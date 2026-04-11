@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-to express repetition, or **повторення** (repetition). If an action happens more than once, it becomes a habit or a routine, and in Ukrainian, habits almost always require the imperfective aspect. Think about your daily schedule. You might say: «Я щодня роблю вправи» *(I do exercises every day)*. Because the action repeats, it never truly has a single, final result that ends forever. It is an ongoing cycle. In the past tense, the imperfective aspect is particularly useful for describing things you used to do. For example: «Він часто телефонував» *(He used to call often)*. In English, you might rely on phrases like "used to" or "would" to indicate past habits. In Ukrainian, you do not need extra auxiliary verbs for this. The imperfective verb itself already carries the meaning of a customary action. Beyond processes and habits, the imperfective aspect serves another fundamental purpose: stating general facts. When you simply want to name an action or state a universal truth where the idea of completion is entirely irrelevant, you will use the imperfective aspect. For instance, consider the sentence: «Діти читають книги» *(Children read books)*. This is a general statement about what children do. There is no specific result being highlighted. Similarly, if you say «Птахи літають» *(Birds fly)*, you are merely stating a fact of nature. For learners at the A2 level, you can consider the imperfective aspect to be your default setting for describing how the world works. Unless you are specifically trying to draw attention to a single, completed achievement, the imperfective aspect is the safest choice for general observations. There is a critical grammatical rule regarding the imperfective aspect that makes speaking Ukrainian much easier: the present tense is exclusively imperfective. Think about it logically. You cannot have a completely finished, result-locked action happening right now in the present moment. If it is happening right now, it is inherently a process. Therefore, any verb you use in the present tense, such as «Я пишу» *(I am writing)*, is always imperfective. You do not even have to make an aspect choice when speaking in the present tense. Contrast this with the past tense, where an action could either be an ongoing process («Я писав» - *I was writing*) or a finished result. To help you instantly recognize when to use the imperfective aspect, look out for specific signal words. These are frequency adverbs that inherently describe duration or repetition, making the imperfective aspect mandatory. The most common triggers include **завжди** (always), **часто** (often), **зазвичай** (usually), **регулярно** (regularly), and **щодня** (every day). Whenever you spot these words, you know a habit is being described. Another powerful signal word is **довго** (for a long time), which highlights a prolonged process. For example, if you want to emphasize the duration of an activity, you would say: «Вона довго писала листа» *(She was writing the letter for a long time)*. These adverbs act as clear signposts, guiding you safely toward the imperfective aspect. <!-- INJECT_ACTIVITY: aspect-sorting-process-result --> <!-- INJECT_ACTIVITY: identify-aspect-in-sentences -->
+actions repeat continuously without a single, final endpoint, they are treated just like an ongoing process. They are open-ended loops. Another common use for imperfective verbs is stating general facts. Sometimes we just want to name the action without any reference to its duration, repetition, or completion. We use imperfective verbs for simple statements where the completion of the action is completely irrelevant to the conversation. For an A2 learner, you can think of the imperfective aspect as the default setting for describing how the world works. У школі діти читають книги та пишуть різні тексти. Птахи літають високо в небі. Люди сплять вночі, а працюють вдень. Вода кипить при ста градусах. > *At school, children read books and write various texts. Birds fly high in the sky. People sleep at night and work during the day. Water boils at one hundred degrees.* These sentences merely state what things do. There is no specific result expected, so the imperfective aspect is the only logical choice. There is a critical rule regarding verb tenses that makes choosing the correct aspect much easier for beginners. The present tense in Ukrainian is exclusively imperfective. Because an action happening right now is, by definition, an ongoing process that has not yet finished, you cannot have a completed action in the present moment. If you are doing it now, it is a process. Therefore, any verb that describes what you are currently doing will always be an imperfective verb. Зараз я сиджу за столом і пишу довгий лист своєму другу. Вона слухає музику у своїй кімнаті. > *Right now I am sitting at the table and writing a long letter to my friend. She is listening to music in her room.* :::info **Grammar box** — If you want to describe something happening right now, you must use an imperfective verb. Perfective verbs simply do not have a true present tense form. The past tense, however, can use both aspects depending on whether the action was a process or a completed result. ::: To help you identify when to use the imperfective aspect, look out for specific frequency adverbs. These signal words naturally pair with imperfective verbs because they inherently describe repetition or duration. The most common signal words are the Ukrainian equivalents for always, often, usually, regularly, every day, and for a long time. These words are «завжди», «часто», «зазвичай», «регулярно», «щодня», and «довго». Whenever you use these adverbs to say that something happens often or lasts for a significant amount of time, you almost certainly need an imperfective verb. Вона довго писала цей лист ввечері. Мій батько зазвичай п'є чорну каву без цукру. Ми регулярно ходимо в гори влітку. Ти занадто часто забуваєш свої ключі вдома. > *She was writing this letter for a long time in the evening. My father usually drinks black coffee without sugar. We regularly go to the mountains in the summer. You forget your keys at home too often.* <!-- INJECT_ACTIVITY: quiz, aspect-sorting-process-result --> <!-- INJECT_ACTIVITY: fill-in, identify-aspect-in-sentences -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -343,7 +343,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -364,14 +431,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

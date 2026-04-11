@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-52-519cdff4.json
+phase: write
+prompt_chars: 62433
+response_chars: 10758
+prompt_words: 8954
+response_words: 1688
+sections:
+- name: preamble
+  start: 0
+  length: 6511
+  fraction: 0.1043
+- name: plan
+  start: 6511
+  length: 5965
+  fraction: 0.0955
+- name: wiki
+  start: 11958
+  length: 28613
+  fraction: 0.4583
+- name: rules
+  start: 41089
+  length: 8967
+  fraction: 0.1436
+- name: skeleton
+  start: 50056
+  length: 5138
+  fraction: 0.0823
+- name: output_spec
+  start: 55194
+  length: 7239
+  fraction: 0.1159
+large_sections:
+- wiki
+directives_total: 49
+directives_covered: 39
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Follow your own pacing plan — each section must hit its word budget (±10%).
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

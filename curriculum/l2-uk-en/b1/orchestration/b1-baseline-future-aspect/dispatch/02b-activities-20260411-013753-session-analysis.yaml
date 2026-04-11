@@ -1,0 +1,163 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-36-29e16778.json
+phase: activities
+prompt_chars: 62161
+response_chars: 11340
+prompt_words: 9127
+response_words: 1267
+sections:
+- name: preamble
+  start: 0
+  length: 1867
+  fraction: 0.03
+- name: plan
+  start: 1867
+  length: 60186
+  fraction: 0.9682
+- name: output_spec
+  start: 62053
+  length: 108
+  fraction: 0.0017
+large_sections:
+- plan
+directives_total: 54
+directives_covered: 24
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: 'To understand how it works, we must revisit the core definition of the perfective
+    aspect: it describes an action that is fully completed, a finalized result.'
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: You must determine whether the verb belongs to the first conjugation (typically
+    taking **-е-** or **-є-**) or the second conjugation (taking **-и-** or **-ї-**).
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: In Ukrainian, if you mean "I will get it done," you must use the simple future
+    form of the perfective aspect, like «Я зроблю це».
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: However, you must always remember to carefully contrast this ongoing, imperfective
+    form with the perfective simple future.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: If you want to confidently state that you will arrive at a specific destination
+    once and achieve a result, you must switch aspects and use the perfective simple
+    future, such as «я прийду».
+  covered: false
+  coverage_note: 3/21 keywords (14%)
+- kind: must
+  text: The characters are organizing a charity concert and must carefully choose
+    their aspects to distinguish between long processes and concrete results.
+  covered: false
+  coverage_note: 0/16 keywords (0%)
+- kind: must
+  text: Therefore, if you need to describe anything that is happening right now, you
+    must use an imperfective verb.
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: 'For example, you must mix aspects correctly to show process then completion:
+    «Вчора я писав листа і написав його» (Yesterday I was writing a letter and I finished
+    it).'
+  covered: false
+  coverage_note: 4/20 keywords (20%)
+- kind: must
+  text: When using the analytic future form (**буду** + infinitive) with a reflexive
+    verb, the particle **-ся** must stay glued to the infinitive.
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: To truly master the future tense, you must learn to weave these aspects naturally
+    into connected speech.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: 'The very first question you must ask yourself is: "Do I need a result, or
+    am I describing a process?" If your goal is to emphasize a completed action or
+    a specific guaranteed result, you must choose a perfective verb.'
+  covered: false
+  coverage_note: 2/21 keywords (10%)
+- kind: must
+  text: You must clearly envision whether your action is a journey or a destination.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

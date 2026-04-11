@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-граматичної конструкції. Тому ми використовуємо збірні форми: **«двоє ножиць»** *(two pairs of scissors)*, **«троє дверей»** *(three doors)*, **«четверо саней»** *(four sleds)*, **«п'ятеро воріт»** *(five gates)*. Це єдиний граматично правильний спосіб порахувати такі предмети від двох до чотирьох. Щоб ваше мовлення не містило помилок, варто запам'ятати суворі заборони. Збірні числівники **ніколи не вживаються** *(are never used)* з іменниками жіночого роду. Сказати «двоє дівчат» чи «троє жінок» — це груба помилка. Правильно казати лише «дві дівчини» та «три жінки». Єдиний виняток для жіночого роду — це слово **«обидві»** *(both)*. Також збірні форми не можна поєднувати з **неістотами** *(inanimate objects)* чоловічого роду. Ми не можемо сказати «двоє столів» або «троє комп'ютерів», правильно лише «два столи» та «три комп'ютери». Правило узгодження для цієї групи дуже просте і не має винятків. Після всіх збірних числівників іменник завжди стоїть у формі **родового відмінка множини** *(genitive plural)*. Порівняйте: кількісний числівник вимагає «два друзі» (називний множини), а збірний — «двоє друзів» (родовий множини). Інші приклади: «четверо коней», «п'ятеро вікон», «десятеро учнів». <!-- INJECT_ACTIVITY: match-up, З’єднати числівники з відповідними іменниками, пояснюючи вибір --> ## 4. Дроби та мішані кількості Окрім цілих чисел, у повсякденному житті ми часто використовуємо **дробові числівники** *(fractional numerals)*. Найпоширеніші прості дроби мають власні назви: **«половина»** *(half)*, **«третина»** *(third)* та **«чверть»** *(quarter)*. Правило узгодження тут максимально просте. Після таких дробів іменник завжди стоїть у формі **родового відмінка однини** *(genitive singular)*: «половина яблука», «третина населення», «чверть години». Зверніть увагу, що слова «половина» і «третина» відмінюються як іменники першої відміни (як «книжка»). Слово «чверть» належить до третьої відміни (як «ніч»): у родовому відмінку воно має форму «чверті», а в орудному — «чвертю». Зі складнішими дробами ми також використовуємо родовий відмінок однини: «дві третіх кілограма». Особливу увагу варто звернути на унікальні слова **«півтора»** *(one and a half - masc/neut)*, **«півтори»** *(one and a half - fem)* та **«півтораста»** *(one hundred and fifty)*. Вони є абсолютно **незмінними** *(indeclinable)* числівниками: у всіх відмінках їхня форма однакова. Проте вони чітко розрізняються за родом іменника. «Півтора» ми використовуємо лише з чоловічим та середнім родом: «півтора метра», «півтора відра». Якщо іменник належить до жіночого роду, ми обов'язково кажемо «півтори»: «півтори години», «півтори порції». Після «півтора» та «півтори» іменник завжди стоїть у родовому відмінку **однини** *(singular)*. Слово «півтораста» позначає сто п'ятдесят, і воно вимагає родового відмінка **множини** *(plural)*: «півтораста учнів», «півтораста гривень». У статистиці та фінансових звітах ми постійно оперуємо **відсотками** *(percentages)*. Слово «відсоток» — це звичайний іменник чоловічого роду, що підпорядковується стандартним правилам узгодження: «один відсоток», «два відсотки» (називний множини) та «п'ять відсотків» (родовий множини). Коли ми читаємо **десяткові дроби** *(decimal fractions)*, ми використовуємо слова «ціла» і «десята». Наприклад, число 1,2 читається як «одна ціла і дві десятих». Після таких дробів іменник ставиться у родовий відмінок однини: «одна ціла і дві десятих відсотка». У мішаних числах зі словом «половина», як-от 2,5, ми кажемо **«два з половиною»** *(two and a half)*. Тут форма іменника залежить від цілої частини: «два з половиною кілометри» (як із «два») або «п'ять із чвертю літрів» (як із «п'ять»). <!-- INJECT_ACTIVITY: quiz, Обрати правильну форму іменника після дробів та відсотків -->
+the noun to be in the genitive plural. This is why we say **двоє друзів** (two friends) and **четверо коней** (four horses). In all oblique cases, the collective numerals decline just like the regular number **п'ять** and match the noun's case. :::note **Quick tip** — When you are unsure whether to use a collective numeral or a regular numeral for a group of men, remember that both **три хлопці** and **троє хлопців** are grammatically correct. The collective form just sounds more natural in casual storytelling. ::: <!-- INJECT_ACTIVITY: match-up-collective-usage --> ## 4. Дроби та мішані кількості (~550 слів) When we talk about parts of a whole, we use fractions. The most common simple fractions in everyday life are **половина** (a half), **третина** (a third), and **чверть** (a quarter). Українські дробові слова вимагають після себе іменника у формі родового відмінка однини. Ми кажемо «половина яблука», «третина населення» або «чверть години». Це логічно, адже ми беремо частину від одного цілого предмета. Слово «чверть» є іменником третьої відміни, тому воно відмінюється як слово «ніч» або «осінь»: родовий відмінок — «чверті», орудний — «чвертю». > *Ukrainian fractional words require the noun following them to be in the genitive singular form. We say "половина яблука" (half of an apple), "третина населення" (a third of the population), or "чверть години" (a quarter of an hour). This is logical, because we are taking a part of one whole object. The word "чверть" is a third declension noun, so it declines like the word "ніч" (night) or "осінь" (autumn): genitive case — "чверті", instrumental — "чвертю".* A very unique feature of the Ukrainian language is the words for "one and a half". Instead of saying "один з половиною", we almost always use the special words **півтора** and **півтори**. Вибір між цими словами залежить від роду іменника. Якщо ми говоримо про предмети чоловічого або середнього роду, ми використовуємо слово «півтора»: «півтора метра», «півтора відра» чи «півтора місяця». Для іменників жіночого роду існує окрема форма «півтори»: «півтори години», «півтори тонни». Ці слова ніколи не відмінюються, але іменник після них завжди стоїть у родовому відмінку однини. Також існує слово «півтораста», яке означає сто п'ятдесят. Воно вимагає після себе родового відмінка множини: «півтораста гривень». In modern life, we constantly encounter percentages and exact decimal measurements. The word for percentage is **відсоток**. Слово «відсоток» узгоджується з цілими числами за стандартними правилами. Ми кажемо «один відсоток» (називний однини), «два відсотки» (називний множини), але «п'ять відсотків» (родовий множини). Якщо ж ми маємо справу з десятковими дробами, правило змінюється. Після таких чисел, як «одна ціла і дві десятих», іменник завжди має форму родового відмінка однини. Наприклад, ми говоримо «одна ціла і дві десятих відсотка» або «три цілих і п'ять десятих кілометра», оскільки ми вказуємо на частину від одного відсотка чи кілометра. :::note **Quick tip** — When reading decimal numbers in Ukrainian, we use the feminine gender for the numbers because they imply the word **частина** (part). So, 1.5 is read as **одна ціла і п'ять десятих** (one whole and five tenths). ::: <!-- INJECT_ACTIVITY: quiz-fraction-agreement -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -544,7 +544,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -557,14 +624,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

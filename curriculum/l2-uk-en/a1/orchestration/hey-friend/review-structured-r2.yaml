@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text covers the outline effectively, but it completely misses the
+    "State Standard 2024" reference from the plan and fails to mention the author
+    "Заболотний" when referring to the Grade 4 textbook.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless. No Russianisms or Surzhyk; correct vocative formations throughout
+    (Олено, Тарасе, Андрію, друже, синку, бабусю).
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. Drawing a clear distinction between nominative
+    (talking ABOUT someone) and vocative (talking TO someone) is highly effective,
+    as is introducing the "Кл. (!)" mental trigger
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words (друг, подруга, пан, пані,
+    синку, дочко, козак, бабуся, etc.) are included naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 required markers are present. Three are clustered at the end of
+    section 3, but this is pedagogically sound as they test mixed-gender rules.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm and professional. Highlighting the vocative case as a
+    "living marker of Ukrainian linguistic identity" perfectly hits the decolonized
+    curriculum goal.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: The very last sentence of the module is cut off and left dangling ("If
+    you can confidently answer these questions and apply the correct endings,").
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate cultural framing, correctly noting the survival of the vocative
+    case in modern conversational Ukrainian compared to standard Russian.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly contextual, utilizing the party scenario perfectly
+    to demonstrate calling across a crowded room.
+findings: []

@@ -1,86 +1,47 @@
 ## Без чого? Без + родовий (Without What? Без + Genitive)
 
-The preposition **без** (without) is one of the most common and useful words in Ukrainian. It always requires the Genitive case. We use it to express the absence or lack of something, or when we do things without a certain object or person. The best place to start practicing **без** is in a café or restaurant, as it is essential for customizing your food and drinks. 
+The preposition **без** means "without." We use it to talk about the absence or lack of something, and just like **для**, it always requires the Genitive case. To ask "without what?", we simply say **без чого?**. In everyday life, you will hear this preposition most often when people are ordering food or drinks. It is incredibly useful for customizing your order at a cafe or restaurant, ensuring you get exactly what you want.
 
-Змінюємо закінчення (Changing endings):
-«цукор» (sugar) → «без цукру»
-«молоко» (milk) → «без молока»
-«газ» (gas) → «без газу»
+Я завжди п'ю чорну каву без цукру. Мій брат любить зелений чай без молока. Вона замовила склянку води без газу. Цей суп дуже смачний, але він без м'яса. Ми купили свіжий салат без цибулі.
 
-«Читаємо українською»:
-— Я завжди п'ю каву **без цукру** (I always drink coffee without sugar).
-— Дайте, будь ласка, чорний чай **без молока** (Please give me black tea without milk).
-— Ми хочемо замовити воду **без газу** (We want to order still water / water without gas).
-— Вона їсть свіжий салат **без м'яса** (She is eating a fresh salad without meat).
-— Цей гарячий суп зовсім **без солі** (This hot soup is completely without salt).
+> *I always drink black coffee without sugar. My brother likes green tea without milk. She ordered a glass of water without gas (still water). This soup is very tasty, but it is without meat. We bought a fresh salad without onion.*
 
-Beyond food and drinks, **без** is frequently paired with abstract nouns to form common idioms, adverbial phrases, and everyday modifiers. When you combine **без** with a concept, it describes how an action is performed or the state of a situation. These phrases are very natural and are used constantly in spoken Ukrainian.
+Beyond food and drinks, **без** is frequently paired with abstract nouns to form common idioms and descriptive phrases. These combinations are used to express how an action is performed, to describe a situation, or to indicate a state of being. They often function like adverbs do in English. Mastering these set phrases will make your spoken Ukrainian sound much more natural, expressive, and fluent in everyday conversations.
 
-Змінюємо закінчення (Changing endings):
-«сумнів» (doubt) → «без сумніву»
-«проблема» (problem) → «без проблем»
-«допомога» (help) → «без допомоги»
-«успіх» (success) → «без успіху»
+Ця складна робота пройшла абсолютно без проблем. Він зробив це завдання швидко і без допомоги. Без сумніву, це найкращий фільм цього року. На жаль, наші довгі пошуки закінчилися без успіху. Вони прийняли це важливе рішення без вагань.
 
-«Читаємо українською»:
-— Це найкращий варіант, **без сумніву** (This is the best option, without doubt).
-— Я зроблю це нове завдання **без проблем** (I will do this new task without problems / no problem).
-— Він швидко закінчив роботу **без допомоги** (He quickly finished the work without help).
-— Ми довго шукали ключі **без успіху** (We searched for the keys for a long time without success).
-— Вони працюють цілий день **без зупинки** (They are working all day without a stop).
+> *This difficult work went absolutely without problems. He did this task quickly and without help. Without a doubt, this is the best movie of this year. Unfortunately, our long searches ended without success. They made this important decision without hesitation.*
 
-When using masculine nouns after **без**, you must choose between the **-а** (or **-я**) and **-у** (or **-ю**) endings. As a general rule, concrete objects that you can easily count or touch usually take the **-а** ending. On the other hand, substances, materials, or abstract concepts often take the **-у** ending. 
+When using masculine nouns after **без**, you must pay close attention to the Genitive ending, choosing carefully between **-а** (or **-я**) and **-у** (or **-ю**). As a general rule, concrete, physical objects and countable tools take the **-а** ending. However, substances, materials, and abstract concepts typically take the **-у** ending. This distinction is crucial for grammatical accuracy and will become more intuitive as you practice.
 
-Змінюємо закінчення (Changing endings):
-«хліб» (bread) → «без хліба»
-«ніж» (knife) → «без ножа»
-«цукор» (sugar) → «без цукру»
-«шум» (noise) → «без шуму»
+:::info
+**Grammar box** — Masculine Genitive Endings
+Concrete objects take **-а** (ніж → без ножа, олівець → без олівця). Substances and abstract concepts take **-у** (цукор → без цукру, шум → без шуму).
+:::
 
-«Читаємо українською»:
-— Ми ніколи не їмо борщ **без хліба** (We never eat borscht without bread).
-— Я не можу нарізати овочі **без ножа** (I cannot cut vegetables without a knife).
-— Мій старший брат п'є чай **без цукру** (My older brother drinks tea without sugar).
-— Діти спокійно гралися в кімнаті **без шуму** (The children played calmly in the room without noise).
-— Він вийшов на вулицю **без телефона** (He went outside without a phone).
+Я не можу нарізати ці овочі без гострого ножа. Ми сьогодні обідаємо без свіжого хліба. Цей студент прийшов на урок без олівця. Діти граються в кімнаті без шуму. Я не люблю пити чай без меду.
 
-For feminine nouns after **без**, the endings are much simpler and follow the standard rules. Hard-stem feminine nouns take **-и**, while soft-stem nouns (ending in **-я** or a soft consonant) take **-і**. Neuter nouns typically change their final **-о** to **-а**, and their final **-е** to **-я**.
+> *I cannot chop these vegetables without a sharp knife. We are dining today without fresh bread. This student came to the lesson without a pencil. The children are playing in the room without noise. I do not like to drink tea without honey.*
 
-Змінюємо закінчення (Changing endings):
-«вода» (water) → «без води»
-«сіль» (salt) → «без солі»
-«вікно» (window) → «без вікна»
-«море» (sea) → «без моря»
+For feminine and neuter nouns, the rules remain completely consistent with what you already know about the Genitive case. Feminine nouns will typically end in **-и** for hard stems or **-і** for soft stems after **без**. Neuter nouns will change their final **-о** or **-е** to **-а** or **-я**. Pay close attention to how these endings sound in full phrases to build your confidence.
 
-«Читаємо українською»:
-— Жодна людина не живе довго **без води** (No person lives long without water).
-— Ця смачна страва приготовлена **без солі** (This tasty dish is prepared without salt).
-— У цьому старому будинку є кімната **без вікна** (In this old building there is a room without a window).
-— Я дуже сумую, коли живу **без моря** (I am very sad when I live without the sea).
-— Вона пішла на роботу **без куртки** (She went to work without a jacket).
+Людина не може довго жити без чистої води. Ця страва зовсім не смачна без солі. У цьому старому будинку є кімната без вікна. Я не уявляю своє літо без теплого моря. Вона вийшла на вулицю без шапки.
 
-In natural conversation, **без** is frequently used in complete sentences to emphasize dependence or absolute necessity. A very common structure is pairing it with the verb phrase **не можу** (I cannot) to express that something is essential for your routine. You can also use **без** with pronouns, just like you would with regular nouns.
+> *A person cannot live long without clean water. This dish is not tasty at all without salt. In this old house, there is a room without a window. I do not imagine my summer without the warm sea. She went out onto the street without a hat.*
 
-Змінюємо закінчення (Changing endings):
-«кава» (coffee) → «без кави»
-«парасолька» (umbrella) → «без парасольки»
-«він» (he) → «без нього»
+In complete sentences, the preposition **без** is very frequently paired with the phrase **не можу** (I cannot) to express a strong personal preference, a habit, or a dependence on something. You will also often see it used with personal pronouns when talking about people missing from a group. Remember that personal pronouns also change their specific form in the Genitive case after a preposition.
 
-«Читаємо українською»:
-— Вранці я просто **не можу без кави** (In the morning I simply cannot without coffee).
-— На вулиці сильний дощ, а вона прийшла **без парасольки** (There is heavy rain outside, and she arrived without an umbrella).
-— Ми поїхали на вечірній концерт **без нього** (We went to the evening concert without him).
-— Вони зовсім не можуть жити **без музики** (They absolutely cannot live without music).
-— Цей складний проєкт неможливий **без вас** (This complex project is impossible without you).
+Я просто не можу почати свій день без кави. Вона сьогодні прийшла на роботу без парасольки, а надворі йде дощ. Ми вчора поїхали на концерт без нього. Ти не можеш працювати цілий день без відпочинку. Вони організували це чудове свято без нас.
 
-Let's return to Ігор (Igor) and Марта (Marta). They are continuing to pack their bags for the camping trip. Igor suddenly realizes they forgot an essential item for the dark mountain nights. Pay attention to how they use **без** to discuss what they cannot go without.
+> *I simply cannot start my day without coffee. She came to work today without an umbrella, and it is raining outside. We went to the concert without him yesterday. You cannot work all day without rest. They organized this wonderful holiday without us.*
 
-> — **Ігор:** Марто, ми забули щось дуже важливе. *(Marta, we forgot something very important.)*
-> — **Марта:** Що саме? Я думаю, що ми взяли все. *(What exactly? I think that we took everything.)*
-> — **Ігор:** Ми не можемо їхати **без ліхтарика**. У горах дуже темно. *(We cannot go without a flashlight. It is very dark in the mountains.)*
-> — **Марта:** Ой, правда. Вночі **без нього** ми нічого не побачимо. *(Oh, right. At night without it we will see nothing.)*
-> — **Ігор:** Так. І ще нам треба більше питної води. *(Yes. And we also need more drinking water.)*
-> — **Марта:** Згодна. У такий похід не можна йти **без води**. *(Agreed. You cannot go on such a hike without water.)*
-> — **Ігор:** Добре, що ми робимо список. Подорожувати **без плану** — це погана ідея. *(Good that we are making a list. Traveling without a plan is a bad idea.)*
+Let's rejoin Igor and Marta as they continue packing their bags for their weekend camping trip. They are double-checking their gear and suddenly realizing that some specific items are absolutely essential. Notice how they use **без** to emphasize what they cannot manage without while out in the forest.
 
-<!-- INJECT_ACTIVITY: quiz-prep-choice, choose between 'для' and 'без' to complete everyday sentences -->
+> — **Ігор:** Ой, я забув свій новий ліхтарик удома. *(Oh, I forgot my new flashlight at home.)*
+> — **Марта:** Це дуже погано! Ми нічого не зможемо робити вночі без ліхтарика. *(This is very bad! We will not be able to do anything at night without a flashlight.)*
+> — **Ігор:** Ти маєш рацію. Ми не можемо йти в ліс без води. *(You are right. We cannot go into the forest without water.)*
+> — **Марта:** Звісно. Туристи ніколи не ходять у гори без чіткого плану. *(Of course. Tourists never go into the mountains without a clear plan.)*
+> — **Ігор:** Добре, що ми перевіряємо наші речі зараз. *(It is good that we are checking our things now.)*
+> — **Марта:** Так, наша подорож без цих предметів була б дуже складною. *(Yes, our trip without these items would be very difficult.)*
+
+<!-- INJECT_ACTIVITY: quiz-prep-choice -->

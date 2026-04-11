@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module covers all plan points, but deviates from the plan in the Volleyball
+    dialogue by using "Відчини двері" instead of the requested "Відкрий двері". This
+    breaks the introduction of the target v
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Incorrect stress on the imperatives of `говорити` (`го́вори`), `ходити`
+    (`хо́ди`), and `покласти` (`По́клади`). The correct forms are `говори́`, `ходи́`,
+    and `Поклади́`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow (PPP). The explanation of changing `-и` to
+    `-іть` is highly actionable and helpful for A1 learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are successfully
+    integrated in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All activity markers are present, mapped to the correct concepts, and
+    logically placed after the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Natural, warm teacher persona ("Imagine a typical morning...", "Consider
+    a completely different situation").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan perfectly. The word count is 1509 (safely
+    above the 1200 target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Scenarios (cafe, classroom, volleyball practice) and names are culturally
+    authentic and appropriate.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly realistic and contextual, avoiding stilted robotic
+    phrasing.
+findings: []

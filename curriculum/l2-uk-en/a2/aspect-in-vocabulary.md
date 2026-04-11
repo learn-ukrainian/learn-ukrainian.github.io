@@ -1,234 +1,163 @@
-## Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
+## Чому дієслова потрібно вчити парами?
 
-Imagine going to a shoe store, buying a left sneaker, and leaving the right one on the shelf. That is exactly what happens when you learn a Ukrainian verb without its partner. In Ukrainian grammar, the vast majority of verbs exist in an aspectual pair. 
+In Ukrainian, learning a new verb is a unique experience because you are rarely learning just a single word. Instead, you are learning an aspect pair (**видова пара**). Imagine trying to buy shoes, but you only buy the left one. It is useful, but you cannot walk far without its partner! When you learn the verb for writing, you must learn the word for the ongoing process alongside the word for the completed result. You need both halves to answer two completely different questions. 
 
-* **Видова пара** — aspectual pair.
+**Що ти робив?** — *What were you doing?*
+**Що ти зробив?** — *What have you done?*
 
-For example, you might learn a word for writing. 
+В українській мові ми завжди вчимо дієслова парами. Кожна дія має дві різні форми. Одна форма описує довгий процес, а інша — готовий результат.
 
-* **Писати** — to write, to be writing.
+> *In the Ukrainian language, we always learn verbs in pairs. Every action has two different forms. One form describes a long process, and the other describes a finished result.*
 
-If you learn this without its partner, you only have half the vocabulary needed for that action. You might know how to say you were writing a letter, but you will not know how to express that you actually finished it. This is where the perfective partner comes in.
+Let us look at how this works in a cooking scenario. 
 
-* **Написати** — to write completely, to finish writing.
-
-The core difference between the two halves of the pair comes down to the question you are answering. Are you describing an ongoing process, or are you announcing a final result? 
-
-«Що ти робив?» *(What were you doing?)*
-
-Here, they are asking about the continuous process. Alternatively, they might only want to know the completed result.
-
-«Що ти зробив?» *(What have you done?)*
-
-Let us see how this dynamic plays out in real life. Imagine a grandmother teaching her granddaughter how to cook a traditional Ukrainian dish. Notice how she naturally switches between focusing on the continuous process and the finalized result.
-
-> — **Бабуся:** Ліпи вареники, поки я грію воду. *(Keep forming varenyky while I heat the water.)*
-> — **Онучка:** Я вже зліпила десять! *(I have already formed ten!)*
+> — **Бабуся:** Ліпи вареники, поки я грію воду. *(Keep forming the varenyky while I heat the water.)*
+> — **Онучка:** Я вже зліпила десять штук! *(I have already formed ten of them!)*
 > — **Бабуся:** Тепер вари їх п'ять хвилин, поки вони не спливуть. *(Now boil them for five minutes until they float.)*
-> — **Бабуся:** Як звариш — клич усіх до столу. *(When you have finished boiling them — call everyone to the table.)*
+> — **Онучка:** А що робити потім? *(And what to do after?)*
+> — **Бабуся:** Як звариш, клич усіх до столу! *(Once you have boiled them, call everyone to the table!)*
 
-The logic here is entirely about process versus result. Let us look at another common household scenario using words for cleaning.
+The logic behind these pairs is the contrast between process and result. The imperfective aspect describes the effort you put into an action, while the perfective aspect describes the final outcome. For example, the imperfective verb for cleaning emphasizes the physical act of working with a broom and a cloth. The perfective verb means the room is completely clean and the job is done. You should memorize these two forms as a single lexical unit, treating them like two halves of the same concept.
 
-* **Прибирати** — to be cleaning, to tidy up.
-* **Прибрати** — to have cleaned, to have tidied up.
+Недоконаний вид показує довгий процес і твою роботу. Доконаний вид показує успішний результат цієї роботи. Наприклад, ти можеш прибирати кімнату цілий день, але так і не прибрати її.
 
-The imperfective verb describes the physical effort and the time spent. It means you were moving things around and sweeping the floor. However, it does not guarantee that the room is actually clean at the end. The perfective verb describes the final, successful result. It means you have achieved a completely clean room.
+> *The imperfective aspect shows a long process and your work. The perfective aspect shows the successful result of this work. For example, you can be cleaning a room all day, but still not have cleaned it.*
 
-Because these concepts are closely linked in everyday communication, you should never learn them separately. From now on, you must memorize these verbs as a single, inseparable lexical unit. You are not just learning one word anymore. Your new vocabulary entry is the complete pair.
+Because these pairs are fundamental, dictionaries are designed to help you find both forms. When you look up a new action, you usually see the imperfective verb listed first, followed by its perfective partner. You will often see standard abbreviations like **нед.** (imperfective) and **док.** (perfective) in official resources. Getting comfortable with these dictionary entries makes expanding your vocabulary much easier.
 
-* **Прибирати / прибрати** — to clean / to have cleaned.
+:::note
+**Quick tip**
+Always write down new verbs as a pair in your notebook, like **робити / зробити**. If a dictionary only gives you one form, take a moment to search for its partner!
+:::
 
-How do you find these pairs when you are studying on your own? Navigating a Ukrainian dictionary is much easier once you understand this system. When you look up an action, modern dictionaries will usually list the pair together. The imperfective form usually comes first as the base word.
+## Спосіб 1: Додавання префікса
 
-* **Недоконаний вид** — imperfective aspect.
+The most common and productive way to create a perfective verb in Ukrainian is by adding a prefix to its imperfective partner. Think of the imperfective verb as the basic "process" form. When you attach a specific prefix to the beginning of this word, it instantly transforms into a "result" verb. This new word now focuses entirely on the completion or success of the action.
 
-Right next to it, you will see its partner, the perfective form.
+Найчастіше ми утворюємо дієслова доконаного виду за допомогою префіксів. Ми беремо звичайне дієслово процесу і додаємо до нього коротку частинку. Наприклад, ми знаємо дієслово «читати», яке показує довгий процес. Якщо ми додамо префікс «про-», ми отримаємо нове слово «прочитати». Тепер це слово означає, що процес успішно завершився.
 
-* **Доконаний вид** — perfective aspect.
+> *Most often, we form perfective verbs with the help of prefixes. We take a regular process verb and add a short particle to it. For example, we know the verb "читати" (to read), which shows a long process. If we add the prefix "про-", we get the new word "прочитати" (to read through/finish). Now this word means that the process has successfully finished.*
 
-For instance, you might search for a verb meaning to do or to make.
+The most frequent and universal prefix you will encounter is **по-**. When you are unsure which prefix to use to make a verb perfective, this is often your best guess. It usually marks the simple completion of a standard, everyday action without adding any complex extra meaning. You will see it attached to many common verbs you already know.
 
-* **Робити** — to do, to make.
-* **Зробити** — to have done, to have made.
+Цей префікс допомагає нам говорити про щоденні рутинні справи. Вранці ми можемо довго «снідати». Але коли тарілка порожня, ми кажемо, що вже «поснідали». Ми вчимо такі пари дієслів: «бачити» і «побачити», «чути» і «почути». Якщо хтось зробив вам добру справу, ви можете довго «дякувати» йому. Або ви можете просто один раз щиро «подякувати».
 
-In authentic Ukrainian resources, you will frequently encounter standard abbreviations. You will see «нед.» for the imperfective aspect and «док.» for the perfective aspect. Knowing these labels will help you always find the missing shoe for your new vocabulary.
+> *This prefix helps us talk about daily routine chores. In the morning we can be "снідати" (having breakfast) for a long time. But when the plate is empty, we say that we have already "поснідали" (had breakfast). We learn such pairs of verbs: "бачити" and "побачити" (to see), "чути" and "почути" (to hear). If someone did a good deed for you, you can "дякувати" (be thanking) them for a long time. Or you can just sincerely "подякувати" (thank) them once.*
 
-## Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)
+:::note
+**Quick tip**
+The prefix **по-** is incredibly common. Whenever you learn a new basic action, try looking for its partner with this prefix first. It is the default tool for turning a process into a one-time result!
+:::
 
-* **Префікс** — prefix.
+Other prefixes are more specific to the type of task being performed. For creative and communicative actions, where you produce something physical or written, the prefix **на-** is extremely common. Another very useful prefix is **про-**, which often relates to actions that involve passing through something or spending a specific amount of time.
 
-In the Ukrainian language, the most productive and predictable way to create a perfective verb is through the grammatical process of prefixation. You simply take a basic imperfective verb, which describes an ongoing or repeated process, and securely attach a short prefix to its beginning. This single, small addition instantly transforms the word into a perfective verb, permanently shifting its focus from the continuous process to the final, successful result. You can think of this added prefix as a tiny grammatical seal of completion. For a clear and practical example, consider the basic process of reading a book.
+Коли ми створюємо текст або малюнок, ми часто використовуємо префікс «на-». Письменник може «писати» книгу роками, але колись він її «написав». Художник може «малювати» картину цілий день. А ввечері він нарешті її «намалював». Префікс «про-» часто показує час. Людина може просто «жити» в місті, але вона може «прожити» там десять років.
 
-* **Читати** — to read, to be reading.
+> *When we create a text or a drawing, we often use the prefix "на-". A writer can "писати" (be writing) a book for years, but someday he "написав" (has written) it. An artist can "малювати" (be drawing/painting) a picture all day. And in the evening he finally "намалював" (has drawn/painted) it. The prefix "про-" often shows time. A person can just "жити" (live) in a city, but they can "прожити" (live through) ten years there.*
 
-If you want to announce to someone that you have finished reading a book completely, from the very first page to the very last, you must add a specific prefix.
+One of the most essential verbs, **робити** (to do/make), takes the prefix **з-** to form its perfective partner **зробити**. However, there is a strict phonetic rule that dictates how this prefix sounds and is written. Before certain voiceless consonants, the prefix **з-** changes to **с-**. You can remember these consonants using the mnemonic phrase «Кафе Птах» (Cafe Bird), which contains the letters K, P, T, F, and Kh.
 
-* **Прочитати** — to read through, to finish reading.
+Префікс «з-» є дуже популярним, але він має свій секрет. Якщо корінь слова починається на глухий звук з фрази «Кафе Птах», ми пишемо префікс «с-». Тому ми маємо базову пару «робити» та «зробити». Але дієслово «казати» перетворюється на «сказати», бо слово починається на літеру «к». Так само дієслово «фотографувати» стає доконаним у формі «сфотографувати».
 
-The core meaning of the action remains exactly the same, but the grammatical perspective has shifted entirely to the achieved, final result.
+> *The prefix "з-" is very popular, but it has its secret. If the root of the word begins with a voiceless sound from the phrase "Кафе Птах" (K, P, T, F, Kh), we write the prefix "с-". Therefore, we have the basic pair "робити" (to do/make) and "зробити" (to have done/made). But the verb "казати" (to say/tell) turns into "сказати", because the word begins with the letter "к". Similarly, the verb "фотографувати" (to photograph) becomes perfective in the form "сфотографувати".*
 
-While there are many different prefixes available in the Ukrainian language, the prefix «по-» is undeniably the most frequent, versatile, and absolutely essential. It acts as a universal marker of completion for a truly massive number of everyday actions. Whenever you see a verb starting with this specific prefix, there is a very high probability that you are looking at the perfective half of a standard aspectual pair. This prefix often simply signals that a regular, expected daily action has reached its natural and logical conclusion. Look at these essential vocabulary pairs that you will need to use constantly in your daily Ukrainian conversations.
+:::info
+**Grammar box**
+The "Кафе Птах" rule only applies to the prefix **з-**. Whenever you see an imperfective verb starting with K, P, T, F, or Kh (к, п, т, ф, х) and it uses this prefix to become perfective, it will always change to **с-**. This makes the pronunciation much smoother!
+:::
 
-* **Бачити / побачити** — to see / to catch sight of.
-* **Готувати / приготувати** — to cook / to finish cooking.
-* **Чути / почути** — to hear / to catch a sound of.
-* **Снідати / поснідати** — to have breakfast / to finish having breakfast.
-* **Дякувати / подякувати** — to thank / to express thanks.
+Finally, you will often encounter the prefixes **ви-** and **за-**, which frequently deal with consumption, mastery, and transactions. The prefix **ви-** often implies exhausting a resource completely or taking something out, while **за-** is frequently used for actions that secure a result or close a deal.
 
-Beyond the universal marker, certain prefixes naturally gravitate toward specific types of actions, themes, and tasks. For creative, communicative, or surface-level actions, you will frequently encounter the productive prefix «на-». It often implies producing a physical, tangible result or successfully accumulating a certain amount of something.
+Коли ми повністю закінчуємо напій, ми використовуємо префікс «ви-». Можна «пити» каву повільно, але потім «випити» її до дна. Цей префікс також працює з навчанням. Якщо ви просто сидите з книгою, ви можете «вчити» слова. Але якщо ви знаєте їх напам'ять, ви змогли їх успішно «вивчити». Префікс «за-» дуже важливий у магазині. Там ви повинні не просто «платити» гроші, а обов'язково «заплатити» за товар.
 
-* **Писати / написати** — to write / to write down completely.
-* **Малювати / намалювати** — to draw / to finish drawing.
+> *When we completely finish a drink, we use the prefix "ви-". One can "пити" (be drinking) coffee slowly, but then "випити" (drink up) it to the bottom. This prefix also works with studying. If you just sit with a book, you can "вчити" (be studying) words. But if you know them by heart, you managed to successfully "вивчити" (master/memorize) them. The prefix "за-" is very important in a store. There you must not simply "платити" (be paying) money, but necessarily "заплатити" (pay off/complete payment) for the goods.*
 
-Another highly common prefix is «про-», which we already saw successfully applied to the concept of reading. It often carries the subtle nuance of an action moving steadily through something, whether it is moving through a physical text or moving through a specific period of time.
-
-* **Жити / прожити** — to live / to live through a specific period.
-
-«Я жив там довго.»
-
-This sentence means "I lived there for a long time," and it strictly describes the continuous state of living. Conversely, look at the perfective version.
-
-«Я прожив там рік.»
-
-This means "I lived through a year there," and it firmly focuses on the completed block of time as a single, achieved result.
-
-Another fundamental prefix for creating perfective verbs is «з-». You will need to use it constantly in your daily life, most notably with the primary verb for doing or making things.
-
-* **Робити / зробити** — to do / to have done.
-
-However, this specific prefix comes with an incredibly important phonetic rule that you must remember. Ukrainian spelling and pronunciation always strive for natural harmony and ease of speech. If the root verb begins with a voiceless consonant, specifically the letters «к», «п», «т», «ф», or «х», the voiced prefix «з-» automatically transforms into the voiceless «с-». Ukrainian schoolchildren memorize these five specific letters using a simple, memorable mnemonic phrase.
-
-«Кафе Птах.»
-
-This translates to "Cafe Bird." Because of this strict phonetic rule, the prefix must adapt itself to perfectly match the voiceless sounds of the root verb.
-
-* **Казати / сказати** — to say / to tell.
-* **Фотографувати / сфотографувати** — to photograph / to take a photo.
-
-Finally, let us look at the highly productive prefixes «ви-» and «за-», which are frequently used for actions involving consumption, extraction, or complete mastery. The prefix «ви-» literally means "out," and it often implies using something up completely or extracting a final, definitive result from a process.
-
-* **Пити / випити** — to drink / to drink up completely.
-* **Вчити / вивчити** — to study / to master or memorize.
-
-Notice the crucial difference in the learning process depicted here.
-
-«Я вчив ці слова.»
-
-This sentence means "I was studying these words," and it simply describes the time and effort you spent looking at the textbook. However, look at the result.
-
-«Я вивчив ці слова.»
-
-This means "I have mastered these words," confirming that the specific information is now permanently stored in your head. The prefix «за-» is also incredibly common, particularly in administrative, financial, or modern transactional contexts.
-
-* **Платити / заплатити** — to pay / to complete a payment.
-* **Телефонувати / зателефонувати** — to call / to make a phone call.
-
-<!-- INJECT_ACTIVITY: quiz-find-partner -->
+<!-- INJECT_ACTIVITY: quiz-find-partner --> [quiz, Find the Partner (Verb Matching), 8 items]
 
 ## Спосіб 2: Зміна в корені або суфіксі
 
-* **Корінь** — root.
-* **Суфікс** — suffix.
+Not all imperfective verbs are short and simple dictionary forms. In many cases, the perfective verb is actually the shorter base form. This is especially common when the verb already contains a prefix that gives it a specific meaning. If the verb already has a prefix, we cannot simply add another one to change its aspect. Instead, we have to "stretch" the verb by adding a special suffix to the end. This extra length physically represents the extended duration of the ongoing process. When you encounter a long verb with multiple syllables, it is very likely an imperfective verb describing a continuous action, while its shorter partner describes the completed result. By recognizing these stretching suffixes, you will easily identify whether a verb focuses on the journey or the destination.
 
-У попередньому розділі ми бачили, як префікс перетворює недоконаний процес на доконаний результат. In the previous section, we saw how adding a prefix builds a perfective result from an imperfective process. However, the Ukrainian language also employs the exact opposite logic. Sometimes, the perfective verb is the shorter, simpler form, representing a quick, defined action. To talk about the ongoing process leading up to that result, we stretch the verb by adding a suffix or changing its internal structure, creating the imperfective form. This reverse engineering is especially common with verbs that already contain a prefix as part of their core meaning. Instead of piling on more prefixes, the language modifies the end of the word to show duration. Recognizing these suffix patterns helps you instantly identify whether a verb describes a quick result or a drawn-out process.
+The most recognizable stretching suffixes in Ukrainian are **-ува-** and **-юва-**. They transform a short, perfective result into a long, imperfective process. The extra syllables literally take longer to pronounce, which mimics the duration of the action itself. You can feel the physical difference between the drawn-out process and the sharp resolution of the perfective form. This pattern is essential for verbs describing mental processes or communication.
 
-One of the most frequent ways to stretch a perfective verb into an imperfective process is by inserting the suffix «-ува-» or «-юва-». Think of this suffix as a rubber band that elongates the action. Let us look at an essential pair for making choices.
+Ми часто додаємо суфікси «-ува-» або «-юва-», щоб зробити слово довшим. Коли ви довго думаєте, ви можете «вирішувати» проблему. Але коли ви нарешті маєте відповідь, ви змогли її «вирішити». Так само працює слово «запитувати», коли ви ставите багато питань. А коли ви ставите одне коротке питання, ви можете просто «запитати».
 
-* **Вирішувати / вирішити** — to decide (process) / to decide (result).
+> *We often add the suffixes "-ува-" or "-юва-" to make the word longer. When you think for a long time, you might "вирішувати" (be deciding) a problem. But when you finally have an answer, you managed to "вирішити" (decide/solve) it. The word "запитувати" (to be asking) works the same way when you ask many questions. And when you ask one short question, you can simply "запитати" (ask once).*
 
-Notice how «вирішити» is a sharp, crisp action. You make the choice, and it is done. But «вирішувати» takes longer to say. Those extra syllables mimic the duration of the thinking process and the weighing of options. «Я довго вирішував, що робити.» This means "I was deciding for a long time what to do." «Нарешті я вирішив.» This means "Finally, I decided." Another crucial pair uses this exact pattern.
+Another common pattern involves shifting the vowel right before the infinitive ending. The most frequent shift is between the broad vowel **-а-** (or **-я-**) for the imperfective aspect and the narrower **-и-** for the perfective aspect. The **-а-** sound requires opening the mouth wider, which feels continuous. In contrast, the **-и-** sound feels "sharper" and more final, signaling the end of the action. 
 
-* **Запитувати / запитати** — to ask (process) / to ask (result).
+Викладач може «відповідати» на питання студентів цілу годину. Але студент на іспиті має швидко «відповісти» на одне запитання. Ми можемо повільно «відчиняти» важкі двері в кімнату. Або ми можемо різко «відчинити» вікно вранці.
 
-If you are constantly asking questions, you use the long «запитувати». For one quick question, you use the short «запитати». 
+> *A teacher can "відповідати" (be answering) students' questions for a whole hour. But a student at an exam must quickly "відповісти" (give an answer) to one question. We can slowly "відчиняти" (be opening) heavy doors into a room. Or we can sharply "відчинити" (open/throw open) a window in the morning.*
 
-Another extremely common pattern involves shifting the vowel suffix just before the infinitive ending. We frequently see imperfective verbs using the broad, open «-а-» or «-я-», while their perfective partners switch to a tighter «-и-» or a completely different concise ending. The open «-а-» sound naturally feels more continuous, whereas the «-и-» ending feels sharper and more final.
+:::info
+**Grammar box**
+When you see a verb ending in **-ати** or **-яти**, it is very often the imperfective partner. Its perfective twin will frequently end in **-ити**, providing a crisp conclusion.
+:::
 
-* **Відчиняти / відчинити** — to open (process) / to open (result).
+Sometimes, stretching the verb requires changing a vowel right inside the root of the word. This internal change is called vowel alternation, or **чергування**. A common phonetic shift is changing the vowel **о** to the vowel **а** when moving from a perfective result to an imperfective process. The wider **а** sound physically opens the mouth more, reflecting the expanded duration of the ongoing action. 
 
-When you say «відчиняти», the mouth stays open longer, reflecting the ongoing action of pushing the door. When you say «відчинити», the action snaps shut like a lock. «Хто відчиняв вікно?» This translates to "Who was opening the window?" We see a similar, though slightly irregular, shift in another vital verb pair.
+Мій брат завжди готовий мені «допомагати» з ремонтом. Минулого тижня він зміг «допомогти» мені перевезти меблі. У першому слові корінь має звук «а», бо це довгий процес. У другому слові корінь має звук «о», бо це швидкий результат.
 
-* **Відповідати / відповісти** — to answer (process) / to answer (result).
+> *My brother is always ready to "допомагати" (be helping) me with repairs. Last week he was able to "допомогти" (help/give help) me move furniture. In the first word, the root has the sound "a" because it is a long process. In the second word, the root has the sound "o" because it is a quick result.*
 
-The long «відповідати» describes the ongoing process of giving a detailed response, while the compact «відповісти» is the final, delivered answer.
+Finally, there is a special suffix that works in the exact opposite direction. Instead of stretching the verb into a process, the suffix **-ну-** instantly compresses it. When you add **-ну-** to an imperfective verb, it immediately turns it into a perfective, lightning-fast action. It is the grammatical equivalent of a single burst of energy or a momentary event that happens in the blink of an eye. 
 
-Sometimes, adding an imperfective suffix forces a deeper phonetic change inside the word. The root vowel changes to accommodate the new rhythm. This phenomenon is called vowel alternation, or «чергування». The most frequent shift is the vowel «о» transforming into the broad «а» when moving from a quick result to an extended process. Let us examine a high-frequency verb pair.
+Хтось може довго «стукати» у ваші двері. Але вітер може раптом «стукнути» вікном лише один раз. Діти на вулиці можуть голосно «кричати» під час гри. Але перехожий може злякано «крикнути», якщо побачить небезпеку. Ніколи не можна «штовхати» людей у транспорті. Навіть випадково «штовхнути» людину дуже негарно.
 
-* **Допомагати / допомогти** — to help (process) / to help (result).
+> *Someone can "стукати" (be knocking) on your door for a long time. But the wind can suddenly "стукнути" (give a knock) with a window just once. Children outside can loudly "кричати" (be shouting) during a game. But a passerby can frighteningly "крикнути" (let out a cry) if they see danger. One must never "штовхати" (be pushing) people in transport. Even to accidentally "штовхнути" (give a shove to) a person is very ugly.*
 
-The perfective base «допомогти» describes a single, completed act of assistance. To create the imperfective form, we add the «-а-» suffix. But the root also changes from «допомог-» to «допомаг-». The double «а» sounds make the word feel much wider. «Вона завжди мені допомагала.» This means "She always helped me." Conversely, «Він допоміг мені вчора.» This translates to "He helped me yesterday," emphasizing a single intervention.
-
-Finally, we must look at a special suffix used to create perfective verbs out of continuous sounds or repetitive movements. Adding the suffix «-ну-» instantly transforms an ongoing action into a single, sudden, and complete event. It acts like a camera flash, capturing just one split second of a longer activity.
-
-* **Стукати / стукнути** — to knock (repeatedly) / to give a single knock.
-
-If you are standing at the door knocking over and over, you use «стукати». If you just tap the wood once, it is «стукнути». This pattern applies to many physical actions and loud noises.
-
-* **Кричати / крикнути** — to shout (process) / to let out a single cry.
-* **Штовхати / штовхнути** — to push (continuously) / to give a single shove.
-
-The «-ну-» suffix is your clearest indicator that something happened once, abruptly, and is now entirely over.
-
-<!-- INJECT_ACTIVITY: fill-in-categorize-by-formation-type -->
+<!-- INJECT_ACTIVITY: fill-in-categorize-formation -->
 
 ## Спосіб 3: Зовсім інші слова (суплетивізм)
 
-Sometimes, the most fundamental verbs in a language do not follow predictable patterns at all. Instead of adding a prefix or changing a suffix, they use completely different words for the continuous process and the final result. Linguists call this phenomenon suppletion. You already know how this works in English; the past tense of "go" is "went," which looks like a completely unrelated word. In Ukrainian, a few essential aspectual pairs work the exact same way. Because these verbs describe actions we perform every single day, you simply have to memorize them as distinct pairs. The most critical pair in this category is **брати / взяти** (to take). You use «брати» when you are in the process of taking things, and «взяти» for a single, completed grab. 
+Sometimes, a verb changes so drastically between its forms that it becomes a completely different word. This is called suppletion. You know this from English, where the past tense of "go" is "went." In Ukrainian, a few basic verbs use entirely different roots to distinguish between the ongoing process and the final result. The most critical pair is the verb for taking.
 
-«Вона часто брала мої речі.» (She often took my things.)
+Уявіть, що ви берете речі з полиці. Це довгий процес. Але коли ви нарешті взяли останню річ, дія завершилася. Тому ми маємо два слова: «брати» для процесу і «взяти» для результату.
 
-«Вчора вона взяла мій телефон.» (Yesterday she took my phone.)
+> *Imagine that you are taking things from a shelf. This is a long process. But when you finally took the last thing, the action finished. That is why we have two words: "брати" (to be taking) for the process and "взяти" (to take) for the result.*
 
-Another incredibly common pair is the speech pair: **говорити / сказати** (to speak, talk / to say, tell). It is vital to understand the difference here. «Говорити» describes the ongoing act of communicating, having a conversation, or speaking a language. It is a continuous process. On the other hand, «сказати» is the act of delivering a specific message or making a single statement. It is the end result of the speaking process.
+Another essential pair relates to speech. The imperfective verb «говорити» describes the continuous act of speaking. It is a process that can last for hours. However, to express the result of delivering a single message, you must use the perfective verb «сказати». This is the instantaneous act of saying or telling a concrete fact.
 
-«Ми довго говорили про життя.» (We talked about life for a long time.)
+Вчора ми довго говорили про роботу. Ми говорили дві години, але колега так і не сказав мені новину. Тільки сьогодні він сказав правду.
 
-«Він сказав правду.» (He told the truth.)
+> *Yesterday we talked for a long time about work. We talked for two hours, but the colleague still did not tell me the news. Only today he told the truth.*
 
-You cannot use «сказати» to mean "having a conversation," and you cannot use «говорити» when you mean "he said one specific thing."
+Students always learn another famous pair together: «шукати» (to search) and «знайти» (to find). Strictly speaking, they are different actions rather than a true grammatical pair. The actual perfective partner for «шукати» is «пошукати» (to search for a bit). But in daily life, finding is the natural result of searching, so we treat them as a practical pair. A similar jump happens with «ловити» (to catch - process) and «піймати» (to catch - result).
 
-Next, we must look at the "search versus find" distinction. Learners are almost always taught the verbs **шукати** (to search, look for) and **знайти** (to find) as an aspectual pair. While they function together logically in real life, they are technically two different actions. You search (the process), and as a result, you find (the result). The true perfective form of «шукати» is actually «пошукати» (to search for a little while), but in everyday situations, «знайти» is the result we are usually hoping for. Similarly, we have the pair **ловити / піймати** (to catch). You spend time trying to catch something («ловити»), but the moment of capture is instantaneous («піймати»). Finally, you must memorize the pair for putting or laying things down: **класти / покласти** (to put).
+Мій брат любить ловити рибу. Він може ловити її цілий день. Але рідко він може дійсно піймати велику рибу. Коли він шукає гриби, він хоче їх знайти.
 
-We have covered a lot of ground in this module. To help you organize your vocabulary, here is a summary table of the most important aspectual pairs you need for the A2 level, grouped by how they are formed. We have also included one more essential suffix pair to round out your daily vocabulary: **купувати / купити** (to buy).
+> *My brother likes catching fish. He can be catching them all day. But rarely can he actually catch a big fish. When he searches for mushrooms, he wants to find them.*
 
-| Форма (Formation) | Недоконаний (Process) | Доконаний (Result) | Переклад (Translation) |
-| :--- | :--- | :--- | :--- |
-| **Префікс** | читати | **про**читати | to read |
-| | писати | **на**писати | to write |
-| | робити | **з**робити | to do |
-| | бачити | **по**бачити | to see |
-| | готувати | **при**готувати | to cook |
-| | пити | **ви**пити | to drink |
-| | вчити | **ви**вчити | to study |
-| | платити | **за**платити | to pay |
-| | класти | **по**класти | to put |
-| | чути | **по**чути | to hear |
-| **Суфікс** | відчин**я**ти | відчин**и**ти | to open |
-| | куп**ува**ти | куп**и**ти | to buy |
-| | виріш**ува**ти | виріш**и**ти | to decide |
-| | запит**ува**ти | запит**а**ти | to ask |
-| **Корінь** | допом**ага**ти | допом**ог**ти | to help |
-| | відповід**а**ти | відпов**іс**ти | to answer |
-| **Інші слова** | брати | взяти | to take |
-| | говорити | сказати | to speak / to say |
-| | ловити | піймати | to catch |
-| | шукати | знайти* | to search / to find |
+:::info
+**Grammar box**
+Always memorize verbs in their aspectual pairs. If you only know the imperfective form, you will never be able to express that  We have grouped twenty essential verb pairs for this level into a reference table. This includes examples of prefixation, suffix changes, and completely different words. Notice the essential pair «купувати» and «купити» (to buy), which drops its long suffix to form the perfective result.
 
-*\*Ці слова пов'язані логічно, але не є граматичною парою (These words are logically linked, but are not a grammatical pair).*
+Ось найважливіші дієслова для вашого рівня. Вивчайте їх тільки парами. Так ви зможете завжди правильно описувати дію.
 
-<!-- INJECT_ACTIVITY: match-up-fill-in-the-blanks-with-the-correct-pair -->
-<!-- INJECT_ACTIVITY: fill-in-choose-the-correct-aspect-partner -->
+> *Here are the most important verbs for your level. Learn them only in pairs. This way you will always be able to correctly describe the action.*
+
+| Спосіб | Недоконаний вид (Процес) | Доконаний вид (Результат) |
+| :--- | :--- | :--- |
+| **Префікс по-** | снідати, думати, бачити | поснідати, подумати, побачити |
+| **Інші префікси** | робити, читати, писати, пити | зробити, прочитати, написати, випити |
+| **Суфікси / Корінь**| купувати, допомагати, відчиняти | купити, допомогти, відчинити |
+| **Інші слова** | брати, говорити, шукати, ловити | взяти, сказати, знайти, піймати |
+
+<!-- INJECT_ACTIVITY: match-up-blanks-pairs -->
+<!-- INJECT_ACTIVITY: fill-in-aspect-choice -->
 
 ## Підсумок (Summary)
 
-We have covered a fundamental concept of the Ukrainian language today: verbal aspect. Remember that learning verbs in pairs is essential. You are not just learning two forms of the same word; you are learning how to describe both the ongoing process and the completed result of an action.
+We have covered the essential concept of verb aspects in Ukrainian. Remember that the imperfective aspect describes an ongoing process, while the perfective aspect focuses on a successfully completed result. You learned the three main ways to form these crucial aspectual pairs. The most common method is adding a prefix, like turning «робити» into «зробити». The second method involves changing the suffix or a vowel in the root, such as changing «вирішувати» to «вирішити». Finally, some of the most important everyday verbs use completely different words for their pairs. Good examples of this are «брати» and «взяти».
 
-Let's recap the three main methods of forming aspectual pairs that we discussed. The most common method is **префіксація** (prefixation), where we add a prefix to the imperfective verb, such as **робити / зробити** (to do). The second method involves changing the suffix or root vowel, like in the pair **вирішувати / вирішити** (to decide). Finally, we have completely different words, or suppletive pairs, such as **брати / взяти** (to take).
+:::note
+**Self-check questions:**
+1. Can you name the perfective partner for the verb «писати»? (Answer: «написати»)
+2. What prefix follows the "K-P-T-F-Kh" rule when forming a perfective verb? (Answer: the prefix «с-»)
+3. Which verb describes the completed result: «говорити» or «сказати»? (Answer: «сказати»)
+:::
 
-Before you move on to the next module, try these quick self-check questions to test your memory:
+Ви зробили великий крок уперед. Тепер ви розумієте, як працюють українські дієслова.
 
-1. Can you name the perfective partner for **писати** (to write)? (**написати**)
-2. What prefix follows the "K-P-T-F-Kh" rule? (**с-**)
-3. Which verb describes the result: **говорити** (to speak) or **сказати** (to say)? (**сказати**)
-
-If you answered these correctly, you are well on your way to mastering Ukrainian verbs!
+> *You have made a big step forward. Now you understand how Ukrainian verbs work.*

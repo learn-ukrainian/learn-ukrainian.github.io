@@ -1,0 +1,75 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-41-3b8b3d9d.json
+phase: review
+prompt_chars: 34734
+response_chars: 2463
+prompt_words: 5433
+response_words: 369
+sections:
+- name: preamble
+  start: 0
+  length: 441
+  fraction: 0.0127
+- name: plan
+  start: 441
+  length: 30306
+  fraction: 0.8725
+- name: output_spec
+  start: 30747
+  length: 3987
+  fraction: 0.1148
+large_sections:
+- plan
+directives_total: 16
+directives_covered: 5
+directives_missed:
+- kind: must
+  text: To navigate any shop successfully, you must learn how to ask for prices.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: Remember that **коштувати** (to cost) must match the noun it describes.
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: Despite this friendly atmosphere, you must always remember to maintain your
+    own politeness by using the formal pronoun **Ви** (You) when speaking to any seller
+    you do not know personally.
+  covered: false
+  coverage_note: 0/22 keywords (0%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 2/17 keywords (12%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 3/22 keywords (14%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact
+    find/replace pairs.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: '- The `find` string MUST be an EXACT copy-paste from the module content.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '**The `<fixes>` block is REQUIRED for REVISE verdicts.'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

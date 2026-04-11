@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-08-2e1a077d.json
+phase: write-chunk-04
+prompt_chars: 39871
+response_chars: 4524
+prompt_words: 5834
+response_words: 761
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0112
+- name: skeleton
+  start: 446
+  length: 1270
+  fraction: 0.0319
+- name: prior_summary
+  start: 1716
+  length: 3226
+  fraction: 0.0809
+- name: plan
+  start: 4942
+  length: 10761
+  fraction: 0.2699
+- name: wiki
+  start: 9459
+  length: 24040
+  fraction: 0.6029
+- name: output_spec
+  start: 39743
+  length: 128
+  fraction: 0.0032
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: '> *You must arrive at the station by eight o''clock.'
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: match-up-functions
+  covered: false
+  coverage_note: marker missing

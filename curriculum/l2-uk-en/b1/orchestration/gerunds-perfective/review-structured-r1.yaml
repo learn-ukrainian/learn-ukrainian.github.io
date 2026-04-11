@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module flawlessly executes the plan. The difference between `одночасність`
+    and `різночасність` is clear, and all vocabulary is used naturally.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Deductions for 12 instances of `Давайте + дієслово`, using active participles
+    (`надихаючий`, `розслаблюючу`), calques (`зустрічаються`, `слідкуйте`, `виступає
+    в ролі`), and a critical phonetic error a
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent use of narrative (detective story) and logical contrast pairs
+    to teach aspect. 1 point deducted because the phonetic hallucination about `-ши`
+    ending in a consonant and taking `-ся` will sev
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (e.g., `повернувшись`, `прокинувшись`,
+    `дізнавшись`) are perfectly integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Excellent placement of markers directly after concepts. Deduct 1 point
+    for generating 12 markers when only 6 were requested in the plan, causing over-saturation.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Highly engaging. The examples are vivid, and the explanation of the "dangling
+    participle" is conversational and genuinely helpful.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all required sections present. The word count is a robust
+    4872 words, far exceeding the 4000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explicitly decolonizes the grammar by directly contrasting correct Ukrainian
+    forms with Russian-style active participles (`прочитавший студент`), explaining
+    why they are wrong.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The police station dialogue is crisp, professional, and efficiently demonstrates
+    sequential gerund logic in a realistic setting.
+findings: []

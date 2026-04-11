@@ -1,6 +1,6 @@
 # Build Summary: people-around-me (A1)
 
-Generated: 2026-04-09 03:17
+Generated: 2026-04-11 01:47
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 03:17
 | vocab | complete | 2026-04-09 01:16:06 |
 | enrich | complete | 2026-04-09 01:16:06 |
 | verify | complete | 2026-04-09 01:16:06 |
-| review | complete | 2026-04-09 01:17:36 |
 | stress | complete | 2026-04-09 01:17:38 |
-| publish | complete | 2026-04-09 01:17:40 |
+| review | complete | 2026-04-10 23:46:59 |
+| publish | complete | 2026-04-10 23:47:06 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | people-around-me-review-r1.md |
+| 2 | people-around-me-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,14 +39,17 @@ Generated: 2026-04-09 03:17
 | activities | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 259s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 155s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -35,7 +35,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-один дуже класичний абзац тексту. «Була пізня ніч. Велике місто дуже міцно спало. Раптом хтось несподівано і голосно постукав у мої двері. Я швидко прокинувся і обережно підійшов до темного вікна». Перші два короткі речення — це наша базова декорація. «Була» і «спало» — це чистий недоконаний вид, який одразу задає правильний тон. Третє речення — це той самий несподіваний поворотний момент. Слово «раптом» і доконане дієслово «постукав» миттєво руйнують нічну тишу. Четверте речення логічно продовжує цей новий сюжетний ланцюжок. Дієслова «прокинувся» і «підійшов» — це мої швидкі та послідовні реакції на цей дивний шум. Без такого довгого і спокійного вступу цей короткий стукіт у двері ніколи б не здався читачеві таким страшним. Загальний темп вашої захопливої історії також повністю і беззаперечно залежить від вашого особистого вибору граматичного виду. Якщо ви будете постійно використовувати занадто багато доконаних дієслів підряд, ваша історія дуже швидко стане схожою на сухий і нудний поліцейський звіт. «Він встав, швидко одягнувся, вийшов, сів у свою машину, поїхав, приїхав, зайшов у будівлю». Це звучить дуже нервово і відверто штучно. Читач просто фізично не встигає нормально уявити собі цю детальну картину. З іншого боку, якщо ви розумно додасте туди трохи недоконаного "м'якого" матеріалу, ваш текст одразу магічним чином оживе. «Він встав і дуже повільно одягнувся. Надворі вже яскраво світило ранкове сонце. Він вийшов з дому, сів у машину і поїхав на роботу». Цей зовсім невеликий опис сонячної погоди робить ідеальну паузу між дуже активними діями. Він дає вашому читачеві необхідний час, щоб трохи перепочити. <!-- INJECT_ACTIVITY: fill-in-aspect-narrative, choose the correct aspect (impf or pf) for verbs in a narrative passage based on their function, 8 items --> <!-- INJECT_ACTIVITY: match-aspect-logic, match narrative functions (turning point, sequential chain, result) to the correct aspect/example, 8 items --> Отже, український граматичний вид — це ваш найголовніший особистий інструмент талановитого режисера. Ви самі свідомо вирішуєте, де саме зробити довгу атмосферну паузу, а де треба максимально прискорити всі події. Давайте наостанок послухаємо ще одну дуже типову розмову. Два хороші друзі активно обговорюють, як саме краще написати оповідання для шкільного літературного конкурсу. > — **Олег:** Моя нова історія чомусь здається дуже нудною. Головний герой просто прийшов, побачив страшного монстра і швидко втік. *(My new story seems very boring for some reason. The main hero just came, saw the scary monster and ran away quickly.)* > — **Іван:** Твоєму тексту дуже бракує глибшої атмосфери. Обов'язково додай трохи більше недоконаного виду на самому початку. *(Your text really lacks a deeper atmosphere. Definitely add a little more imperfective aspect at the very beginning.)* > — **Олег:** Що саме я маю там детально описати? *(What exactly should I describe there in detail?)* > — **Іван:** Опиши ту стару і темну кімнату. Як там дивно пахло? Що саме спокійно робив герой до несподіваної появи цього монстра? Тоді його раптова втеча буде виглядати набагато емоційніше! *(Describe that old and dark room. How did it smell strangely there? What exactly was the hero doing calmly before the unexpected appearance of this monster? Then his sudden escape will look much more emotional!)*
+допомогою недоконаного виду («була», «спало»). Це наше тло. Наступні дії несподівано розбивають цю тишу. Дієслова доконаного виду («постукав», «прокинувся», «встав», «підійшов») створюють швидкий ланцюжок реакцій. Контраст між статичним фоном і динамічними подіями робить сцену напруженою. > *True storytelling mastery lies in the correct alternation of the two verb aspects. Let's look at this paragraph. "It was deep night. The city had long been sleeping. Suddenly someone knocked loudly on the door. I instantly woke up, got out of bed, and went to the window." The first two sentences create an atmosphere of calm using the imperfective aspect ("була", "спало"). This is our background. The subsequent actions unexpectedly shatter this silence. The perfective verbs ("постукав", "прокинувся", "встав", "підійшов") create a rapid chain of reactions. The contrast between the static background and the dynamic events makes the scene tense.* Your choice of aspect dictates the overall pacing and emotional rhythm of your story. Using too many perfective verbs in a row makes the narrative feel frantic, rushed, and remarkably similar to a list of facts. Adding imperfective "padding" slows things down and makes the world feel immersive, breathable, and natural. Вибір виду безпосередньо впливає на темп вашої історії. Якщо ви використаєте виключно дієслова доконаного виду («я прийшов, сів, поїв, написав лист і ліг спати»), текст звучатиме як **сухий поліцейський звіт** (dry police report). Події відбуваються занадто швидко, і читач не встигає відчути атмосферу. Щоб історія стала живою, її потрібно «уповільнити» за допомогою недоконаного виду. Додайте опис кімнати, вашого настрою чи погоди за вікном. Цей фоновий матеріал дає читачеві **простір для уяви** (room for imagination) перед наступною подією. :::tip **Quick tip** Think of imperfective verbs as breathing room for your story. They allow the listener to mentally process the scene before the perfective verbs drive the plot forward again. ::: <!-- INJECT_ACTIVITY: fill-in-aspect-narrative --> <!-- INJECT_ACTIVITY: match-aspect-logic --> Let's listen to two writers discussing how to fix the pacing of a short story draft. They realize that adding more imperfective background can completely transform the emotional impact of the final events. > — **Остап:** Цей фінал звучить занадто сухо. Головний герой просто зайшов у кімнату, побачив лист і заплакав. *(This ending sounds too dry. The main character just walked into the room, saw the letter, and cried.)* > — **Марія:** Згодна, тут є лише голі події. Нам потрібно додати більше недоконаного виду, щоб створити емоційну напругу. *(I agree, there are only bare events here. We need to add more imperfective aspect to create emotional tension.)* > — **Остап:** Може, опишемо порожню кімнату? Що там відбувалося до його приходу? *(Maybe we describe the empty room? What was happening there before his arrival?)* > — **Марія:** Точно. Напиши, що у відкрите вікно дув вітер, а на столі самотньо горіла лампа. *(Exactly. Write that the wind was blowing into the open window, and a lamp was burning lonely on the table.)* > — **Остап:** Супер. Тоді його доконані дії наприкінці здаватимуться набагато драматичнішими. *(Super. Then his perfective actions at the end will seem much more dramatic.)*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -584,7 +584,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -597,14 +664,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

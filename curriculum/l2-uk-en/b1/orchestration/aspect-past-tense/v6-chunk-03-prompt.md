@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-у цьому конкретному реченні. Якщо ви особисто хочете підкреслити значну **тривалість** *(duration)* або постійність вашої минулої дії, ви завжди будете свідомо використовувати маркери саме недоконаного виду. Такі знайомі слова, як **довго** *(for a long time)*, **три години** *(for three hours)*, або фраза **весь вечір** *(the whole evening)*, категорично вимагають дієслова, що яскраво описує тривалий процес. Вони ніби штучно розтягують вашу минулу дію у просторі та часі. Наприклад, просте речення «Він довго вчив ці нові граматичні правила» звучить абсолютно природно для носіїв мови. Цей маркер «довго» ідеально поєднується з незавершеним процесом «вчив». З іншого боку, якщо ви раптом хочете описати дуже миттєву подію або яскраво підкреслити конкретний фінальний результат, ви точно будете використовувати надійні маркери доконаного виду. Слова **раптом** *(suddenly)*, **нарешті** *(finally)*, та фраза **за годину** *(in an hour)* суворо вимагають дієслова, що чітко описує вашу **завершеність** *(completedness)*. Фраза «Він нарешті вивчив усі ці складні правила» показує його справжній тріумф. Наш маркер «нарешті» ставить впевнену крапку в цьому занадто тривалому процесі важкого щоденного навчання. Ви ніяк не можете сказати «Він довго вивчив», бо довга тривалість логічно суперечить цьому миттєвому результату. Так само абсолютно не можна сказати фразу «Він за годину вчив». Адже цей прийменник «за» прямо вказує на ту часову межу, після якої обов'язково з'явився фінальний позитивний результат завершеної дії. Однак, ми як досвідчені викладачі обов'язково мусимо серйозно попередити вас про одну приховану небезпеку. Це цікаве граматичне явище можна сміливо назвати «тиранією маркерів» *(marker tyranny)*. Ці відомі маркери часу — це лише зручні текстові підказки для початківців, а не якісь непорушні залізні закони мови. Ваш особистий комунікативний намір та загальний навколишній контекст завжди впевнено перемагають абсолютно будь-який часовий маркер. Професійні українські мовознавці зазвичай називають це явище **загально-фактичне значення** *(general factual function)* нашого недоконаного виду. Це така специфічна ситуація, коли ви просто щиро цікавитеся або спокійно констатуєте сам загальний факт. Ви запитуєте про те, що якась подія взагалі відбувалася в минулому, і вам при цьому абсолютно байдуже на результат. У таких типових випадках дієслово недоконаного виду вільно використовується навіть тоді, коли сама дія була вже явно завершена. Давайте детально порівняємо дві дуже схожі робочі ситуації. У першій ситуації ви вранці питаєте свого колегу: «Ти вчора читав мій новий фінансовий звіт?». Використовуючи тут недоконаний вид, ви просто хочете дізнатися базовий факт. Чи відкривав він цей важливий файл на своєму робочому комп'ютері? Чи ознайомився він взагалі з цією складною фінансовою темою? Це і є той самий простий загальний факт. У другій, набагато більш напруженій ситуації керівник відділу дуже суворо питає: «Вчора ти прочитав мій новий фінансовий звіт?». Тут свідомо використано дієслово доконаного виду. Цього вимогливого керівника зовсім не цікавить просто ваш процес читання. Його цікавить лише конкретний робочий результат. Він хоче знати, чи дійшов його колега до останньої сторінки тексту і чи готовий він зараз активно обговорювати новий план спільних дій. Таким чином, остаточний вибір правильного виду — це завжди дуже гнучкий інструмент людського мислення. Ваша особиста мовленнєва мета завжди диктує граматику, а не навпаки. Навчіться уважно слухати живий контекст, і тоді ваша українська мова стане по-справжньому вільною та природною. <!-- INJECT_ACTIVITY: match-up-time-markers -->
+your sentence includes words that emphasize the duration of an event, the imperfective aspect is almost always required. Phrases like **довго** (for a long time) or **весь день** (the whole day) stretch the action out over a timeline. They force the listener to focus on the continuous flow of time rather than a single endpoint. If a student says they studied Ukrainian for three years, the emphasis is heavily placed on the lengthy, ongoing journey of education. З іншого боку, існують часові маркери, які вимагають використання доконаного виду. Слова на кшталт «раптом», «нарешті» або фрази типу «за одну годину» стискають дію до однієї точки або підкреслюють межу, після якої з'являється результат. Наприклад, студент довго вчив граматику, але одного вечора він нарешті вивчив усі правила. Маркер «нарешті» чітко сигналізує про перехід від нескінченного процесу до тріумфального завершення. Якщо дія відбулася за годину, це означає, що процес мав чіткий ліміт і завершився конкретним досягненням. :::info **Time Markers as Clues** When you see duration words, your brain should automatically reach for the imperfective aspect to show the process. When you see boundary words, you should switch to the perfective aspect to show the result. ::: While time markers are incredibly useful tools, you must be wary of what we might call Marker Tyranny. Beginners often fall into the trap of treating these markers as absolute grammatical laws. They memorize that specific adverbs must always be followed by a specific aspect. However, in Ukrainian, context and the speaker's intent always override the markers. The aspect you choose depends entirely on what you want to say, not just on the adverbs in your sentence. A marker is merely a suggestion; your communicative goal is the supreme law. Найскладнішим для розуміння є використання недоконаного виду для констатації загального факту в минулому. В українській мові це називається загально-фактичним значенням. Уявіть, що вас запитують, чи ви вчора читали новини. Ніхто не хоче знати, чи ви дочитали всі статті до кінця. Співрозмовника цікавить лише сам факт: чи відбувалася ця дія взагалі. Тому ви відповідаєте недоконаним видом, підтверджуючи, що такий досвід у вас був. Але якщо начальник запитує, чи ви прочитали вчорашній звіт, він вимагає доконаного виду. Його цікавить конкретний результат вашої роботи, а не просто факт того, що ви дивилися на текст. > *The most difficult thing to understand is the use of the imperfective aspect to state a general fact in the past. In the Ukrainian language, this is called the general factual meaning. Imagine you are asked if you read the news yesterday. No one wants to know if you finished reading all the articles to the end. The interlocutor is only interested in the fact itself: whether this action took place at all. Therefore, you answer with the imperfective aspect, confirming that you had such an experience. But if a boss asks if you read yesterday's report, he demands the perfective aspect. He is interested in the specific result of your work, not just the fact that you looked at the text.* <!-- INJECT_ACTIVITY: match-up-time-markers -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -584,7 +584,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -597,14 +664,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

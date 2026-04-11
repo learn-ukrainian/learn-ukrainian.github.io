@@ -1,29 +1,39 @@
 ## Скільки тобі років? Вік у давальному відмінку (Age in the Dative)
 
-Говорити про свій **вік** *(age)* українською мовою дуже легко, якщо ви пам'ятаєте попереднє правило. *(Talking about your age in Ukrainian is very easy if you remember the previous rule.)* In English, you "are" a certain age, using the verb "to be" with the subject. В українській мові ми використовуємо іншу логіку. *(In the Ukrainian language, we use a different logic.)* Age is treated as a fact or an experience that happens *to* someone. Тому людина завжди стоїть у давальному відмінку. *(That is why the person always stands in the dative case.)* The pattern is simple and strict: [Person in Dative] + [Number] + [Word for "year"]. Наприклад, ми кажемо: «Мені двадцять років». *(For example, we say: "To me twenty years".)* Дідусеві вісімдесят років. *(Grandpa is eighty years old.)* The verb "to be" is completely omitted in the present tense, making the structure very concise and direct.
+In English, you "are" a certain number of years old. You use the verb "to be" to express your age. In Ukrainian, age is not something you are; it is an experience that happens *to* you. Because of this, the person who is aging is always the receiver of the years, which means they must be in the Dative case. The structure is very simple: you put the person in the Dative case, add the number, and then add the correct word for "year".
 
-The most complex part of stating your age is choosing the correct form for the word "year". В українській мові є три різні форми цього слова. *(In the Ukrainian language, there are three different forms of this word.)* The choice depends entirely on the last digit of the number you are using.
+В українській мові вік — це не те, ким ти є. Це те, що з тобою відбувається. Тому людина завжди стоїть у давальному відмінку. Мені зараз двадцять років. Моєму старшому братові тридцять один рік. А нашій маленькій сестрі тільки чотири роки. Ми ніколи не використовуємо дієслово «бути» в теперішньому часі для віку.
 
-1. Форма **рік** *(year)* використовується для чисел, які закінчуються на 1, але не 11.
-2. Форма **роки** *(years)* потрібна для чисел, які закінчуються на 2, 3, або 4, але не 12, 13, 14.
-3. Форма **років** *(years [Genitive plural])* використовується для всіх інших чисел: 5, 6, 7, 8, 9, 0, а також для групи від 11 до 19.
+> *In the Ukrainian language, age is not who you are. It is what happens to you. Therefore, the person always stands in the Dative case. I am twenty years old now. My older brother is thirty-one years old. And our little sister is only four years old. We never use the verb "to be" in the present tense for age.*
 
-| Число (Number) | Форма (Form) | Приклад (Example) |
-| :--- | :--- | :--- |
-| 1, 21, 31... | рік | Моєму братові двадцять один рік. *(My brother is 21 years old.)* |
-| 2, 3, 4, 22, 23, 24... | роки | Моїй сестрі двадцять два роки. *(My sister is 22 years old.)* |
-| 5-20, 25-30, 35-40... | років | Моїй мамі п'ятдесят років. *(My mom is 50 years old.)* |
+When expressing age, the word for "year" changes depending on the number that comes right before it. There are three different forms of this word: **рік**, **роки**, and **років**. For numbers that end in 1 (except 11), use the singular form. For numbers that end in 2, 3, or 4 (except 12, 13, and 14), use the plural form. For all other numbers, including 5 through 20 and all tens, use the genitive plural form.
 
-Щоб запитати про вік, ми використовуємо слово **скільки** *(how many)*. *(To ask about age, we use the word "how many".)* Після слова «скільки» іменник завжди стоїть у родовому відмінку множини. *(After the word "how many", the noun always stands in the genitive case plural.)* That is why the question always uses the form «років», regardless of what the actual age might be. Людина, про яку ми запитуємо, залишається в давальному відмінку. *(The person about whom we are asking remains in the dative case.)* Скільки тобі років? *(How old are you?)* Скільки йому років? *(How old is he?)* Скільки років вашому синові? *(How old is your son?)* The structure of the question perfectly mirrors the structure of the answer you expect.
+:::info
+**The Forms of Year**
+- Use **рік** for 1, 21, 31, 41...
+  **Мені двадцять один рік.** — *I am twenty-one years old.*
+- Use **роки** for 2, 3, 4, 22, 23, 24...
+  **Йому тридцять два роки.** — *He is thirty-two years old.*
+- Use **років** for 5-20, 25, 30, 50...
+  **Їй сорок років.** — *She is forty years old.*
+:::
 
-Давайте подивимося, як люди говорять про вік у реальному житті. *(Let's see how people talk about age in real life.)*
+Моєму дідусеві шістдесят один рік. Моїй бабусі п'ятдесят чотири роки. Моїй мамі сорок років, і моєму татові також сорок років. Моєму другові дванадцять років, а його сестрі тринадцять років.
 
-> — **Олена:** Привіт, Антоне! Скільки років твоєму татові? *(Hi, Anton! How old is your dad?)*
-> — **Антон:** Йому п'ятдесят два роки. А твоїй мамі? *(He is fifty-two years old. And your mom?)*
-> — **Олена:** Їй сорок дев'ять років. *(She is forty-nine years old.)*
-> — **Антон:** А скільки років твоїй бабусі? *(And how old is your grandma?)*
-> — **Олена:** Моїй бабусі сімдесят один рік. *(My grandma is seventy-one years old.)*
+> *My grandfather is sixty-one years old. My grandmother is fifty-four years old. My mom is forty years old, and my dad is also forty years old. My friend is twelve years old, and his sister is thirteen years old.*
 
-Як бачите, ми часто запитуємо про вік родичів або друзів. *(As you can see, we often ask about the age of relatives or friends.)* Головне — пам'ятати про правильний відмінок для людини та правильну форму слова. *(The main thing is to remember about the correct case for the person and the correct form of the word.)*
+To ask someone their age, you use the question word **скільки** (how much / how many). After this word, the noun must always be in the Genitive plural form. That is why the question always uses the word **років**. However, the person you are asking about must still be in the Dative case. 
 
-<!-- INJECT_ACTIVITY: true-false, focus: judging the correctness of age expressions (Dative form + correct year noun agreement), 8 items -->
+Скільки тобі років? Скільки років твоєму братові? Скільки років вашій мамі? У цих питаннях слово «скільки» вимагає родового відмінка множини для слова «рік». Але людина, про яку ми питаємо, завжди стоїть у давальному відмінку.
+
+> *How old are you? How old is your brother? How old is your mother? In these questions, the word "how many" requires the genitive plural case for the word "year". But the person we are asking about always stands in the dative case.*
+
+Let's look at a short conversation where two friends ask about their family members. Notice how the Dative case is used for every person whose age is mentioned.
+
+> — **Олена:** Привіт, Антоне! Скільки тобі років? *(Hi, Anton! How old are you?)*
+> — **Антон:** Мені двадцять два роки. А тобі? *(I am twenty-two years old. And you?)*
+> — **Олена:** Мені двадцять один рік. А скільки років твоєму братові? *(I am twenty-one years old. And how old is your brother?)*
+> — **Антон:** Йому двадцять п'ять років. А твоїй сестрі? *(He is twenty-five years old. And your sister?)*
+> — **Олена:** Їй тільки вісімнадцять років. *(She is only eighteen years old.)*
+
+<!-- INJECT_ACTIVITY: true-false-age -->

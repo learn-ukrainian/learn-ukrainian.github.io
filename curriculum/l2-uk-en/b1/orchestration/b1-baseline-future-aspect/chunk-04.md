@@ -1,17 +1,38 @@
 ## Складена (аналітична) форма майбутнього часу
 
-Третя і остання форма майбутнього часу — це **складена форма** *(analytic form)*. Її часто називають аналітичною, оскільки вона утворюється за допомогою додаткових елементів. Вона використовується виключно для дієслів **недоконаного виду** *(imperfective aspect)*. Ця форма складається з двох окремих слів, які працюють у парі: **допоміжного дієслова** *(auxiliary verb)* «бути» та **інфінітива** *(infinitive)* основного дієслова. Наприклад, ми кажемо: я буду читати, ми будемо працювати, вони будуть співати. Найголовніше правило цієї граматичної конструкції дуже просте і логічне. Основне смислове дієслово ніколи не змінює свою форму. Воно завжди, за будь-яких граматичних обставин, залишається в інфінітиві. Натомість усю граматичну роботу бере на себе маленьке слово «бути». Саме воно гнучко змінює свої закінчення, щоб чітко показати особу та число виконавця дії. Ця структура може дещо нагадувати англійський час Future Continuous, де ми використовуємо конструкцію «will be» та дієслово з закінченням «-ing». Але в українській мові нам взагалі не потрібно додавати жодних спеціальних суфіксів чи закінчень до основного слова. Це значно полегшує процес спілкування.
+The analytic future tense is the most accessible way to express the imperfective future in Ukrainian. This two-word construction relies on a simple formula: the auxiliary verb for "to be" followed by the infinitive of the main verb. The beauty of this form lies in its rigid structure. The main verb, which describes the actual action, never changes. It remains frozen in its dictionary infinitive form, whether it is **читати** (to read), **писати** (to write), or **малювати** (to draw). All the grammatical heavy lifting is done entirely by the auxiliary verb. As the subject changes, only the auxiliary verb reflects the new person and number. This means you only ever need to memorize one set of conjugations to talk about any ongoing future action. It is a highly predictable system that completely eliminates the need to worry about complex consonant alternations or stem changes for your main verb. You simply lock the infinitive in place and adjust the helper verb.
 
-Щоб правильно і впевнено будувати складену форму, вам потрібно ідеально знати дієвідмінювання слова **бути** *(to be)*. Це дуже давнє, унікальне і трохи неправильне дієслово. Воно цікаве тим, що не має простої форми майбутнього часу, бо історично не має прямої доконаної пари для цієї ролі. Його форми у майбутньому часі виглядають так. Я **буду** *(I will be)*, ти **будеш** *(you will be)*, він, вона або воно **буде** *(he/she/it will be)*. Для множини форми змінюються так. Ми **будемо** *(we will be)*, ви **будете** *(you [pl] will be)*, вони **будуть** *(they will be)*. Ретельно запам'ятайте цю коротку базову таблицю. Якщо ви знаєте ці шість слів, ви зможете миттєво утворити майбутній час для абсолютно будь-якого дієслова недоконаного виду. Просто візьміть потрібну форму слова «бути» і додайте до неї незмінну початкову форму вашого цільового дієслова.
+:::info
+**Grammar box**
+The analytic future tense is formed exclusively with verbs of the imperfective aspect. You cannot use the auxiliary verb "to be" with a perfective verb. **Буду читати** is correct, but *буду прочитати* is grammatically impossible.
+:::
 
-Давайте подивимося, як різні форми майбутнього часу гармонійно працюють разом у реальній життєвій ситуації. Уявіть, що активні студенти планують організувати масштабний благодійний концерт. Вони зібралися в просторій аудиторії, яку їм надав **Харківський університет** *(Kharkiv University)*.
-> — **Голова комітету:** Друзі, ми **будемо збирати** *(will be collecting)* **кошти** *(funds)* цілий тиждень біля головного входу до нашого корпусу.
-> — **Студентка:** Це просто чудова ідея. А коли саме ми розкажемо про сам концерт усім іншим студентам факультету?
-> — **Голова комітету:** Ми **оголосимо** *(will announce)* точну дату вже завтра вранці на наших сторінках у соціальних мережах.
-> — **Волонтер:** Я досить добре малюю, тому я швидко **напишу** *(will write/draw)* велику і яскраву **афішу** *(poster)* для нашого майбутнього заходу.
+Щоб утворити складену форму, вам потрібно знати лише одне дієслово. Дієслово «бути» є унікальним, оскільки воно має власну форму майбутнього часу. Воно не підкоряється стандартним правилам видових пар і не має доконаного відповідника для цієї конструкції. Ви просто відмінюєте його за особами та числами, а потім додаєте будь-який інфінітив недоконаного виду.
 
-Зверніть увагу на логіку студентів. Збирання грошей — це довгий і безперервний процес, тому вони використовують аналітичну форму «будемо збирати». А от швидке оголошення дати та створення готової афіші — це конкретні фінальні результати. Тому тут ідеально працює проста доконана форма: «оголосимо» та «напишу».
+> *To form the analytic form, you only need to know one verb. The verb "бути" is unique because it has its own future tense form. It does not obey the standard rules of aspect pairs and has no perfective counterpart for this construction. You simply conjugate it by person and number, and then add any imperfective infinitive.*
 
-Складена форма майбутнього часу — це справжня безпечна гавань і рятувальне коло для іноземних студентів. Вона утворюється максимально легко і ніколи не вимагає від вас знати складне чергування приголосних звуків. Крім того, ця форма є надзвичайно популярною в сучасному повсякденному розмовному мовленні. Ви будете гарантовано чути конструкції на зразок «я буду робити» чи «ми будемо чекати» абсолютно скрізь. Вони лунають від офіційних телевізійних новин до невимушених дружніх розмов за кавою. Вона також має стабільно високу частотність використання у західних українських діалектах, де її чути на кожному кроці. Можливо, ви зараз запитаєте себе: що ж усе-таки краще використовувати в розмові? Що обрати — «я буду працювати» чи синтетичну форму «я працюватиму»? Відповідь дуже проста: обидві ці форми є абсолютно правильними і рівнозначними. Форма «буду працювати» звучить дещо більш нейтрально, звично і прямолінійно в щоденному побутовому спілкуванні. Натомість форма «працюватиму» додає вашій мові певної глибокої літературної елегантності та традиційної української милозвучності. Ви можете сміливо і вільно комбінувати та чергувати ці дві форми у своїх розповідях. Це допоможе зробити вашу українську мову ще більш живою, багатою та стилістично різноманітною.
+| Особа | Однина | Множина |
+| :--- | :--- | :--- |
+| 1-ша | я **буду** | ми **будемо** |
+| 2-га | ти **будеш** | ви **будете** |
+| 3-тя | він, вона, воно **буде** | вони **будуть** |
+
+Let's see how this works in a practical context. Imagine a student planning committee at a Kharkiv university (Харківський університет). They are organizing a large charity concert and delegating tasks. Notice how they naturally mix the analytic future for ongoing processes and the simple future for concrete results.
+
+> — **Голова комітету:** Ми будемо збирати кошти цілий тиждень біля головного корпусу. *(We will be collecting funds all week near the main building.)*
+> — **Волонтер 1:** А завтра ми оголосимо дату нашого благодійного концерту. *(And tomorrow we will announce the date of our charity concert.)*
+> — **Волонтер 2:** Я напишу афішу та опублікую її в соціальних мережах. *(I will write the poster and publish it on social networks.)*
+> — **Голова комітету:** Добре, а я буду шукати музикантів. *(Good, and I will be looking for musicians.)*
+
+Here, the continuous effort of collecting funds and looking for musicians uses the analytic form. The discrete, completed tasks of announcing the date and writing the poster use the simple perfective future.
+
+For language learners, the analytic form is the ultimate safe harbor. Because it completely bypasses the consonant mutations and stress shifts that can occur in the simple future, it offers a stress-free way to speak about your plans. You will hear this two-word construction constantly in everyday spoken Ukrainian. It is particularly dominant in Western dialects, where the analytic form is often preferred over the synthetic one in casual conversation.
+
+Складена форма «буду працювати» є абсолютно нейтральною та підходить для будь-якої ситуації. Вона означає те саме, що й синтетична форма «працюватиму». Ви можете вільно замінювати їх у своєму мовленні. Форма «працюватиму» може звучати трохи більш літературно або елегантно, але обидві конструкції є абсолютно правильними. Вибір між ними часто залежить лише від особистих уподобань або загального ритму речення.
+
+:::tip
+**Quick tip**
+If you ever feel unsure about how to conjugate a complex verb in the synthetic future, fall back to the analytic form. As long as the verb is imperfective, adding **буду** will always result in perfectly natural and grammatically correct Ukrainian.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-future-choice -->

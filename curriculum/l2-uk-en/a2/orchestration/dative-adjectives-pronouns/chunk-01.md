@@ -1,15 +1,19 @@
-## Вступ та діалог (Introduction and Dialogue)
+## Вступ та діалог
 
-In previous lessons, we learned how to use the Dative case for nouns and personal pronouns. This case answers the question of who receives an action. Але що, якщо ми хочемо сказати більше? *(But what if we want to say more?)* 
+In our daily lives, we often give things to people, write messages to our friends, or help our colleagues. To describe *who* is receiving our action, we use the Dative case. So far, you know how to change the noun itself to answer the question **кому?** (to whom?).
 
-Instead of just giving a gift to a friend, we often want to give it to our best friend or our new teacher. Whenever we add descriptive words to a noun in the Dative case, those words must also change their endings. To do this, we need our adjectives and possessive pronouns to match the noun perfectly. Let us see how this agreement works in a real classroom situation.
+Але ми рідко говоримо просто про друга чи сестру. Ми говоримо про нашого старого друга або мою молодшу сестру. Тому прикметники та займенники також повинні змінитися, щоб підтримати іменник у реченні.
 
-У класі вчитель віддає тести. *(In the classroom, the teacher is handing back tests.)* Студенти уважно слухають. *(The students listen carefully.)*
+> *But we rarely talk just about a friend or a sister. We talk about our old friend or my younger sister. Therefore, adjectives and pronouns must also change to support the noun in the sentence.*
 
-> — **Вчитель:** **Моєму найкращому студентові** — десятка! *(To my best student — a ten!)*
-> — **Студенти:** Ого, вітаємо! *(Wow, congratulations!)*
-> — **Вчитель:** **Нашій новій студентці** — дев'ятка. *(To our new student — a nine.)* Дуже добре! *(Very good!)*
-> — **Нова студентка:** Дякую! *(Thank you!)* Мені дуже приємно. *(I am very pleased.)*
-> — **Вчитель:** А **цьому хлопцю** треба більше працювати. *(And this boy needs to work more.)*
-> — **Студент:** Я розумію. *(I understand.)* Дякую **нашому доброму вчителеві** за допомогу. *(Thank you to our kind teacher for the help.)*
-> — **Вчитель:** Будь ласка. *(You are welcome.)* Завтра ми пишемо новий тест. *(Tomorrow we are writing a new test.)*
+:::note
+**The concept of agreement**
+In Ukrainian, adjectives and possessive pronouns are loyal companions to the noun. Whatever gender, number, or case the main noun takes, the adjective and the pronoun will match it perfectly.
+:::
+
+> — **Вчитель:** Доброго ранку! Сьогодні я віддаю ваші есе. Моєму найкращому студентові — десятка! *(Good morning! Today I am handing back your essays. To my best student — a ten!)*
+> — **Студенти:** Вітаємо! *(Congratulations!)*
+> — **Вчитель:** Нашій новій студентці — дев'ятка. Це гарна робота. *(To our new student — a nine. This is good work.)*
+> — **Нова студентка:** Дякую вам! *(Thank you!)*
+> — **Вчитель:** А ось цьому хлопцю треба більше працювати. *(And as for this boy, he needs to work more.)*
+> — **Студент:** Я розумію. Дякую нашому доброму вчителеві за поради! *(I understand. Thank you to our kind teacher for the advice!)*

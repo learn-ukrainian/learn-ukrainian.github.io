@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**з**. If you are holding a phone in your «**рука**» *(hand)*, you hold it «**в руці**» *(in the hand)*, changing **к** to **ц**. And if you want to give a crumb to a «**муха**» *(a fly)*, you give it to the «**мусі**» *(to the fly)*, shifting **х** to **с**. Beyond the letters themselves, the melody of Ukrainian relies heavily on word stress. Unlike languages where the stress always falls on a predictable syllable, Ukrainian stress is free and mobile. It can land anywhere in a word, and it can even move around when a word changes its grammatical form. Sometimes, the placement of the stress is the only thing that distinguishes two completely different words, known as homographs. A classic example is the word spelled "замок". If you place the stress on the first syllable, it is a «**замок**» *(a castle)*. But if you shift the stress to the final syllable, it suddenly becomes a «**замок**» *(a lock)*. Paying close attention to where native speakers place their emphasis is just as important as learning the correct vowels and consonants. Another fascinating aspect of Ukrainian phonology is how certain consonants blend together. You have probably noticed the letter combinations **дз** and **дж**. It is crucial to understand that these are not two separate sounds forcefully pushed together; they represent single, unified sounds called affricates. You should pronounce them as one smooth motion, just like you hear in «**дзвінок**» *(a bell)* or «**бджола**» *(a bee)*. Furthermore, Ukrainian consonants sometimes influence the voicing of their immediate neighbors to make pronunciation physically easier. This is called voicing assimilation. When a voiceless consonant stands right before a voiced one, it borrows some of that voice. For example, the word «**просьба**» *(a request)* has a voiceless **с** followed by a voiced **б**. In natural speech, that **с** sounds exactly like a **з**, so we pronounce it as [проз'ба]. Likewise, in the word «**вокзал**» *(a train station)*, the voiceless **к** before the voiced **з** sounds just like a **ґ**, making the pronunciation [воґзал]. The mobility of Ukrainian stress does not just create homographs; it also plays a huge role in the everyday declension of nouns. As you learn new words, you will discover that the stress often shifts between the main stem of the word and its grammatical ending, depending entirely on the case or the number. A very common pattern involves feminine nouns. Let us take the word «**вода**» *(water)*. In the Nominative case, the stress falls heavily on the final **-а**. But when you want to drink that water and use the Accusative case, the stress jumps back to the stem, and you ask for «**воду**» *(water)*. A similar shift happens with body parts. You have one «**рука**» *(hand)*, with the stress at the very end. However, if you are talking about both of your hands in the plural, the stress moves to the first syllable, giving you «**руки**» *(hands)*. Noticing these rhythmic shifts will help you predict the correct pronunciation. <!-- INJECT_ACTIVITY: fill-in-phonology -->
+ensures smooth transitions between sounds. You cannot say «подругі» or «дорогі»; you must always say «подрузі» and «дорозі». ::: Моя нова машина стоїть на дорозі. Я зараз тримаю телефон у правій руці. На чистому вікні сидить велика муха. Я не люблю, коли мусі там так зручно. > *My new car is parked on the road. I am holding the phone in my right hand right now. A large fly is sitting on the clean window. I do not like when the fly is so comfortable there.* Stress in the Ukrainian language is completely free and highly mobile, meaning it is not permanently fixed to a specific syllable like it is in French or Polish. Because of this unpredictability, stress alone has the power to change the entire meaning of a word. Words that share the exact same spelling but have different stress patterns are called homographs. Paying close attention to how native speakers stress their words is absolutely essential for avoiding confusion and ensuring clear comprehension. На високій горі стоїть дуже старий замок. Я ніяк не можу відкрити цей новий замок. Ми справді ніколи там раніше не були. Мені зараз ніколи сьогодні з тобою гуляти. > *A very old castle stands on the high mountain. I simply cannot open this new lock. We really have never been there before. I have no time to walk with you today right now.* Consonant assimilation is a phonetic phenomenon that makes spoken Ukrainian flow smoothly and effortlessly. The letter combinations «дж» and «дз» are not pronounced as two separate, distinct sounds, but rather as single unified affricate consonants. Additionally, voiceless consonants automatically become voiced when they stand immediately before voiced consonants in a word. This means the written spelling of a word does not always perfectly match its phonetic output in rapid, natural speech. У нашому саду літає велика бджола. Я раптом чую дуже гучний шкільний дзвінок. Це була справді велика і важлива просьба. Ми довго чекаємо на головному вокзалі. > *A large bee is flying in our garden. I suddenly hear a very loud school bell. It was truly a big and important request. We are waiting for a long time at the main train station.* Finally, the mobility of stress extends deeply into noun and verb paradigms. As you decline a noun through its cases or conjugate a verb across different persons, the stressed syllable can frequently shift back and forth between the stem and the ending. Recognizing these mobile stress patterns early on helps you predict how a completely new word will sound in different grammatical contexts. This awareness ultimately makes your conversational speech much more natural, fluid, and confident. Ця холодна гірська вода дуже смачна. Я з радістю п'ю цю холодну воду. Моя права рука сьогодні сильно болить. Підніміть ваші обидві руки високо вгору. > *This cold mountain water is very tasty. I gladly drink this cold water. My right hand hurts badly today. Raise both your hands high up.* <!-- INJECT_ACTIVITY: fill-in, Phonological Alternation Pairs, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -491,7 +491,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -512,14 +579,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

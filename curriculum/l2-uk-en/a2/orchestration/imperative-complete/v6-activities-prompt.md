@@ -102,7 +102,6 @@ required:
 > — **Оксана:** Дякую, я обережна. *(Thank you, I am careful.)*
 > — **Шеф-кухар:** Усі молодці! *(Everyone is doing great!)* **Хай** наш борщ буде найсмачнішим! *(May our borscht be the most delicious!)*
 
-
 ## Хай і нехай: Наказ для третіх осіб
 
 Зазвичай ми звертаємося прямо до людини, з якою ми спілкуємося. Ми кажемо: «**Скажи** *(tell)* йому!», «**Зробіть** *(do)* це!», «**Слухай** *(listen)* уважно!». Ми використовуємо форми для «ти» або «ви». Але іноді нам потрібен наказ або побажання для іншої людини. Ми хочемо сказати про «нього», «неї» або «них». When we want to give an indirect command or express a wish for a third party, we use the third-person imperative. В українській мові ми використовуємо спеціальні слова для цього. Ми кажемо: «Хай він скаже!». Це дуже популярна конструкція в розмовній мові. We do not change the verb itself, but rather add a specific particle before it to show our intent. This is a very common structure in daily conversations and formal writing.
@@ -149,7 +148,6 @@ This aspect distinction helps you be extremely precise about what kind of action
 
 <!-- INJECT_ACTIVITY: fill-in-3rd-person-imperative -->
 
-
 ## Читаймо! Ходімо! Перша особа множини
 
 Коли ми хочемо щось робити разом з іншими людьми, ми використовуємо спеціальну форму. We use the first-person plural imperative to invite others to act with us. Це точний граматичний еквівалент англійського «Let's...». Щоб утворити цю форму, ми беремо дієслово для другої особи однини. Потім ми просто додаємо суфікс **-мо**. The grammatical formation is wonderfully simple: just take the familiar "you" command form and attach the "-мо" suffix to the end. Наприклад: дієслово «**читати**» *(to read)* має форму «**читай**» *(read)*. Ми додаємо суфікс і маємо «**читаймо**» *(let's read)*. Дієслово «**робити**» *(to do)* має форму «**роби**» *(do)*. Разом це буде «**робімо**» *(let's do)*. А дієслово «**бути**» *(to be)* має форму «**будь**» *(be)*, тому ми кажемо «**будьмо**» *(let's be)*. Це дуже красива, формальна і природна українська конструкція. This is the authentic, elegant way to suggest a shared action or activity in the Ukrainian language.
@@ -168,7 +166,6 @@ This aspect distinction helps you be extremely precise about what kind of action
 
 <!-- INJECT_ACTIVITY: unjumble-1st-person-plural -->
 
-
 ## Кличний + наказовий + орудний: Побажання (~550 words)
 
 В українській мові є дуже красива і важлива конструкція для **побажання** *(wish, blessing)*. We often use a specific rhythmic pattern for wishes, greetings, and blessings. Ми поєднуємо **кличний відмінок** *(Vocative case)*, **наказовий спосіб** *(imperative mood)* та орудний відмінок. This powerful grammatical combination uses the Vocative case to address the person directly. It uses the imperative mood to command the state. Finally, it uses the Instrumental case to define exactly what that state is. Наприклад: «**Мамо** *(Mom)*, **будь** *(be)* **щасливою** *(happy)*!». You are literally commanding someone to exist in a specific, positive state of being. Це звучить дуже тепло, емоційно і природно. Ми активно використовуємо цю граматичну форму на всі свята і кожного дня. Зрозуміти цю логіку означає зрозуміти українську душу. 
@@ -182,7 +179,6 @@ This aspect distinction helps you be extremely precise about what kind of action
 Ми також можемо поєднувати частку «**хай**» *(let)* з кличним відмінком. We can also combine the particle "хай" with Vocative addresses to create indirect blessings. У таких реченнях дія часто спрямована на людину. Тому ми додаємо займенники у давальному відмінку. We use the Dative case pronouns "тобі" or "вам" to show exactly who receives the positive action. Наприклад: «Друже, хай тобі **щастить** *(to be lucky)*!». This translates beautifully as: "May luck happen to you, my friend!". Інший дуже гарний і популярний приклад для свята: «Діти, **нехай** *(let)* **здійсняться** *(come true)* всі ваші **мрії** *(dreams)*!». Тут ми кличемо дітей. А потім ми використовуємо форму третьої особи для слова «мрії». These elegant combinations make your Ukrainian sound native, warm, and deeply respectful in any situation.
 
 <!-- INJECT_ACTIVITY: match-up-vocative-wishes -->
-
 
 ## Вид дієслова в наказовому способі
 
@@ -209,7 +205,6 @@ This aspect distinction helps you be extremely precise about what kind of action
 Ми кажемо: «Читай українські книги щодня». We say: "Read Ukrainian books every day". Це корисна звичка. This is a useful habit. Але ми кажемо: «Прочитай цей текст зараз». But we say: "Read this text now". Це вже конкретне завдання. This is a specific task.
 
 <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
-
 
 ## Підсумок
 

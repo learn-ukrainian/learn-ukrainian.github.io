@@ -1,20 +1,17 @@
 ## Підсумок — Summary
 
-Let's review the three golden rules we have learned in this module:
+У цьому модулі ми вивчили три важливі граматичні правила. По-перше, заперечення зі словом «немає» завжди вимагає родового відмінка. По-друге, слова кількості, такі як «багато», «мало» або «кілька», вимагають родового відмінка множини. По-третє, закінчення іменників залежать від їхнього роду та типу основи.
 
-1. **Negation requires the Genitive:** The word **немає** *(there is not / have not)* always acts as a magnet for the Genitive case.
-   * **У мене немає машини.** *(I don't have a car.)*
-2. **Quantity requires the Genitive plural:** Words like **багато** *(many/much)*, **мало** *(few/little)*, and **кілька** *(several)* must be followed by the Genitive plural when counting objects.
-   * **Тут є багато людей і мало дерев.** *(There are many people and few trees here.)*
-3. **Endings depend on gender and stems:** The correct ending relies on whether the noun is masculine, feminine, or neuter, and if its stem is hard or soft.
+> *In this module, we learned three important grammar rules. First, negation with the word "немає" always requires the Genitive case. Second, quantity words like "багато", "мало", or "кілька" require the Genitive plural. Third, noun endings depend on their gender and stem type.*
 
-**Самоперевірка** *(Self-check)*:
-* Do you use **-а** / **-я** for concrete masculine objects? (**немає стола** *(there is no table)*, **немає брата** *(there is no brother)*)
-* Do you use **-у** / **-ю** for abstract masculine concepts? (**немає часу** *(there is no time)*, **немає цукру** *(there is no sugar)*)
-* Do you remember the fleeing vowel in feminine plurals? (**книжка** *(book)* → **кілька книжок** *(several books)*)
-* Can you correctly say you don't have money? (**У мене немає грошей.** *(I have no money.)*)
+Before moving on, use this final self-check to review your progress:
 
-### Читаємо українською (Reading Practice)
-**Сьогодні у мене немає вільного часу.** *(Today I have no free time.)*
-**Я маю багато роботи і кілька нових завдань.** *(I have a lot of work and several new tasks.)*
-**На вулиці немає дощу, але також немає сонця.** *(There is no rain outside, but there is also no sun.)*
+* Do you use **-а** or **-я** for concrete masculine objects (стола)?
+* Do you use **-у** or **-ю** for abstract masculine concepts (часу)?
+* Do you remember the fleeing vowel in feminine plurals (книжок)?
+* Can you correctly say you don't have money (грошей)?
+
+:::tip
+**Take your time**
+Do not worry if you occasionally confuse the masculine **-а** and **-у** endings. Focus on memorizing high-frequency everyday words first, and the broader patterns will naturally become clearer as you continue reading and listening.
+:::

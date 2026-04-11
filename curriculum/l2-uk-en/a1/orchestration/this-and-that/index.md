@@ -1,6 +1,6 @@
 # Build Summary: this-and-that (A1)
 
-Generated: 2026-04-09 03:17
+Generated: 2026-04-11 00:53
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 03:17
 | verify | complete | 2026-04-09 01:15:34 |
 | review | complete | 2026-04-09 01:17:38 |
 | stress | complete | 2026-04-09 01:17:39 |
-| publish | complete | 2026-04-09 01:17:41 |
+| publish | complete | 2026-04-10 22:53:50 |
+| audit | complete | 2026-04-10 22:53:50 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 03:17
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

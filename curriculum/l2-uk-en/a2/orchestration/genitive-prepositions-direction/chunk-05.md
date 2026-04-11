@@ -1,22 +1,22 @@
 ## Підсумок — Summary
 
-Ми вивчили дуже важливий прийменник **до** *(to/until/by)*. He is a versatile tool in your Ukrainian vocabulary. This single preposition connects space, time, and abstract concepts, always requiring the noun to take the Genitive case. Let us summarize his three main jobs.
+Let's review everything we have learned about the preposition **до** and the Genitive case. This small word is incredibly versatile, but its core logic always involves moving toward a limit, a destination, or a goal.
 
-:::note Три ролі прийменника ДО (Three Roles of ДО)
-| Функція *(Function)* | Питання *(Question)* | Приклад *(Example)* |
-| :--- | :--- | :--- |
-| **1. Напрямок** *(Direction)* | Куди? *(Where to?)* | **до Києва** *(to Kyiv)*, **до мами** *(to mom)* |
-| **2. Час** *(Time limit/deadline)* | До якого часу? *(Until/by when?)* | **до вечора** *(until evening)*, **до п'ятниці** *(by Friday)* |
-| **3. Мета** *(Purpose)* | Для чого? *(What for?)* | **до побачення** *(goodbye)*, **до речі** *(by the way)* |
+Ось коротке резюме всіх значень прийменника «до». По-перше, він показує напрямок до місця або особи. Наприклад, ми їдемо до Києва або йдемо до мами. По-друге, він позначає часову межу. Ми працюємо до вечора і маємо закінчити проєкт до п'ятниці. По-третє, він вказує на мету. Ми кажемо «до побачення» та додаємо цукор до кави.
+
+> *Here is a short summary of all the meanings of the preposition "до". First, it shows direction to a place or a person. For example, we travel to Kyiv or go to mom's. Second, it indicates a time limit. We work until evening and have to finish the project by Friday. Third, it indicates purpose. We say "goodbye" and add sugar to coffee.*
+
+Here is a quick reference list of the three main categories:
+- **Direction:** **до Києва** (to Kyiv), **до мами** (to mom's)
+- **Time limit:** **до вечора** (until evening), **до п'ятниці** (by Friday)
+- **Purpose:** **до побачення** (goodbye), **до речі** (by the way)
+
+:::note
+**Quick tip** — When you learn a new phrase with **до**, ask yourself if it represents a physical destination, a time boundary, or an abstract goal. This will help you remember the pattern naturally.
 :::
 
-:::tip Читаємо українською
-— Влітку ми їдемо до Львова. *(In the summer we are riding to Lviv.)*
-— Завтра я йду до лікаря. *(Tomorrow I am going to the doctor.)*
-— Я маю працювати до вечора. *(I have to work until evening.)*
-— Мені треба зробити це до п'ятниці. *(I need to do this by Friday.)*
-:::
+Now it is time for a quick self-check before you finish this module. Can you answer these two questions?
 
-Now, a quick self-check. Як сказати "by 5 o'clock"? Remember that time limits and deadlines always use **до** plus the Genitive case. 
+Як сказати українською мовою «by five o'clock»? Чому ми кажемо «до лікаря», а не «в лікар»?
 
-Чому ми кажемо "до лікаря", а не "в лікар"? Because movement toward a person or a professional always requires **до**, never "в" or "на". Master this rule to sound much more natural in everyday conversations.
+> *How do you say "by five o'clock" in Ukrainian? Why do we say "to the doctor" (до лікаря) and not "in the doctor" (в лікар)?*

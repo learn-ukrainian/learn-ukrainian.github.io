@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-05-2c4a8b56.json
+phase: write-chunk-05
+prompt_chars: 46827
+response_chars: 6688
+prompt_words: 6415
+response_words: 1034
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0095
+- name: skeleton
+  start: 446
+  length: 1433
+  fraction: 0.0306
+- name: prior_summary
+  start: 1879
+  length: 3641
+  fraction: 0.0778
+- name: plan
+  start: 5520
+  length: 14555
+  fraction: 0.3108
+- name: wiki
+  start: 15214
+  length: 26624
+  fraction: 0.5686
+- name: output_spec
+  start: 46699
+  length: 128
+  fraction: 0.0027
+large_sections:
+- wiki
+directives_total: 5
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in, Поверхи та напрямок руху
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz, Порядкові числівники у розкладах і адресах
+  covered: false
+  coverage_note: marker missing

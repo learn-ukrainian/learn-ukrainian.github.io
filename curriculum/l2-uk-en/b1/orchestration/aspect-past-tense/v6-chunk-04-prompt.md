@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-виключно дієслова недоконаного виду. Чому так? Тому що він не розповідає жодної конкретної історії. Він лише красиво описує вашу щоденну звичку, вашу абсолютну повторюваність. Але без цієї рутини ваша майбутня історія просто не має сенсу. Тепер нарешті додамо саму подію: «Але одного тихого вечора я традиційно купував каву, випадково повернув голову і раптом побачив свого старого шкільного друга. Ми різко зупинилися, міцно обійнялися і емоційно проговорили дві години поспіль. Він радісно запросив мене на смачну вечерю у свій новий італійський ресторан». Тут ви миттєво переходите виключно на доконаний вид («побачив», «зупинилися», «обійнялися», «проговорили», «запросив»). Ці слова — це чиста енергія вашої розповіді. Доконаний вид грубо розриває нескінченне коло «купував-сідав-читав» і створює абсолютно унікальний сюжет. Якщо ви спробуєте розповісти всю цю історію лише недоконаним видом, ваш співрозмовник ніколи не зрозуміє, де саме закінчується ваше нудне повсякденне життя і де починається справжня весела пригода. Ваша розповідь буде здаватися монотонною і пласкою, немов довгий і нудний поліцейський звіт. Саме такий наративний контраст видів робить українську мову надзвичайно динамічною. Щоб навчитися мислити як справжній носій української мови, вам потрібно вміти самостійно аналізувати такі складні тексти. Давайте разом розберемо один короткий абзац про типовий робочий тиждень і спробуємо знайти ту тонку межу, де назавжди закінчується звична повторюваність і починається раптова однократність. Прочитайте цей текст: «Минулого року я працював у великому офісі дуже багато. Щопонеділка ми проводили довгі нудні наради, на яких наш директор розповідав про нові фінансові стратегії. Я завжди уважно слухав його, робив детальні нотатки і після наради йшов пити свій міцний чорний чай. Це була моя справжня робоча рутина. Проте минулого вівторка директор несподівано зайшов до мого кабінету з дуже широкою усмішкою. Він важко поклав на мій стіл велику червону теку і голосно сказав, що наша невелика компанія успішно виграла надзвичайно важливий державний тендер. Того щасливого дня ми не пили чай, ми урочисто відкрили холодне шампанське!». Ваш граматичний аналіз має бути дуже чітким. Перша частина тексту міцно базується на маркері «щопонеділка» та слові «завжди». Дієслова «працював», «проводили», «розповідав», «слухав», «робив», «йшов» — це стовідсоткова повторюваність. Вони яскраво показують процес без жодного фінального результату, бо кожна нарада була схожа на попередню. Але справжня межа виникає на словах «минулого вівторка». Це дуже сильний сигнал однократності. Далі автор свідомо використовує тільки доконаний вид: «зайшов», «поклав», «сказав», «виграла», «відкрили». Чому він так робить? Тому що ці події відбулися один єдиний раз і вони назавжди змінили ту нудну офісну рутину. Це був яскравий виняток із правил, який повністю зруйнував їхню звичну систему роботи. А як же бути з фразою «не пили чай»? Тут використано дієслово недоконаного виду, хоча йдеться лише про один вівторок. Це дуже хитрий стилістичний прийом: автор прямо заперечує саму рутину, показуючи, що звичний фоновий процес був повністю скасований. Такі несподівані переходи роблять ваш текст справді живим та автентичним. Коли ви свідомо керуєте цими двома осями — віссю результату та віссю частотності — ви отримуєте повний контроль над своєю розповіддю. Коли ви пишете власні історії, намагайтеся постійно ставити собі це важливе питання: це моє звичне щоденне тло чи мій новий яскравий результат? <!-- INJECT_ACTIVITY: group-sort-aspect-usage -->
+настрій, постійні стани та звички персонажів. Він не створює нових подій, а лише готує для них місце. Доконаний вид, навпаки, — це самі події. Це кроки, якими ми йдемо по лінії часу. Без доконаного виду ваша розповідь була б статичною картиною, а без недоконаного — сухим списком фактів. > *Understanding narrative structure through aspects is the key to natural speech. Linguists often call the imperfective aspect in the past tense "background," and the perfective — "foreground." The imperfective aspect describes the weather, mood, constant states, and characters' habits. It doesn't create new events but only prepares a place for them. The perfective aspect, on the other hand, is the events themselves. These are the steps we take along the timeline. Without the imperfective aspect, your story would be a static picture, and without the perfective — a dry list of facts.* Уявіть собі сценарій у Львові. Ви можете сказати: «Коли я жив у Львові, я кожного вечора ходив на прогулянку. Зазвичай я купував каву на Площі Ринок і довго дивився на перехожих». Усе це — недоконаний вид. Ви описуєте свою рутину, свій спосіб життя. Ви ніби малюєте декорації до своєї історії. Слухач розуміє, що це відбувалося багато разів. Але раптом ви додаєте: «Але минулої суботи я не пішов на прогулянку, бо зустрів старого друга. Ми зайшли в цукерню і проговорили три години». Тут ви використали доконаний вид («не пішов», «зустрів», «зайшли»), щоб виділити цей конкретний день із черги однакових субот. Ви перемістили фокус із загальної звички на конкретну пригоду. Це і є магія аспектів: ви самі керуєте увагою слухача, вказуючи, що було нормою, а що стало подією. Тепер давайте проаналізуємо складніший текст. Уявіть опис звичайного робочого тижня в офісі. «Весь тиждень Максим працював над звітом. Він щодня приходив о дев’ятій, вмикав комп’ютер і пив чай. Потім він три години писав текст і перевіряв цифри. Але в п’ятницю ситуація змінилася. Керівник несподівано зайшов у кабінет і приніс нові дані. Максим за одну годину переробив увесь звіт і нарешті відправив його замовнику». У першій частині тексту ми бачимо повторюваність: «працював», «приходив», «вмикав», «пив», «писав», «перевіряв». Це все — недоконаний вид, бо це опис звичного процесу. Навіть якщо Максим завершував пити чай щодня, ми використовуємо недоконаний вид «пив», бо наголошуємо на регулярності дії. Але у другій частині з’являється однократність і результат: «зайшов», «приніс», «переробив», «відправив». Це винятки з правила, конкретні дії, які мають чітке завершення. Це і є межа, де «повторюваність» закінчується, а «однократність» починається. :::tip **Мистецтво розповіді** Якщо ви хочете, щоб ваша історія звучала жваво, чергуйте види. Використовуйте недоконаний вид для описів і атмосфери («сонце світило», «я читав»), а доконаний — для активних дій («раптом пролунав дзвінок», «я відкрив двері»). ::: При аналізі тексту завжди шукайте причину вибору аспекту. Запитайте себе: «Чи ця дія була частиною звички? Чи це унікальний момент?». Якщо ви бачите маркер тривалості (три години) разом із повторюваністю (щодня), вибір недоконаного виду стає подвійно обґрунтованим. Українська мова дуже логічна в цьому питанні: форма дієслова завжди підпорядковується вашому бажанню виділити або процес, або результат, або звичку. <!-- INJECT_ACTIVITY: group-sort-aspect-usage -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -584,7 +584,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -597,14 +664,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

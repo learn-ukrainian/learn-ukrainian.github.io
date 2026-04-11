@@ -1,0 +1,289 @@
+vocabulary:
+- word: прі́звище
+  translation: surname
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: поса́да
+  translation: position/title
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: офіці́йний
+  translation: official/formal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ділови́й
+  translation: business-related
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: листува́ння
+  translation: correspondence
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: панове
+  translation: gentlemen (formal address)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: зверта́ння
+  translation: address/salutation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: по батькові
+  translation: patronymic
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пан
+  translation: Mr./Sir (formal address)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́ні
+  translation: Ms./Madam (formal address)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: добро́дій
+  translation: Sir (very formal)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: добро́дійка
+  translation: Madam (very formal)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: шано́вний
+  translation: respected/dear (formal address)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: шано́вна
+  translation: respected/dear (formal address)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вельмишано́вний
+  translation: most respected
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: офіційно-діловий стиль
+  translation: official-business style
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перша відміна
+  translation: first declension
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: друга відміна
+  translation: second declension
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: третя відміна
+  translation: third declension
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гіпокористики
+  translation: hypocorisms/diminutives
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: збігатися
+  translation: to coincide
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: това́риш
+  translation: comrade
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: деколоніза́ція
+  translation: decolonization
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: регі́стр
+  translation: register
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: устано́ва
+  translation: institution
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: компете́нтність
+  translation: competence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: співробі́тниця
+  translation: female coworker
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: партне́р
+  translation: partner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: співпра́ця
+  translation: cooperation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зв'я́зки
+  translation: connections
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ска́рга
+  translation: complaint
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пе́нсія
+  translation: retirement
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: канцеляризми
+  translation: bureaucratese/clichés
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ко́ма
+  translation: comma
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́ми́лка
+  translation: mistake
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: узго́джуватися
+  translation: to agree/match
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дерево рішень
+  translation: decision tree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неформа́льний
+  translation: informal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нейтра́льний
+  translation: neutral
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: розділові знаки
+  translation: punctuation marks
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відокре́млювати
+  translation: to isolate/separate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знак оклику
+  translation: exclamation mark
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: велика літера
+  translation: capital letter
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ча́стка
+  translation: particle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прийме́нник
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Шановні пані та панове!
+  translation: Ladies and gentlemen!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З повагою
+  translation: Sincerely/With respect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

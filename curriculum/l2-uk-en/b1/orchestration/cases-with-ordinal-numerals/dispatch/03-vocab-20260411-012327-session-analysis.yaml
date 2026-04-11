@@ -1,0 +1,122 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-22-f348e954.json
+phase: vocab
+prompt_chars: 41121
+response_chars: 2904
+prompt_words: 6207
+response_words: 331
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0194
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0056
+- name: plan
+  start: 1028
+  length: 40093
+  fraction: 0.975
+large_sections:
+- plan
+directives_total: 23
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: 'While almost all ordinal numerals belong to the hard declension group, there
+    is one critical exception that you must memorize: the numeral «третій» (third).'
+  covered: false
+  coverage_note: 4/20 keywords (20%)
+- kind: must
+  text: The soft sign is required before the vowel «о» to maintain the soft sound
+    of the consonant.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: 'If you are reading the first book, the feminine noun takes the Accusative
+    case, so the numeral must also become Accusative: «першу книжку».'
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: You must use the preposition «о» (or «об» before vowels) followed by the ordinal
+    numeral in the Locative case.
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: Conversely, to indicate the destination of your movement, such as going up,
+    you must use the Accusative case with the preposition «на».
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: Remember that the numeral must agree with the noun in gender.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: To truly master ordinal numerals, you must see them in action within authentic
+    scenarios.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: When stating that an event happened "on a date", both the ordinal numeral
+    and the month must be in the Genitive case (e.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: However, when expressing that you need something "for a specific date" (like
+    booking a ticket), you must use the preposition **на** followed by the Accusative
+    case (e.
+  covered: false
+  coverage_note: 2/18 keywords (11%)
+- kind: must
+  text: This means they must always agree with their accompanying noun in gender,
+    number, and case.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: You must completely avoid unnatural constructions borrowed from Russian.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: inject_activity
+  text: fill-in-declension
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-declension
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-dates
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-dates
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-dates
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-time
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-time
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading-ordinals
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz
+  covered: false
+  coverage_note: marker missing

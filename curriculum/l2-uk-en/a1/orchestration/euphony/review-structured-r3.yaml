@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All plan objectives and dialogues are covered exactly as requested. Word
+    budget is 1692, exceeding the 1200 minimum.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian phrases are correctly formed. Rules accurately reflect euphony
+    laws (e.g. `у Львові` vs `в Києві`, `і яблука`). No Russianisms found.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow and rich use of examples. DEDUCT for a contradictory
+    presentation of the `із/зі` rule, where the stated rule contradicts the module's
+    own examples (e.g., claiming `зі` is reserved f
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words (у/в, і/й, з/із/зі, Київ,
+    Львів, офіс, парк, театр) are seamlessly integrated into prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: DEDUCT for placing a comprehensive euphony quiz marker (`quiz-naturalness-comparison`)
+    before two of the three euphony rules are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, natural teacher tone ("Think of it as building a comfortable V-C-V
+    sandwich in your mouth"). Highly engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown and perfect section structure. Minor deduction because
+    the writer manually injected stress marks (e.g., `Студе́нт`, `шви́дше`) into the
+    prose, which is supposed to be handled determinis
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Euphony is respectfully and accurately presented as a foundational characteristic
+    of the Ukrainian language.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues represent a realistic scenario (proofreading an essay, making
+    plans) with named speakers, distinct voices, and highly relevant usage of the
+    target grammar.
+findings: []

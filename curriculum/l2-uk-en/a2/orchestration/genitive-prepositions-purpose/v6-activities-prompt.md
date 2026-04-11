@@ -28,8 +28,8 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: match-up-purpose -->`
-- `<!-- INJECT_ACTIVITY: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences -->`
 - `<!-- INJECT_ACTIVITY: fill-in-location -->`
+- `<!-- INJECT_ACTIVITY: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences -->`
 - `<!-- INJECT_ACTIVITY: true-false-grammar -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -98,7 +98,7 @@ In Ukrainian, we use the preposition **для** (for) to express purpose or to s
 — Ця міцна кава **для тебе** (This strong coffee is for you).
 — Ми купили квитки **для дітей** (We bought tickets for the children).
 
-When we want to explain what something is strictly intended for, we attach **для** to a noun. This is often an abstract noun or a noun that describes an action or process. This structure helps us talk about the specific function of everyday objects.
+When we want to explain the **призначення** (purpose) of something, we attach **для** to a noun. This is often an abstract noun or a noun that describes an action or process. This structure helps us talk about the specific function of everyday objects.
 
 Змінюємо закінчення (Changing endings):
 «здоров'я» (health) → «для здоров'я»
@@ -166,7 +166,6 @@ Let's see these Genitive forms in action in a real conversation. Ігор (Igor)
 > — **Марта:** Вони вже там. Я все зібрала **для подорожі**. *(They are already there. I packed everything for the trip.)*
 
 <!-- INJECT_ACTIVITY: match-up-purpose -->
-
 
 ## Без чого? Без + родовий (Without What? Без + Genitive)
 
@@ -252,9 +251,6 @@ Let's return to Ігор (Igor) and Марта (Marta). They are continuing to p
 > — **Ігор:** Так. І ще нам треба більше питної води. *(Yes. And we also need more drinking water.)*
 > — **Марта:** Згодна. У такий похід не можна йти **без води**. *(Agreed. You cannot go on such a hike without water.)*
 > — **Ігор:** Добре, що ми робимо список. Подорожувати **без плану** — це погана ідея. *(Good that we are making a list. Traveling without a plan is a bad idea.)*
-
-<!-- INJECT_ACTIVITY: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences -->
-
 
 ## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive)
 
@@ -345,8 +341,8 @@ Let's rejoin Ігор (Igor) and Марта (Marta). They have finally arrived a
 These location words are part of a larger system of spatial prepositions that use the Genitive case. Later, you will learn prepositions like **до** (to), **з** (from), and **від** (from, away from). The key difference is that **біля**, **навпроти**, and **коло** describe a static position—where something simply exists in space. Prepositions like **до**, on the other hand, will describe active direction or movement toward a destination.
 
 <!-- INJECT_ACTIVITY: fill-in-location -->
+<!-- INJECT_ACTIVITY: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences -->
 <!-- INJECT_ACTIVITY: true-false-grammar -->
-
 
 ## Підсумок — Summary
 

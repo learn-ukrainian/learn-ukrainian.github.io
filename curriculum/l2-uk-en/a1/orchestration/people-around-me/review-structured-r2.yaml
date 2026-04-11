@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all sections, vocabulary requirements, and grammar rules from the
+    plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Noun declensions are accurate. Forms like "Олену Петрівну", "сусіда",
+    and "колегу" are correct in the Accusative animate context.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: DEDUCT for grouping "колега -> колегу" under the rule for masculine nouns
+    ending in soft consonants or -ар that take the -я ending (Section 3). This contradicts
+    the rule just stated and will confuse t
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (бачити, знати, любити, чекати, шукати, друг, подруга) and
+    recommended vocabulary included naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 activity markers are present, in the correct sequence, and placed
+    logically after the relevant concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. Tone is encouraging and grounded in reality
+    (e.g., "The Ukrainian language treats objects in a specific way. However, our
+    world is mostly filled with people.").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 1681, well above the 1200 target. Headings perfectly match
+    the plan outline.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of the Ukrainian Grade 4 school logic (Кого? Що?)
+    and natural use of name-and-patronymic (Олена Петрівна).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues flow naturally, named characters have distinct voices, and the
+    contexts are highly realistic (showing wedding photos, colleagues chatting at
+    school).
+findings: []

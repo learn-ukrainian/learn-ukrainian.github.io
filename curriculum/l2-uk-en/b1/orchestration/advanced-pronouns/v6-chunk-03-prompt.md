@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Орудний відмінок — **собою** (пишатися **собою** — *to be proud of oneself*). Місцевий відмінок вимагає обов'язкового прийменника — на **собі** (відчути біль на **собі** — *to feel pain on oneself*). Часто українці використовують форму давального відмінка **собі**, щоб підкреслити, що дія виконується для власної користі. Наприклад: «Я хочу купити **собі** нову книгу» *(I want to buy myself a new book)* або «Можеш уявити **собі** таку ситуацію?» *(Can you imagine such a situation to yourself?)*. Водночас форма орудного відмінка **собою** найчастіше вказує на внутрішній стан чи задоволення результатом: «Він зараз дуже задоволений **собою**» *(He is very satisfied with himself right now)* або «Завжди будь **собою**!» *(Always be yourself!)*. У живій розмовній та літературній мові зворотний займенник **себе** є частиною багатьох популярних ідіом та стійких виразів *(fixed phrases)*. Найважливіший щоденний вираз стосується вашого здоров'я та самопочуття: **почувати себе** або **почуватися** *(to feel oneself)*. Ви можете ввічливо запитати знайомого: «Як ти **себе** сьогодні почуваєш?» *(How do you feel today?)*. Також часто використовують вираз **сам по собі** *(by itself, independent)*, коли говорять про предмет або людину, що діє ізольовано від інших: «Ця проблема не зникне **сама по собі**» *(This problem will not disappear by itself)*. Якщо вас запитують про настрій або якість роботи, ви можете відповісти **так собі** *(so-so, mediocre)*. Це означає, що результат не дуже хороший, але й не є критично поганим. У діловому спілкуванні часто звучить фраза **від себе** *(on one's own behalf)*: «Я хочу додати кілька слів **від себе**» *(I want to add a few words from myself)*. Ще один цікавий психологічний вираз — **не по собі** *(uncomfortable, eerie)*. Він влучно описує внутрішній стан тривоги або дискомфорту. Наприклад: «У цьому темному лісі мені раптом стало **не по собі**» *(In this dark forest I suddenly felt uncomfortable)*. Такі вирази роблять мовлення більш природним. На рівні B1 дуже важливо чітко розрізняти зворотний займенник **себе** *(reflexive object)* та присвійний займенник **свій** *(reflexive possessive, one's own)*. Іноземні студенти часто плутають їх у розмові, оскільки обидва ці слова логічно повертають увагу назад до підмета. Але вони виконують абсолютно різні синтаксичні ролі. Займенник **себе** — це об'єкт дії (додаток). Він завжди відповідає на базові питання відмінків (кого? кому? ким?). Наприклад: «Цей чоловік дуже любить **себе**» *(This man loves himself very much)*. Тут чоловік є одночасно і виконавцем (він любить), і об'єктом (любить кого? — себе). Натомість займенник **свій** вказує виключно на приналежність і відповідає на питання (чий?). Він стоїть перед іменником і поводиться як прикметник. Наприклад: «Цей чоловік дуже любить **свою** роботу» *(This man loves his own work very much)*. У цьому реченні чоловік не любить себе; він любить об'єкт (роботу), який йому належить. Слово **свою** просто показує, чия саме це робота. Інший приклад: «Марія дивиться на **себе** на фотографії» *(Maria looks at herself in the photo)* — це дія, спрямована на неї саму. Але «Марія дивиться на **свою** фотографію» *(Maria looks at her own photo)* — це дія, спрямована на предмет, власником якого вона є. Розуміння цієї різниці є ключем до правильної побудови думок. <!-- INJECT_ACTIVITY: essay-reflexive-self --> <!-- INJECT_ACTIVITY: error-correction-reflexive-self --> <!-- INJECT_ACTIVITY: match-up-reflexive-self -->
+від іншого впливу: «Цей архітектурний проєкт цікавий сам по собі». Якщо щось є дуже посереднім, не вражає або має не дуже високу якість, ми використовуємо розмовну фразу «так собі»: «Новий фільм у кінотеатрі був так собі, нічого особливого». Коли людина говорить чи дарує щось від власного імені, вона каже «від себе». А якщо комусь раптом стає страшно чи ніяково, ми використовуємо влучний вираз «не по собі»: «Мені одразу стало не по собі від його холодних слів». :::tip **«Сам по собі» чи «само собою»?** — Вираз *сам по собі* підкреслює унікальність та незалежність предмета або особи. Натомість фраза *само собою* (часто звучить як *само собою зрозуміло*) означає щось цілком очевидне, те, що не потребує жодних додаткових пояснень чи логічних доказів. ::: Критично важливо чітко розрізняти зворотний займенник «себе» та присвійний займенник «свій», адже вони виконують абсолютно різні функції. Займенник «себе» виступає в ролі прямого чи непрямого об'єкта дії. Він фізично або емоційно приймає цю дію на себе. Натомість займенник «свій» вказує лише на зворотну належність. Він показує, що певний предмет належить безпосередньо виконавцю дії. Порівняйте ці два короткі речення, щоб зрозуміти ключову різницю. У реченні «Він дуже любить себе» займенник виступає об'єктом: хлопець спрямовує свою любов на власну персону. А в реченні «Він дуже любить свою роботу» займенник «свою» лише вказує на те, чия це саме робота. Обидва ці слова відсилають нас назад до підмета речення, але вони займають абсолютно різні синтаксичні позиції. Слово «себе» завжди відмінюється як іменник. Натомість слово «свій» відмінюється як звичайний прикметник і завжди граматично узгоджується з наступним словом. > *It is critically important to clearly distinguish between the reflexive pronoun "себе" and the possessive pronoun "свій", as they perform absolutely different functions. The pronoun "себе" acts as a direct or indirect object of the action. It physically or emotionally receives this action. In contrast, the pronoun "свій" only indicates reflexive ownership. It shows that a certain object belongs directly to the doer of the action. Compare these two short sentences to understand the key difference. In the sentence "Він дуже любить себе" (He really loves himself), the pronoun acts as the object: the boy directs his love at his own person. But in the sentence "Він дуже любить свою роботу" (He really loves his job), the pronoun "свою" only indicates whose job it exactly is. Both of these words refer back to the subject of the sentence, but they occupy completely different syntactic positions. The word "себе" is always declined like a noun. Instead, the word "свій" is declined like a regular adjective and always grammatically agrees with the following word.* English speakers often make a critical mistake when translating sentences like "He told a story about his sister." If you say «Він розповів про його сестру», a Ukrainian will automatically assume he is talking about *another man's* sister. The distinction is strict. Because the subject (he) owns the object (sister), you must always use the reflexive possessive pronoun: «Він розповів про свою сестру». <!-- INJECT_ACTIVITY: essay-reflexive-self --> <!-- INJECT_ACTIVITY: error-correction-reflexive-self --> <!-- INJECT_ACTIVITY: match-up-reflexive-self -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -582,7 +582,74 @@ _Джерела: 5-klas-ukrmova-zabolotnyi-2023_s0110, 10-klas-ukrmova-glazova-2
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -595,14 +662,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

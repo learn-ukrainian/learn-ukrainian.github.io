@@ -97,3 +97,16 @@
 {"slug": "leisure-culture-festivals", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-09T23:18:06.845475+00:00"}
 {"slug": "leisure-culture-festivals", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-09T23:19:30.970641+00:00"}
 {"slug": "instrumental-nuances", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-09T23:19:50.720727+00:00"}
+{"slug": "prepositions-spatial-review", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-10T22:40:44.337784+00:00"}
+{"slug": "b1-baseline-past-present", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-10T23:00:44.300160+00:00"}
+{"slug": "cases-with-ordinal-numerals", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-10T23:07:30.550084+00:00"}
+{"slug": "b1-baseline-future-aspect", "error_type": "VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-10T23:15:31.987663+00:00"}
+{"slug": "b1-baseline-past-present", "error_type": "TOXIC, STRUCTURE, VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-10T23:28:55.662882+00:00"}
+{"slug": "cases-with-ordinal-numerals", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-10T23:34:44.095844+00:00"}
+{"slug": "b1-baseline-future-aspect", "error_type": "STRUCTURE, VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-10T23:45:53.414748+00:00"}
+{"slug": "cases-with-quantity-expressions", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-10T23:59:48.641788+00:00"}
+{"slug": "advanced-pronouns", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-11T00:18:05.312597+00:00"}
+{"slug": "aspect-past-tense", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-11T00:18:34.604888+00:00"}
+{"slug": "aspect-future-tense", "error_type": "TOXIC, VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-11T00:32:43.591793+00:00"}
+{"slug": "checkpoint-cases", "error_type": "VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-11T00:38:29.769469+00:00"}
+{"slug": "aspect-in-narration", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-11T00:46:53.365466+00:00"}

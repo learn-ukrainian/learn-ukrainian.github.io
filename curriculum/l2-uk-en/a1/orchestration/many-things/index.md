@@ -1,6 +1,6 @@
 # Build Summary: many-things (A1)
 
-Generated: 2026-04-09 03:29
+Generated: 2026-04-11 00:53
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 03:29
 | verify | complete | 2026-04-09 01:27:59 |
 | review | complete | 2026-04-09 01:29:20 |
 | stress | complete | 2026-04-09 01:29:22 |
-| publish | complete | 2026-04-09 01:29:24 |
+| publish | complete | 2026-04-10 22:53:57 |
+| audit | complete | 2026-04-10 22:53:57 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 03:29
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

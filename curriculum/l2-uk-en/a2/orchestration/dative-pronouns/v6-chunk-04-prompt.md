@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-see you.)* > Їй весело грати з великим собакою. *(It is joyful for her to play with the dog.)* > Йому тепло у цій новій куртці. *(He is warm in this new jacket.)* > Їм нудно сидіти вдома цілий день. *(It is boring for them to sit at home.)* > Мені дуже соромно за цю велику помилку. *(I am very ashamed of this big mistake.)* > Вам зручно сидіти на цьому старому кріслі? *(Is it comfortable for you to sit on this chair?)* We also use the Dative case for modal adverbs expressing necessity, permission, or advice. The most important ones are **«треба»** or **«потрібно»** *(need)*, **«можна»** *(allowed / may)*, and **«варто»** *(should / worth doing)*. When you want to say "I need," you must literally say "To me it is necessary." You absolutely cannot use the word "I" (**я**) here. This is a common mistake for English speakers. Simply add an infinitive verb after these modal adverbs to show what action is needed or allowed. :::tip Запам'ятайте (Remember) **Я треба йти.** ❌ **Мені треба йти.** ✅ *(I need to go.)* ::: > Читаємо українською: > Мені треба йти додому прямо зараз. *(I need to go home right now.)* > Тобі потрібно купити новий мобільний телефон. *(You need to buy a new mobile phone.)* > Вам можна тут сидіти і читати. *(You are allowed to sit here and read.)* > Йому варто добре відпочити після роботи. *(He should rest well after work.)* > Їй не можна пити чорну каву. *(She is not allowed to drink black coffee.)* > Нам треба багато працювати сьогодні ввечері. *(We need to work a lot tonight.)* > Їм потрібно швидко написати цей довгий лист. *(They need to write this long letter quickly.)* > Мені варто запитати про це нашого вчителя. *(I should ask our teacher about this.)* Let us look at how these impersonal constructions sound in a real conversation. Read this dialogue between two friends sitting at a cafe. They discuss their comfort and what they need to order. > — **Анна:** Тобі тут тепло біля вікна? *(Are you warm near the window?)* > — **Богдан:** Так, мені приємно тут сидіти. *(Yes, it is pleasant to sit here.)* > — **Анна:** Мені цікаво, що ти сьогодні замовиш. *(I wonder what you will order today.)* > — **Богдан:** Мені потрібно випити велику чашку кави. *(I need to drink a big cup of coffee.)* > — **Анна:** Чому тобі хочеться саме чорної кави? *(Why exactly do you want black coffee?)* > — **Богдан:** Бо мені сумно без неї зранку. А тобі що треба? *(Because I feel sad without it in the morning. What do you need?)* > — **Анна:** Мені варто випити гарячий зелений чай. Мені трохи холодно. *(I should drink hot green tea. I am a little cold.)* > — **Богдан:** Тобі можна взяти ще теплий десерт. *(You can also take a warm dessert.)* > — **Анна:** Добре, зараз нам можна спокійно відпочити. *(Good, we are allowed to rest calmly now.)* <!-- INJECT_ACTIVITY: true-false-impersonal -->
+for "cold" remains exactly the same. Найчастіше ми використовуємо такі короткі слова: холодно, тепло, сумно, весело, приємно та цікаво. Взимку на вулиці мені часто буває дуже холодно. А тобі цікаво читати цю нову українську книгу про історію? Моїй молодшій сестрі зараз сумно, тому що надворі йде сильний дощ. Нам дуже приємно бачити вас у нашому новому домі. > *Most often we use such short words: cold, warm, sad, fun, pleasant, and interesting. In winter on the street, I am often very cold. And is it interesting for you to read this new Ukrainian book about history? My younger sister is sad right now because it is raining heavily outside. It is very pleasant for us to see you in our new home.* This exact same impersonal structure is also used to express necessity, permission, or advice. Instead of using active verbs like "must" or "should," Ukrainian relies on modal adverbs such as «треба» or «потрібно» (need/necessary), «можна» (allowed/possible), and «варто» (should/worthwhile). When you want to say "I need to go," the literal translation is "To me it is necessary to go." This is a fundamental pattern you will hear constantly in everyday life. Зараз уже пізно, тому мені негайно треба йти додому. Чи можна вам тут сидіти і так голосно розмовляти під час лекції? Йому варто більше відпочити після такого важкого робочого тижня в офісі. Їм потрібно купити квитки на ранковий поїзд заздалегідь. Нам можна взяти ці смачні червоні яблука зі столу? > *It is already late now, so I immediately need to go home. Are you allowed to sit here and talk so loudly during the lecture? He should rest more after such a hard work week in the office. They need to buy tickets for the morning train in advance. Can we take these tasty red apples from the table?* Let's see how these impersonal expressions naturally flow in a real conversation. Notice how often the speakers use the Dative pronouns to check in on each other's physical comfort and to express their own immediate desires. This makes the dialogue sound authentically Ukrainian. > — **Остап:** Привіт! Тобі тут тепло біля великого вікна? *(Hi! Are you warm here by the large window?)* > — **Ганна:** Так, дуже дякую. Мені приємно тут сидіти і спокійно дивитися на вулицю. *(Yes, thank you very much. It is pleasant for me to sit here and calmly look at the street.)* > — **Остап:** Мені цікаво, що ти замовиш сьогодні на обід. *(I wonder what you will order today for lunch.)* > — **Ганна:** Мені потрібно випити чашку гарячої чорної кави. *(I need to drink a cup of hot black coffee.)* > — **Остап:** Чому саме кави? *(Why specifically coffee?)* > — **Ганна:** Бо мені трохи сумно без неї зранку, я ще хочу спати. *(Because I am a little sad without it in the morning, I still want to sleep.)* > — **Остап:** Зрозуміло. Тоді нам усім варто покликати нашого офіціанта. *(Understood. Then we all should call our waiter.)* <!-- INJECT_ACTIVITY: true-false-impersonal -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -502,7 +502,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -529,14 +596,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

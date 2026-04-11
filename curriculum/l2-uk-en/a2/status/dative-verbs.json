@@ -1,0 +1,68 @@
+{
+  "module": "dative-verbs",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T02:55:07.412394Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T02:52:25.602516Z",
+    "meta": null,
+    "activities": "2026-04-11T02:55:04.388684Z",
+    "vocabulary": "2026-04-08T01:45:23.189920Z",
+    "research": null,
+    "plan": "2026-04-04T22:04:59.947400Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2856/2000 (raw: 2993) | engagement: 0/3"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "21/0 | density: 10 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "19/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -27 | premature=5 | gaps=2 | well-paced=0",
+      "delta": -27,
+      "premature": 5,
+      "gaps": 2,
+      "well_paced": 0
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

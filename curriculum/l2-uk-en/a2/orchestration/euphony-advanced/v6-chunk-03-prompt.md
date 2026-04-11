@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-*(I study at school. I'm a student.)* > — **Степан:** Ти була у Франції минулого року? *(France last year?)* > — **Оксана:** Ні, я була в Іспанії. *(No, Spain.)* > — **Степан:** Це чудово! Іспанія — гарна країна. *(That's great! Spain is a beautiful country.)* <!-- INJECT_ACTIVITY: quiz-euphony-variants, Focus on choosing between у and в in varied phonetic environments (starts, middle, after commas), 8 items --> ## З, із чи зі? Правила перед збігами приголосних Українська мова дуже мелодійна. Ми уникаємо складних збігів приголосних. *(The Ukrainian language is very melodious. We avoid difficult consonant clusters.)* The preposition **з** *(from/with)* has three forms. We use them to maintain a smooth rhythm. :::tip Правило (Rule) **Форма «з»** *(Default)*: * перед голосними *(before vowels)* * перед простими приголосними *(before simple consonants)* **Форма «із»** *(Vowel bridge)*: * між групами приголосних *(between consonant clusters)* * перед шиплячими: з, с, ц, ш, ч, ж *(before sibilants)* **Форма «зі»** *(Strong buffer)*: * перед важкими збігами: з, с, ш, щ *(before heavy clusters)* * слова-винятки: зі мною, зі Львова *(exceptions: with me, from Lviv)* ::: «Читаємо українською»: * Він швидко вийшов **з кімнати**. *(He quickly walked from the room.)* * Це нова студентка **із Франції**. *(This is a new student from France.)* * Вона забрала речі **зі столу**. *(She took things from the table.)* The default form is **з**, used when there is no phonetic friction. «Читаємо українською»: > — **Оксана:** Ваш брат повернувся **з Америки**? *(Did your brother return from America?)* > — **Степан:** Так, він приїхав **з Європи**. *(Yes, he arrived from Europe.)* > — **Оксана:** Ти сьогодні гуляєш **з Оленою**? *(Are you walking with Olena today?)* > — **Степан:** Ні, я зараз гуляю **з мамою**. *(No, I'm walking with mom now.)* The form **із** connects two consonants, or appears before hissing sounds. «Читаємо українською»: > — **Ігор:** Це старий лист **із Бразилії**? *(Is this an old letter from Brazil?)* > — **Марія:** Ні, це лист **із Житомира**. *(No, this is a letter from Zhytomyr.)* > — **Ігор:** Ти підеш у кіно **із сестрою**? *(Will you go to the cinema with sister?)* > — **Марія:** Так, я працюю **із задоволенням**. *(Yes, I work with pleasure.)* The form **зі** softens heavy consonant combinations (**з**, **с**, **ш**, **щ**) and fixed phrases. Never say «з школи». «Читаємо українською»: > — **Тарас:** Ви приїхали **зі Львова**? *(Did you arrive from Lviv?)* > — **Олена:** Так, ми їхали **зі своїми** друзями. *(Yes, we traveled with our friends.)* > — **Тарас:** Ти зараз ідеш **зі школи**? *(Are you walking from school now?)* > — **Олена:** Ні, я йду **зі старого** парку. *(No, I'm walking from the old park.)* > — **Тарас:** Поїдеш завтра **зі мною**? *(Will you go with me tomorrow?)* > — **Олена:** Звісно, поїдемо **зі студентами**. *(Of course, we will go with the students.)* In the Genitive case, the preposition and noun form a single melodic unit. Pronounce them together. <!-- INJECT_ACTIVITY: fill-in-z-variants, Complete sentences with the correct variant of z/iz/zi based on following nouns and pronouns, 8 items -->
+братом про нову роботу. Ми з мамою часто готуємо вечерю разом. Мій друг повернувся з Києва. > *Yesterday I went to the cinema with Olena. He talked with his brother about the new job. My mom and I often cook dinner together. My friend returned from Kyiv.* Форма «із» працює як голосовий місток між двома групами приголосних звуків. Також ми обов'язково вживаємо «із» перед свистячими та шиплячими звуками (з, с, ц, ш, ч, ж), щоб вони не зливалися з прийменником. > *The form "із" works as a vocal bridge between two groups of consonant sounds. We also mandatorily use "із" before sibilant and hushing sounds (з, с, ц, ш, ч, ж) so that they do not merge with the preposition.* **Читаємо українською** Сьогодні я отримала лист із Бразилії. У нас була дуже цікава зустріч із вчителем. Я допоможу тобі із задоволенням. Ми із сестрою любимо читати. > *Today I received a letter from Brazil. We had a very interesting meeting with the teacher. I will help you with pleasure. My sister and I love to read.* :::info **Grammar box** — The choice between **з**, **із**, and **зі** depends on the sounds of the words *before* and *after* the preposition. Always look at the whole phrase, not just the word that follows! ::: Форма «зі» — це найсильніший буфер для вашого язика. Вона стоїть перед словами, які починаються на збіг приголосних, особливо якщо перша літера — це «з», «с», «ш» або «щ». Також є два надзвичайно важливі винятки, які треба просто запам'ятати: «зі мною» та «зі Львова». > *The form "зі" is the strongest buffer for your tongue. It stands before words that begin with a cluster of consonants, especially if the first letter is "з", "с", "ш", or "щ". There are also two extremely important exceptions that you just need to remember: "зі мною" (with me) and "зі Львова" (from Lviv).* **Читаємо українською** Діти повернулися зі школи дуже пізно. Моя подруга приїхала зі Львова. Ти хочеш піти в театр зі мною? Вони ліпили сніговика зі снігу. > *The children returned from school very late. My friend arrived from Lviv. Do you want to go to the theater with me? They were making a snowman from snow.* Зараз ми активно вивчаємо родовий відмінок. Правила милозвучності роблять практику цього відмінка дуже природною. Звертайте увагу на те, як прийменники поєднуються із закінченнями родового відмінка. Вивчайте ці фрази як єдиний фонетичний блок. > *Now we are actively studying the genitive case. The rules of euphony make the practice of this case very natural. Pay attention to how the prepositions combine with the endings of the genitive case. Learn these phrases as a single phonetic block.* **Читаємо українською** Цей хлопець походить з родини лікарів. Він пішов із сім'ї багато років тому. Моя донька прийшла зі школи втомлена. Вона взяла книгу зі столу. > *This boy comes from a family of doctors. He left the family many years ago. My daughter came from school tired. She took the book from the table.* <!-- INJECT_ACTIVITY: fill-in-z-variants -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -480,7 +480,74 @@ Combine words into a full sentence, forcing the use of the correct euphonic form
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -507,14 +574,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,6 +1,6 @@
 # Build Summary: vocative-expanded (A2)
 
-Generated: 2026-04-08 00:18
+Generated: 2026-04-11 00:39
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-08 00:18
 | vocab | complete | 2026-04-07 22:15:15 |
 | enrich | complete | 2026-04-07 22:15:15 |
 | verify | complete | 2026-04-07 22:15:15 |
-| review | complete | 2026-04-07 22:18:01 |
 | stress | complete | 2026-04-07 22:18:02 |
-| publish | complete | 2026-04-07 22:18:04 |
+| publish | complete | 2026-04-10 22:39:39 |
+| audit | complete | 2026-04-10 22:39:39 |
 
 ## Reviews
 
@@ -46,11 +46,7 @@ Generated: 2026-04-08 00:18
 
 ## Files
 
-- `chunk-01.md`
-- `chunk-02.md`
-- `chunk-03.md`
-- `chunk-04.md`
-- `chunk-05.md`
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

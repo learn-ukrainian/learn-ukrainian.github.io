@@ -48,8 +48,6 @@ A Ukrainian garden provides abundant and fresh produce. Common **о́вочі** 
 
 Cultural spotlight: iconic Ukrainian dishes. The absolute national symbol of Ukrainian cuisine is **борщ** (beet soup). It is recognized as a UNESCO intangible cultural heritage and serves as a point of immense national pride. Borshch is definitively Ukrainian, not a generic Eastern European soup. Another beloved favorite is **варе́ники** (filled dumplings), which are stuffed with potato, cabbage, meat, or sweet cherries. A highly traditional and culturally significant ingredient is **са́ло** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Another classic is **галушки́** (dumplings), which are soft, thick dough dumplings. Finally, **деруни́** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream. For a modern, quick meal, many people simply order a hot **пі́ца** (pizza), or they prepare a light **суп** (soup) and a fresh **салат** (salad).
 
-<!-- INJECT_ACTIVITY: match-up-food-vocab -->
-
 ## Напо́ї (Drinks)
 
 Daily hydration involves both hot and cold choices. The general word for a drink is a **напі́й** (drink). For a hot drink, many people start the day with a strong **ка́ва** (coffee). Alternatively, you can drink a warm **чай** (tea). For cold drinks, the most basic necessity is **вода́** (water) or a sweet fruit **сік** (juice). If you order water in a cafe, a waiter might ask if you want **вода з га́зом** (sparkling water, literally "water with gas") or **вода без га́зу** (still water).
@@ -69,9 +67,7 @@ Learn these common combinations as fixed phrases:
 * **чай з лимо́ном** — tea with lemon (using the word **лимо́н**, lemon)
 * **м'ясо з картоплею** — meat with potatoes
 
-<!-- INJECT_ACTIVITY: group-sort-food-drinks -->
 <!-- INJECT_ACTIVITY: fill-in-chunks -->
-<!-- INJECT_ACTIVITY: quiz-meals-dishes -->
 
 ## Підсумок — Summary
 
@@ -85,6 +81,10 @@ To test your reading comprehension, read these short texts about daily routines:
 > **Я люблю́ холо́дний компот. Мій друг лю́бить гаря́чий чай з лимоном. У кафе́ ми замовля́ємо воду́ з газом.**
 > *(I love cold fruit water. My friend loves hot tea with lemon. In a cafe we order sparkling water.)*
 
+<!-- INJECT_ACTIVITY: match-up-food-vocab -->
+<!-- INJECT_ACTIVITY: group-sort-food-drinks -->
+<!-- INJECT_ACTIVITY: quiz-meals-dishes -->
+
 Before moving forward, verify that you can confidently answer the following questions:
 * Name 5 foods you have in your kitchen right now (for example: **хліб**, **яйце**, **сир**, **морква**, **яблуко**).
 * Name 3 drinks you like (for example: **кава**, **чай**, **сік**).
@@ -94,4 +94,8 @@ Before moving forward, verify that you can confidently answer the following ques
 * Why is **борщ** important to Ukrainians? (It is a powerful symbol of identity and cultural heritage).
 * Name one traditional Ukrainian cold drink (**компот** or **узвар**).
 
-If you can answer these questions and name your favorite foods, you are ready to practice. 
+If you can answer these questions and name your favorite foods, you are ready to practice.
+
+:::note Ресурси (Resources)
+To hear this vocabulary in action, listen to **Ukrainian Lessons Podcast (ULP), Season 1, Episodes 11-13**, where Anna introduces food and drink vocabulary and cafe ordering. This module's vocabulary also aligns with the communicative situations (restaurant, ordering food) outlined in the **Ukrainian State Standard 2024, Topic 3**.
+::: 

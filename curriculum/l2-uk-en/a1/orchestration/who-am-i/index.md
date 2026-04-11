@@ -1,6 +1,6 @@
 # Build Summary: who-am-i (A1)
 
-Generated: 2026-04-09 01:08
+Generated: 2026-04-11 00:50
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 01:08
 | verify | complete | 2026-04-08 23:06:23 |
 | review | complete | 2026-04-08 23:08:29 |
 | stress | complete | 2026-04-08 23:08:31 |
-| publish | complete | 2026-04-08 23:08:32 |
+| publish | complete | 2026-04-10 22:50:44 |
+| audit | complete | 2026-04-10 22:50:44 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 01:08
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

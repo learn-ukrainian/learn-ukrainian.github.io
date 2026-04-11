@@ -7,12 +7,7 @@
       "check": "VOCABULARY",
       "severity": "WARNING",
       "message": "Missing 1/10 required vocab: присвійний (possessive)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 5 exercise(s) but content has 4"
     }
   ],
-  "timestamp": "2026-04-07T23:03:21.961759+00:00"
+  "timestamp": "2026-04-11T00:49:10.529759+00:00"
 }

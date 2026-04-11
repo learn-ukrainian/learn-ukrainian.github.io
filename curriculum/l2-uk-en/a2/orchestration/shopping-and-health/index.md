@@ -1,6 +1,6 @@
 # Build Summary: shopping-and-health (A2)
 
-Generated: 2026-04-07 23:50
+Generated: 2026-04-11 02:23
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-07 23:50
 | vocab | complete | 2026-04-07 21:46:24 |
 | enrich | complete | 2026-04-07 21:46:24 |
 | verify | complete | 2026-04-07 21:46:24 |
-| review | complete | 2026-04-07 21:50:02 |
 | stress | complete | 2026-04-07 21:50:02 |
-| publish | complete | 2026-04-07 21:50:04 |
+| publish | complete | 2026-04-11 00:23:10 |
+| audit | complete | 2026-04-11 00:23:10 |
 
 ## Reviews
 
@@ -44,6 +44,7 @@ Generated: 2026-04-07 23:50
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`

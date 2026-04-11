@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-лише одна зміна: префікс дієслова повністю змінює його «часовий підпис». Почнемо з першої дієвідміни на прикладі слова **написати** *(to write, pf)*. До основи ми додаємо знайомі закінчення: я **напишу** *(I will write)*, ти **напишеш** *(you will write)*, він, вона, воно **напише** *(he/she/it will write)*. У множині ми кажемо: ми **напишемо** *(we will write)*, ви **напишете** *(you [pl] will write)*, вони **напишуть** *(they will write)*. А тепер погляньмо на другу дієвідміну, використовуючи популярне дієслово **зробити** *(to do/make, pf)*. Схема залишається абсолютно ідентичною до теперішнього часу: я **зроблю** *(I will do)*, ти **зробиш** *(you will do)*, він **зробить** *(he will do)*. Множина також стандартна: ми **зробимо** *(we will do)*, ви **зробите** *(you [pl] will do)*, вони **зроблять** *(they will do)*. Формально ці слова виглядають як теперішній час, але їхній сенс завжди спрямований у завтрашній день. Коли саме ми використовуємо цю форму в реальному житті? Проста форма майбутнього часу ідеально підходить для заяв про результати, досягнення цілей та серйозні обіцянки. Якщо ви хочете запевнити когось, що дія стовідсотково відбудеться і матиме конкретний фінал, вибирайте доконаний вид. В англійській мові фраза «I will do it» може звучати як спонтанне рішення або загальний намір. В українській мові слово «зроблю» звучить як тверда гарантія та персональна відповідальність за фінальний результат. Це одноразова, чітко обмежена в часі дія. Порівняйте ці життєві ситуації. Якщо ви запізнюєтеся на зустріч, ви телефонуєте другові і кажете: «Не хвилюйся, **я прийду вчасно** *(I will arrive on time)*». Ви обіцяєте факт своєї появи. Коли спортивна команда виходить на поле, капітан мотивує гравців фразою: «Сьогодні **ми виграємо матч** *(We will win the match)*». Він декларує перемогу як неминучий факт. Також ми часто використовуємо ці форми для швидкого розподілу обов'язків: > — **Олена:** Хто організує нашу подорож? *(Who will organize our trip?)* > — **Марко:** Я **куплю** *(will buy)* квитки, а ти **замовиш** *(will order)* готель. Звичайно, ми маємо згадати про деякі фонетичні особливості, які роблять українську мову такою милозвучною. Це **чергування приголосних** *(consonant alternations)*. Правила чергування, які ви вивчили для теперішнього часу, повністю зберігаються і в простій формі майбутнього часу. Наприклад, у дієсловах першої дієвідміни звук «з» часто змінюється на «ж». Дієслово **сказати** *(to say/tell, pf)* перетворюється на форму я **скажу** *(I will say)*, а не «сказаю». У другій дієвідміні звук «с» переходить у «ш», тому від слова **попросити** *(to ask/request, pf)* ми утворюємо правильну форму я **попрошу** *(I will ask)*. Також існують кілька унікальних, дуже давніх слів, які мають свої власні закінчення. Їх потрібно просто запам'ятати. Дуже корисне дієслово **дати** *(to give, pf)* відмінюється так: я **дам** *(I will give)*, ти **даси** *(you will give)*, він **дасть** *(he will give)*, ми **дамо** *(we will give)*, ви **дасте** *(you [pl] will give)*, вони **дадуть** *(they will give)*. За цією ж моделлю працює слово **відповісти** *(to answer, pf)*. Ви кажете: я **відповім** *(I will answer)*, ти **відповіси** *(you will answer)*, він **відповість** *(he will answer)*. У множині це буде: ми **відповімо** *(we will answer)*, ви **відповісте** *(you [pl] will answer)*, вони **відповідять** *(they will answer)*. Це звучить незвично, але дуже автентично. <!-- INJECT_ACTIVITY: fill-in-simple-future -->
+you use are identical to the present-tense endings you mastered for the first and second conjugation classes. The only difference is that you are applying them to the perfective partner of the verb. Adding a prefix like **на-** or **з-** changes the entire time signature from an ongoing reality to a guaranteed future result. For the first conjugation class, look at the perfective verb **написати**. The forms are conjugated exactly like present tense verbs: **я напишу**, **ти напишеш**, **він напише**, **ми напишемо**, **ви напишете**, and **вони напишуть**. For the second conjugation class, using **зробити**, the pattern follows the exact same mathematical logic: **я зроблю**, **ти зробиш**, **він зробить**, **ми зробимо**, **ви зробите**, and **вони зроблять**. :::info **Grammar box** The perfective future looks identical to the present tense conjugation. The presence of a perfective prefix or a distinct perfective root is your only structural signal that the sentence discusses a future event rather than a present reality. ::: We use the simple future form specifically to express results and promises. When you choose this form, you communicate that a one-time action will be finished, a goal will be reached, or a firm commitment is being made. In English, we typically use "I will do it" for both ongoing and completed future actions, but Ukrainian demands precision. If you intend to actually finish the task, you must use the perfective simple future. Я обіцяю, що обов'язково прийду вчасно на зустріч. Ми довго тренувалися, тому я впевнений, що ми виграємо цей матч. Завтра зранку я напишу звіт і одразу надішлю його керівнику. У цих ситуаціях мовець говорить про конкретний результат, якого гарантовано досягне. > *I promise that I will definitely arrive on time to the meeting. We trained for a long time, so I am confident that we will win this match. Tomorrow morning I will write the report and immediately send it to the manager. In these situations, the speaker is talking about a specific result they will guaranteed achieve.* Because the simple future relies on present-tense conjugation patterns, you must also apply the familiar consonant alternations. The identical historical phonetic shifts you learned for the present tense apply directly to perfective verbs in the future. For example, the perfective verb **сказати** undergoes the exact same phonetic shift as its imperfective partner, becoming **я скажу** instead of the incorrect form *сказаю*. When dealing with **просити**, the identical shift that creates the present form **прошу** applies to the future perfective **попросити**, yielding **я попрошу** and **ти попросиш**. These shifts ensure that the flow of spoken Ukrainian remains smooth. You will also encounter highly irregular verbs that follow unique patterns in the simple future. The perfective verb **відповісти** changes dramatically, yielding the forms **я відповім** and **ти відповіси**. The foundational verb **дати** operates on a similarly ancient logic, shifting to the distinct forms **я дам** and **ти даси**. Learning these irregular forms is critical because they describe essential actions. <!-- INJECT_ACTIVITY: fill-in, complete sentences with the correct simple future form based on aspect -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,7 +596,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -609,14 +676,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

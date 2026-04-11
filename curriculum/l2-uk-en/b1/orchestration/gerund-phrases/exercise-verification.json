@@ -1,0 +1,171 @@
+{
+  "total_items": 261,
+  "grounded_items": 235,
+  "ungrounded": [
+    {
+      "word": "членом",
+      "exercise_type": "quiz",
+      "context": "Яким членом речення завжди є дієприслівниковий зворот?",
+      "role": "context"
+    },
+    {
+      "word": "розбору",
+      "exercise_type": "quiz",
+      "context": "Як ми підкреслюємо дієприслівниковий зворот під час розбору?",
+      "role": "context"
+    },
+    {
+      "word": "вислів",
+      "exercise_type": "match-up",
+      "context": "Сталий вислів, який не відокремлюється комами",
+      "role": "context"
+    },
+    {
+      "word": "і'",
+      "exercise_type": "match-up",
+      "context": "Два звороти, з'єднані 'і', без коми між ними",
+      "role": "context"
+    },
+    {
+      "word": "й'",
+      "exercise_type": "match-up",
+      "context": "Слова 'і/й', які скасовують кому перед зворотом",
+      "role": "context"
+    },
+    {
+      "word": "скасовують",
+      "exercise_type": "match-up",
+      "context": "Слова 'і/й', які скасовують кому перед зворотом",
+      "role": "context"
+    },
+    {
+      "word": "адвербіалізація",
+      "exercise_type": "match-up",
+      "context": "Адвербіалізація",
+      "role": "answer"
+    },
+    {
+      "word": "перетворення",
+      "exercise_type": "match-up",
+      "context": "Перетворення дієприслівника на звичайний прислівник",
+      "role": "context"
+    },
+    {
+      "word": "прислівник",
+      "exercise_type": "match-up",
+      "context": "Перетворення дієприслівника на звичайний прислівник",
+      "role": "context"
+    },
+    {
+      "word": "штучне",
+      "exercise_type": "match-up",
+      "context": "Надмірне та штучне використання зворотів у тексті",
+      "role": "context"
+    },
+    {
+      "word": "безвідповідально",
+      "exercise_type": "error-correction",
+      "context": "Він працював безвідповідально не покладаючи рук.",
+      "role": "context"
+    },
+    {
+      "word": "зупинивши",
+      "exercise_type": "error-correction",
+      "context": "Студенти слухали лекцію зупинивши подих.",
+      "role": "context"
+    },
+    {
+      "word": "відчинив",
+      "exercise_type": "error-correction",
+      "context": "Він відчинив двері і, ввімкнувши світло, оглянув кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "сидіти",
+      "exercise_type": "error-correction",
+      "context": "Шкідливо читати сидіти.",
+      "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "group-sort",
+      "context": "Двері, зачинені ввечері",
+      "role": "answer"
+    },
+    {
+      "word": "туристам",
+      "exercise_type": "error-correction",
+      "context": "Піднявшись на гору, туристам відкрився краєвид.",
+      "role": "context"
+    },
+    {
+      "word": "відкрився",
+      "exercise_type": "error-correction",
+      "context": "Піднявшись на гору, туристам відкрився краєвид.",
+      "role": "context"
+    },
+    {
+      "word": "вікно",
+      "exercise_type": "error-correction",
+      "context": "Читаючи книгу, вікно раптом відчинилося.",
+      "role": "context"
+    },
+    {
+      "word": "відчинилося",
+      "exercise_type": "error-correction",
+      "context": "Читаючи книгу, вікно раптом відчинилося.",
+      "role": "context"
+    },
+    {
+      "word": "фразеологічні",
+      "exercise_type": "true-false",
+      "context": "Фразеологічні звороти (наприклад: не покладаючи рук) ніколи ",
+      "role": "context"
+    },
+    {
+      "word": "ставити",
+      "exercise_type": "true-false",
+      "context": "Підсилювальна частка «і» або «й» перед зворотом вимагає став",
+      "role": "context"
+    },
+    {
+      "word": "неподільна",
+      "exercise_type": "fill-in",
+      "context": "Синтаксично весь дієприслівниковий зворот виступає як одна н",
+      "role": "context"
+    },
+    {
+      "word": "пишеться",
+      "exercise_type": "fill-in",
+      "context": "Якщо зворот з часом перетворився на популярний _____, він пи",
+      "role": "context"
+    },
+    {
+      "word": "поспіль",
+      "exercise_type": "fill-in",
+      "context": "Коли два звороти йдуть поспіль без сполучників, це _____ обс",
+      "role": "context"
+    },
+    {
+      "word": "проєктом",
+      "exercise_type": "match-up",
+      "context": "Він сумлінно працював над проєктом",
+      "role": "answer"
+    },
+    {
+      "word": "здоров'я",
+      "exercise_type": "match-up",
+      "context": "Шкідливо для здоров'я читати",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 15,
+    "not_tested": [
+      "відокремлення",
+      "стилістика"
+    ]
+  },
+  "all_grounded": false
+}

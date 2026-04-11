@@ -1,6 +1,6 @@
 # Build Summary: reading-ukrainian (A1)
 
-Generated: 2026-04-09 00:26
+Generated: 2026-04-11 00:50
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 00:26
 | verify | complete | 2026-04-08 22:25:31 |
 | review | complete | 2026-04-08 22:26:34 |
 | stress | complete | 2026-04-08 22:26:36 |
-| publish | complete | 2026-04-08 22:26:39 |
+| publish | complete | 2026-04-10 22:50:22 |
+| audit | complete | 2026-04-10 22:50:22 |
 
 ## Reviews
 
@@ -35,13 +36,22 @@ Generated: 2026-04-09 00:26
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 52s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 32s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 123s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 79s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 83s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 158s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 33s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 63s | ✅ |
 
+## Friction
+
+- `friction.yaml` (134 bytes)
+
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
+- `friction.yaml`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`

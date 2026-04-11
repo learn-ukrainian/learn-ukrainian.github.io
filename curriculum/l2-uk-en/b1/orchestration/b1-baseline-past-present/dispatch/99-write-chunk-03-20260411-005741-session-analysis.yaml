@@ -1,0 +1,63 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T22-56-fb6901e3.json
+phase: write-chunk-03
+prompt_chars: 51178
+response_chars: 6190
+prompt_words: 6879
+response_words: 937
+sections:
+- name: header
+  start: 0
+  length: 442
+  fraction: 0.0086
+- name: skeleton
+  start: 442
+  length: 1377
+  fraction: 0.0269
+- name: prior_summary
+  start: 1819
+  length: 3350
+  fraction: 0.0655
+- name: plan
+  start: 5169
+  length: 17625
+  fraction: 0.3444
+- name: wiki
+  start: 17926
+  length: 28256
+  fraction: 0.5521
+- name: output_spec
+  start: 51050
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: Whenever you narrate your own past experiences, you must constantly be aware
+    of your own gender identity and choose the correct verb ending accordingly.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: 'If the subject has a feminine gender, like the word "сестра", the verb must
+    absolutely have a feminine ending: "Моя сестра сказала".'
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: 'But if you are asking a woman, you must ask: "Де ти була?".'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P5 (100w): Register Note: explain that using the correct aspect is what makes
+    Ukrainian sound ''natural'' rather than ''translated''.'
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: inject_activity
+  text: fill-in-tense-forms
+  covered: false
+  coverage_note: marker missing

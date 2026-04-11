@@ -1,0 +1,52 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-49-1ce7d88e.json
+phase: write-chunk-01
+prompt_chars: 41777
+response_chars: 5017
+prompt_words: 6179
+response_words: 838
+sections:
+- name: header
+  start: 0
+  length: 473
+  fraction: 0.0113
+- name: skeleton
+  start: 473
+  length: 1891
+  fraction: 0.0453
+- name: plan
+  start: 2364
+  length: 12407
+  fraction: 0.297
+- name: wiki
+  start: 8524
+  length: 26878
+  fraction: 0.6434
+- name: output_spec
+  start: 41649
+  length: 128
+  fraction: 0.0031
+large_sections:
+- wiki
+directives_total: 11
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: '| `Привіт, Наталя!` | `Привіт, Наталю!` | The vocative case is mandatory
+    for direct address in Ukrainian.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '` | In a formal address consisting of a first name and patronymic, **both**
+    nouns must be in the vocative case (Source 5, 10, 16).'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: '` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`)
+    and a surname, the title must be in the vocative case, while the surname remains
+    in the nominative (Source 5, 16).'
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)

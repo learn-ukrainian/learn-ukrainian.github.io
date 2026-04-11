@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'DEDUCT for missing recommended vocabulary. While the content outline
+    is followed perfectly with all H2 headings and dialogues present, the prose fails
+    to cover three recommended vocabulary words from '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: DEDUCT for minor English translation awkwardness. The Ukrainian is highly
+    accurate, but the phrase `> **Анто́н:** Ні́чого! ... *(That is nothing! ...)*`
+    relies on an overly literal and slightly roboti
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: REWARD for excellent PPP flow and clear grammar instruction. The text
+    doesn't just list conjunctions; it explicitly teaches the semantic difference
+    between soft contrast (`а`) and strong contrast (`ал
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: DEDUCT for incomplete coverage. The required vocabulary is used naturally
+    in context, but the recommended words `тому` (therefore), `також` (also), and
+    `або` (or) are entirely absent from the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: REWARD for correctly matching the plan's activity hints and placing them
+    safely after all prerequisite knowledge (especially `бо/тому що`) has been introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: REWARD for an encouraging, substantive teacher persona ("Connecting your
+    thoughts transforms how you sound in Ukrainian") without resorting to empty gamified
+    filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: REWARD for clean markdown, correct section ordering, and a word count
+    (1778 words) that comfortably exceeds the 1200-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: REWARD for teaching authentic spoken patterns, such as the "Why-Because
+    loop" and the natural conversational workhorse `бо`.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: REWARD for writing highly contextual, multi-turn dialogues that seamlessly
+    integrate the target grammar (e.g., contrasting the Carpathians and the sea).
+findings: []

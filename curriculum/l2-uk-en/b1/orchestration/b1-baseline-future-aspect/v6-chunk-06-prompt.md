@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-замість звичайного теперішнього. Наприклад, студент хоче сказати англійською «I am reading a book now» і радісно каже українською: «Я зараз прочитаю книгу». Для носія української мови ця фраза звучить вкрай нелогічно і навіть комічно. Слово «зараз» прямо вказує на поточний момент мовлення, але дієслово «прочитаю» — це типовий доконаний вид, який означає результат у майбутньому. Коли ви кажете «я прочитаю», українець чує таке повідомлення: «Я обов'язково закінчу читати цю книгу пізніше і потім покажу тобі результат». Ваша дія ще зовсім не завершена, тому вона автоматично проектується у майбутнє. Якщо ж ви хочете повідомити співрозмовнику, що ви перебуваєте у процесі читання саме в цю секунду, ви маєте використати дієслово недоконаного виду. Правильний варіант звучатиме так: «Я зараз читаю книгу». Те саме стосується й інших слів. Ви не можете сказати «я зараз напишу листа», якщо ви тримаєте ручку в руці. Запам'ятайте це правило. Якщо дія відбувається прямо зараз, на ваших очах, це завжди стовідсотково недоконаний вид і тільки теперішній час. Розуміння цієї видової матриці також чудово допомагає вам будувати красиві та динамічні розповіді. Коли ви розказуєте цікаву **історію** *(story)*, види дієслова працюють як професійна режисерська камера у кіно. Недоконаний вид створює загальне **тло** *(background)* або декорації для вашої головної сцени. Він малює широку картину: «Сонце яскраво світило на небі, я повільно йшов вулицею». Це довгі процеси без чіткого кінця. Натомість доконаний вид діє як раптова подія, яка несподівано ламає цей статус-кво і стрімко штовхає сюжет уперед. Він вводить нові активні дії: «Раптом я побачив старого друга, і мій телефон голосно задзвонив». Ця ж кінематографічна логіка ідеально працює і для ваших складних планів на майбутнє. Ви можете вільно комбінувати різні види, щоб показати правильну послідовність майбутніх подій. Наприклад, ви можете сказати другу: «Я буду чекати на тебе біля театру, а коли ти прийдеш, я радісно закричу». У цій фразі конструкція «буду чекати» — це недоконаний вид, ваш тривалий безперервний процес. А слова «прийдеш» та «закричу» — це доконаний вид, короткі завершені події, які переривають або доповнюють цей процес. Ще одна надзвичайно важлива відмінність полягає у тому, як наші дві мови говорять про заплановані майбутні події. Англійська мова дуже часто і природно використовує теперішній тривалий час для вираження конкре планів. Ви кажете: «I am going to Berlin tomorrow». Ця конструкція є абсолютно нормальною для англомовного світу. Але в українській мові ми мислимо зовсім інакше. Для дій, які гарантовано стануться завтра або через тиждень, ми традиційно віддаємо перевагу саме формам майбутнього часу. Ми скажемо: «Завтра я поїду до Берліна». Тут ми використовуємо доконаний вид і робимо акцент на результаті нашої подорожі. Або ж ми можемо сказати: «Завтра я буду їхати до Берліна», обираючи недоконаний вид з акцентом на довгому процесі дороги. Звісно, ви іноді можете почути теперішній час для дуже близьких планів. Наприклад, коротка фраза «Я завтра їду додому» є цілком допустимою в розмовному стилі. Але спеціальні форми майбутнього часу є значно поширенішими, точнішими та граматично безпечнішими для іноземців. Вони не створюють жодної плутанини між тим, що ви робите зараз, і тим, що плануєте зробити потім. Тому сміливо використовуйте майбутній час. <!-- INJECT_ACTIVITY: error-correction-aspect-tense -->
+grammatically impossible in Ukrainian. If you are sitting with a book in your hands and someone asks what you are doing, answering with a perfective verb sounds as if you are completely ignoring their question and suddenly declaring your future intentions to the room. The true elegance of the aspect system reveals itself when we tell stories or describe complex plans. Aspects allow us to separate the background setting from the main events that move the narrative forward. Imperfective verbs set the scene, describing the status quo, the weather, or ongoing states. Perfective verbs introduce the discrete, completed events that break that status quo and create a sequence of actions. Сонце яскраво світило, і я повільно йшов вулицею. Раптом задзвонив телефон, і я побачив повідомлення від друга. Процес прогулянки — це лише фон для головної події. > *The sun was shining brightly, and I was walking slowly down the street. Suddenly the phone rang, and I saw a message from a friend. The process of the walk is just the background for the main event.* This exact same logic applies when we project our plans into the future. We use the imperfective aspect to establish the continuous reality of what we will be doing, and the perfective aspect for the specific events that will punctuate that time. Завтра ввечері я буду чекати на тебе в кафе. Коли ти прийдеш, я замовлю нам дві кави. Моє очікування — це тривалий процес, а твій прихід і моє замовлення — це конкретні результати. > *Tomorrow evening I will be waiting for you in the cafe. When you arrive, I will order us two coffees. My waiting is a continuous process, and your arrival and my ordering are concrete results.* Another major source of interference comes from the English tendency to use the Present Continuous tense for future arrangements. In English, it is perfectly natural and extremely common to say "I am going to Berlin tomorrow" or "We are having dinner tonight." Ukrainian handles this temporal projection differently. В українській мові ми надаємо перевагу формам майбутнього часу для майбутніх подій. Ми кажемо: «Завтра я поїду до Берліна» або «Сьогодні ввечері ми будемо вечеряти». Форми теперішнього часу використовують для майбутнього дуже рідко. > *In Ukrainian, we prefer future tense forms for future events. We say: "Tomorrow I will go to Berlin" or "Tonight we will be having dinner." Present tense forms are used for the future very rarely.* While it is occasionally possible to use a present tense verb of motion for immediate and certain plans, such as saying "я їду" (I am going) for a train leaving in an hour, this is an exception rather than the rule. Relying on the present tense for future plans will often confuse your listeners, as it sounds like you are describing a current, ongoing reality that contradicts the future timeframe. You should always default to the clear boundaries of the future tense forms, choosing perfective for completed goals and imperfective for ongoing activities. <!-- INJECT_ACTIVITY: error-correction-aspect-tense -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,7 +596,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -609,14 +676,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -47,21 +47,21 @@
       "status": "complete",
       "ts": "2026-04-07T22:38:38.905760+00:00"
     },
-    "review": {
-      "status": "complete",
-      "ts": "2026-04-07T22:42:41.942072+00:00"
-    },
     "stress": {
       "status": "complete",
       "ts": "2026-04-07T22:42:42.098714+00:00"
     },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-07T22:42:43.826951+00:00"
-    },
     "skeleton": {
       "status": "complete",
       "ts": "2026-04-08T23:39:06.778407+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-10T22:39:46.713874+00:00"
+    },
+    "audit": {
+      "status": "complete",
+      "ts": "2026-04-10T22:39:46.714069+00:00"
     }
   }
 }

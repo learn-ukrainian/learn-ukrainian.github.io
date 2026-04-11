@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All outline points are covered with correct section pacing. Vocabulary
+    requirements are fully met.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The text states that gerunds "завжди закінчуються на літеру «и»", which
+    contradicts the text's earlier correct rule that reflexive gerunds end in «-сь»
+    (e.g., "сміючись").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent integration of theory and clear rules. The pedagogical breakdown
+    of avoiding Russian calques for active present participles is particularly strong
+    and aligns with Antonenko-Davydovych.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required and recommended words (`контрольна робота`, `самооцінка`, `повторення`,
+    `впевнено`) are used organically.
+- dimension: 5
+  name: Exercise quality
+  score: 4
+  evidence: The writer invented 17 custom `INJECT_ACTIVITY` markers instead of using
+    the 6 IDs explicitly provided in the plan's `activity_hints`. This breaks the
+    build pipeline.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural academic tone. Warm, encouraging teacher persona that avoids
+    gamified jargon.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4715 (exceeds the 4000-word target). All headings correspond
+    to the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent decolonization perspective applied to linguistic structures
+    (rejecting artificial participles enforced during Russification).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are well-structured, but the Block 1 dialogue omits the gerund
+    examples explicitly requested in the plan (`Читаючи ці рядки`, `Прочитавши 'Кобзар'`).
+findings: []

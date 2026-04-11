@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-47-030a13da.json
+phase: review
+prompt_chars: 36657
+response_chars: 4460
+prompt_words: 5739
+response_words: 667
+sections:
+- name: preamble
+  start: 0
+  length: 441
+  fraction: 0.012
+- name: plan
+  start: 441
+  length: 32226
+  fraction: 0.8791
+- name: output_spec
+  start: 32667
+  length: 3990
+  fraction: 0.1088
+large_sections:
+- plan
+directives_total: 21
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: You cannot just use their regular, dictionary-form name; you must change its
+    ending to show that you are talking to them, rather than about them.
+  covered: false
+  coverage_note: 8/21 keywords (38%)
+- kind: must
+  text: When you address a person, you must alter their name or title to match this
+    specific grammatical role.
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: 'However, if you want to address her, you must use the vocative: **Олено,
+    ходи сюди!** (Olena, come here!), because you are talking TO her.'
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: Whenever you use the formal title **пан**, it must also take this ending,
+    as in **Добрий день, пане!** (Good day, sir!).
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: Instead of adding **-е**, you must add the letter **-ю** to the end of the
+    word.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 7/22 keywords (32%)
+- kind: must
+  text: '- The `find` string MUST be an EXACT copy-paste from the module content.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

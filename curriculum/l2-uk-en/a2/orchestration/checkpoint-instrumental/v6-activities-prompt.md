@@ -92,9 +92,9 @@ required:
 > **Студент:** Що ми робимо сьогодні? *(What are we doing today?)*
 > **Вчитель:** Сьогодні у нас **контрольна точка** *(checkpoint)*. Ми повторюємо **орудний відмінок** *(instrumental case)*.
 
-The **орудний відмінок** (instrumental case) is essential. It answers the questions **ким?** (by whom?) and **чим?** (by/with what?). In this module, we review five primary functions: tool or means (**інструмент або засіб**), accompaniment (**супровід**), profession (**професія**), spatial location (**місце**), and temporal expressions (**час**). Let us test your knowledge.
+The **орудний відмінок** (instrumental case) is essential. It answers the questions **ким?** (by whom?) and **чим?** (by/with what?). In this module, we review five primary functions: tool or means (**інструмент або засіб**), accompaniment (**супровід**), profession (**професія**), spatial location (**місце**), and temporal expressions (**час**). Let us test your knowledge with a short **вправа** (exercise).
 
-Let's review the basic noun endings. Words in the first and second declensions change depending on their stem (hard, soft, or mixed).
+Let's review the basic noun endings, as taught in Ukrainian school textbooks (Захарійчук Grade 4, Заболотний Grade 5). Words in the first and second declensions change depending on their stem (hard, soft, or mixed).
 
 For hard stems, we use the endings **-ою** (feminine) and **-ом** (masculine/neuter).
 * **Вона розмовляє з рідною сестрою.** (She is talking with her own sister.)
@@ -104,7 +104,7 @@ For soft and mixed stems, we use **-ею** and **-ем**.
 * **Фермер працює із сирою землею.** (The farmer works with the damp earth.)
 * **Чайки літають над синім морем.** (The seagulls fly above the blue sea.)
 
-For words ending in a vowel sound, we use **-єю** and **-єм**.
+For words ending in **-я**, **-є**, **-ї**, or **-й**, we use **-єю** and **-єм**.
 * **Ми живемо однією великою мрією.** (We live by one great dream.)
 * **Стежка йде самим краєм лісу.** (The path goes by the very edge of the forest.)
 
@@ -112,7 +112,7 @@ Nouns in the third and fourth declensions have special phonetic changes. When a 
 * **Вона любить гуляти темною ніччю.** (She likes to walk during the dark night.)
 * **Ми купуємо хліб із морською сіллю.** (We buy bread with sea salt.)
 
-If the word ends in two consonants or an `р` or a labial consonant (б, п, в, м, ф), we do not double it. Instead, we use an apostrophe.
+If the word ends in two consonants, there is no doubling (**радістю**). If it ends in an `р` or a labial consonant (б, п, в, м, ф), we use an apostrophe.
 * **Вона пише картину з великою любов'ю.** (She paints the picture with great love.)
 * **Він часто говорить з матір'ю.** (He often speaks with his mother.)
 
@@ -120,7 +120,7 @@ Neuter nouns of the fourth declension can have parallel forms.
 * **Ми називаємо його своїм справжнім ім'ям.** (We call him by his real name.)
 * **Також можна сказати: своїм іменем.** (Also one can say: by his name.)
 
-Adjectives must agree with their nouns. For masculine and neuter words, the ending is **-им**. For feminine words, the ending is **-ою**. Personal pronouns also have specific forms. You must memorize these forms: **мною** (me), **тобою** (you), **ним** (him/it), **нею** (her), **нами** (us), **вами** (you, plural), and **ними** (them).
+Adjectives must agree with their nouns. For masculine and neuter words, the ending is **-им** (or **-ім**). For feminine words, the ending is **-ою** (or **-єю**). For plurals, adjectives take **-ими** (or **-іми**), and nouns take **-ами**, **-ями**, or **-ми** (like **дітьми**). As noted in Голуб (Grade 6, p. 179), personal pronouns also have specific forms. You must memorize these forms: **мною** (me), **тобою** (you), **ним** (him/it), **нею** (her), **нами** (us), **вами** (you, plural), and **ними** (them).
 
 A crucial rule applies to third-person pronouns. When they follow a preposition, they require a mandatory **н-** at the beginning.
 
@@ -135,7 +135,7 @@ A crucial rule applies to third-person pronouns. When they follow a preposition,
 
 ## Частина 2: Вибір та застосування (Part 2: Choice and Application)
 
-Spatial prepositions describe where things are located. When we describe a static location — answering the question **де?** (where?) — we must use the **орудний відмінок** (instrumental case). The most common spatial prepositions are **над** (above), **під** (under), and **між** (between).
+Spatial prepositions describe where things are located. When we describe a static location — answering the question **де?** (where?) — we must use the **орудний відмінок** (instrumental case). The most common spatial prepositions are **над** (above), **під** (under), **між** (between), **перед** (in front of/before), and **за** (behind).
 
 * **Кругле дзеркало висить над умивальником.** (The round mirror hangs above the washbasin.)
 * **Велика картина висить над моїм ліжком.** (The large painting hangs above my bed.)
@@ -143,6 +143,8 @@ Spatial prepositions describe where things are located. When we describe a stati
 * **Старі кросівки лежать під шафою.** (The old sneakers lie under the wardrobe.)
 * **Кіт любить сидіти між вікнами.** (The cat likes to sit between the windows.)
 * **Є вузький прохід між шафою і ліжком.** (There is a narrow passage between the wardrobe and the bed.)
+
+These prepositions can also be used for time (temporal expressions): **перед сном** (before sleep), **за вечерею** (during dinner).
 
 Notice that **між** (between) always requires at least two nouns, and both must be in the instrumental case.
 * **Вона стоїть між братом і сестрою.** (She stands between the brother and the sister.)
@@ -211,15 +213,15 @@ When speaking Ukrainian, you must avoid translating directly from other language
    ✅ **Ми голосно сміялися з нього.** (We laughed loudly at him.)
    ❌ *Ми сміялися над ним.* (Incorrect Russian error).
 
-Let us analyze a visual scene to prepare for your next **завдання** (task). Imagine a busy kitchen. You must **описати** (to describe) the scene using the instrumental case.
+Let us analyze a visual scene to prepare for your next **завдання** (task). Imagine a busy kitchen. You must **визначити** (to identify) the objects and **описати** (to describe) the scene using the instrumental case.
 
 > **На кухні багато людей. Батько ріже свіжий хліб гострим ножем.** *(There are many people in the kitchen. The father is cutting fresh bread with a sharp knife.)*
 > **Мати готує смачний суп із м'ясом.** *(The mother is cooking a delicious soup with meat.)*
 > **Велика миска з фруктами стоїть між вікнами.** *(A large bowl with fruit stands between the windows.)*
-> **Білий рушник висить під раковиною.** *(A white towel hangs under the sink.)*
+> **Білий рушник висить під мийкою.** *(A white towel hangs under the sink.)*
 > **Маленький собака лежить під обіднім столом.** *(A small dog lies under the dining table.)*
 
-This short **текст** (text) uses the instrumental case to show the tool (**гострим ножем**), the ingredients (**із м'ясом**), and the spatial relations (**між вікнами**, **під раковиною**, **під обіднім столом**).
+This short **текст** (text) uses the instrumental case to show the tool (**гострим ножем**), the ingredients (**із м'ясом**), and the spatial relations (**між вікнами**, **під мийкою**, **під обіднім столом**).
 
 Now it is time to write your own paragraph. A great way to practice the **орудний відмінок** (instrumental case) is to describe your daily routine. You can build complex **речення** (sentences) by combining different functions.
 

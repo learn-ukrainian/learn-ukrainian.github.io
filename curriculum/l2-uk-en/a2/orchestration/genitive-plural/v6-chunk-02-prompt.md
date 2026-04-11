@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-багато нових будинків. *(There are many new buildings in the city.)* Я бачу п'ять великих столів у кімнаті. *(I see five large tables in the room.)* Скільки студентів сьогодні на лекції? *(How many students are at the lecture today?)* Ми купили кілька нових підручників. *(We bought a few new textbooks.)* If a masculine noun ends in a soft consonant (like -ь or -ць), it usually still takes the **-ів** ending. However, you must watch out for fleeting vowels. Often, the vowels **е** or **о** in the final syllable will drop out before you add the ending. - **учитель** *(teacher)* → п'ять **учителів** *(of teachers)* - **олівець** *(pencil)* → десять **олівців** *(of pencils)* - **хлопець** *(boy)* → багато **хлопців** *(of boys)* - **день** *(day)* → сім **днів** *(of days)* **Читаємо українською:** У цій школі працює десять учителів. *(Ten teachers work in this school.)* Мені треба купити кілька кольорових олівців. *(I need to buy a few colored pencils.)* На вулиці грає багато хлопців. *(Many boys are playing on the street.)* Я буду там через п'ять днів. *(I will be there in five days.)* The ending **-їв** is a variation of -ів, and it appears only when the noun's stem ends in a vowel or an apostrophe. This keeps the pronunciation smooth and natural. - **герой** *(hero)* → багато **героїв** *(of heroes)* - **трамвай** *(tram)* → п'ять **трамваїв** *(of trams)* - **подвір'я** *(courtyard)* → кілька **подвір'їв** *(of courtyards)* - **відкриття** *(discovery)* → багато **відкриттів** *(of discoveries)* **Читаємо українською:** Ми знаємо багато українських героїв. *(We know many Ukrainian heroes.)* Скільки трамваїв їде в центр? *(How many trams are going to the center?)* У цьому районі є кілька великих подвір'їв. *(There are a few large courtyards in this area.)* There is a rare exception for masculine nouns. Words that denote nationalities or social groups and end in the suffix **-ин** or **-їн** lose this suffix entirely in the plural. When this happens, they take a "zero ending" (**нульове закінчення**), meaning you add nothing to the base. - **громадянин** *(citizen)* → мільйони **громадян** *(of citizens)* - **селянин** *(villager)* → багато **селян** *(of villagers)* - **болгарин** *(Bulgarian)* → кілька **болгар** *(of Bulgarians)* - **татарин** *(Tatar)* → тисячі **татар** *(of Tatars)* **Читаємо українською:** Тисячі громадян чекають на новини. *(Thousands of citizens are waiting for news.)* У нашому місті живе багато болгар. *(Many Bulgarians live in our city.)* Кілька селян продають овочі на ринку. *(A few villagers are selling vegetables at the market.)* Finally, pay attention to the word **чоловік** *(man/person)*. It has parallel forms depending on the context. When you count people specifically as a unit of measure with numbers, you use the zero ending form: «п'ять чоловік» *(five people/men)*. However, in more general contexts, «багато **чоловіків**» *(of men)* is also perfectly valid. Most other masculine nouns strictly take the -ів ending. **Читаємо українською:** Там стояло десять чоловік. *(Ten people stood there.)* На конференцію приїхало багато молодих чоловіків. *(Many young men came to the conference.)* <!-- INJECT_ACTIVITY: match-up, Match Nominative singular nouns to their Genitive plural forms -->
+is very predictable. We simply add the ending "-ів" to the initial form of the word.* `стіл` → `столів` `будинок` → `будинків` `підручник` → `підручників` `студент` → `студентів` `брат` → `братів` У мого друга є п'ять великих столів. На цій вулиці побудували кілька нових будинків. У бібліотеці є багато підручників. Ми бачимо десять студентів. > *My friend has five large tables. They built several new houses on this street. The library has many textbooks. We see ten students.* Іменники чоловічого роду з м'якою основою також найчастіше отримують закінчення «-ів». Але тут треба бути уважними, бо іноді зникають голосні «е» або «о». > *Masculine nouns with a soft stem also most often receive the ending "-ів". But here you need to be careful, because sometimes the vowels "е" or "о" disappear.* `учитель` → `учителів` `олівець` → `олівців` `хлопець` → `хлопців` `день` → `днів` У школі працює багато хороших учителів. Я купив кілька кольорових олівців. У нашому класі вчиться вісім хлопців. Я чекав тебе п'ять днів. > *Many good teachers work at the school. I bought several colored pencils. Eight boys study in our class. I waited for you for five days.* Якщо основа слова закінчується на голосний звук або має апостроф, ми використовуємо закінчення «-їв» замість «-ів». > *If the stem of the word ends in a vowel sound or has an apostrophe, we use the ending "-їв" instead of "-ів".* `герой` → `героїв` `трамвай` → `трамваїв` `подвір'я` → `подвір'їв` `відкриття` → `відкриттів` У цьому фільмі є кілька головних героїв. На зупинці стоїть багато трамваїв. Учені зробили багато нових відкриттів. > *There are several main heroes in this film. There are many trams standing at the stop. Scientists have made many new discoveries.* :::info **Grammar box** Notice that words like `подвір'я` and `відкриття` are neuter nouns. Most neuter nouns have a zero ending in the plural, but these borrow the `-їв` ending. ::: Деякі іменники чоловічого роду втрачають свій суфікс у множині і мають нульове закінчення. Це слова, які означають національність або соціальну групу і закінчуються на «-ин» або «-їн». > *Some masculine nouns lose their suffix in the plural and have a zero ending. These are words that denote nationality or social group and end in "-ин" or "-їн".* `громадянин` → `громадян` `селянин` → `селян` `болгарин` → `болгар` `татарин` → `татар` На площі зібралося багато громадян. У цьому селі живе кілька працьовитих селян. Я знаю п'ять болгар. > *Many citizens gathered on the square. Several hardworking peasants live in this village. I know five Bulgarians.* Існує одне дуже важливе слово з особливим правилом. Це слово «чоловік», яке означає «людина» або «мужчина». > *There is one very important word with a special rule. This is the word "чоловік", which means "person" or "man".* When we count people generally as a unit, we use the zero ending form: `п'ять чоловік` (five people). When talking about men specifically, the regular form `багато чоловіків` (many men) is used. <!-- INJECT_ACTIVITY: match-up-masc-genitive --> [match-up, Match Nominative singular nouns to their Genitive plural forms, 8 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -539,7 +539,74 @@ Understanding numeral agreement is a crucial hub connecting several grammatical 
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -566,14 +633,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

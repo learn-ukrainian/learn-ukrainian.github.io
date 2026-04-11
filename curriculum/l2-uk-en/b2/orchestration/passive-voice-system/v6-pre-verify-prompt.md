@@ -1,0 +1,80 @@
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG — drop textbook search -->
+# V6 Pre-Write Verification — Linguistic Fact Checking
+
+You MUST verify linguistic facts using the tools below BEFORE writing begins. This is a verification-only step — do NOT write any module content.
+
+The wiki article already contains curated textbook content — your job here is to verify VOCABULARY, GRAMMAR RULES, CALQUES, and CEFR LEVELS using linguistic tools.
+
+## Module
+
+**Module:** 1: Система пасивного стану в українській мові (B2, B2.1a [Passive Voice System])
+
+## Plan vocabulary to verify
+
+- здійснюватися
+- впроваджуватися
+- погоджено
+- виконано
+- результат
+- розроблятися
+- моніторинг
+- доцільно
+- звітність
+- реформа
+- довкілля
+
+## Sections to research
+
+- **Пасивна парадигма: три кити української граматики**: 
+- **Стилістична доцільність та переваги активних конструкцій**: 
+- **Культура мовлення: типові помилки та анти-кальки**: 
+- **Синтез: аналіз офіційної документації**: 
+
+## Instructions
+
+Complete ALL of the following verification tasks. Each task MUST include at least one tool call.
+
+### Task 1: Verify ALL vocabulary words exist in VESUM
+
+Call `verify_words` with EVERY word from the plan vocabulary above. Batch them (10-15 per call).
+
+Report:
+- ✅ Words confirmed in VESUM
+- ❌ Words NOT in VESUM (these must not be used in the module)
+
+### Task 2: Verify grammar rules
+
+For any grammar rules mentioned in the plan, call `query_pravopys` to confirm the official 2019 rule.
+
+Report the Правопис section number and key rule text.
+
+### Task 3: Check for calques
+
+Call `search_style_guide` for any phrases in the plan that might be calques. Check at least 3 phrases.
+
+Report any calques found with the correct Ukrainian alternative.
+
+### Task 4: Verify CEFR appropriateness
+
+Call `query_cefr_level` on 5-10 key vocabulary words to confirm they match the target level (B2).
+
+Report any words above the target level.
+
+## Output format
+
+Output your findings in this exact format:
+
+<verification>
+## VESUM Verification
+- Confirmed: [list of verified words]
+- Not found: [list of words to avoid]
+
+## Grammar Rules
+- [rule]: Правопис §[number] — [key text]
+
+## Calque Warnings
+- [phrase]: [calque or OK] — [correct form if calque]
+
+## CEFR Check
+- [word]: [level] — [OK or above target]
+</verification>

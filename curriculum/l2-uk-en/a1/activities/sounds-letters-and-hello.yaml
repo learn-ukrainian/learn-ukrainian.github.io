@@ -52,29 +52,6 @@ inline:
     - Ґ
     correct: 0
   title: Choose the correct answer based on the golden rule of Ukrainian.
-- id: group-sort-sounds
-  type: group-sort
-  instruction: Sort the following sounds into Голосні (vowels) and Приголосні (consonants).
-  groups:
-  - label: Голосні (Vowels)
-    items:
-    - '[а]'
-    - '[о]'
-    - '[у]'
-    - '[е]'
-    - '[и]'
-    - '[і]'
-  - label: Приголосні (Consonants)
-    items:
-    - '[к]'
-    - '[м]'
-    - '[т]'
-    - '[в]'
-    - '[н]'
-    - '[р]'
-    - '[с]'
-    - '[х]'
-  title: Sort the following sounds into Голосні (vowels) and Приголосні (consonants).
 - id: match-up-letters
   type: match-up
   instruction: Match the Ukrainian letter to the sound it represents. Бачу... Чую...
@@ -127,6 +104,355 @@ inline:
     - Чудово
     - Нормально
   title: Complete this basic greeting dialogue.
+- type: letter-grid
+  instruction: Голосні — Vowels
+  letters:
+  - upper: А
+    lower: а
+    emoji: 🍍
+    key_word: ананас
+    sound_type: vowel
+  - upper: О
+    lower: о
+    emoji: 👁️
+    key_word: око
+    sound_type: vowel
+  - upper: У
+    lower: у
+    emoji: 🇺🇦
+    key_word: Україна
+    sound_type: vowel
+  - upper: И
+    lower: и
+    emoji: 🐟
+    key_word: риба
+    sound_type: vowel
+  - upper: І
+    lower: і
+    emoji: 🦃
+    key_word: індик
+    sound_type: vowel
+  - upper: Е
+    lower: е
+    emoji: 📺
+    key_word: екран
+    sound_type: vowel
+  - upper: Я
+    lower: я
+    emoji: 🍎
+    key_word: яблуко
+    sound_type: vowel
+  - upper: Ю
+    lower: ю
+    emoji: 🧑
+    key_word: юнак
+    sound_type: vowel
+  - upper: Є
+    lower: є
+    emoji: 🦝
+    key_word: єнот
+    sound_type: vowel
+  - upper: Ї
+    lower: ї
+    emoji: 🦔
+    key_word: їжак
+    sound_type: vowel
+  id: letter-grid-5
+- type: letter-grid
+  instruction: Friendly letters
+  letters:
+  - upper: М
+    lower: м
+    emoji: 🥕
+    key_word: морква
+    sound_type: consonant
+  - upper: К
+    lower: к
+    emoji: 🐱
+    key_word: кіт
+    sound_type: consonant
+  - upper: Т
+    lower: т
+    emoji: 🐯
+    key_word: тигр
+    sound_type: consonant
+  id: letter-grid-6
+- type: letter-grid
+  instruction: False friends!
+  letters:
+  - upper: Н
+    lower: н
+    emoji: ✂️
+    key_word: ножиці
+    sound_type: consonant
+  - upper: С
+    lower: с
+    emoji: 👜
+    key_word: сумка
+    sound_type: consonant
+  - upper: Р
+    lower: р
+    emoji: 🚀
+    key_word: ракета
+    sound_type: consonant
+  - upper: В
+    lower: в
+    emoji: 🐺
+    key_word: вовк
+    sound_type: consonant
+  - upper: Х
+    lower: х
+    emoji: 🍞
+    key_word: хліб
+    sound_type: consonant
+  id: letter-grid-7
+- type: letter-grid
+  instruction: New shapes
+  letters:
+  - upper: Л
+    lower: л
+    emoji: ✈️
+    key_word: літак
+    sound_type: consonant
+  - upper: Б
+    lower: б
+    emoji: 🍌
+    key_word: банан
+    sound_type: consonant
+  - upper: Д
+    lower: д
+    emoji: 🏠
+    key_word: дім
+    sound_type: consonant
+  - upper: П
+    lower: п
+    emoji: 🕷️
+    key_word: павук
+    sound_type: consonant
+  - upper: Г
+    lower: г
+    emoji: ⛰️
+    key_word: гора
+    sound_type: consonant
+  - upper: Ґ
+    lower: ґ
+    emoji: 🚪
+    key_word: ґанок
+    sound_type: consonant
+  - upper: З
+    lower: з
+    emoji: 🦓
+    key_word: зебра
+    sound_type: consonant
+  - upper: Ж
+    lower: ж
+    emoji: 🪲
+    key_word: жук
+    sound_type: consonant
+  - upper: Ш
+    lower: ш
+    emoji: 🧢
+    key_word: шапка
+    sound_type: consonant
+  - upper: Й
+    lower: й
+    emoji: 🥛
+    key_word: йогурт
+    sound_type: consonant
+  - upper: Ч
+    lower: ч
+    emoji: 🐢
+    key_word: черепаха
+    sound_type: consonant
+  - upper: Щ
+    lower: щ
+    emoji: 🪥
+    key_word: щітка
+    sound_type: consonant
+  - upper: Ц
+    lower: ц
+    emoji: 🧅
+    key_word: цибуля
+    sound_type: consonant
+  - upper: Ф
+    lower: ф
+    emoji: 🦩
+    key_word: фламінго
+    sound_type: consonant
+  id: letter-grid-8
+- type: letter-grid
+  instruction: Special letters
+  letters:
+  - upper: Я
+    lower: я
+    emoji: 🍎
+    key_word: яблуко
+    sound_type: vowel
+  - upper: Ю
+    lower: ю
+    emoji: 🧑
+    key_word: юнак
+    sound_type: vowel
+  - upper: Є
+    lower: є
+    emoji: 🦝
+    key_word: єнот
+    sound_type: vowel
+  - upper: Ь
+    lower: ь
+    emoji: 🧂
+    key_word: сіль
+    sound_type: special
+  - upper: Ї
+    lower: ї
+    emoji: 🦔
+    key_word: їжак
+    sound_type: vowel
+  id: letter-grid-9
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: А, М, Л, У, Н, С'
+  items:
+  - video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    letter: А
+    word: ананас
+    note: У нас ананас.
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: М
+    word: морква
+    note: Мама сама.
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: Л
+    word: літак
+    note: Мала лама.
+  - video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    letter: У
+    word: Україна
+    note: У нас мул.
+  - video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    letter: Н
+    word: ножиці
+    note: У нас лан.
+  - video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    letter: С
+    word: сумка
+    note: Сумна мама.
+  id: watch-and-repeat-10
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: К, И, Р, Б, В, Д, І'
+  items:
+  - video: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    letter: К
+    word: кіт
+    note: ''
+  - video: https://www.youtube.com/watch?v=W-1rCu0indE
+    letter: И
+    word: риба
+    note: ''
+  - video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    letter: Р
+    word: ракета
+    note: ''
+  - video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    letter: Б
+    word: банан
+    note: ''
+  - video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    letter: В
+    word: вовк
+    note: ''
+  - video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    letter: Д
+    word: дім
+    note: ''
+  - video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    letter: І
+    word: індик
+    note: ''
+  id: watch-and-repeat-11
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: П, Т, Г, Ґ, Е, З, Ж, Ш, Х'
+  items:
+  - video: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    letter: П
+    word: павук
+    note: ''
+  - video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    letter: Т
+    word: тигр
+    note: ''
+  - video: https://www.youtube.com/watch?v=gVnclpSI0DU
+    letter: Г
+    word: гора
+    note: ''
+  - video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    letter: Ґ
+    word: ґанок
+    note: ''
+  - video: https://www.youtube.com/watch?v=KFlsroBW0dk
+    letter: Е
+    word: екран
+    note: ''
+  - video: https://www.youtube.com/watch?v=BhASNxitC1A
+    letter: З
+    word: зебра
+    note: ''
+  - video: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    letter: Ж
+    word: жук
+    note: ''
+  - video: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    letter: Ш
+    word: шапка
+    note: ''
+  - video: https://www.youtube.com/watch?v=vpr58zJSJKc
+    letter: Х
+    word: хліб
+    note: ''
+  id: watch-and-repeat-12
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф'
+  items:
+  - video: https://www.youtube.com/watch?v=aq0cjB90s3w
+    letter: Й
+    word: йогурт
+    note: ''
+  - video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    letter: Ч
+    word: черепаха
+    note: ''
+  - video: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    letter: Щ
+    word: щітка
+    note: ''
+  - video: https://www.youtube.com/watch?v=yhSAf41LX8I
+    letter: Я
+    word: яблуко
+    note: ''
+  - video: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    letter: Ю
+    word: юнак
+    note: ''
+  - video: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    letter: Є
+    word: єнот
+    note: ''
+  - video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    letter: Ь
+    word: сіль
+    note: ''
+  - video: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    letter: Ї
+    word: їжак
+    note: ''
+  - video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    letter: Ц
+    word: цибуля
+    note: ''
+  - video: https://www.youtube.com/watch?v=haHRsFFZRQI
+    letter: Ф
+    word: фламінго
+    note: ''
+  id: watch-and-repeat-13
 workbook:
 - id: wb-count-syllables
   type: count-syllables
@@ -310,343 +636,3 @@ workbook:
     correct: 3
     explanation: Добре means 'fine'. The others are phonetic and linguistic terms.
   title: Find the word that does not belong in the group (Четверте зайве).
-- type: letter-grid
-  instruction: Голосні — Vowels
-  letters:
-  - upper: А
-    lower: а
-    emoji: 🍍
-    key_word: ананас
-    sound_type: vowel
-  - upper: О
-    lower: о
-    emoji: 👁️
-    key_word: око
-    sound_type: vowel
-  - upper: У
-    lower: у
-    emoji: 🇺🇦
-    key_word: Україна
-    sound_type: vowel
-  - upper: И
-    lower: и
-    emoji: 🐟
-    key_word: риба
-    sound_type: vowel
-  - upper: І
-    lower: і
-    emoji: 🦃
-    key_word: індик
-    sound_type: vowel
-  - upper: Е
-    lower: е
-    emoji: 📺
-    key_word: екран
-    sound_type: vowel
-  - upper: Я
-    lower: я
-    emoji: 🍎
-    key_word: яблуко
-    sound_type: vowel
-  - upper: Ю
-    lower: ю
-    emoji: 🧑
-    key_word: юнак
-    sound_type: vowel
-  - upper: Є
-    lower: є
-    emoji: 🦝
-    key_word: єнот
-    sound_type: vowel
-  - upper: Ї
-    lower: ї
-    emoji: 🦔
-    key_word: їжак
-    sound_type: vowel
-- type: letter-grid
-  instruction: Friendly letters
-  letters:
-  - upper: М
-    lower: м
-    emoji: 🥕
-    key_word: морква
-    sound_type: consonant
-  - upper: К
-    lower: к
-    emoji: 🐱
-    key_word: кіт
-    sound_type: consonant
-  - upper: Т
-    lower: т
-    emoji: 🐯
-    key_word: тигр
-    sound_type: consonant
-- type: letter-grid
-  instruction: False friends!
-  letters:
-  - upper: Н
-    lower: н
-    emoji: ✂️
-    key_word: ножиці
-    sound_type: consonant
-  - upper: С
-    lower: с
-    emoji: 👜
-    key_word: сумка
-    sound_type: consonant
-  - upper: Р
-    lower: р
-    emoji: 🚀
-    key_word: ракета
-    sound_type: consonant
-  - upper: В
-    lower: в
-    emoji: 🐺
-    key_word: вовк
-    sound_type: consonant
-  - upper: Х
-    lower: х
-    emoji: 🍞
-    key_word: хліб
-    sound_type: consonant
-- type: letter-grid
-  instruction: New shapes
-  letters:
-  - upper: Л
-    lower: л
-    emoji: ✈️
-    key_word: літак
-    sound_type: consonant
-  - upper: Б
-    lower: б
-    emoji: 🍌
-    key_word: банан
-    sound_type: consonant
-  - upper: Д
-    lower: д
-    emoji: 🏠
-    key_word: дім
-    sound_type: consonant
-  - upper: П
-    lower: п
-    emoji: 🕷️
-    key_word: павук
-    sound_type: consonant
-  - upper: Г
-    lower: г
-    emoji: ⛰️
-    key_word: гора
-    sound_type: consonant
-  - upper: Ґ
-    lower: ґ
-    emoji: 🚪
-    key_word: ґанок
-    sound_type: consonant
-  - upper: З
-    lower: з
-    emoji: 🦓
-    key_word: зебра
-    sound_type: consonant
-  - upper: Ж
-    lower: ж
-    emoji: 🪲
-    key_word: жук
-    sound_type: consonant
-  - upper: Ш
-    lower: ш
-    emoji: 🧢
-    key_word: шапка
-    sound_type: consonant
-  - upper: Й
-    lower: й
-    emoji: 🥛
-    key_word: йогурт
-    sound_type: consonant
-  - upper: Ч
-    lower: ч
-    emoji: 🐢
-    key_word: черепаха
-    sound_type: consonant
-  - upper: Щ
-    lower: щ
-    emoji: 🪥
-    key_word: щітка
-    sound_type: consonant
-  - upper: Ц
-    lower: ц
-    emoji: 🧅
-    key_word: цибуля
-    sound_type: consonant
-  - upper: Ф
-    lower: ф
-    emoji: 🦩
-    key_word: фламінго
-    sound_type: consonant
-- type: letter-grid
-  instruction: Special letters
-  letters:
-  - upper: Я
-    lower: я
-    emoji: 🍎
-    key_word: яблуко
-    sound_type: vowel
-  - upper: Ю
-    lower: ю
-    emoji: 🧑
-    key_word: юнак
-    sound_type: vowel
-  - upper: Є
-    lower: є
-    emoji: 🦝
-    key_word: єнот
-    sound_type: vowel
-  - upper: Ь
-    lower: ь
-    emoji: 🧂
-    key_word: сіль
-    sound_type: special
-  - upper: Ї
-    lower: ї
-    emoji: 🦔
-    key_word: їжак
-    sound_type: vowel
-- type: watch-and-repeat
-  instruction: 'Watch and repeat: А, М, Л, У, Н, С'
-  items:
-  - video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-    letter: А
-    word: ананас
-    note: У нас ананас.
-  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    letter: М
-    word: морква
-    note: Мама сама.
-  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    letter: Л
-    word: літак
-    note: Мала лама.
-  - video: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    letter: У
-    word: Україна
-    note: У нас мул.
-  - video: https://www.youtube.com/watch?v=vNUfiKHPYaU
-    letter: Н
-    word: ножиці
-    note: У нас лан.
-  - video: https://www.youtube.com/watch?v=7UsFBgSL91E
-    letter: С
-    word: сумка
-    note: Сумна мама.
-- type: watch-and-repeat
-  instruction: 'Watch and repeat: К, И, Р, Б, В, Д, І'
-  items:
-  - video: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    letter: К
-    word: кіт
-    note: ''
-  - video: https://www.youtube.com/watch?v=W-1rCu0indE
-    letter: И
-    word: риба
-    note: ''
-  - video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-    letter: Р
-    word: ракета
-    note: ''
-  - video: https://www.youtube.com/watch?v=V1hxBE_JbGg
-    letter: Б
-    word: банан
-    note: ''
-  - video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-    letter: В
-    word: вовк
-    note: ''
-  - video: https://www.youtube.com/watch?v=g4Bh-lqzd48
-    letter: Д
-    word: дім
-    note: ''
-  - video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-    letter: І
-    word: індик
-    note: ''
-- type: watch-and-repeat
-  instruction: 'Watch and repeat: П, Т, Г, Ґ, Е, З, Ж, Ш, Х'
-  items:
-  - video: https://www.youtube.com/watch?v=JksSjjxyW5Y
-    letter: П
-    word: павук
-    note: ''
-  - video: https://www.youtube.com/watch?v=m-jcLR_gK0k
-    letter: Т
-    word: тигр
-    note: ''
-  - video: https://www.youtube.com/watch?v=gVnclpSI0DU
-    letter: Г
-    word: гора
-    note: ''
-  - video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-    letter: Ґ
-    word: ґанок
-    note: ''
-  - video: https://www.youtube.com/watch?v=KFlsroBW0dk
-    letter: Е
-    word: екран
-    note: ''
-  - video: https://www.youtube.com/watch?v=BhASNxitC1A
-    letter: З
-    word: зебра
-    note: ''
-  - video: https://www.youtube.com/watch?v=dIrGVcqPwqM
-    letter: Ж
-    word: жук
-    note: ''
-  - video: https://www.youtube.com/watch?v=1D-6MIw3OXY
-    letter: Ш
-    word: шапка
-    note: ''
-  - video: https://www.youtube.com/watch?v=vpr58zJSJKc
-    letter: Х
-    word: хліб
-    note: ''
-- type: watch-and-repeat
-  instruction: 'Watch and repeat: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф'
-  items:
-  - video: https://www.youtube.com/watch?v=aq0cjB90s3w
-    letter: Й
-    word: йогурт
-    note: ''
-  - video: https://www.youtube.com/watch?v=UsJkbdsY2RA
-    letter: Ч
-    word: черепаха
-    note: ''
-  - video: https://www.youtube.com/watch?v=QmBLieIuf6Q
-    letter: Щ
-    word: щітка
-    note: ''
-  - video: https://www.youtube.com/watch?v=yhSAf41LX8I
-    letter: Я
-    word: яблуко
-    note: ''
-  - video: https://www.youtube.com/watch?v=9JdIBYCTWGw
-    letter: Ю
-    word: юнак
-    note: ''
-  - video: https://www.youtube.com/watch?v=O0bwRyyBQSc
-    letter: Є
-    word: єнот
-    note: ''
-  - video: https://www.youtube.com/watch?v=cJlal8XKBxo
-    letter: Ь
-    word: сіль
-    note: ''
-  - video: https://www.youtube.com/watch?v=UcjdjQXhAY8
-    letter: Ї
-    word: їжак
-    note: ''
-  - video: https://www.youtube.com/watch?v=u44eCjR2Oz8
-    letter: Ц
-    word: цибуля
-    note: ''
-  - video: https://www.youtube.com/watch?v=haHRsFFZRQI
-    letter: Ф
-    word: фламінго
-    note: ''

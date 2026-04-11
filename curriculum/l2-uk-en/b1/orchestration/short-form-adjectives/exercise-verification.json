@@ -1,0 +1,214 @@
+{
+  "total_items": 203,
+  "grounded_items": 170,
+  "ungrounded": [
+    {
+      "word": "народнопоетичні",
+      "exercise_type": "group-sort",
+      "context": "Народнопоетичні форми",
+      "role": "context"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "fill-in",
+      "context": "Мені дуже ____ твоя допомога.",
+      "role": "context"
+    },
+    {
+      "word": "студентам",
+      "exercise_type": "fill-in",
+      "context": "Студентам ____ час на підготовку.",
+      "role": "context"
+    },
+    {
+      "word": "підготовку",
+      "exercise_type": "fill-in",
+      "context": "Студентам ____ час на підготовку.",
+      "role": "context"
+    },
+    {
+      "word": "роботи",
+      "exercise_type": "fill-in",
+      "context": "Мені ____ ця книжка для роботи.",
+      "role": "context"
+    },
+    {
+      "word": "словник",
+      "exercise_type": "error-correction",
+      "context": "Мені потрібна новий словник.",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютери",
+      "exercise_type": "error-correction",
+      "context": "Нам потрібне нові комп'ютери.",
+      "role": "context"
+    },
+    {
+      "word": "усічена",
+      "exercise_type": "match-up",
+      "context": "усічена форма, яка втратила закінчення у чоловічому роді",
+      "role": "context"
+    },
+    {
+      "word": "стандартна",
+      "exercise_type": "match-up",
+      "context": "стандартна форма, яка вільно змінюється за родами та відмінк",
+      "role": "context"
+    },
+    {
+      "word": "єдиний",
+      "exercise_type": "match-up",
+      "context": "єдиний розряд прикметників, який може мати коротку форму",
+      "role": "context"
+    },
+    {
+      "word": "розряд",
+      "exercise_type": "match-up",
+      "context": "єдиний розряд прикметників, який може мати коротку форму",
+      "role": "context"
+    },
+    {
+      "word": "архаїчні",
+      "exercise_type": "match-up",
+      "context": "стиль, у якому живуть архаїчні форми типу «дрібен» або «пове",
+      "role": "context"
+    },
+    {
+      "word": "сучасних",
+      "exercise_type": "match-up",
+      "context": "синтаксична роль таких сучасних коротких форм, як «потрібен»",
+      "role": "context"
+    },
+    {
+      "word": "нестягнена",
+      "exercise_type": "match-up",
+      "context": "повна нестягнена форма, в якій для вірша відкинули голосний",
+      "role": "context"
+    },
+    {
+      "word": "якій",
+      "exercise_type": "match-up",
+      "context": "повна нестягнена форма, в якій для вірша відкинули голосний",
+      "role": "context"
+    },
+    {
+      "word": "вірша",
+      "exercise_type": "match-up",
+      "context": "повна нестягнена форма, в якій для вірша відкинули голосний",
+      "role": "context"
+    },
+    {
+      "word": "відкинули",
+      "exercise_type": "match-up",
+      "context": "повна нестягнена форма, в якій для вірша відкинули голосний",
+      "role": "context"
+    },
+    {
+      "word": "голосний",
+      "exercise_type": "match-up",
+      "context": "повна нестягнена форма, в якій для вірша відкинули голосний",
+      "role": "context"
+    },
+    {
+      "word": "особливість",
+      "exercise_type": "quiz",
+      "context": "Яку граматичну особливість мають поетичні короткі форми типу",
+      "role": "context"
+    },
+    {
+      "word": "впевнені",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати, якщо ви дуже впевнені у своєму другові",
+      "role": "context"
+    },
+    {
+      "word": "другові",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати, якщо ви дуже впевнені у своєму другові",
+      "role": "context"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати, якщо ви дуже впевнені у своєму другові",
+      "role": "context"
+    },
+    {
+      "word": "діловій",
+      "exercise_type": "true-false",
+      "context": "Слово «зелен» активно використовується у сучасній офіційно-д",
+      "role": "context"
+    },
+    {
+      "word": "утворювати",
+      "exercise_type": "true-false",
+      "context": "В українській мові ми можемо утворювати короткі форми від бу",
+      "role": "context"
+    },
+    {
+      "word": "дрібная",
+      "exercise_type": "true-false",
+      "context": "Слово «дрібная» — це коротка форма прикметника.",
+      "role": "context"
+    },
+    {
+      "word": "цим",
+      "exercise_type": "fill-in",
+      "context": "____ потрібна допомога з цим складним завданням?",
+      "role": "context"
+    },
+    {
+      "word": "складним",
+      "exercise_type": "fill-in",
+      "context": "____ потрібна допомога з цим складним завданням?",
+      "role": "context"
+    },
+    {
+      "word": "проблеми",
+      "exercise_type": "fill-in",
+      "context": "____ потрібне швидке рішення проблеми.",
+      "role": "context"
+    },
+    {
+      "word": "книги",
+      "exercise_type": "fill-in",
+      "context": "____ дуже потрібні ці книги для навчання.",
+      "role": "context"
+    },
+    {
+      "word": "навчання",
+      "exercise_type": "fill-in",
+      "context": "____ дуже потрібні ці книги для навчання.",
+      "role": "context"
+    },
+    {
+      "word": "достовірна",
+      "exercise_type": "fill-in",
+      "context": "____ терміново потрібна достовірна інформація.",
+      "role": "context"
+    },
+    {
+      "word": "інформація",
+      "exercise_type": "fill-in",
+      "context": "____ терміново потрібна достовірна інформація.",
+      "role": "context"
+    },
+    {
+      "word": "знову",
+      "exercise_type": "unjumble",
+      "context": "знову.",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 26,
+    "tested_in_exercises": 23,
+    "not_tested": [
+      "жив",
+      "жива",
+      "рада"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,6 +1,6 @@
 # Build Summary: aspect-mastery (A2)
 
-Generated: 2026-04-08 19:49
+Generated: 2026-04-11 00:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-08 19:49
 | vocab | complete | 2026-04-08 14:25:01 |
 | enrich | complete | 2026-04-08 14:25:01 |
 | verify | complete | 2026-04-08 14:25:01 |
-| review | complete | 2026-04-08 17:49:19 |
 | stress | complete | 2026-04-08 17:49:20 |
-| publish | complete | 2026-04-08 17:49:27 |
+| publish | complete | 2026-04-10 22:40:11 |
+| audit | complete | 2026-04-10 22:40:11 |
 
 ## Reviews
 
@@ -51,11 +51,6 @@ Generated: 2026-04-08 19:49
 ## Files
 
 - `.build.lock`
-- `chunk-01.md`
-- `chunk-02.md`
-- `chunk-03.md`
-- `chunk-04.md`
-- `chunk-05.md`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

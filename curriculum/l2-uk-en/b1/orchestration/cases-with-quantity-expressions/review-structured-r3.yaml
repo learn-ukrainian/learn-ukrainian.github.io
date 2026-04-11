@@ -1,0 +1,55 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covered every outline point, including catching and correcting a grammatical
+    error in the plan regarding 50-80 declension (the plan incorrectly showed both
+    parts declining as "п'ятдесяти", while the w
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless handling of Ukrainian numeral rules, which are notoriously difficult.
+    Correctly differentiated "півтора" vs "півтори", explained the "два/три/чотири"
+    rule, and used correct declensions for co
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The writer correctly anticipated common Russian-influenced
+    mistakes (e.g., using genitive singular after 2, 3, 4 like "два студента" and
+    the Russicism "біля ста людей") and
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 10 required and 6 recommended vocabulary words were naturally woven
+    into the text (e.g., "кілька", "декілька", "чимало", "достатньо", "понад", "близько",
+    "забагато", "замало").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly align with the content just taught and match the number
+    of activities requested in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional, encouraging, and avoids artificial gamification.
+    The explanations feel like they are coming from an experienced Ukrainian teacher
+    who knows exactly where students will stumbl
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, logical progression, excellent summary table at the end,
+    and a clear self-check section.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses highly authentic Ukrainian examples (hryvnias, kopecks, population
+    statistics, land measurements in ares/hectares, and traditional village census
+    context).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between the census worker and the homeowner is completely
+    natural and perfectly embeds the grammar targets ("двоє дітей", "кілька кімнат",
+    "троє поросят"). The shopping dialogue at the en
+findings: []

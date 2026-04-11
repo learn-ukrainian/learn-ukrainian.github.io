@@ -1,0 +1,59 @@
+{
+  "module": "dozvillia-i-khobi",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:49:28.747085Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:39:58.580665Z",
+    "meta": null,
+    "activities": "2026-04-11T00:39:59.212203Z",
+    "vocabulary": "2026-04-08T02:41:23.186312Z",
+    "research": null,
+    "plan": "2026-04-04T22:10:26.318484Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2557/2000 (raw: 2597) | engagement: 0/3"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "6/0 | density: 1 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "51/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

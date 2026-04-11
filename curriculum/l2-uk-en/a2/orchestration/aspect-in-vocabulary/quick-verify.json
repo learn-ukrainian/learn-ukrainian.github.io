@@ -1,18 +1,13 @@
 {
   "attempt": 1,
-  "passed": true,
-  "errors": [],
-  "warnings": [
+  "passed": false,
+  "errors": [
     {
       "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/8 required vocab: читати / прочитати (to read)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 1"
+      "severity": "ERROR",
+      "message": "Missing 4/8 required vocab: читати / прочитати (to read), писати / написати (to write), брати / взяти (to take), говорити / сказати (to speak / to say)"
     }
   ],
-  "timestamp": "2026-04-07T19:28:20.156477+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-10T23:04:01.286497+00:00"
 }

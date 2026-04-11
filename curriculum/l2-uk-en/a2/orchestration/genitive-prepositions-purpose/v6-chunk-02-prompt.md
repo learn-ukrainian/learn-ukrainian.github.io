@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-the Genitive ending is usually **-я**. For feminine nouns ending in **-ія**, the ending changes to **-ії**. Soft feminine nouns ending in **-я** take the ending **-і**. Змінюємо закінчення (Changing endings): «вчитель» (teacher) → «для вчителя» «Марія» (Maria) → «для Марії» «Софія» (Sophia) → «для Софії» «Читаємо українською»: — У класі стоїть новий стілець **для вчителя** (A new chair for the teacher stands in the classroom). — Я несу ці красиві квіти **для Марії** (I am carrying these beautiful flowers for Maria). — Це м'яка іграшка **для Софії** (This is a soft toy for Sophia). — Ми купили ефективні ліки **для бабусі** (We bought effective medicine for grandma). — Це важливий лист **для лікаря** (This is an important letter for the doctor). Finally, let's look at neuter nouns and plural recipients after our new preposition. Many abstract neuter nouns end in double consonants plus **-я**, like **щастя** (happiness) or **життя** (life). In the Genitive case, their ending remains **-я**. For plural recipients, masculine nouns often take the ending **-ів**, while feminine and neuter nouns usually drop their final vowel entirely. Змінюємо закінчення (Changing endings): «щастя» (happiness) → «для щастя» «діти» (children) → «для дітей» «друзі» (friends) → «для друзів» «Читаємо українською»: — Ми зробимо все можливе **для щастя** (We will do everything possible for happiness). — Чиста вода дуже потрібна **для життя** (Clean water is very necessary for life). — У нашому готелі є кімната **для дітей** (Our hotel has a room for children). — У мене є хороші новини **для друзів** (I have good news for friends). — Це весела музика **для танців** (This is fun music for dances). Let's see these Genitive forms in action in a real conversation. Ігор (Igor) and Марта (Marta) are packing their bags for a weekend camping trip in the mountains. Pay attention to how they discuss the purpose of the items and who the specific items are for. > — **Ігор:** Марто, ми взяли всі речі **для походу**? *(Marta, did we take all the things for the hike?)* > — **Марта:** Так, майже всі. Але я ще шукаю теплий одяг. *(Yes, almost all. But I am still looking for warm clothes.)* > — **Ігор:** Ось лежить велика ковдра. **Для кого** ця ковдра? *(Here lies a large blanket. Who is this blanket for?)* > — **Марта:** Вона **для Олени**. Їй завжди холодно вночі. *(It is for Olena. She is always cold at night.)* > — **Ігор:** Зрозумів. А навіщо нам цей великий стіл? *(Understood. And what do we need this large table for?)* > — **Марта:** Це **для комфорту**. Ми будемо там їсти і пити чай. *(It is for comfort. We will eat and drink tea there.)* > — **Ігор:** Добре, тоді я покладу його в машину. А де ліки **для бабусі**? *(Good, then I will put it in the car. And where is the medicine for grandma?)* > — **Марта:** Вони вже там. Я все зібрала **для подорожі**. *(They are already there. I packed everything for the trip.)* <!-- INJECT_ACTIVITY: match-up-purpose -->
+pleasant surprise for sister together. They are currently cooking a delicious dinner for dad. This is my new phone for son.* When dealing with soft-stem nouns or feminine nouns ending in **-ія**, we need to switch to our soft Genitive endings. Soft masculine nouns, especially professions ending in **-тель**, will take the **-я** ending instead of **-а**. Feminine nouns that end in **-ія** are very common for names, and they will change their ending to **-ії**. It is important to hear the difference between these endings. У нашому класі є зручний стілець для вчителя. Я з радістю несу ці красиві квіти для Марії. Ми вчора купили цю м'яку іграшку для Софії. Це важливий лист для лікаря. > *There is a comfortable chair for the teacher in our classroom. I am carrying these beautiful flowers for Maria with joy. We bought this soft toy for Sophia yesterday. This is an important letter for the doctor.* Finally, let's look at how neuter nouns and plural recipients behave after **для**. Many abstract neuter nouns end in **-я** (like the words for life or happiness). These will simply keep their **-я** ending in the Genitive singular. For plural recipients, masculine nouns often take the **-ів** ending. You should also pay attention to common irregular plurals, like the word for children. Нам усім дуже потрібне сонце для життя. Кожна людина робить все можливе для щастя. У цьому великому будинку є світла кімната для дітей. Я маю дуже хороші новини для друзів. > *We all really need the sun for life. Every person does everything possible for happiness. There is a bright room for children in this large house. I have very good news for friends.* Let's see these exact phrases in action in a real conversation. Igor and Marta are actively packing their bags for a weekend camping trip in the forest. Notice how they use **для** to discuss who each item belongs to and what specific purpose each piece of equipment serves. > — **Ігор:** Марто, скажи мені, для кого ця велика ковдра? *(Marta, tell me, who is this large blanket for?)* > — **Марта:** Це дуже тепла ковдра для Олени. Вона завжди швидко мерзне вночі. *(This is a very warm blanket for Olena. She always gets cold quickly at night.)* > — **Ігор:** Добре, я розумію. А де лежить мій новий ліхтарик? *(Good, I understand. And where is my new flashlight lying?)* > — **Марта:** Він уже у твоєму рюкзаку. Нам також обов'язково потрібні речі для комфорту. *(It is already in your backpack. We also definitely need things for comfort.)* > — **Ігор:** Я повністю згоден з тобою. Я беру теплий одяг для походу. *(I completely agree with you. I am taking warm clothes for the hike.)* > — **Марта:** Це просто чудово! Тепер у нас є абсолютно все для відпочинку біля річки. *(This is simply great! Now we have absolutely everything for rest near the river.)* <!-- INJECT_ACTIVITY: match-up, focus on matching Ukrainian 'для' phrases to their English equivalents, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -476,7 +476,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -503,14 +570,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,25 +1,29 @@
 ## Все разом: мелодійні речення
 
-> — **Тарас:** Оленко, поїдемо **у Львів із друзями** на вихідні? *(Olenka, shall we go to Lviv with friends for the weekend?)*
-> — **Оленка:** **У Львів**? *(To Lviv?)* **Із задоволенням**! *(With pleasure!)* Але я поїду туди **з Оленою й Андрієм**. *(But I will go there with Olena and Andrii.)* Вони вже купили квитки. *(They have already bought tickets.)*
-> — **Тарас:** Чудова ідея. *(Great idea.)* А коли ви повернетеся **зі Львова**? *(And when will you return from Lviv?)*
-> — **Оленка:** Ми повернемося **в понеділок** уранці. *(We will return on Monday morning.)* А ти поїдеш **зі мною**? *(And will you go with me?)*
-> — **Тарас:** Ні, я залишуся **в Києві**. *(No, I will stay in Kyiv.)* Буду читати книжку **й відпочивати**. *(I will read a book and rest.)*
-> — **Оленка:** Добре, зустрінемося **в університеті й усе** обговоримо. *(Good, we will meet at the university and discuss everything.)*
-> — **Тарас:** Так, мій брат **і я** чекатимемо на тебе. *(Yes, my brother and I will wait for you.)*
+Let's see how all these rules interact in a spontaneous conversation. Notice how the prepositions and conjunctions shift instantly depending on the words around them to keep the sentence flowing.
 
-Have you ever noticed how smoothly Ukrainian flows? This is not an accident. Read the dialogue above aloud. Now, try saying «в Львові» or «з мною». You will immediately feel your tongue stop or trip over the **збіг** *(cluster)* of consonants. Ukrainian is often described as a language designed to be sung, not just spoken. If you have to pause awkwardly or push forcefully through a phrase, you have likely violated a rule of **милозвучність** *(euphony)*. Your ears and your mouth are your best teachers here. When a sentence is phonetically correct, it glides without effort.
+> — **Тарас:** Оленко, поїдемо **у** Львів **із** друзями на вихідні? *(Olenka, shall we go to Lviv with friends for the weekend?)*
+> — **Оленка:** Поїхати **зі** Львова? **Із** задоволенням! Але я поїду **з** Оленою **й** Андрієм. *(To go from Lviv? With pleasure! But I will go with Olena and Andriy.)*
+> — **Тарас:** Добре, зустрінемося **в** університеті **й** усе обговоримо. *(Good, we will meet at the university and discuss everything.)*
+> — **Оленка:** Домовилися. Я вже була **у** відпустці, але хочу відпочити ще. *(Agreed. I was already on vacation, but I want to rest more.)*
+> — **Тарас:** Тоді я куплю квитки, **і** ми поїдемо разом. *(Then I will buy tickets, and we will go together.)*
 
-«Читаємо українською»:
-* Ця українська пісня дуже **мелодійна й гарна**. *(This Ukrainian song is very melodious and beautiful.)*
-* Ми любимо співати **в Україні**. *(We love to sing in Ukraine.)*
-* Він завжди говорить **із задоволенням**. *(He always speaks with pleasure.)*
+Українська мова створена для того, щоб її співали, а не просто говорили. Найкращий спосіб перевірити милозвучність — це прочитати речення вголос. Якщо вам важко вимовити слова, або ви повинні зупинитися перед групою приголосних, ви напевно зробили фонетичну помилку. Тому ми завжди шукаємо найлегший шлях для звуку і змінюємо букви.
 
-Think of these rules as the "phonetic ecology" of Ukrainian. The language actively self-regulates to maintain its rhythm and its reputation as one of the most melodic in the world. It actively avoids harsh collisions of consonants and awkward vowel gaps at word boundaries. Mastering these small alternations—choosing between **у** and **в**, **з**, **із**, and **зі**, or **і** and **й**—is the real secret to fluency. It is the key to sounding like a natural, living speaker, rather than a robot reading from a dictionary.
+> *The Ukrainian language is created to be sung, not just spoken. The best way to check euphony is to read the sentence aloud. If it is hard for you to pronounce the words, or you have to stop before a group of consonants, you probably made a phonetic mistake. Therefore, we always look for the easiest path for the sound and change letters.*
 
-«Читаємо українською»:
-* Моя сестра живе **у Львові, і я** часто їжджу туди. *(My sister lives in Lviv, and I often travel there.)*
-* Вони вийшли **зі школи й пішли в парк**. *(They left the school and went to the park.)*
-* Це складне **правило**, але воно дуже важливе. *(This is a complex rule, but it is very important.)*
+This is what we call the "Singing Test." When you speak Ukrainian, the sounds should glide seamlessly into one another. If you feel like you are tripping over a heavy cluster of consonants, you have likely violated a euphony rule. Trust your ears and let your breath guide your choice of words.
+
+Think of these rules as the "phonetic ecology" of the language. Ukrainian constantly self-regulates to avoid harsh collisions of sounds, maintaining its reputation as one of the most melodious languages in the world.
+
+Милозвучність — це головний секрет української мови. Якщо ви хочете звучати як носій мови, ви повинні запам'ятати ці маленькі чергування. Вони роблять вашу вимову живою, природною та дуже красивою. З часом ви будете робити це автоматично.
+
+> *Euphony is the main secret of the Ukrainian language. If you want to sound like a native speaker, you must remember these small alternations. They make your pronunciation alive, natural, and very beautiful. With time, you will do this automatically.*
+
+Mastering these small shifts in prepositions and conjunctions is the key to sounding like a natural speaker, rather than a robot reading from a dictionary.
+
+:::tip
+**Trust your ears** — Euphony isn't just about memorizing tables; it's about feeling the rhythm. When in doubt, read the phrase out loud. The option that requires the least physical effort to pronounce is almost always the correct one.
+:::
 
 <!-- INJECT_ACTIVITY: error-correction, Find and fix errors like *в вікно, *з школи, *і усі, *й її, *в Львові, 8 items -->

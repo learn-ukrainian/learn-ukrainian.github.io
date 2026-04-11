@@ -27,7 +27,7 @@ Grand total: ~4420 words
 <previous_context>
 [...previous sections truncated...]
 
-«через дощ», це дуже серйозний сигнал для негайного повторення матеріалу. По-третє, чи можете ви швидко та без типових помилок утворити форму Давального відмінка для вираження власного віку або фізичного стану? Якщо конструкція **«мені холодно»** *(I am cold)* або фраза **«моєму братові двадцять років»** *(my brother is twenty years old)* викликає у вас труднощі, вам потрібна додаткова цілеспрямована практика. По-четверте, чи пам'ятаєте ви, як грамотно звертатися до шанованих людей у формальних ділових ситуаціях? Якщо ви використовуєте звичайний Називний відмінок замість Кличного і кажете **«пан директор»** *(Mr. Director)* замість «пане директоре», ваша професійна ввічливість звучить досить неприродно. Нарешті, чи вмієте ви впевнено відмінювати великі числівники та правильно узгоджувати їх з іменниками? Якщо ви кажете **«після п'ять днів»** *(after five days)* замість правильної форми «після п'яти днів», вам слід ще раз звернути увагу на відмінювання кількісних числівників. Що ж робити, якщо під час цієї швидкої самооцінки ви несподівано виявили певні серйозні прогалини у своїх знаннях? Головне правило успішного навчання — ніколи не намагайтеся просто механічно завчити сухі граматичні таблиці без контексту. Якщо ви постійно плутаєте закінчення **-а/-я** та **-у/-ю** в Родовому відмінку однини, почніть глибоко аналізувати семантику кожного окремого слова. Пам'ятайте золоте правило: чітко окреслені фізичні предмети завжди мають закінчення **-а**, тоді як абстрактні поняття, тривалі процеси та різноманітні речовини отримують закінчення **-у**. Найкраща та найефективніша стратегія для міцного запам'ятовування складних відмінків після специфічних прийменників — це регулярне тренування в живому та цікавому контексті. Створюйте власні короткі речення, які безпосередньо стосуються вашого щоденного життя, професійної роботи або хобі. Наприклад, напишіть п'ять чи шість речень про свій звичний ранковий маршрут до офісу, активно використовуючи просторові прийменники **«через»** *(through)*, **«попід»** *(underneath)* та **«біля»** *(near)*. Тільки таке багаторазове повторення в абсолютно реалістичних життєвих сценаріях допоможе вам швидко подолати мовну інтерференцію та почати інтуїтивно відчувати всі правильні граматичні форми. Чому це бездоганне знання всіх відмінків настільки критично важливо саме зараз? Тому що ми вже стоїмо на порозі сьомої фази нашого курсу, яка широко відкриє вам двері до значно складнішого та багатшого синтаксису. У наступних навчальних модулях ми почнемо детально вивчати **дієприкметники** *(participles)*. Це дуже специфічні та надзвичайно цікаві слова, які успішно функціонують як своєрідні граматичні гібриди між звичайним прикметником та повноцінним дієсловом. Наприклад, поширене слово **«написаний»** *(written)* має чіткі ознаки дієслова, бо воно означає виконану в минулому дію, але водночас воно завжди відмінюється як типовий прикметник. Щоб правильно та максимально природно використовувати такі дієприкметники у своєму щоденному мовленні, вам стовідсотково знадобиться абсолютно ідеальне володіння всією парадигмою відмінків. Дієприкметник у реченні завжди повинен точно узгоджуватися з головним іменником у роді, числі та конкретному відмінку. Більше того, без глибокого та повністю автоматичного розуміння Орудного відмінка ви просто ніколи не зможете будувати правильні пасивні конструкції. Якщо ви хочете вказати, хто саме фізично виконав певну дію, вам необхідно використати Орудний відмінок. Він потрібен для точного позначення цього агента: **«цей важливий документ був підписаний новим директором»** *(this important document was signed by the new director)*. Усі ці дрібні відмінкові нюанси обов'язково стануть вашим міцним граматичним фундаментом для створення надзвичайно складних, професійних та елегантних українських текстів у майбутньому. <!-- INJECT_ACTIVITY: quiz, quiz-diagnostics-phase6 -->
+memorize new vocabulary in context or as part of fixed phrases. If you make mistakes in choosing prepositions of cause or purpose, review your own texts and correct them. Practice with real sentences is much more effective than simply reading grammar reference books.* Identifying a gap in your knowledge is the first step toward true fluency. If you realize that masculine Genitive endings still confuse you, or if prepositional cases feel like guesswork, change your study strategy. Instead of staring at declension charts, start drilling with context. Create personalized sentences about your daily life. For instance, instead of trying to remember that the word for sugar takes an «-у» ending, write down «я п'ю каву без цукру» and practice saying it aloud. Contextual drilling anchors the grammar to real-world situations, making the correct forms sound natural to your ear over time. Whenever you learn a new verb, always write down the preposition and case it requires. :::tip **Quick tip** — Create a dedicated notebook section exclusively for your "frequent flyers." Write down the top ten words or phrases you consistently decline incorrectly and review them for just one minute every morning. ::: Looking ahead, we are preparing to cross the bridge into Phase 7, where your mastery of cases will be put to the ultimate test. In the next modules, we will introduce participles, known as «дієприкметники». These fascinating words act as adjective-verb hybrids. They describe a noun while simultaneously conveying an action. Because they function like adjectives, they must agree with the noun they modify in gender, number, and case. This is why a solid foundation from Phase 6 is non-negotiable. If your underlying case knowledge is shaky, building these complex modifiers will be incredibly frustrating. Орудний відмінок відіграватиме надзвичайно важливу роль під час вивчення пасивних дієприкметників. Коли ви захочете сказати, що лист був написаний директором, вам доведеться використати орудний відмінок для позначення виконавця дії. Без чіткого розуміння того, як формується цей відмінок, ви не зможете правильно будувати такі конструкції. Крім того, усі ті нюанси прийменників, які ви щойно повторили, стануть органічною частиною довгих речень. Ваша здатність швидко обирати правильний відмінок дозволить вам говорити плавно та впевнено. > *The Instrumental case will play an extremely important role when studying passive participles. When you want to say that the letter was written by the director, you will have to use the Instrumental case to indicate the performer of the action. Without a clear understanding of how this case is formed, you will not be able to build such constructions correctly. Furthermore, all those nuances of prepositions that you have just reviewed will become an organic part of long sentences. Your ability to quickly choose the correct case will allow you to speak fluently and confidently.* Take your time with the final diagnostic quiz below. Treat it as a comprehensive check of your readiness for the advanced syntax that awaits you. If you pass this comfortably, you are ready to tackle the sophisticated structures of Phase 7. <!-- INJECT_ACTIVITY: quiz-diagnostics-phase6 -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -530,7 +530,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -543,14 +610,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

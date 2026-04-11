@@ -1,0 +1,28 @@
+discovered_at: '2026-04-10T22:21:35.397704+00:00'
+error: null
+query_keywords:
+- Weather
+- Діалоги (Dialogues)
+- Яка погода? (What's the Weather?)
+- Погода і пори року (Weather and Seasons)
+- Підсумок — Summary
+- Use "іде дощ / іде сніг" pattern for precipitation
+- погода
+- холодно
+- тепло
+- дощ
+- сніг
+- сонце
+- сьогодні
+- завтра
+- спекотно
+- прохолодно
+- вітер
+- хмарно
+- ясно
+- сонячно
+- градус
+- вчора
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

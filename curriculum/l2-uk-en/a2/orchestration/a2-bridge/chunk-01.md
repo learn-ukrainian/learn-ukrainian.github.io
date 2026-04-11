@@ -1,26 +1,48 @@
 ## Пригадуємо відмінки (Reviewing Cases)
 
-Welcome to the A2 level! You have already accomplished a great deal by mastering the core basics of the Ukrainian language. This module serves as an essential bridge between the strong foundation you built in A1 and the much more complex concepts we will explore together next. Before we start building a towering skyscraper of advanced vocabulary and intricate grammar, we must thoroughly check our foundation. Let us review the essential tools that make Ukrainian sentences work and ensure that everything is perfectly solid.
+Welcome to the A2 level! Before we start building a skyscraper of complex Ukrainian sentences, we must first inspect our foundation. In the A1 level, you learned that Ukrainian is a heavily inflected language. This means that nouns, adjectives, and pronouns change their endings to show their exact grammatical role in a sentence. This system is the core of Ukrainian grammar and allows for incredible flexibility. Today, we will review the four cases you already know so that you can use them confidently. This review will act as a solid bridge connecting your foundational knowledge to the more advanced topics ahead.
 
-Imagine your very first day at a new language school in the capital. You walk confidently into the classroom and finally meet your teacher. Listen carefully to how naturally the words change their endings to fit the context of the situation.
+Let us listen to a short conversation on the first day of classes at a language school in the heart of Kyiv. Pay close attention to how the student uses different word endings to talk about himself, his location, and his studies. Notice how the endings change depending on what he is trying to say.
 
-> — **Новий студент:** Добрий ранок! Я — новий студент. *(Good morning! I am a new student.)*
-> — **Оксана:** Привіт! Ласкаво просимо. Як справи? *(Hi! Welcome. How are you?)*
-> — **Новий студент:** Дякую, добре. Я вивчаю українську мову. *(Thank you, fine. I am studying the Ukrainian language.)*
-> — **Оксана:** Це чудово! Де ти зараз живеш? *(That is wonderful! Where do you live now?)*
-> — **Новий студент:** Я живу в Києві. *(I live in Kyiv.)*
-> — **Оксана:** Привіт, Оксано! — так ти можеш вітатися зі мною. *(Hi, Oksana! — this is how you can greet me.)*
+> — **Викладач:** Доброго ранку! Заходьте, будь ласка. *(Good morning! Come in, please.)*
+> — **Степан:** Доброго ранку! Я — новий студент. *(Good morning! I am a new student.)*
+> — **Викладач:** Привіт, Степане! Мене звати Оксана. *(Hi, Stepan! My name is Oksana.)*
+> — **Степан:** Привіт, Оксано! Дуже приємно. Я вивчаю українську мову. *(Hi, Oksana! Nice to meet you. I am studying the Ukrainian language.)*
+> — **Викладач:** Чудово. Звідки ви приїхали до нас? *(Wonderful. Where did you come from to us?)*
+> — **Степан:** Я з Канади, але зараз я живу в Києві. *(I am from Canada, but right now I live in Kyiv.)*
 
-In this short everyday exchange, the student and the teacher naturally used four completely different forms of nouns depending entirely on their specific role in the sentence.
+The Nominative case, or Називний відмінок, is the basic dictionary form of a word. It answers the questions «хто?» (who?) for living beings and «що?» (what?) for inanimate objects. We use this case primarily for the subject of a sentence—the main person or thing that is performing the action. When you learn a new noun in your vocabulary lists, you always memorize its Nominative form first. This form is your starting point before any changes are applied.
 
-The Nominative case, or **Називний відмінок** *(Nominative case)*, is the fundamental starting point for all words. It answers the questions **хто?** *(who?)* and **що?** *(what?)*. This is the exact dictionary form of a word that you always learn first. In a sentence, it almost always acts as the main subject—the person or thing performing the primary action. It simply names the object or person without any modifications. For example, «**урок** починається» *(the lesson begins)* or «**книга** лежить» *(the book lies)*. Here, the lesson and the book are the main actors driving the entire sentence forward.
+Новий урок починається вчасно. Велика книга лежить на столі. Студент уважно читає текст.
 
-When an action is directly applied to an object, we use the Accusative case, or **Знахідний відмінок** *(Accusative case)*. It answers the specific questions **кого?** *(whom?)* and **що?** *(what?)*. This form consistently acts as the direct object of the sentence. You must remember the critical rule for feminine nouns: the ending usually changes to **-у** or **-ю**. For example, you read «**книжку**» *(a book)* and drink «**каву**» *(coffee)*. However, masculine inanimate nouns stay exactly the same as they appear in the dictionary form. You start «**урок**» *(a lesson)* and buy «**стіл**» *(a table)* without changing the ending at all.
+> *The new lesson starts on time. The large book lies on the table. The student carefully reads a text.*
 
-To talk about physical locations, we rely heavily on the Locative case, or **Місцевий відмінок** *(Locative case)*. It answers the simple question **де?** *(where?)*. A strict and unbreakable rule in Ukrainian grammar is that the Locative case is never used entirely alone; it is always paired with a preposition, usually **у/в** *(in/at)* or **на** *(on/at)*. When you want to clearly state where something is currently happening, you say «**у школі**» *(at school)*, «**в Ужгороді**» *(in Uzhhorod)*, or «**на заводі**» *(at the factory)*.
+:::note
+**Quick tip** — When you say «Я — новий студент», both «я» and «студент» are in the Nominative case because they identify exactly who you are. This structure directly links a subject to its definition.
+:::
 
-Finally, whenever we address someone directly in a conversation, we use the Vocative case, or **Кличний відмінок** *(Vocative case)*. It does not answer any specific questions. It is used purely for calling out to people or even inanimate things. This case is a vibrant, living marker of the authentic Ukrainian language. While it has largely disappeared from modern Russian, it remains absolutely mandatory in Ukrainian everyday speech. Using the Nominative case instead of the proper Vocative when addressing someone immediately sounds unnatural. You should always say «**друже**» *(friend)*, «**Олю**» *(Olia)*, and «**вчителю**» *(teacher)*.
+The Accusative case, or Знахідний відмінок, points directly to the direct object of an action. It answers the questions «кого?» (whom?) or «що?» (what?). This case shows what is receiving the action of the verb. For feminine nouns ending in -а or -я, the ending typically changes to -у or -ю. However, for inanimate masculine and neuter nouns, the form stays exactly the same as the dictionary form. Recognizing when a word acts as a direct object is crucial for clear communication.
 
-These four cases form the absolute core of your ability to make basic statements, describe direct actions, specify locations, and interact politely with people. However, the complete Ukrainian noun system actually consists of seven cases in total. To reach true A2 level fluency, you will soon master the remaining three missing pieces of the grammar puzzle: the Genitive case to show absence or possession, the Dative case to indicate the recipient of an action, and the Instrumental case to describe the specific tool used to perform an action.
+Я п'ю гарячу каву і читаю цікаву книжку. Наш викладач починає новий урок. Ми бачимо великий стіл.
 
-<!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->
+> *I am drinking hot coffee and reading an interesting book. Our teacher starts a new lesson. We see a large table.*
+
+The Locative case, or Місцевий відмінок, tells us exactly where an action takes place, answering the essential question «де?» (where?). A unique and strict rule of this case is that it is never used alone; it always requires a preposition. Most commonly, you will use it with the prepositions «у» or «в» (in), and «на» (on). This case is extremely common in daily conversations when discussing locations, cities, or workplaces.
+
+Зараз ми сидимо у світлій школі. Мій старший брат працює на заводі. Минулої весни ми були в Ужгороді.
+
+> *Right now we are sitting in a bright school. My older brother works at a factory. Last spring we were in Uzhhorod.*
+
+The Vocative case, or Кличний відмінок, is used exclusively for addressing people, animals, or personified objects directly. It does not answer any standard questions. This case is a vibrant, living marker of the Ukrainian language and carries deep cultural significance. Unlike Russian, where the vocative case has largely disappeared in modern speech, Ukrainian strictly requires it for natural communication. Using the Nominative dictionary form instead of the Vocative to address someone immediately marks a speaker as a foreigner or indicates the use of Surzhyk.
+
+Привіт, найкращий друже! Олю, допоможи мені, будь ласка. Пане вчителю, я маю важливе запитання.
+
+> *Hi, best friend! Olia, help me, please. Mr. Teacher, I have an important question.*
+
+:::tip
+**Did you know?** — Always use the Vocative case when writing emails or messages. Starting a message with «Оксана» instead of «Оксано» sounds abrupt and unnatural to a native Ukrainian speaker.
+:::
+
+In total, the full Ukrainian grammatical system contains seven cases. You have already successfully practiced four of them: Nominative, Accusative, Locative, and Vocative. This is a massive achievement that allows you to handle many basic interactions. In the A2 level, we will introduce the three missing pieces to complete your grammatical map. We will learn the Genitive case to express absence and possession, the Dative case to identify the recipient of an action, and the Instrumental case to explain what tools we use. By mastering all seven cases, you will be able to express any thought with complete precision.
+
+<!-- INJECT_ACTIVITY: quiz-case-id --> [quiz, Case Identification Drill, 8 items]

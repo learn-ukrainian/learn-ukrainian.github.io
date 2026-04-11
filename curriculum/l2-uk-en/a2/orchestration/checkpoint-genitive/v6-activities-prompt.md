@@ -86,7 +86,7 @@ required:
 <module_content>
 ## Частина 1: Впізнавання форм (Part 1: Recognizing Forms)
 
-This module consolidates your knowledge of the **родовий відмінок** (genitive case) covered in modules M08-M13. The Genitive case is the most frequently used case in the Ukrainian language. We use it to express negation, possession, quantity, and movement. Before moving to more complex case interactions, this checkpoint ensures your foundation is solid. You must be able to recognize which **прийменник** (preposition) triggers the Genitive and correctly apply the **закінчення** (ending) for singular and plural nouns. Let's review the core preposition groups.
+This module consolidates your knowledge of the **родовий відмінок** (genitive case) covered in modules M08-M13. The Genitive case is the most frequently used case in the Ukrainian language. We use it to express negation, possession, quantity, and movement. Before moving to more complex case interactions, this checkpoint ensures your foundation is solid. You must be able to recognize which **прийменник** (preposition) triggers the Genitive and correctly apply the **закінчення** (ending) for **однина** (singular) and plural nouns. Let's review the core preposition groups.
 
 Spatial prepositions describe physical location and proximity. The prepositions **біля** (near/by), **навпроти** (opposite/across from), **коло** (around/near), and **до** (to/towards) always require the Genitive case. When you hear these words, immediately anticipate a Genitive ending. The preposition **до** indicates direction towards a destination, while the others indicate static location. Notice the endings in the following examples.
 
@@ -140,12 +140,12 @@ Forming the Genitive **множина** (plural) is often the most challenging p
 > Ми не спали **кілька ночей**. (We didn't sleep for a few nights.)
 > У мене немає **грошей**. (I don't have money.)
 
-For inanimate masculine nouns in the singular, you must choose between the ending **-а / -я** and **-у / -ю**. The logic relies on how "concrete" the item is. Concrete objects, people, animals, and specific terms take **-а / -я**. Abstract concepts, collective nouns, materials, and phenomena take **-у / -ю**. 
+For masculine nouns in the singular, you must choose between the ending **-а / -я** and **-у / -ю**. Animate nouns (people and animals) always take **-а / -я**. For inanimate nouns, the logic relies on how "concrete" the item is. Concrete objects and specific terms take **-а / -я**. Abstract concepts, collective nouns, materials, and phenomena take **-у / -ю**. 
 
 > **Читаємо українською:**
 > Водій чекає біля **автобуса**. (The driver is waiting near the bus.) *Concrete object.*
 > У мене зовсім немає вільних годин, немає **часу**. (I have no free hours at all, I have no time.) *Abstract concept.*
-> Ми йдемо до **магазина**. (We are walking to the store.) *Concrete building.*
+> Я дістав зошит з **рюкзака**. (I took a notebook from the backpack.) *Concrete object.*
 > Я п'ю каву без **цукру**. (I drink coffee without sugar.) *Material/substance.*
 > Тут немає **вітру**. (There is no wind here.) *Natural phenomenon.*
 
@@ -156,7 +156,7 @@ Minimal pairs of prepositions often confuse learners. Compare **з** (from/out o
 > **Читаємо українською:**
 > Він приїхав **зі Львова**. (He arrived from Lviv.)
 > Вона взяла зошит **зі столу**. (She took the notebook from the table.)
-> Лікарня знаходиться **навпроти парку**. (The hospital is located opposite the park.)
+> Лікарня розташована **навпроти парку**. (The hospital is located opposite the park.)
 > Ми зустрілися **біля парку**. (We met near the park.)
 
 A frequent **помилка** (mistake) among English speakers is leaving the noun in the Nominative case after **немає** or after prepositions. English does not change the noun's form to show absence. Another common error is using the Accusative case instead of the Genitive with certain verbs. For example, the verb **потребувати** (to need/require) always governs the Genitive case. Saying "Я потребую допомогу" (Accusative) is incorrect. The correct form is "Я потребую допомоги" (Genitive). You must **впізнати** (recognize) the trigger word to **виправити** (correct) the error.
@@ -188,15 +188,15 @@ Let's observe a multi-turn dialogue. In this scenario, a tour guide shows a grou
 > **Туристи:** Яка краса! А куди ми йдемо далі? *(What beauty! And where are we going next?)*
 > **Гід:** Зараз ми йдемо **до Софійського собору**. Це близько. *(Now we are walking to St. Sophia's Cathedral. It is close.)*
 > **Туристи:** Скільки часу туди йти? *(How much time to walk there?)*
-> **Гід:** **До Хрещатику** десять хвилин, а до собору — п'ять. *(To Khreshchatyk it is ten minutes, and to the cathedral — five.)*
+> **Гід:** **До Хрещатика** десять хвилин, а до собору — п'ять. *(To Khreshchatyk it is ten minutes, and to the cathedral — five.)*
 > **Туристи:** Чи потрібен квиток? *(Is a ticket needed?)*
-> **Гід:** Так, **без квитка** заходити не можна. Але ця екскурсія **для туристів з України**, тому вхід безкоштовний! *(Yes, without a ticket you cannot enter. But this tour is for tourists from Ukraine, so entry is free!)*
+> **Гід:** Так, **без квитка** заходити не можна. Але ця екскурсія **для групи з десяти людей**, тому вхід безкоштовний! *(Yes, without a ticket you cannot enter. But this tour is for tourists from Ukraine, so entry is free!)*
 
 When translating from English to Ukrainian, you must adjust your strategy. English uses an apostrophe with an "s" ('s) or the preposition "of" to show possession. Ukrainian uses the Genitive case directly on the noun and its modifiers. Do not simply place two Nominative nouns next to each other.
 
 > **Читаємо українською:**
 > Це **машина мого брата**. (This is my brother's car.)
-> Де знаходиться **центр міста**? (Where is the city center?)
+> Де розташований **центр міста**? (Where is the city center?)
 > Ми читаємо **книгу відомого автора**. (We are reading the book of a famous author.)
 > Це **смак дитинства**. (This is the taste of childhood.)
 
@@ -214,7 +214,7 @@ Consistent use of correct Genitive endings is a strong sign of A2 and early B1 p
 
 ## Підсумок
 
-This checkpoint confirms your readiness to use the Genitive case in daily life. Use this self-assessment checklist to evaluate your progress. If you answer "yes" to these questions, you have successfully mastered the core A2 Genitive concepts.
+This checkpoint confirms your readiness to use the Genitive case in daily life. Use this self-assessment checklist to evaluate your progress. If you answer "yes" to these questions, you are ready to move on: 
 
 *   Чи можу я використати прийменники **до**, **біля**, **від**, **для** без помилок?
 *   Чи правильно я утворюю множину (**друзів**, **книжок**, **людей**)?
@@ -222,7 +222,7 @@ This checkpoint confirms your readiness to use the Genitive case in daily life. 
 *   Чи розумію я різницю між **автобуса** та **часу**?
 *   Чи можу я пояснити напрямок або рецепт, використовуючи родовий відмінок?
 
-If you feel confident with these points, you are ready to explore how the Genitive interacts with other cases in more complex sentences. Keep practicing, and always listen for the prepositions that signal a change in the ending.
+If you feel confident with these points, keep practicing, and always listen for the prepositions that signal a change in the ending.
 
 </module_content>
 

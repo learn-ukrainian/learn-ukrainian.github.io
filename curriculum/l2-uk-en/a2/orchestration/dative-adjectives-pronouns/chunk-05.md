@@ -1,39 +1,28 @@
-## Порівняння відмінків (Comparing Cases So Far)
+## Порівняння відмінків
 
-It is very common to confuse the Genitive and Dative cases, especially for masculine and neuter words. The Genitive ending is **-ого**, while the Dative ending is **-ому**. The letter "м" in **-ому** is your unique marker for the Dative case. When you hear or write "м", you are usually directing an action to someone.
+Now that we have learned the Dative case, it is time to compare it with the Genitive case. For masculine and neuter words, both cases change the ends of adjectives and pronouns, but they use different sounds. The Genitive case uses the ending «-ого», while the Dative case uses «-ому». That letter «м» is your unique signal for the Dative case when talking about masculine or neuter objects.
 
-«Читаємо українською»
-У мене немає **нового друга**. *(I do not have a new friend.)* [Родовий / Genitive]
-Я телефоную **новому другові**. *(I am calling a new friend.)* [Давальний / Dative]
-Вона не бачить **мого старшого брата**. *(She does not see my older brother.)* [Родовий / Genitive]
-Вона купує каву **моєму старшому братові**. *(She is buying coffee for my older brother.)* [Давальний / Dative]
+У мене немає нового друга. Я телефоную новому другу. Ми прийшли без його старшого брата. Вони купили подарунок його старшому братові. Це ключ від нашого старого будинку. Ми радіємо нашому старому будинку.
 
-For feminine words, you must contrast the Genitive ending **-ої** with the Dative ending **-ій**. Notice that the Dative **-ій** is exactly identical to the Locative form you use with the prepositions **на** *(on)* or **в** *(in)*.
+> *I do not have a new friend. I am calling a new friend. We arrived without his older brother. They bought a gift for his older brother. This is the key to our old house. We rejoice in our old house.*
 
-«Читаємо українською»
-Тут немає **нашої нової вчительки**. *(Our new teacher is not here.)* [Родовий / Genitive]
-Ми даруємо квіти **нашій новій вчительці**. *(We are gifting flowers to our new teacher.)* [Давальний / Dative]
-Я не знаю **твоєї молодшої сестри**. *(I do not know your younger sister.)* [Родовий / Genitive]
-Я допомагаю **твоїй молодшій сестрі**. *(I am helping your younger sister.)* [Давальний / Dative]
+For feminine words, the difference is also very clear. The feminine Genitive ending is «-ої», but the feminine Dative ending is «-ій». If you remember our previous lessons, you might notice that this Dative «-ій» is exactly the same as the feminine Locative ending. Context will always tell you which case is being used.
 
-How do you know which case to choose? The verb or the preposition in your sentence is always the "driver." Prepositions like **для** *(for)* or **без** *(without)* always require the Genitive case. Verbs of giving, telling, and helping always require the Dative case. 
+Тут немає моєї нової подруги. Я завжди допомагаю моїй новій подрузі. Вони прийшли без тієї молодої жінки. Петро зараз телефонує тій молодій жінці. У нашої розумної вчительки сьогодні свято. Ми несемо квіти нашій розумній вчительці.
 
-> — **Анна:** Це подарунок для **твого найкращого друга**? *(Is this a gift for your best friend?)*
-> — **Марк:** Так, я завжди купую подарунки **моєму найкращому другові**. *(Yes, I always buy gifts for my best friend.)*
-> — **Анна:** А що ти подаруєш **твоїй дівчині**? *(And what will you gift to your girlfriend?)*
-> — **Марк:** Я ще не знаю. Я запитаю **її старшу сестру**. *(I do not know yet. I will ask her older sister.)*
-> — **Анна:** Ти часто телефонуєш **її старшій сестрі**? *(Do you often call her older sister?)*
-> — **Марк:** Так, ми дуже добре спілкуємося. *(Yes, we communicate very well.)*
+> *My new friend is not here. I always help my new friend. They arrived without that young woman. Petro is calling that young woman right now. Our smart teacher has a holiday today. We are bringing flowers to our smart teacher.*
 
-Here is a quick reference for common verbs that require the Dative case for your noun phrases.
+How do you know which case to choose? The verb or preposition in your sentence is the driver. If you use a preposition of location or purpose, you need the Genitive case. However, verbs that describe giving, communicating, or assisting will drive the entire descriptive phrase into the Dative case.
 
-«Читаємо українською»
-**Дієслова для давального відмінка** *(Verbs for the dative case)*
-**давати / дати** *(to give)* → даю **цьому чоловікові** *(giving to this man)*
-**дарувати / подарувати** *(to gift)* → дарую **моїй мамі** *(gifting to my mom)*
-**телефонувати / зателефонувати** *(to call)* → телефоную **нашому лікарю** *(calling our doctor)*
-**допомагати / допомогти** *(to help)* → допомагаю **старому сусідові** *(helping the old neighbor)*
-**дякувати / подякувати** *(to thank)* → дякую **вашому синові** *(thanking your son)*
+Слова для родового відмінка: немає, для, без, біля, від. Дієслова для давального відмінка: допомагати, дякувати, телефонувати, дарувати, пояснювати.
 
-<!-- INJECT_ACTIVITY: match-up -->
-<!-- INJECT_ACTIVITY: group-sort -->
+> *Words for the Genitive case: there is no, for, without, near, from. Verbs for the Dative case: to help, to thank, to call, to gift, to explain.*
+
+:::info
+**Find the driver**
+Always look at the verb first. If the verb implies transferring something to a receiver, you need the Dative wave across the whole noun phrase.
+:::
+
+Вони купили смачний торт для мого маленького брата. Вони подарували смачний торт моєму маленькому братові. Я стою біля твоєї нової машини. Цей колір дуже пасує твоїй новій машині. У нас немає вашого старого номера. Ми надіслали повідомлення вашому старому номеру.
+
+> *They bought a delicious cake for my little brother. They gifted a delicious cake to my little brother. I am standing near your new car. This color really suits your new car. We do not have your old number. We sent a message to your old number.*

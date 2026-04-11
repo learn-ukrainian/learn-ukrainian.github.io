@@ -1,0 +1,28 @@
+discovered_at: '2026-04-10T22:21:35.397704+00:00'
+error: null
+query_keywords:
+- Questions
+- Діалоги (Dialogues)
+- Питальні слова (Question Words)
+- Заперечення (Negation)
+- Підсумок — Summary
+- Ask questions using хто, що, де, куди, коли, чому, як
+- Use negation with не (verb) and ні (nothing/nobody)
+- хто
+- що
+- де
+- куди
+- коли
+- чому
+- як
+- не
+- ні
+- ніхто
+- нічого
+- ніколи
+- жити
+- розуміти
+- тому що
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

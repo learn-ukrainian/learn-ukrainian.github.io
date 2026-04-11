@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-30-6c21b904.json
+phase: write-chunk-04
+prompt_chars: 50378
+response_chars: 8552
+prompt_words: 6838
+response_words: 1322
+sections:
+- name: header
+  start: 0
+  length: 445
+  fraction: 0.0088
+- name: skeleton
+  start: 445
+  length: 1916
+  fraction: 0.038
+- name: prior_summary
+  start: 2361
+  length: 3538
+  fraction: 0.0702
+- name: plan
+  start: 5899
+  length: 16454
+  fraction: 0.3266
+- name: wiki
+  start: 17491
+  length: 27897
+  fraction: 0.5538
+- name: output_spec
+  start: 50250
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 9
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P4 (150w): Preview of connected speech — introducing the idea of "Background
+    vs. Foreground" (aspect in narrative) which will be the focus of module b1-006.
+    Future tense is the first step in telling a story that hasn''t happened yet.'
+  covered: false
+  coverage_note: 8/24 keywords (33%)
+- kind: inject_activity
+  text: match-up-situations
+  covered: false
+  coverage_note: marker missing

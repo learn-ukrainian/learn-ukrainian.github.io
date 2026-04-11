@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-можемо сказати «два люди» чи «три діти». Разом із цими іменниками ми завжди використовуємо спеціальні збірні числівники та форму Родового відмінка множини: **двоє людей** *(two people)*, **троє дітей** *(three children)*. Порядкові числівники, які відповідають на питання «котрий?» або «який за порядком?», вивчити набагато простіше. Вони відмінюються абсолютно так само, як і звичайні українські прикметники твердої групи. Змінюється їхній граматичний рід, число і відмінок залежно від контексту. Наприклад, ми природно кажемо: піднятися на **перший поверх** *(first floor)*, зустрітися біля **другого будинку** *(second house)*, жити на **третьому поверсі** *(third floor)*. У великих складених порядкових числівниках відмінюється лише останнє слово. Окрім цілих чисел, у повсякденному житті ми надзвичайно часто використовуємо різноманітні дроби. Такі поширені слова, як **половина** *(half)*, **третина** *(a third)* або **чверть** *(a quarter)*, граматично є звичайними іменниками. Вони завжди вимагають після себе форми Родового відмінка: половина яблука, третина зарплати. Окремої уваги заслуговують унікальні дробові числівники **півтора** *(one and a half)* для чоловічого і середнього роду та **півтори** *(one and a half)* для жіночого роду. Вони мають одну незмінну вимогу: наступний іменник завжди стоїть у Родовому відмінку однини. Ми кажемо: чекати **півтора місяця** *(one and a half months)*, купити **півтори тонни** *(one and a half tons)* піску. Самі ці слова ніколи не змінюються за відмінками. Давайте також перевіримо, як добре ви пам'ятаєте систему українських займенників. Питальні та відносні займенники, такі як **який** *(which)* та **чий** *(whose)*, відмінюються подібно до звичайних прикметників. Слова **хто** *(who)* та **що** *(what)* мають свої власні відмінкові форми. На їхній основі ми легко утворюємо неозначені займенники за допомогою спеціальних часток «-сь», «будь-» або «-небудь». Так з'являються слова **хтось** *(someone)*, **будь-хто** *(anyone)*, **якийсь** *(some kind of)*. Під час відмінювання ці частки просто прикріплюються до форми потрібного відмінка: когось, комусь. Найцікавіше граматичне правило стосується заперечних займенників, таких як **ніхто** *(nobody)* та **ніщо** *(nothing)*. Якщо ми збираємося використати їх разом із прийменником, цей прийменник буквально розриває слово навпіл і стає рівно посередині. Ми не можемо сказати «з ніким» або «до нікого». Правильним варіантом є розірвана конструкція з трьох окремих слів. Наприклад, я не говорив **ні з ким** *(with nobody)*. Він не писав **ні до кого** *(to nobody)*. Ми не думали **ні про що** *(about nothing)*. Насамкінець згадаємо про зворотні та означальні займенники. Унікальний зворотний займенник **себе** *(oneself)* є дуже особливим, оскільки він взагалі не має форми Називного відмінка. Він завжди вказує на ту особу, яка виконує активну дію, абсолютно незалежно від її статі чи числа. Ми дуже часто використовуємо його коротку форму Давального відмінка — **собі** *(for oneself)* — як своєрідний етичний давальний. Це допомагає емоційно підкреслити, що дія виконується для власного задоволення. Наприклад, ми кажемо: мій брат **купив собі** *(bought for himself)* машину, а я просто **сиджу собі** *(just sitting by myself)* і читаю книгу. Також варто правильно вживати означальні займенники, такі як **сам** *(oneself/alone)*, **самий** *(the very same)* та **увесь** *(all/whole)*. Займенник «сам» чітко підкреслює самостійність дії: я зроблю це сам. Займенник «увесь» охоплює предмет повністю і узгоджується з іменником у роді, числі та відмінку. Наприклад, він уважно прочитав увесь текст, ми витратили всі гроші. <!-- INJECT_ACTIVITY: quiz-numerals-pronouns -->
+думати про правильний відмінок. Ви маєте один великий будинок, два нові автомобілі та п'ять розумних студентів. Зверніть увагу на те, що слово «людина» в множині змінює свою основу. Ми кажемо «дві людини», але після п'яти ми використовуємо форму «людей». :::info **Grammar box** — The words **людина** (person) and **дитина** (child) have unique behaviors. For 2-4, use the standard forms **дві людини** and **три дитини**. For 5+, switch entirely to the plural stems: **п'ять людей** and **десять дітей**. ::: Ordinal numerals indicate position in a sequence, such as first or second, and behave exactly like standard adjectives. They change their endings based on the gender, number, and case of the noun they describe. You decline them using the standard adjective tables: **до другого поверху** or **на третьому поверсі**. Порядкові числівники допомагають нам орієнтуватися в часі та просторі. Ми використовуємо їх, коли називаємо дати, поверхи в будинку або сторінки в книзі. Якщо ви хочете сказати про частину чогось, ви використовуєте дроби. Українці дуже часто вживають слова «половина» і «чверть» у повсякденному житті. Fractions present a different grammatical structure. Words like **половина** and **третина** are standard nouns followed by another noun in the Genitive case. A unique word you must master is **півтора** for masculine or neuter nouns, and its feminine equivalent **півтори**. This word uniquely forces the following noun into the Genitive Singular: **півтора року** or **півтори години**. Pronouns hold complex sentences together. Your review must cover interrogative pronouns like **хто** and **чий**, as well as relative pronouns like **який** and **котрий**. Indefinite pronouns are formed by adding suffixes or prefixes. Words like **хтось** or **будь-хто** decline exactly like their base word **хто**. Займенники роблять наше мовлення більш плавним і природним. Вони дозволяють нам уникати постійного повторення тих самих іменників. Заперечні займенники мають одну цікаву особливість. Коли ви використовуєте прийменник, він завжди стає між часткою «ні» та самим займенником. Це правило розщеплення є унікальним і дуже важливим. The most critical rule involves negative pronouns like **ніхто**. When used with a preposition, the preposition physically splits the pronoun into three separate words. Instead of saying that you went with nobody as "з ніким", you must say **ні з ким**. Similarly, the word for "to no one" becomes **ні до кого**. The reflexive pronoun **себе** is highly versatile, referring to the subject regardless of person or number. It has no Nominative form because it can never be the subject. It declines like the pronoun **ти**: Genitive and Accusative are **себе**, Dative is **собі**, and Instrumental is **собою**. Зворотний займенник «себе» показує, що дія спрямована на саму людину, яка її виконує. Ми часто використовуємо форму давального відмінка «собі» в розмовному стилі, щоб підкреслити особистий інтерес. Наприклад, ви можете сказати, що просто гуляєте собі по парку. Це робить ваше мовлення дуже природним та розслабленим. :::tip **Did you know?** — Definitive pronouns like **сам** (oneself, alone) and **увесь** (all, whole) help emphasize the completeness of an action. They decline like hard or soft adjectives, adding strong emphasis to the noun they modify. ::: <!-- INJECT_ACTIVITY: quiz-numerals-pronouns -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -527,7 +527,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -540,14 +607,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

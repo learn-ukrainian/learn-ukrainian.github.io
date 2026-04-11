@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Every point from the `content_outline` is covered. The text successfully
+    explains conjugation classes, tense structures, verb aspect (perfective/imperfective),
+    narrative foreground vs background, and '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Almost perfect, but deducted points for the Russianism "Давайте подивимося"
+    instead of the synthetic imperative "Подивімося", and the temporal calque "прямо
+    зараз" instead of "саме зараз". Gender agre
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The PPP flow is perfectly executed. The use of a relatable café dialogue
+    to introduce present/past contrasts works well. Excellent pedagogical metaphors
+    are used (e.g., aspect as a "video recording vs
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (`дієвідміна`, `особа`, `доконаний вид`, `видова
+    пара`, etc.) is used naturally in the prose. Recommended terms like `тематичний
+    голосний` and `постфікс` are also explicitly in
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The 6 primary inline activities perfectly match the plan's `activity_hints`.
+    Deducted points because the writer accidentally clustered 6 generic duplicate
+    markers at the end of the module and added an
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Tone is warm and encouraging. It uses clear, concrete Ukrainian examples
+    rather than empty filler. The tone feels like a knowledgeable teacher leading
+    a class.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Module achieves a word count of 4,994 words, easily surpassing the 4,000-word
+    target. All headings are present, the markdown formatting is clean, and the sequence
+    flows logically.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module highlights a critical decolonization marker (the dropping of
+    the final «-ть» in the 3rd person singular for 1st conjugation verbs) as a feature
+    of Ukrainian linguistic identity. It perfectl
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening dialogue features named speakers (Олексій and Дарина) and
+    a natural, multi-turn conversation that seamlessly introduces the grammar topic
+    ("Скільки літ, скільки зим!", "Я ж все літо працюв
+findings: []

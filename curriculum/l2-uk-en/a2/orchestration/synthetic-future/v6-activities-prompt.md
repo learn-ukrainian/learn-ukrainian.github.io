@@ -27,9 +27,8 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-choose-between-simple-and-compound-future-forms-based-on-context -->`
 - `<!-- INJECT_ACTIVITY: group-sort-future-forms -->`
-- `<!-- INJECT_ACTIVITY: fill-in-compound-future -->`
+- `<!-- INJECT_ACTIVITY: fill-in-future-forms -->`
 - `<!-- INJECT_ACTIVITY: quiz-aspect-choice -->`
 - `<!-- INJECT_ACTIVITY: unjumble-future-sentences -->`
 
@@ -102,29 +101,23 @@ required:
 
 Давайте коротко порівняємо ці дві форми. Let's briefly compare these two forms. The simple future promises a clear result and a logical completion. Форма «я **напишу**» гарантує результат. The form "I will write" guarantees a result. The compound future focuses entirely on duration and repetition. Форма «я **буду писати**» показує лише активний процес. The form "I will be writing" shows only an active process. Choosing the wrong tense can change the meaning of your promise. Якщо ви кажете «я **зроблю**», люди чекають на результат. If you say "I will do", people wait for a result. If you say "я **буду робити**", you only promise to spend time on the task. Обидва часи дуже потрібні для щоденного спілкування українською мовою. Both tenses are very necessary for daily communication in the Ukrainian language.
 
-<!-- INJECT_ACTIVITY: fill-in-choose-between-simple-and-compound-future-forms-based-on-context -->
-
-
 ## Простий майбутній час (Perfective/Synthetic Future)
 
 The simple future tense uses perfective verbs. Ми завжди використовуємо дієслова **доконаного виду** *(perfective aspect)*. To build this tense, we take a perfective verb and conjugate it exactly like a present-tense verb. Ми просто додаємо звичайні закінчення теперішнього часу. *(We simply add normal present-tense endings.)* Most perfective verbs are just imperfective verbs with a specific prefix added to the beginning. Наприклад, ми беремо популярний префікс **про-** і дієслово **читати** *(to read)*. *(For example, we take the popular prefix pro- and the verb to read.)* Разом ми отримуємо нове дієслово **прочитати** *(to read completely)*. This new verb belongs to the first conjugation. Ми відмінюємо його так: **я прочитаю** *(I will read)*, **ти прочитаєш** *(you will read)*, **він прочитає** *(he will read)*. У множині ми кажемо: **ми прочитаємо** *(we will read)*, **ви прочитаєте** *(you will read)*, **вони прочитають** *(they will read)*. The endings are absolutely identical to the present tense, but the prefix automatically makes the meaning future.
 
-The second conjugation follows the exact same structural logic. Ми беремо префікс і додаємо його до базової основи. *(We take a prefix and add it to the base stem.)* However, you must remember the specific consonant shifts that happen in the first person singular. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл**. Дієслово **зробити** *(to do completely)* має форму **я зроблю** *(I will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*, **вони зроблять** *(they will do)*. Another common shift is **т** to **ч**. Від дієслова **побачити** *(to see)* ми легко утворюємо форму **я побачу** *(I will see)*. You will also frequently see the shift from **д** to **дж** in verbs like **порадити** *(to advise)*, which becomes **я пораджу** *(I will advise)*.
+The second conjugation follows the exact same structural logic. Ми беремо префікс і додаємо його до базової основи. *(We take a prefix and add it to the base stem.)* However, you must remember the specific consonant shifts that happen. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл** in the first person singular and third person plural. Дієслово **зробити** *(to do completely)* має форми **я зроблю** *(I will do)* та **вони зроблять** *(they will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*. Another common shift is **т** to **ч** in the first person singular. Від дієслова **заплатити** *(to pay)* ми легко утворюємо форму **я заплачу** *(I will pay)*. You will also frequently see the shift from **д** to **дж** in verbs like **порадити** *(to advise)*, which becomes **я пораджу** *(I will advise)*.
 
 Some perfective verbs are absolutely essential for daily communication and simple transactions. Це головні дієслова для вашого щоденного виживання. *(These are the main verbs for your daily survival.)* You will use them constantly to make firm promises or state clear decisions. Якщо ви хочете щось сказати, ви кажете: «Я **скажу**» *(I will say)*. Якщо ви плануєте покупку в магазині, ви кажете: «Я **куплю**» *(I will buy)*. Notice that the verb **купити** *(to buy)* also features the consonant shift in the first person. Для розмови по телефону ми використовуємо дієслово **подзвонити** *(to call)*. Ви кажете своїм друзям: «Я **подзвоню** вам завтра» *(I will call you tomorrow)*. Якщо ви відправляєте важливе повідомлення, ви кажете: «Я **надішлю** довгий емейл» *(I will send a long email)*.
 
 Motion verbs use specific prefixes to clearly show your concrete future travel plans. Дієслова руху дуже часто мають префікси **по-** або **при-**. *(Motion verbs very often have the prefixes po- or pry-.)* The prefix "по-" shows the active start of a trip or movement away from your current location. Якщо ви плануєте подорож машиною, ви кажете: «Я **поїду**» *(I will leave/go by vehicle)*. Якщо ви йдете кудись пішки, ви кажете: «Я **піду**» *(I will go by foot)*. The prefix "при-" always shows successful arrival at a destination. Якщо ви говорите про точний час, ви кажете: «Я **приїду** о сьомій годині» *(I will arrive at seven o'clock)*. Ці короткі слова ідеально підходять для планування маршруту. *(These short words are perfectly suited for planning a route.)*
 
-Let's see how friends use these concrete promises when planning a relaxing evening together. Вони зараз планують спільну смачну вечерю. *(They are now planning a joint tasty dinner.)*
+Let's see how friends use these concrete forms when sharing their New Year's resolutions. Вони обговорюють свої цілі на новий рік. *(They are discussing their goals for the new year.)*
 
-> — **Анна:** Що ми будемо робити сьогодні ввечері? *(What will we do tonight?)*
-> — **Максим:** Я **куплю** червоне вино і свіжі фрукти. *(I will buy red wine and fresh fruits.)*
-> — **Анна:** Дуже добре, а я **зроблю** великий салат. *(Very good, and I will make a large salad.)*
-> — **Анна:** Також я **замовлю** гарячу піцу для нас. *(Also I will order a hot pizza for us.)*
-> — **Максим:** Чудово! А потім ми **подивимося** цікавий фільм. *(Great! And then we will watch an interesting movie.)*
-
-<!-- INJECT_ACTIVITY: group-sort-future-forms -->
-
+> — **Анна:** Які у вас плани на цей рік? *(What are your plans for this year?)*
+> — **Максим:** Я **напишу** книгу! А ти, Анно? *(I will write a book! And you, Anna?)*
+> — **Анна:** Я **вивчу** іспанську мову. Це моя головна мета. *(I will learn Spanish. This is my main goal.)*
+> — **Максим:** А що **зробить** наш друг Іван? *(And what will our friend Ivan do?)*
+> — **Анна:** Він **прочитає** п'ятдесят книг! А Олена **складе** свій іспит. *(He will read fifty books! And Olena will pass her exam.)*
 
 ## Складений майбутній час (Imperfective/Analytical Future)
 
@@ -134,7 +127,7 @@ Let's see how friends use these concrete promises when planning a relaxing eveni
 
 Також ми регулярно використовуємо цей час для повторюваних дій. *(Also we regularly use this tense for repeated actions.)* When an action will happen repeatedly or habitually in the future, the compound form is strictly required. Слова-маркери дуже часто допомагають зрозуміти цю щоденну ситуацію. *(Marker words very often help to understand this daily situation.)* The repetition makes the action an imperfective process by definition, requiring the helper verb. Ви часто побачите слова **щодня** *(every day)*, **часто** *(often)* або **завжди** *(always)*. *(You will often see the words every day, often or always.)* Ці короткі слова завжди показують рутину. *(These short words always show a routine.)* Ви кажете: «Я буду **дзвонити** тобі щодня» *(I will be calling you every day)*. Це чітко означає, що дія буде повторюватися багато разів. *(This clearly means that the action will be repeated many times.)* Ви також можете сказати своїм друзям: «Ми будемо часто **зустрічатися**» *(We will be meeting often)*.
 
-Тут студенти дуже часто роблять серйозну граматичну помилку. *(Here students very often make a serious grammatical error.)* You must never combine the conjugated helper verb with a perfective infinitive. Це жахливий гібрид, який зовсім не існує в українській мові. *(This is a terrible hybrid that does not exist in the Ukrainian language at all.)* Форма «я буду написати» є абсолютно неправильною. *(The form "I will write" is absolutely incorrect.)* Ukrainian explicitly separates the idea of process and the idea of a finished result. Якщо ви хочете показати фінальний результат, ви завжди використовуєте просту форму: «Я **напишу** довгий емейл» *(I will write a long email)*. Тут важлива дія має чіткий кінець. *(Here the important action has a clear end.)* Якщо ви хочете показати процес, ви використовуєте складену форму: «Я **буду писати** емейл» *(I will be writing an email)*. Цей активний процес триває певний час. *(This active process lasts a certain time.)* You cannot mix these two distinct temporal concepts together.
+Тут студенти дуже часто роблять серйозну граматичну помилку. *(Here students very often make a serious grammatical error.)* You must never combine the conjugated helper verb with a perfective infinitive. Це жахливий гібрид, який зовсім не існує в українській мові. *(This is a terrible hybrid that does not exist in the Ukrainian language at all.)* Форма «я буду написати» є абсолютно неправильною. *(The hybrid form "я буду написати" is absolutely incorrect.)* Ukrainian explicitly separates the idea of process and the idea of a finished result. Якщо ви хочете показати фінальний результат, ви завжди використовуєте просту форму: «Я **напишу** довгий емейл» *(I will write a long email)*. Тут важлива дія має чіткий кінець. *(Here the important action has a clear end.)* Якщо ви хочете показати процес, ви використовуєте складену форму: «Я **буду писати** емейл» *(I will be writing an email)*. Цей активний процес триває певний час. *(This active process lasts a certain time.)* You cannot mix these two distinct temporal concepts together.
 
 Давайте уважно подивимося, як друзі обговорюють свої нові звички. *(Let's carefully see how friends discuss their new habits.)* Вони серйозно говорять про свої амбітні плани на наступний рік. *(They are seriously talking about their ambitious plans for the next year.)* Вони обговорюють корисні речі, які скоро стануть їхньою новою рутиною. *(They are discussing useful things that will soon become their new routine.)*
 > — **Марта:** Що ти будеш **робити** в новому році? *(What will you be doing in the new year?)*
@@ -144,8 +137,7 @@ Let's see how friends use these concrete promises when planning a relaxing eveni
 > — **Марта:** Чудово, я буду **допомагати** тобі з домашнім завданням. *(Great, I will be helping you with homework.)*
 > — **Олег:** Дякую, ми будемо регулярно **практикувати** мову разом. *(Thank you, we will be practicing the language regularly together.)*
 
-<!-- INJECT_ACTIVITY: fill-in-compound-future -->
-
+<!-- INJECT_ACTIVITY: group-sort-future-forms -->
 
 ## Як обрати вид для майбутнього (Choosing Aspect for the Future)
 
@@ -161,9 +153,9 @@ There is a very important difference between English and Ukrainian grammar in co
 > — **Анна:** Чудово! Я **куплю** квитки заздалегідь. *(Great! I will buy the tickets in advance.)*
 > — **Марко:** Добре, якщо ти **купиш** квитки, я **куплю** попкорн. *(Good, if you buy the tickets, I will buy the popcorn.)*
 
+<!-- INJECT_ACTIVITY: fill-in-future-forms -->
 <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
 <!-- INJECT_ACTIVITY: unjumble-future-sentences -->
-
 
 ## Підсумок
 

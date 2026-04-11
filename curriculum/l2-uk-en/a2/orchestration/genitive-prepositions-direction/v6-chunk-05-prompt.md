@@ -21,7 +21,7 @@ Grand total: ~2300 words
 <previous_context>
 [...previous sections truncated...]
 
-**інтерес до мови** *(interest in the language)* or a positive **ставлення до роботи** *(attitude toward work)*. These abstract connections follow the exact same grammatical rules as walking to a park. The structure remains perfectly consistent. :::note Зв'язки та ставлення (Connections and Attitude) **додати до списку** *(add to the list)* **додати до чаю** *(add to the tea)* **ставлення до роботи** *(attitude toward work)* **інтерес до історії** *(interest in history)* ::: > — **Олег:** Ти можеш додати молоко до моєї кави? *(Can you add milk to my coffee?)* > — **Ганна:** Так, звичайно. До речі, ти готовий до екзамену? *(Yes, of course. By the way, are you ready for the exam?)* > — **Олег:** Майже. У мене великий інтерес до історії. *(Almost. I have a great interest in history.)* > — **Ганна:** Це чудово. Твоє ставлення до навчання дуже гарне. *(That is wonderful. Your attitude toward studying is very good.)* <!-- INJECT_ACTIVITY: group-sort-categories --> Let us consolidate what we know about the Genitive case by comparing three essential prepositions: **до** *(to/until)*, **від** *(from)*, and **після** *(after)*. All three require the following noun to take Genitive endings, but they move our focus in different directions across space and time. **Від** marks the starting point of a journey or a time period. **До** marks the destination, the limit, or the final goal. **Після** shows what happens next in a sequence. You can map a complete experience using just these three words. For example, you travel **від вокзалу** *(from the station)*, you go **до готелю** *(to the hotel)*, and you rest **після поїздки** *(after the trip)*. Understanding this triad gives you the power to describe plans simply and accurately. :::note Простір і час (Space and Time) **від вокзалу** *(from the station)* → **до готелю** *(to the hotel)* → **після поїздки** *(after the trip)* **від ранку** *(from the morning)* → **до вечора** *(until the evening)* → **після вечері** *(after dinner)* ::: :::tip Читаємо українською — Я їду від університету до бібліотеки. *(I am riding from the university to the library.)* — Після роботи ми йдемо до нового ресторану. *(After work we are going to a new restaurant.)* — Від понеділка до п'ятниці я дуже зайнятий. *(From Monday to Friday I am very busy.)* — Після уроку студенти пішли до парку. *(After the lesson the students went to the park.)* ::: <!-- INJECT_ACTIVITY: quiz-meaning-choice --> Finally, it is crucial to avoid a common mistake influenced by Russian syntax. In Russian, movement toward a person is expressed with "к" and the Dative case. In Ukrainian, movement toward a person always requires **до** and the Genitive case. You must say **до мами** *(to mom)*, **до лікаря** *(to the doctor)*, or **до друга** *(to a friend)*. Using "к" for direction is a calque that sounds unnatural and incorrect in modern Ukrainian. The preposition **до** is the only authentic way to express movement toward people and time limits. Embrace this preposition as a core feature of natural Ukrainian sentence structure. Using it correctly will make your speech sound significantly more fluent.
+an existing collection, or when your emotions are directed toward a specific subject, Ukrainian uses this preposition. The grammatical logic is that your attention or the new item is moving "to" the target. Будь ласка, обов'язково додай свіже молоко до нашого списку продуктів. У мого молодшого брата є великий інтерес до української історії та народної музики. Наш новий менеджер має дуже гарне ставлення до складної роботи і до своїх колег. Я хочу додати цю чудову веселу пісню до мого літнього плейлиста. > *Please definitely add fresh milk to our grocery list. My younger brother has a great interest in Ukrainian history and folk music. Our new manager has a very good attitude toward difficult work and toward his colleagues. I want to add this wonderful cheerful song to my summer playlist.* :::tip **Did you know?** — In English you might say you have an interest "in" something, but in Ukrainian your interest is directed "toward" it: **інтерес до**. The same logic applies to your attitude: **ставлення до**. ::: <!-- INJECT_ACTIVITY: group-sort-categories --> Now that you have learned the different meanings of **до**, let us consolidate how it works with other prepositions you already know. We often combine **від** (from), **до** (to or until), and **після** (after) to describe a complete sequence of events or a full physical journey. All three of these common prepositions require the Genitive case. They simply shift your focus backward or forward in space or time, creating a clear chronological chain of actions. Спочатку ми довго йдемо від старого вокзалу до нового готелю в центрі міста. Ми добре знаємо цей напрямок. Після цього ми підемо до історичного музею. Ми із задоволенням гуляли там від ранку до вечора. Після цієї цікавої поїздки ми поїдемо до бабусі. > *First we walk for a long time from the old station to the new hotel in the city center. We know this direction well. After this we will go to the historical museum. We walked there with pleasure from morning to evening. After this interesting trip, we will go to grandma's.* <!-- INJECT_ACTIVITY: quiz-meaning-choice --> Finally, there is a very important note about speaking natural, authentic Ukrainian. When you are expressing movement toward a person or a goal, Ukrainian strictly uses **до** with the Genitive case. You might sometimes hear people use the preposition "к" with the Dative case, saying things like "к лікарю" instead of "до лікаря". This is a direct influence from Russian grammar and is a common mistake. It is an unnatural structure in standard Ukrainian. Коли я хворий, я завжди йду до лікаря. Вона часто їздить до мами на вихідні. Ми зараз серйозно готуємося до цього великого свята. > *When I am sick, I always go to the doctor. She often travels to her mom's for the weekend. We are now seriously preparing for this big holiday.* Always use **до** to build these relationships. It is the authentic, correct way to structure your sentences and shows that you respect the natural rules of the Ukrainian language.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -475,7 +475,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -502,14 +569,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

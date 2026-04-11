@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Covers all 5 outline sections exactly as requested. Integrates vocative,
+    imperative, and conjunctions smoothly. Word count exceeds the 1000 target ("PIPELINE
+    NOTE — Word count: 1111 words").'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'No Russianisms, Surzhyk, or calques found. Correct gender and case endings.
+    Mandatory comma rule is taught accurately: "placing a comma before **що**, **де**,
+    **коли**, and **бо** is a strict grammati'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent pedagogical pacing. Introduces the scenario in Reading Practice
+    first, then explains the grammar clearly in Grammar Summary ("Masculine names
+    ending in a hard consonant or -о take -е: Тара́с'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All suggested nouns for the event are used naturally in context: "плака́т
+    (poster), квито́к (ticket), напі́й (drink), and стіле́ць (chair)."'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The injected markers correspond perfectly to the 4 planned activity hints
+    and appear immediately after the concepts are taught, testing exactly what was
+    just explained.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural and encouraging teacher persona. Tone is supportive and clear
+    ("Language is a tool for connection", "Observe how these essential communication
+    tools work together in a single, natural flo
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown structure. All H2 headings match the plan perfectly. Total
+    word count is 1111, comfortably achieving the module goal. No formatting artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correct cultural context for Ukrainian holidays and greetings ("З Різдвом!",
+    "З Великоднем!", "З Новим роком!"). Helpful tip on responding naturally with "Навза́єм!"
+    or "Вас та́ко́ж!".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural and realistic dialogue. The speakers are named, the tone is authentic,
+    and it seamlessly integrates the grammar skills targeted for this phase (e.g.
+    "Ході́мо до мене́! Принеси кутю́, будь ласк
+findings: []

@@ -25,7 +25,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-the brother entered the room.)* * Я **пив** каву, коли він **прийшов**. *(I was drinking coffee when he arrived.)* * Діти **грали**, коли батько **купив** піцу. *(The children were playing when the father bought pizza.)* :::tip Common L2 Error Alert English speakers often translate "to take an exam" directly into the Russian-influenced phrase «здавати іспит». In authentic Ukrainian, you must use the verb **складати** (to put together) for the process, and its Perfective pair **скласти** for the successful result. * Студенти зараз **складають** іспит. *(The students are taking the exam right now. — Imperfective process)* * Я успішно **склав** іспит! *(I successfully passed the exam! — Perfective result)* Never use «здавати» for exams. You can «здавати» blood or money, but for tests, it is always «складати» or «скласти». ::: Let us expand your daily routine and work vocabulary with some new aspect pairs. While many pairs are formed by simply adding a prefix (like **робити** and **зробити**), others involve internal changes to the word stem. A common pattern is the change from **-вл-** in the Imperfective process to **-в-** in the Perfective result. You must memorize these verbs as pairs to use them correctly. * **аналізувати / проаналізувати** (to analyze / to have analyzed) * **обговорювати / обговорити** (to discuss / to have discussed) * **замовляти / замовити** (to order / to have ordered) * Я зараз **замовляю** обід. *(I am ordering lunch now.)* * Я вже **замовив** піцу. *(I have already ordered pizza.)* * Ми довго **обговорювали** проект. *(We discussed the project for a long time.)* * Ми успішно **обговорили** всі деталі. *(We successfully discussed all details.)* Choosing the right aspect is what makes your storytelling sound like natural Ukrainian rather than a translated sequence of English verbs. In English, you use the past tense ending for both process and result. In Ukrainian, your choice of aspect paints a vivid picture for the listener. It tells them whether they should imagine a continuous, flowing scene or a sharp, completed action. When you master this distinction, your speech becomes fully decolonized and authentic. You stop translating grammar rules and start thinking in the natural rhythm of the Ukrainian language. ### Читаємо українською (Reading Practice) Вчора у мене був дуже цікавий день. *(Yesterday I had a very interesting day.)* Вранці я довго читав новини і пив каву. *(In the morning I read the news for a long time and drank coffee.)* Потім я пішов у центр міста. *(Then I went to the city center.)* Я гуляв парком, коли раптом побачив старого друга. *(I was walking in the park when suddenly I saw an old friend.)* Ми зайшли в кафе і замовили обід. *(We entered a cafe and ordered lunch.)* Ми обговорювали наші плани цілий вечір. *(We discussed our plans all evening.)* Я повернувся додому пізно, але був дуже радий. *(I returned home late, but was very glad.)* <!-- INJECT_ACTIVITY: match-up, Story Completion: Choose the Right Aspect, 8 items --> <!-- INJECT_ACTIVITY: match-up, Answering questions about a short narrative, 8 items -->
+готував смачну вечерю, коли ти несподівано подзвонив. Ми йшли додому через парк, коли почався сильний дощ. Вона читала цікаву книгу, коли в кімнату швидко зайшов її брат. > *I was calmly cooking a tasty dinner when you unexpectedly called. We were walking home through the park when a heavy rain started. She was reading an interesting book when her brother quickly entered the room.* As you talk about your past experiences, especially related to education or work, you must be careful with the verbs for taking exams. A very common error among learners is translating "to take an exam" literally as "здавати іспит". This is a calque from Russian. In proper Ukrainian, the verb **здавати** means to hand something over, like an apartment key. To express the process of taking an academic test, you must use the verb **складати**. Мій молодший брат зараз навчається в університеті і складає складний іспит з історії. Я впевнений, що він складе його дуже добре. > *My younger brother is currently studying at the university and is taking a difficult history exam. I am sure that he will pass it very well.* :::note **Quick tip** Remember: **складати іспит** (imperfective) is the stressful process of taking the test, while **скласти іспит** (perfective) is the joyful result of successfully passing it. ::: Let us expand your daily routine vocabulary with some essential aspect pairs. Many professional verbs form their perfective partner simply by adding the prefix **про-** or **об-**, such as **аналізувати** (to analyze) becoming **проаналізувати**. However, some verbs undergo an internal stem change. For instance, the verb **замовляти** (to order, process) loses the letter "л" to become **замовити** (to order, result). Сьогодні ми довго обговорювали новий проєкт. Потім ми ретельно проаналізували всі важливі фінансові дані. Після цієї зустрічі ми вирішили замовити смачну піцу в офіс. Я часто замовляю тут їжу, тому що вони готують дуже швидко. > *Today we discussed the new project for a long time. Then we carefully analyzed all the important financial data. After this meeting, we decided to order a tasty pizza to the office. I often order food here because they cook very quickly.* Choosing the right aspect is what makes your Ukrainian sound natural and decolonized. Instead of translating a sequence of English verbs ending in "-ed", you must pause and think about the nature of the action. Was it a background process, or was it a completed step that moved the story forward? When you master this rhythm, you stop translating and start truly thinking in Ukrainian. Я дуже довго вивчав українську граматику. Я читав складні правила і робив різні письмові вправи. Але саме сьогодні я нарешті добре зрозумів цю важливу тему. Тепер я можу вільно розповідати цікаві історії про своє життя. > *I studied Ukrainian grammar for a very long time. I read difficult rules and did various written exercises. But exactly today I finally understood this important topic well. Now I can freely tell interesting stories about my life.* <!-- INJECT_ACTIVITY: match-up-story-aspect --> <!-- INJECT_ACTIVITY: match-up-narrative-check -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -466,7 +466,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -494,14 +561,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

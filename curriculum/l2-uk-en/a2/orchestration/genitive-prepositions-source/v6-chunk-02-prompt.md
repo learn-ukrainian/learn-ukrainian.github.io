@@ -24,18 +24,20 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 ## Вступ: Вечірка в друзів
 
-Сьогодні у нас міжнародна вечеря. *(Today we have an international dinner.)* Let's see what everyone brought.
+Imagine you are at an international potluck dinner with your friends. Everyone has brought something special, and naturally, people are asking where the food and drinks came from. This is the perfect situation to practice three very common Ukrainian prepositions: **з** (from a place), **від** (from a person), and **після** (after an event).
 
-> — **Олена:** Привіт усім! Що ви принесли? *(Hi everyone! What did you bring?)*
-> — **П'єр:** Це сир **з Франції** *(from France)*.
-> — **Нікос:** А це оливки **з Греції** *(from Greece)*. Вони дуже свіжі. *(They are very fresh.)*
-> — **Анна:** Я принесла шоколад **від бабусі** *(from grandma)*. Вона живе в Бельгії. *(She lives in Belgium.)*
-> — **Олена:** Чудово! А це вино ми п'ємо **після подорожі** *(after a trip)*.
+> — **Марко:** Привіт усім! Який великий стіл. Що це? *(Hi everyone! What a big table. What is this?)*
+> — **Анна:** Це сир з Франції. А ці смачні оливки — з Греції. *(This is cheese from France. And these tasty olives are from Greece.)*
+> — **Марко:** Дуже добре! А звідки цей шоколад? *(Very good! And where is this chocolate from?)*
+> — **Олена:** Це шоколад від бабусі з Бельгії. *(This is chocolate from grandma from Belgium.)*
+> — **Анна:** А що ти приніс, Марку? *(And what did you bring, Marko?)*
+> — **Марко:** А це вино після подорожі Італією. *(And this is wine after a trip through Italy.)*
+> — **Олена:** Чудово! Тоді давайте вечеряти. *(Wonderful! Then let's have dinner.)*
 
-Notice how the friends describe where things come from or when things happen. They use the prepositions **з** *(from)*, **від** *(from a person)*, and **після** *(after)*. 
-
-Ці маленькі слова дуже важливі для спілкування. *(These small words are very important for communication.)* In this module, you will learn how to use them to talk about origins, materials, and time.
-
+:::note
+**Quick tip**
+Notice how the prepositions **з**, **від**, and **після** change the ending of the noun that follows them. For example, *Франція* becomes *Франції*, *бабуся* becomes *бабусі*, and *подорож* becomes *подорожі*. This is the Genitive case in action!
+:::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -484,7 +486,74 @@ These examples are drawn from the provided sources and demonstrate natural usage
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -511,14 +580,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

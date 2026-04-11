@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-first-contact (A1)
 
-Generated: 2026-04-09 01:55
+Generated: 2026-04-11 00:53
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 01:55
 | verify | complete | 2026-04-08 23:54:31 |
 | review | complete | 2026-04-08 23:55:38 |
 | stress | complete | 2026-04-08 23:55:40 |
-| publish | complete | 2026-04-08 23:55:42 |
+| publish | complete | 2026-04-10 22:53:14 |
+| audit | complete | 2026-04-10 22:53:14 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 01:55
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

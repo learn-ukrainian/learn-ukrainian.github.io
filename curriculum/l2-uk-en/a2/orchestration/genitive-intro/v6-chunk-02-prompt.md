@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-The dictionary form for a fridge is **холодильник** (fridge, masculine). But because the neighbor says it is missing, she uses the word **немає**, and the noun changes to **холодильника**. The same thing happens with the feminine noun **плита** (stove), which changes to **плити**. The neuter noun **дзеркало** (mirror) changes to **дзеркала**. You can think of the word **немає** as a powerful grammatical magnet. Whenever it appears in a sentence, it pulls the object that is missing out of its basic dictionary form and forces it to take a new Genitive ending. Notice that the new tenant says she has **багато коробок** (a lot of boxes). The word **багато** (a lot, many, much) also requires the Genitive case. To build a strong habit, it is helpful to practice contrasting positive and negative statements. Look at how the nouns change when we switch from existence to absence. * **Тут є стіл.** *(There is a table here.)* * **Тут немає стола.** *(There is no table here.)* * **У мене є проблема.** *(I have a problem.)* * **У мене немає проблеми.** *(I don't have a problem.)* * **У нас є вікно.** *(We have a window.)* * **У нас немає вікна.** *(We don't have a window.)* * **В офісі є директор.** *(There is a director in the office.)* * **В офісі немає директора.** *(There is no director in the office.)* * **У тебе є вода?** *(Do you have water?)* * **Ні, у мене немає води.** *(No, I don't have water.)* In everyday casual speech, Ukrainians often shorten the word **немає** to simply **нема** (there is no). This short form means exactly the same thing and follows the exact same grammatical rule. It still acts as a magnet for the Genitive case. A very common example you will hear every day is «Часу нема» (There is no time), where **час** (time) becomes **часу**. ### Читаємо українською (Reading Practice) **Моя нова кімната дуже велика.** *(My new room is very big.)* **Але зараз вона порожня.** *(But right now it is empty.)* **Тут є тільки одне ліжко.** *(There is only one bed here.)* **У мене немає шафи.** *(I don't have a wardrobe.)* **У мене немає телевізора.** *(I don't have a television.)* **На вікні немає штори.** *(There is no curtain on the window.)* **Я хочу працювати, але в кімнаті немає стола.** *(I want to work, but there is no table in the room.)* **У мене є тільки багато планів.** *(I only have a lot of plans.)* **Завтра я куплю меблі.** *(Tomorrow I will buy furniture.)* <!-- INJECT_ACTIVITY: quiz, Possession vs. Absence Drill (`Є` vs. `Немає`), 8 items --> To summarize this section, remember the golden rule of absence in Ukrainian. Whenever something is missing, whether it is a person, a physical object in a room, or an abstract concept like time, you must use the word **немає** (or **нема**). And whenever you use that word, the missing noun must take the Genitive case. In the next section, we will learn exactly how to form these endings for all noun genders.
+missing. > — **Сусідка:** Добрий день! Я ваша нова сусідка. *(Good day! I am your new neighbor.)* > — **Нова мешканка:** Привіт! Заходьте, будь ласка. *(Hi! Come in, please.)* > — **Сусідка:** Ого, тут ще зовсім порожньо. *(Wow, it's still completely empty here.)* > — **Нова мешканка:** Так, це моя нова кухня. Тут є багато коробок, але ще нічого не працює. *(Yes, this is my new kitchen. There are many boxes here, but nothing works yet.)* > — **Сусідка:** Я бачу. Тут немає холодильника! *(I see. There is no fridge here!)* > — **Нова мешканка:** Так, і немає плити. Я не можу готувати. *(Yes, and there is no stove. I cannot cook.)* > — **Сусідка:** А де ваші меблі? Навіть немає дзеркала! *(And where is your furniture? There isn't even a mirror!)* > — **Нова мешканка:** Усе буде завтра. А сьогодні ми тільки розпаковуємо речі. *(Everything will be tomorrow. And today we are just unpacking things.)* Let's analyze what happened in that conversation. The word «немає» acts like a powerful grammar magnet, pulling nouns out of their default Nominative state and into the Genitive case. The masculine noun «холодильник» (fridge) transforms into «холодильника». The feminine noun «плита» (stove) changes to become «плити». Even the neuter noun «дзеркало» (mirror) shifts its final vowel to become «дзеркала». You cannot simply say «немає холодильник»—that sounds entirely broken to a native speaker. The concept of absence itself demands the Genitive form. To master this concept, practice the direct contrast between presence and absence. When an item is present, it sits safely in the Nominative case. When it is gone, it falls into the Genitive case. The sentence «Тут є стіл» (There is a table here) uses the base form. But the opposite statement, «Тут немає стола» (There is no table here), requires the case change. У кімнаті є велике вікно. Але в коридорі немає вікна. На столі є гаряча кава. Але в чашці немає цукру. Я люблю каву, але зараз у мене немає часу. > *In the room there is a large window. But in the corridor there is no window. On the table there is hot coffee. But in the cup there is no sugar. I love coffee, but right now I don't have time.* In casual, everyday Ukrainian speech, people frequently shorten the word «немає» to «нема». :::info **Скорочена форма (Shortened form)** The short form **нема** is used exactly like **немає** and carries the identical meaning. It still strictly requires the Genitive case. For example, you will often hear «Часу нема» (There is no time) instead of «Часу немає». Both are completely correct, but the shorter version is very popular in relaxed conversation. ::: <!-- INJECT_ACTIVITY: quiz-possession-vs-absence --> The core takeaway for this section is absolute. Whenever you express that something or someone is missing, the Genitive case is mandatory. Whether you are talking about an object like a stove, a person like a sister, or a concept like time, the word «немає» always triggers this fundamental change in the noun's ending.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -543,7 +543,74 @@ Here are sentences demonstrating the use of the genitive case with `немає`.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -571,14 +638,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Орудним відмінком. Наприклад: ми діємо **згідно із законом** *(according to the law)*. Також можна використати прийменник **відповідно до** *(in accordance with)* разом з Родовим відмінком: **відповідно до закону** *(in accordance with the law)*. Калькована російська форма «згідно закону» (з Давальним відмінком без прийменника) є абсолютно неприйнятною в сучасній літературній українській мові. Чому всі ці дрібні нюанси такі критично важливі на рівні B1? Тому що саме вони чітко відрізняють механічний переклад від справжнього, глибокого мислення українською мовою. Правильне граматичне керування дієслів яскраво показує вашу щиру повагу до унікальної структури мови. Коли ви кажете **піти по хліб** *(to go for bread)* замість помилкового «піти за хлібом», або коли ви правильно кажете **через сильний дощ** *(due to heavy rain)* замість калькованого «із-за дощу», ви демонструєте дуже високу мовну культуру. Ваше головне завдання зараз — назавжди позбутися цих «привидів» і говорити максимально автентично. Зараз ми проведемо практичну письмову симуляцію, яка обов'язково допоможе вам надійно закріпити всі здобуті знання в абсолютно реальному життєвому сценарії. Уявіть собі таку ситуацію: ви плануєте незабаром переїхати до нового великого міста і активно шукаєте зручну квартиру для довгострокової оренди. Ви знайшли дуже чудове оголошення в інтернеті і тепер маєте написати грамотний формальний електронний лист потенційному орендодавцю. Цього чоловіка звати **Пан Сидоренко** *(Mr. Sydorenko)*. Ваше головне завдання — самостійно скласти дуже чіткий, максимально ввічливий та абсолютно граматично правильний запит на отримання додаткової інформації про це житло. У цьому офіційному листі ви повинні детально описати свої особисті потреби, використовуючи специфічні граматичні конструкції, які ми детально вивчали в цій фазі. По-перше, ви обов'язково маєте правильно звернутися до шановного власника квартири, використовуючи формальний Кличний відмінок: **Пане Сидоренку** *(Mr. Sydorenko)*. По-друге, логічно поясніть, чому саме ви зараз шукаєте нове житло, використовуючи складний сполучник причини **через те що** *(due to the fact that)*. Наприклад, ви можете прямо написати, що ви переїжджаєте **через те що** швидко змінили свою роботу. По-третє, чітко вкажіть, на який саме період часу ви плануєте орендувати цю квартиру. Тут вам обов'язково знадобиться прийменник часу **протягом** *(during/throughout)* з правильним відмінком, наприклад, ви плануєте жити тут **протягом одного року** *(during one year)*. По-четверте, детально розкажіть, для кого саме ви шукаєте це житло, правильно використавши прийменник мети **для** *(for)* обов'язково з Родовим відмінком: я шукаю житло **для мене та моєї родини** *(for me and my family)*. Нарешті, найважливіша частина будь-якого ділового листа — це точні цифри. Ви повинні абсолютно правильно провідміняти всі числівники, коли будете писати про ваш максимальний фінансовий бюджет та бажану адресу. Наприклад, ви можете чітко зазначити, що ваш бюджет становить близько **п'ятнадцяти тисяч гривень** *(fifteen thousand hryvnias)*, і ви дуже хотіли б жити недалеко від **третьої станції метро** *(the third metro station)*. Перш ніж остатно відправити цей лист, обов'язково перевірте його граматичну структуру. Запитайте себе: чи правильно я утворив складну форму Родового відмінка після числівників п'ять, десять, двадцять? Чи правильно я використав усі займенники, щоб повністю уникнути зайвих повторень у тексті? Пам'ятайте, що справжня ввічливість в українській мові завжди виражається через правильну та багату граматику. Орендодавець, який отримає ваш грамотно написаний лист, з набагато більшою ймовірністю відповість вам позитивно. <!-- INJECT_ACTIVITY: essay-response-housing -->
+often slip into speech because they use familiar Ukrainian vocabulary but apply a completely foreign grammatical logic. To speak naturally, you must learn the unique case government of Ukrainian verbs and prepositions. Let us examine the verb **сміятися** (to laugh). A very common mistake is saying **сміятися над другом** using the Instrumental case. This is a direct copy of the Russian structure. The authentic Ukrainian phrase requires the preposition **з** followed by the Genitive case: **сміятися з друга**. This subtle shift in prepositions changes your speech from sounding translated to sounding completely native. Another frequent trap is the verb **дякувати** (to thank). In English, you thank someone as a direct object, and in Russian, you use the Accusative case for the person you are thanking. However, in Ukrainian, **дякувати** always demands the Dative case, indicating the recipient of your gratitude. You must say **дякую вам**, never **дякую вас**. Using the Accusative case here is a grammatical error that immediately flags your speech as unnatural. Similarly, the verb **навчатися** (to study) specifically requires the Genitive case. While a learner might be tempted to say **навчатися музиці** (Dative) due to Russian interference, the correct form is **навчатися музики** (Genitive). Remembering these specific combinations is essential for passing the B1 checkpoint. :::info **Grammar box** — Always double-check verb government when learning new words. Make a firm habit of memorizing the required preposition and case alongside the infinitive form, such as **дякувати (кому?)**, **навчатися (чого?)**, and **сміятися (з кого?)**. ::: Now it is time to put all your theoretical knowledge of cases, prepositions, and numerals into practical use. Imagine you are relocating to Lviv for a new job and need to find an apartment. You have found a suitable option online and must write a formal email to the landlord, Pan Sydorenko. Your message needs to be polite, grammatically precise, and clear about your housing expectations. In your email, you must use the Vocative case for the greeting, demonstrating your cultural respect. You also need to employ cause and purpose prepositions like **для** (for), **протягом** (during), and **через те що** (because of the fact that) to accurately explain your situation. Additionally, you will have to correctly decline numerals to state your budget and specify the exact address you are interested in. When drafting your response, consider the following structure. First, address the landlord using the formal Vocative case: **Шановний пане Сидоренку!**. Next, introduce yourself and explain why you are writing: **Я пишу вам через те що...**. Then, state how long you plan to rent the apartment: **протягом року** or **на півтора року**. Mention what is important to you in the apartment, using the Genitive case for purpose: **для комфортної роботи**. Finally, confirm the price you saw in the advertisement, ensuring the numeral agrees with the noun **гривень**. This exercise tests your ability to synthesize everything you have learned in this phase. Precise case usage is not just an academic exercise; it is the foundation of effective, professional communication in Ukrainian. <!-- INJECT_ACTIVITY: essay-response-housing -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -525,7 +525,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -538,14 +605,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

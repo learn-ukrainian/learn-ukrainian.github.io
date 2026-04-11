@@ -6,49 +6,49 @@ inline:
   type: fill-in
   instruction: Напишіть множину (Nominative plural)
   items:
-  - sentence: Це моя ____ (сестра).
+  - sentence: Це моя ____.
     answer: сестри
     options:
     - сестри
     - сестра
     - сестрів
-  - sentence: Тут стоять нові ____ (стіл).
+  - sentence: Тут стоять нові ____.
     answer: столи
     options:
     - столи
     - столів
     - стіли
-  - sentence: У зоопарку живуть великі ____ (лев).
+  - sentence: У зоопарку живуть великі ____.
     answer: леви
     options:
     - леви
     - левів
     - лева
-  - sentence: Де мої ____ (річ)?
+  - sentence: Де мої ____?
     answer: речі
     options:
     - речі
     - річі
     - речей
-  - sentence: У нас є нові ____ (телефон).
+  - sentence: У нас є нові ____.
     answer: телефони
     options:
     - телефони
     - телефон
     - телефонів
-  - sentence: Там бігають маленькі ____ (кошеня).
+  - sentence: Там бігають маленькі ____.
     answer: кошенята
     options:
     - кошенята
     - кошеняти
     - кошенят
-  - sentence: Ці ____ (людина) дуже добрі.
+  - sentence: Ці ____ дуже добрі.
     answer: люди
     options:
     - люди
     - людини
     - людей
-  - sentence: Які красиві ____ (місто)!
+  - sentence: Які красиві ____!
     answer: міста
     options:
     - міста
@@ -139,70 +139,6 @@ inline:
     - лікарям
     - лікарями
     correct: 0
-- id: error-correction-plural
-  type: error-correction
-  instruction: Знайдіть і виправте помилку у формі іменника.
-  items:
-  - sentence: Дітей грають у парку.
-    error: дітей
-    correction: діти
-    error_type: word
-    options:
-    - діти
-    - дитина
-    - дітям
-    explanation: The children are performing the action, so they must be in the Nominative
-      case (діти).
-  - sentence: Я бачу студенти біля університету.
-    error: студенти
-    correction: студентів
-    error_type: word
-    options:
-    - студентів
-    - студентам
-    - студентами
-    explanation: Students are animate direct objects, so the Accusative plural looks
-      like the Genitive (студентів).
-  - sentence: Вона читає нові книжок.
-    error: книжок
-    correction: книжки
-    error_type: word
-    options:
-    - книжки
-    - книжкам
-    - книжками
-    explanation: Books are inanimate direct objects, so the Accusative plural is the
-      same as the Nominative (книжки).
-  - sentence: Людей ідуть на роботу.
-    error: людей
-    correction: люди
-    error_type: word
-    options:
-    - люди
-    - людям
-    - людьми
-    explanation: The people are performing the action, so they must be in the Nominative
-      case (люди).
-  - sentence: Ми зустріли старі друзі.
-    error: друзі
-    correction: друзів
-    error_type: word
-    options:
-    - друзів
-    - друзям
-    - друзями
-    explanation: Friends are animate direct objects, so they take the Accusative form
-      identical to the Genitive (друзів).
-  - sentence: Він любить ці старі міст.
-    error: міст
-    correction: міста
-    error_type: word
-    options:
-    - міста
-    - містам
-    - містами
-    explanation: Cities are inanimate, so their Accusative plural form is identical
-      to the Nominative (міста).
 workbook:
 - type: match-up
   id: match-singular-plural
@@ -327,37 +263,37 @@ workbook:
   id: fill-in-acc-mixed
   instruction: Вставте правильну форму іменника (Називний чи Знахідний відмінок).
   items:
-  - sentence: У цьому лісі живуть красиві ____ (птах).
+  - sentence: У цьому лісі живуть красиві ____.
     answer: птахи
     options:
     - птахи
     - птахів
     - птахам
-  - sentence: Я часто бачу цих ____ (птах) біля дому.
+  - sentence: Я часто бачу цих ____ біля дому.
     answer: птахів
     options:
     - птахів
     - птахи
     - птахами
-  - sentence: На столі лежать нові ____ (зошит).
+  - sentence: На столі лежать нові ____.
     answer: зошити
     options:
     - зошити
     - зошитів
     - зошитам
-  - sentence: Студенти швидко відкривають свої ____ (зошит).
+  - sentence: Студенти швидко відкривають свої ____.
     answer: зошити
     options:
     - зошити
     - зошитів
     - зошитам
-  - sentence: У нас є хороші ____ (друг).
+  - sentence: У нас є хороші ____.
     answer: друзі
     options:
     - друзі
     - друзів
     - друзям
-  - sentence: Ми любимо наших ____ (друг).
+  - sentence: Ми любимо наших ____.
     answer: друзів
     options:
     - друзів

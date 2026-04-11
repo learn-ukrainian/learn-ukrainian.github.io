@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed the explicit gerund examples in the literary dialogue: "Читаючи
+    ці рядки, розумієш... Прочитавши ''Кобзар'', неможливо залишитися байдужим."'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Russian calques present ("Давайте детально згадаємо"). Factual error regarding
+    the word "рад" (claiming it has no full form). Outdated terminology used ("ВНЗ"
+    instead of "ЗВО").
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Excellent breakdown of participle rules, but contains a factual math
+    error in gerund formation: `відкидаємо закінчення «-ть» і додаємо суфікси -учи/-ючи
+    або -ачи/-ячи.` (If you drop `-ть` from `читают'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan were beautifully
+    integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Markers are placed after appropriate blocks, though over-generated (17
+    instead of 6).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Fantastic, encouraging tone that effectively frames the checkpoint as
+    a diagnostic tool rather than a stressful exam.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Word count is excellent (4717 words). One minor formatting error: lowercase
+    sentence start in the dialogue (`— Викладач літератури: точне і правильне спостереження!`).'
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Strong focus on decolonizing the language (Antonenko-Davydovych quotes).
+    Deducted one point for the outdated "ВНЗ" terminology which is a remnant of the
+    Soviet "ВУЗ" structure.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The literary dialogue is rich but omitted the requested gerund constructions
+    from the plan.
+findings: []

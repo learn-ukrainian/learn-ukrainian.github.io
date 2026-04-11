@@ -1,0 +1,34 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-49-d9150973.json
+phase: review
+prompt_chars: 59367
+response_chars: 5563
+prompt_words: 8480
+response_words: 828
+sections:
+- name: preamble
+  start: 0
+  length: 433
+  fraction: 0.0073
+- name: plan
+  start: 433
+  length: 55898
+  fraction: 0.9416
+- name: output_spec
+  start: 56331
+  length: 3036
+  fraction: 0.0511
+large_sections:
+- plan
+directives_total: 14
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 7/22 keywords (32%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

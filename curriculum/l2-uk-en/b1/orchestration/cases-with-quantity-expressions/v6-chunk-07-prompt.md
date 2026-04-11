@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-лише з чоловічим та середнім родом: «півтора метра», «півтора відра». Якщо іменник належить до жіночого роду, ми обов'язково кажемо «півтори»: «півтори години», «півтори порції». Після «півтора» та «півтори» іменник завжди стоїть у родовому відмінку **однини** *(singular)*. Слово «півтораста» позначає сто п'ятдесят, і воно вимагає родового відмінка **множини** *(plural)*: «півтораста учнів», «півтораста гривень». У статистиці та фінансових звітах ми постійно оперуємо **відсотками** *(percentages)*. Слово «відсоток» — це звичайний іменник чоловічого роду, що підпорядковується стандартним правилам узгодження: «один відсоток», «два відсотки» (називний множини) та «п'ять відсотків» (родовий множини). Коли ми читаємо **десяткові дроби** *(decimal fractions)*, ми використовуємо слова «ціла» і «десята». Наприклад, число 1,2 читається як «одна ціла і дві десятих». Після таких дробів іменник ставиться у родовий відмінок однини: «одна ціла і дві десятих відсотка». У мішаних числах зі словом «половина», як-от 2,5, ми кажемо **«два з половиною»** *(two and a half)*. Тут форма іменника залежить від цілої частини: «два з половиною кілометри» (як із «два») або «п'ять із чвертю літрів» (як із «п'ять»). <!-- INJECT_ACTIVITY: quiz, Обрати правильну форму іменника після дробів та відсотків --> ## 5. Неозначено-кількісні слова та наближення Іноді ми не знаємо точної кількості предметів або не хочемо її називати. Для цього існують **неозначено-кількісні слова** *(indefinite-quantitative words)*. До них належать **«багато»** *(many, a lot)*, **«мало»** *(few, a little)*, **«кілька»** *(several)*, **«декілька»** *(several)* та **«чимало»** *(quite a lot)*. У називному відмінку ці слова функціонують як кількісні числівники від п'яти до двадцяти. Вони вимагають після себе іменника у формі **родового відмінка множини** *(genitive plural)*. Наприклад, ми кажемо «кілька книжок», «декілька разів» або «багато людей». Слова «кілька» та «декілька» є абсолютними синонімами, ви можете використовувати будь-яке з них. Якщо йдеться про незлічувані поняття, ми використовуємо родовий відмінок **однини** *(singular)*: «багато часу», «мало води», «чимало простору». У новинах або статистиці часто йдеться про **наближення** *(approximation)*. Якщо кількість не є точною, українська мова пропонує зручні граматичні конструкції. Слово **«близько»** *(about, approximately)* завжди вимагає родового відмінка: «На площу прийшло близько ста людей». Прийменник **«до»** *(up to)* також використовується з родовим відмінком і вказує на максимальну межу: «У залі було до п'ятдесяти глядачів». Натомість слово **«понад»** *(more than, over)* означає перевищення межі. Воно вимагає **знахідного відмінка** *(accusative case)*: «Цей проєкт коштує понад тисячу гривень» або «В Україні живе понад сорок мільйонів людей». У розмовному стилі часто використовують прийменник **«з»** *(about, around)* із формою знахідного відмінка: «Він купив з десяток яблук». Пам'ятайте важливе правило: казати «біля ста людей» — це русизм, граматично правильно використовувати лише «близько ста людей». Окрему групу становлять слова, що виражають **надмірність** *(excess)* або **достатність** *(sufficiency)*. Це слова **«забагато»** *(too much, too many)*, **«замало»** *(too little, too few)* та **«достатньо»** *(enough)*. Вони також завжди керують родовим відмінком. Ми часто використовуємо їх, коли обговорюємо фінансовий бюджет, час або кулінарні рецепти. Наприклад: «Для проєкту нам виділили замало грошей», «У мене забагато роботи на цьому тижні» або «Нам достатньо двох годин для відпочинку». У побутових ситуаціях ви можете почути: «Додайте солі, але не забагато» або «Цієї порції достатньо для трьох осіб». Ці короткі слова роблять ваше мовлення точним і дуже природним. <!-- INJECT_ACTIVITY: fill-in-indefinite-quantity -->
+«три цілих і п'ять десятих кілометра», оскільки ми вказуємо на частину від одного відсотка чи кілометра. :::note **Quick tip** — When reading decimal numbers in Ukrainian, we use the feminine gender for the numbers because they imply the word **частина** (part). So, 1.5 is read as **одна ціла і п'ять десятих** (one whole and five tenths). ::: <!-- INJECT_ACTIVITY: quiz-fraction-agreement --> ## 5. Неозначено-кількісні слова та наближення (~550 слів) In many situations, you don't need an exact number. When describing general amounts, Ukrainian uses a special group of words called indefinite-quantitative words. The most common of these express everyday concepts like "many", "few", "several", and "quite a lot". Слова «багато», «мало», «кілька», «декілька» та «чимало» граматично поводяться так само, як числівники від п'яти до двадцяти. Після них іменник завжди стоїть у формі родового відмінка множини. Ми кажемо «кілька книжок», «багато людей» або «чимало зусиль». Виняток становлять незліченні іменники, які мають лише форму однини. З такими словами ми використовуємо родовий відмінок однини, наприклад, «багато часу» чи «мало води». > *The words for "many", "few", "several", and "quite a lot" behave grammatically just like the numerals from five to twenty. After them, the noun always stands in the genitive plural form. We say "кілька книжок" (several books), "багато людей" (many people), or "чимало зусиль" (quite a lot of effort). The exception is uncountable nouns, which only have a singular form. With such words, we use the genitive singular, for example, "багато часу" (much time) or "мало води" (little water).* When you want to give a rough estimate rather than a vague amount, Ukrainian relies on specific prepositions. The most standard word for "about" or "approximately" is **близько**, which requires the genitive case. For example, **близько ста людей** means "about a hundred people". To express "more than" or "over", we use **понад** with the accusative case, as in **понад тисячу гривень**. If you need to indicate an upper limit meaning "up to", the preposition **до** is used with the genitive case. :::note **Quick tip** — In spoken Ukrainian, you might hear the preposition **біля** instead of **близько** to mean "about". While common in everyday conversation, the literary standard strongly prefers **близько** for quantities. ::: Для вираження дуже приблизної кількості в розмовній мові часто використовують частку «з». Ця частка додається до числівника і не змінює його відмінка. Якщо ви скажете «я купив з десяток яблук», це означатиме, що яблук було приблизно десять. Ця конструкція звучить дуже природно і робить ваше мовлення схожим на мовлення носіїв. Іноді важливо передати не лише саму кількість, а й власне ставлення до неї. Слова «забагато» та «замало» вказують на надмірність або нестачу чогось. Як і всі кількісні слова цієї групи, вони вимагають родового відмінка. Ви можете поскаржитися, що у вас «замало часу», або зазначити, що в супі «забагато солі». Коли ж кількість ідеально відповідає потребам, ми використовуємо слово «достатньо». Наприклад, ви можете сказати колегам: «Для цього проєкту нам достатньо двох годин». Усі ці слова допомагають точно описати ситуацію, будь то планування бюджету чи приготування їжі. <!-- INJECT_ACTIVITY: fill-in-indefinite-quantity -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -544,7 +544,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -557,14 +624,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

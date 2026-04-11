@@ -29,7 +29,7 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-04-07T23:43:22.858326+00:00"
+      "ts": "2026-04-11T00:55:04.324377+00:00"
     },
     "verify-exercises": {
       "status": "complete",
@@ -51,17 +51,9 @@
       "status": "complete",
       "ts": "2026-04-07T23:45:23.399360+00:00"
     },
-    "review": {
-      "status": "complete",
-      "ts": "2026-04-07T23:50:03.010242+00:00"
-    },
     "stress": {
       "status": "complete",
       "ts": "2026-04-07T23:50:03.162119+00:00"
-    },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-07T23:50:04.445671+00:00"
     }
   }
 }

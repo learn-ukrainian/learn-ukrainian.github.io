@@ -1,28 +1,37 @@
 ## Підсумок
 
-У цьому модулі ми опанували шість ключових розрядів займенників *(categories of pronouns)*. Вони дозволяють будувати складні, точні та стилістично багаті висловлювання. Давайте підсумуємо їхні функції у таблиці:
+У цьому модулі ми детально розглянули шість ключових розрядів займенників. Їхнє правильне використання дозволяє будувати складні речення, ставити точні запитання та виражати найтонші відтінки значень — від повної відсутності до абсолютної впевненості. Зворотний займенник показує, що дія спрямована на самого діяча. Неозначені вказують на невідомі об'єкти, а заперечні підкреслюють їхню відсутність. Означальні займенники виражають повноту або ідентичність. Особливу увагу варто звернути на правопис: частки можуть писатися разом, через дефіс або окремо, якщо з'являється прийменник.
 
-| Розряд *(Category)* | Приклади займенників *(Examples)* | Головні особливості *(Key features)* |
+> *In this module, we have examined six key categories of pronouns in detail. Their correct use allows you to build complex sentences, ask precise questions, and express the subtlest shades of meaning — from complete absence to absolute certainty. The reflexive pronoun shows that an action is directed at the doer. Indefinite pronouns point to unknown objects, while negative pronouns emphasize their absence. Definitive pronouns express completeness or identity. Special attention should be paid to spelling: particles can be written together, hyphenated, or separately if a preposition appears.*
+
+| Розряд (Category) | Основні займенники (Core Pronouns) | Ключові правила (Key Rules & Nuances) |
 | :--- | :--- | :--- |
-| **Питально-відносні** *(Interrogative-relative)* | хто, що, який, чий, котрий | Відмінюються за всіма відмінками. Використовуються для питань та для з'єднання частин складного речення. |
-| **Зворотний** *(Reflexive)* | себе | Вказує на виконавця дії. Не має називного відмінка, роду та числа. Завжди працює як об'єкт. |
-| **Неозначені** *(Indefinite)* | хтось, будь-хто, дехто, що-небудь | Творяться за допомогою спеціальних часток. Мають суворі правила орфографії (пишуться разом або через дефіс). |
-| **Заперечні** *(Negative)* | ніхто, ніщо, ніякий, нічий | Утворюються за допомогою префікса «ні-». Обов'язково вимагають подвійного заперечення у реченні. |
-| **Означальні** *(Definitive)* | кожен, весь, сам, самий, інший | Узагальнюють або чітко виділяють об'єкти. Займенник «весь» має унікальну парадигму відмінювання. |
-| **Особові** *(Personal)* | я, ти, він, вона, ми, ви, вони | Отримують приставний звук «н» після прийменників (до нього, з нею) для кращої милозвучності. |
+| **Особові** (Personal) | я, ти, він, вона, ми, ви, вони | Require an inserted «н-» after prepositions («до нього», «з нею»). |
+| **Питально-відносні** (Interrogative-Relative) | хто, що, який, чий, котрий | Used for direct questions or to connect relative clauses. |
+| **Зворотний** (Reflexive) | себе (себе, собі, собою) | No Nominative case. Always refers back to the subject. |
+| **Неозначені** (Indefinite) | хтось, будь-хто, що-небудь, дехто | Spelling rules: «-сь», «де-» (together); «будь-», «-небудь» (hyphenated). |
+| **Заперечні** (Negative) | ніхто, ніщо, ніякий, нічий | Double negation is mandatory. Prepositions split the word («ні з ким»). |
+| **Означальні** (Definitive) | кожен, весь, сам, самий, інший | «Весь» has an irregular declension. «Сам» (alone) vs «самий» (the same). |
 
-Особливу увагу зверніть на правопис неозначених займенників. Частки **-сь**, **де-**, **аби-** завжди пишуться разом *(written together)*: **хтось** *(someone)*, **дещо** *(something)*, **абиякий** *(any kind)*. Натомість частки **будь-**, **-небудь**, **казна-**, **хтозна-** завжди вимагають дефіса *(hyphen)*: **будь-хто** *(anyone)*, **що-небудь** *(anything)*, **казна-який** *(who knows what kind)*. Це залізне правило української орфографії, яке часто тестують на іспитах. Також пам'ятайте про унікальну поведінку заперечних займенників. Якщо між часткою «ні» та самим займенником з'являється прийменник *(preposition)*, слово розривається на три окремі частини: **ні з ким** *(with nobody)*, **ні в чому** *(in nothing)*. Це правило розриву є специфічною рисою української граматики. Крім того, українська мова вимагає подвійного заперечення: «Ніхто не знає» *(Nobody knows)*.
+:::info
+**Spelling Check**
+Remember the golden rules for indefinite and negative pronouns. Particles like «-сь» and «де-» are always written together (хтось, дехто). Particles like «будь-» and «-небудь» always require a hyphen (будь-який, що-небудь). However, the moment a preposition enters a negative pronoun, the structure breaks into three separate words (ні в кого, ні про що).
+:::
 
-Перевірте себе за допомогою цих чотирьох запитань. Це швидкий тест на розуміння найскладніших нюансів цієї теми перед переходом до наступного модуля.
+**Питання для самоперевірки**
 
-1. **Чому заперечні займенники іноді пишуться трьома словами (наприклад, ні з ким)?**
-Тому що український прийменник має велику силу і завжди розриває заперечний займенник. Якщо ваша дія потребує прийменника (наприклад, ви хочете сказати про спілкування з кимось), цей прийменник стає прямо між заперечною часткою «ні» та граматичною основою «ким». Результат — три окремі слова: **ні з ким**. Це правило без винятків діє для всіх можливих прийменників: **ні для кого** *(for nobody)*, **ні на що** *(on nothing)*, **ні від кого** *(from nobody)*.
+**1. Чому заперечні займенники пишуться трьома словами (ні з ким)?**
 
-2. **Яка різниця між словами «нікого» та «нікого» залежно від наголосу?**
-Українська мова часто використовує наголос *(stress)* для чіткого розрізнення сенсу. Якщо наголос падає на корінь слова (на другий склад), це означає повну фізичну відсутність: «Тут **нікого** немає» *(There is nobody here)*. Якщо ж наголос падає на префікс «ні-» (на перший склад), це означає неможливість виконати дію: «Мені **нікого** спитати» *(I have nobody to ask)*. Те саме правило стосується слова **нічого**: «Я **нічого** не бачу» *(I see nothing)* проти «Нам **нічого** їсти» *(We have nothing to eat)*.
+If a preposition appears between the negative particle «ні-» and the pronoun itself, it splits the word apart. Ukrainian does not allow a preposition to stand before a whole negative pronoun. Therefore, instead of the incorrect «з ніким», we always write «ні з ким», «ні в чому», or «ні до кого».
 
-3. **Чому зворотний займенник «себе» ніколи не має форми називного відмінка?**
-Тому що називний відмінок *(nominative case)* завжди виконує роль головного підмета *(subject)*, який самостійно робить дію. Займенник **себе** за своєю природою може бути лише пасивним об'єктом, на який ця дія спрямована. Виконавець дії уже існує в реченні («Я», «Студенти», «Вона»), тому слово **себе** просто дзеркально повертає дію назад до нього: «Вона бачить **себе** у дзеркалі» *(She sees herself in the mirror)*.
+**2. Яка різниця між ніко́го і нíкого?**
 
-4. **Коли ми використовуємо частку «-небудь» замість звичайного «-сь»?**
-Суфікс **-сь** (як у слові **щось**) використовується, коли об'єкт є цілком реальним, але невідомим для слухача. Мовець точно знає, що цей об'єкт існує у просторі: «**Хтось** стукає у двері» *(Someone is knocking)*. Натомість суфікс **-небудь** (як у слові **хто-небудь**) вказує на абсолютну невизначеність. Він ідеально підходить для загальних запитань або гіпотетичних ситуацій, коли ви взагалі не знаєте, чи існує цей об'єкт: «Чи є тут **хто-небудь** живий?» *(Is anyone here alive?)*.
+The difference lies in the stress and the resulting meaning. The form «ніко́го» (stress on the root) indicates the physical absence of people, translating to 'nobody' (for example, «Там нікого немає»). The form «нíкого» (stress on the prefix) implies a lack of choice or an impossible action, translating to 'nobody to [verb]' (for example, «Мені нікого спитати»).
+
+**3. Чому зворотний займенник себе не має називного відмінка?**
+
+The reflexive pronoun «себе» can never act as the main doer (the subject) of a sentence. Its sole grammatical purpose is to reflect the action back onto the subject. Because the Nominative case is strictly reserved for subjects, «себе» exists only in the oblique cases, such as «себе», «собі», and «собою».
+
+**4. Коли ми використовуємо -небудь замість -сь?**
+
+The suffix «-сь» (like in «хтось» or «щось») points to a specific but unknown entity that actually exists; it is used for stating facts. The suffix «-небудь» (like in «хто-небудь» or «що-небудь») expresses absolute indefiniteness or 'anyone/anything at all'. You will most often use it in questions, open requests, or hypothetical scenarios where the specific identity truly does not matter.

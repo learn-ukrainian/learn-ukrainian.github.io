@@ -1,6 +1,6 @@
 # Build Summary: shopping (A1)
 
-Generated: 2026-04-09 02:57
+Generated: 2026-04-11 01:44
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 02:57
 | vocab | complete | 2026-04-09 00:53:02 |
 | enrich | complete | 2026-04-09 00:53:02 |
 | verify | complete | 2026-04-09 00:53:02 |
-| review | complete | 2026-04-09 00:57:02 |
 | stress | complete | 2026-04-09 00:57:04 |
-| publish | complete | 2026-04-09 00:57:06 |
+| review | complete | 2026-04-10 23:44:18 |
+| publish | complete | 2026-04-10 23:44:22 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-09 02:57
 |-------|------|
 | 1 | shopping-review-r1.md |
 | 2 | shopping-review-r2.md |
+| 3 | shopping-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,14 +41,17 @@ Generated: 2026-04-09 02:57
 | vocab | gemini (gemini-3-flash-preview) | 52s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 125s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 114s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 165s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

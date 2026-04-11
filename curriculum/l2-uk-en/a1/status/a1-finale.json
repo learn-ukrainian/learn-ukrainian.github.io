@@ -1,0 +1,61 @@
+{
+  "module": "a1-finale",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T01:02:23.509031Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T01:02:22.808814Z",
+    "meta": null,
+    "activities": "2026-04-09T08:21:44.232105Z",
+    "vocabulary": "2026-04-09T08:25:16.681142Z",
+    "research": null,
+    "plan": "2026-03-23T23:29:57.660637Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1465/1200 (raw: 1504) | immersion: 21.8% LOW (target 25-48% (M55))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors"
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

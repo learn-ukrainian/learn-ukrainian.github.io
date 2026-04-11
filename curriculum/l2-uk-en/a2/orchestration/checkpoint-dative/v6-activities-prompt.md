@@ -165,26 +165,29 @@ This phonetic shift is mandatory and happens automatically whenever a hard velar
 * **синьому морю** (to the blue sea)
 * **нашим новим друзям** (to our new friends)
 
-Це особливо важливо, коли ви приходите на пошту або користуєтеся сервісами доставки.
+Це особливо важливо, коли ви приходите на пошту або користуєтеся службами доставки.
 
 * **Я хочу надіслати посилку моєму старому другові.** (I want to send a package to my old friend.)
 
+> **Працівник пошти:** Кому ви хочете надіслати цю посилку?
+> **Клієнт:** **Моєму старому другові**.
+> **Працівник пошти:** Добре. А цей лист **новій колезі**?
+> **Клієнт:** Так.
+
 Adjectives and possessives must always agree with the noun they modify in gender, number, and case.
 
-Давайте подивимося, як давальний відмінок працює в реальному житті. Уявіть ситуацію в офісі напередодні свят. Колеги обговорюють подарунки для гри "Таємний Санта".
+Подивімося, як давальний відмінок працює в реальному житті. Уявіть ситуацію в офісі напередодні свят. Колеги обговорюють подарунки для гри "Таємний Санта".
 
 > **Організатор:** Колеги, скоро свято! Що ми вирішили **подарувати** (to give as a gift) **Олексієві**? *(Colleagues, the holiday is soon! What did we decide to give to Oleksiy?)*
 > **Колега 1:** Я дам цю нову книгу **Наталці**. А **Олексієві** — смачну каву. *(I will give this new book to Natalka. And to Oleksiy — delicious coffee.)*
 > **Організатор:** Добре. А що **потрібно** (necessary, needed) купити **новому колезі**? *(Good. And what is necessary to buy for the new colleague?)*
-> **Колега 2:** **Новому колезі** — красиву кружку. *(To the new colleague — a beautiful mug.)*
+> **Колега 2:** **Новому колезі** — красиву чашку. *(To the new colleague — a beautiful mug.)*
 > **Організатор:** А **нашому шефу**? *(And to our boss?)*
 > **Колега 1:** Ми вирішили подякувати **нашому шефу** і подарувати **йому** гарне вино! *(We decided to thank our boss and give him good wine!)*
 
 У цьому діалозі всі виділені слова позначають отримувачів дії, тому вони стоять у давальному відмінку.
 
 <!-- INJECT_ACTIVITY: fill-in-dative-endings -->
-
-<!-- INJECT_ACTIVITY: match-verbs-to-case -->
 
 ## Частина 3: Продукування (Part 3: Production)
 
@@ -200,7 +203,7 @@ Adjectives and possessives must always agree with the noun they modify in gender
 
 In English, verbs like "to thank" and "to help" take a direct object in the accusative case. In Ukrainian, these actions are directed toward a recipient, so they strictly require the dative case.
 
-Давальний відмінок також використовується для того, щоб сказати про свій вік. Конструкція складається з людини у давальному відмінку, числа, та слова рік або років.
+Давальний відмінок також використовується для того, щоб сказати про свій вік. Конструкція складається з людини у давальному відмінку, числа, та слова рік, роки або років.
 
 * **Моєму синові три роки.** (My son is three years old.)
 * **Наталії двадцять один рік.** (Nataliya is twenty-one years old.)
@@ -227,6 +230,8 @@ Age is expressed as a state that happens to someone, similar to impersonal const
 
 Addressing an envelope correctly ensures the package reaches the intended recipient, which is the core meaning of the dative case.
 
+<!-- INJECT_ACTIVITY: match-verbs-to-case -->
+
 <!-- INJECT_ACTIVITY: error-correction-dative -->
 
 ## Огляд помилок та порівняння відмінків (Error Review and Case Comparison)
@@ -246,7 +251,7 @@ For successful mastery, review this comparison chart and complete the self-asses
 
 **Список для самоперевірки (Self-check list):**
 1. Can I say "I am 25 years old" in Ukrainian? (**Мені двадцять п'ять років.**)
-2. Do I remember to change **к** to **ц** in **подрузі**?
+2. Do I remember to change **г** to **з** in **подрузі**?
 3. Do I use **дякую** with the dative case? (**Дякую вам**, not "Дякую вас")
 4. Can I correctly use **мені подобається**? (**Мені подобається музика.**)
 

@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b2",
+  "slug": "passive-voice-system",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-10T00:03:58.186120+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-10T00:03:58.199115+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-10T00:04:45.798268+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-10T00:05:36.064373+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-10T00:16:34.251289+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T00:16:34.252460+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-10T00:18:25.638362+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T00:18:25.705964+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-10T00:18:25.718276+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-10T00:19:06.866671+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-10T00:19:06.866832+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-10T00:19:07.329052+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-10T00:46:20.510572+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-10T00:46:21.225776+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-10T00:46:26.021245+00:00"
+    }
+  }
+}

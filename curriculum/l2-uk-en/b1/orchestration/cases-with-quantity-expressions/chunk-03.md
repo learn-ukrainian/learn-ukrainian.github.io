@@ -1,11 +1,41 @@
-## 2. Відмінювання кількісних числівників
+## 2. Відмінювання кількісних числівників (~750 слів)
 
-Тепер розглянемо, як змінюються кількісні числівники за відмінками. Числівник **«один»** *(one)* відмінюється точно так само, як звичайний прикметник твердої групи. Ми кажемо: «одного стола», «одному другу», «одним словом». Наступна група — це числівники **«два»** *(two)*, **«три»** *(three)* та **«чотири»** *(four)*. У **непрямих відмінках** *(oblique cases)* вони мають дуже схожі закінчення. Наприклад, у родовому та місцевому відмінках ми використовуємо закінчення -ох: **«двох»** *(of two)*, **«трьох»** *(of three)*, **«чотирьох»** *(of four)*. У давальному відмінку з'являється закінчення -ом: «двом», «трьом», «чотирьом». Порівняйте приклади: «У кімнаті немає двох столів» та «Ми маємо допомогти чотирьом друзям». В орудному відмінку форми будуть такими: «двома», «трьома», «чотирма» (зверніть увагу на відсутність м'якого знака).
+The numeral one behaves exactly like a regular adjective. It changes endings to match the noun in gender, number, and case.
 
-Числівники від **«п'яти»** *(five)* до **«двадцяти»** *(twenty)*, а також число **«тридцять»** *(thirty)* мають іншу систему відмінювання. Вони змінюються за правилами іменників третьої відміни, таких як «ніч» *(night)* або «піч» *(oven)*. У родовому, давальному та місцевому відмінках вони мають закінчення -и: «п'яти», «десяти», «двадцяти». Особливу увагу варто звернути на орудний відмінок. Тут існують дві паралельні форми, і обидві є абсолютно правильними. Ви можете використовувати закінчення -ма («п'ятьма», «шістьма») або закінчення -ома («п'ятьома», «шістьома»). Наприклад, ви можете сказати: «Я маю зустрітися з десятьма колегами» або «Я маю зустрітися з десятьома колегами» *(I have to meet with ten colleagues)*.
+**Він не має одного стола.** — *He does not have one table.*
+**Вона працює з одним другом.** — *She works with one friend.*
 
-Складні числівники, які позначають десятки від **«п'ятдесяти»** *(fifty)* до **«вісімдесяти»** *(eighty)*, мають дуже важливе правило. В українській мові у цих словах відмінюється **лише друга частина** *(only the second part)*. Корінь «п'ят-» або «шіст-» залишається незмінним. Наприклад, у родовому відмінку ми кажемо «п'ятдесяти» (змінюється тільки «-десяти»), у давальному — «п'ятдесятьом», а в орудному — «п'ятдесятьма». Ця група різко контрастує з числівниками **«сорок»** *(forty)*, **«дев'яносто»** *(ninety)* та **«сто»** *(one hundred)*. Для них діє надзвичайно просте правило: у всіх непрямих відмінках ці слова мають закінчення -а. Тому правильно казати: «немає сорока гривень», «додати до дев'яноста відсотків», «керувати ста людьми».
+The numerals two, three, and four share a distinct pattern. They take **-ох** in the genitive and locative, **-ом** in the dative, and **-ма** in the instrumental. Note that the instrumental form for four is **чотирма**, without the soft sign.
 
-Найбільше труднощів зазвичай викликають великі **складені числівники** *(compound numerals)* у непрямих відмінках. Літературна норма української мови має чітке правило: у таких числах відмінюються всі слова. Наприклад, якщо ви хочете сказати «з двадцятьма п'ятьма студентами» *(with twenty-five students)* в орудному відмінку, ви повинні змінити і слово «двадцять», і слово «п'ять». Аналогічно в родовому відмінку: «немає двадцяти п'яти студентів». В **усному мовленні** *(spoken language)* українці часто спрощують ці конструкції, відмінюючи лише останнє слово. Проте для офіційних документів, новин та іспитів вимагається суворе дотримання літературної норми. Там кожна частина складеного числа повинна стояти у правильному відмінку.
+У нашій аудиторії немає двох великих столів. Я хочу допомогти цим чотирьом новим друзям. Ми довго говорили про тих трьох студентів.
+
+> *There are not two large tables in our classroom. I want to help these four new friends. We talked for a long time about those three students.*
+
+Numbers from five to twenty, and thirty, decline like third declension feminine nouns such as **ніч** (night) and **піч** (oven). In the genitive, dative, and locative cases, they take the ending **-и**. 
+
+In the instrumental case, you have two parallel forms. You can use either the shorter **-ма** or the longer **-ома**. Both are completely natural, but the longer form is slightly more common in formal writing.
+
+Сьогодні директор зустрічається з десятьма колегами. Вони обговорять проєкт з цими шістьома фахівцями. У мене залишилося близько дев'яти вільних хвилин.
+
+> *Today the director is meeting with ten colleagues. They will discuss the project with these six specialists. I have about nine free minutes left.*
+
+:::note
+**Quick tip** — When numbers are combined with prepositions, the case is determined by the preposition. The phrase **з десятьма** is in the instrumental case because of the preposition **з** (with).
+:::
+
+The numbers from fifty to eighty are complex numerals. The critical rule is that both the first and second parts must change their endings. In the instrumental case, you can use the shorter or longer form.
+
+**Я маю справу з п'ятдесятьма людьми.** — *I am dealing with fifty people.*
+
+In sharp contrast, the numbers forty, ninety, and one hundred are incredibly simple. In all oblique cases, they simply take the ending **-а**.
+
+**Нам не вистачає сорока гривень.** — *We are short forty hryvnias.*
+**Він живе за сто кілометрів звідси.** — *He lives one hundred kilometers from here.*
+
+For compound numerals consisting of multiple words, the strict literary rule is that every single word must decline. 
+
+**Вона працює з двадцятьма п'ятьма студентами.** — *She works with twenty-five students.*
+
+While native speakers often simplify this in everyday speech by declining only the last word, full declension is strictly required in writing.
 
 <!-- INJECT_ACTIVITY: error-correction-declension -->

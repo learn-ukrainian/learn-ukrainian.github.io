@@ -20,9 +20,7 @@ Later, Оля shows a larger group picture on her screen.
 
 > **Оля:** Це моя сім'я на фотогра́фії. *(This is my family in the photograph.)*
 > **Марк:** Кла́сно! Хто це? *(Cool! Who is this?)*
-> **Оля:** Це моя ма́ма Мари́на. *(This is my mom Maryna.)*
-> **Оля:** Це мій та́то Євге́н. *(This is my dad Yevhen.)*
-> **Оля:** Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с. *(This is my sister Katya and my brothers — Ivan and Denys.)*
+> **Оля:** Це моя ма́ма Мари́на. Це мій та́то Євге́н. Це моя сестра Ка́тя і мої́ брати — Іва́н і Дени́с. *(This is my mom Maryna. This is my dad Yevhen. This is my sister Katya and my brothers — Ivan and Denys.)*
 > **Марк:** А це твоя́ бабу́ся? *(And is this your grandmother?)*
 > **Оля:** Так, її звати Тетя́на. *(Yes, her name is Tetiana.)*
 
@@ -44,7 +42,7 @@ Ukrainian has two common words for "family." The word **сім'я** typically re
 
 For your immediate family, you will use these core terms. A mother is **ма́ти** (formal) or **мама** (informal). A father is **ба́тько** (formal) or **тато** (informal). In everyday conversation, Ukrainians almost always use **мама** and **тато**. A brother is a **брат**, and a sister is a **сестра**. If you have children, a son is a **син**, and a daughter is a **дочка́** or **до́нька**. Both words for daughter are equally common and correct. A husband is a **чолові́к** (which also means "man"), and a wife is a **дружи́на**.
 
-Your extended family network adds more essential words to your vocabulary. A grandmother is a **бабуся**, and a grandfather is a **діду́сь**. An aunt is a **ті́тка**, and an uncle is a **дя́дько**. 
+Your extended family network adds more essential words to your vocabulary. A grandmother is a **бабуся** (or **ба́ба**), and a grandfather is a **діду́сь** (or **дід**). An aunt is a **ті́тка**, and an uncle is a **дя́дько**. 
 
 English has convenient grouping words like "grandparents," but Ukrainian operates differently. Ukrainian has absolutely no single word that translates to "grandparents." If you want to talk about them together, you must name them both. You say **бабуся і дідусь** (grandmother and grandfather) or **мої дідусь і бабуся** (my grandfather and grandmother). This is a strict rule of the language. You must always specify both individuals when referring to your grandparents.
 

@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-вони **-тимуть** *(they will)*. Головний секрет успішного утворення — ніколи не відкидати частинку «ти» від початкового інфінітива. Наприклад, візьмемо популярне дієслово **працювати** *(to work, impf)*. Ми зберігаємо його повністю і отримуємо: я **працюватиму** *(I will be working)*, ти **працюватимеш** *(you will be working)*, він **працюватиме** *(he will be working)*. Для множини: ми **працюватимемо** *(we will be working)*, ви **працюватимете** *(you [pl] will be working)*, вони **працюватимуть** *(they will be working)*. Ця ж сама логіка бездоганно працює для дуже коротких слів, таких як **жити** *(to live, impf)*. Ми відмінюємо його так: я **житиму** *(I will live)*, ти **житимеш** *(you will live)*, він **житиме** *(he will live)*, ми **житимемо** *(we will live)*, ви **житимете** *(you [pl] will live)*, вони **житимуть** *(they will live)*. Ви, напевно, запитаєте: чи існує реальна смислова різниця між формами «я буду писати» та «я писатиму»? З точки зору чистої граматики ці дві форми є абсолютно однаковими. Вони обидві описують тривалу, незавершену дію в майбутньому часі і є повними синонімами. Ви можете вільно вибирати ту форму, яка вам більше подобається або легше згадується під час розмови. Однак синтетична складна форма має свої особливі стилістичні **відтінки** *(nuances)*. У сучасному українському мовленні слова на зразок «писатиму» чи «чекатиму» звучать трохи більш елегантно, літературно і навіть поетично. Українські письменники та поети дуже люблять і часто використовують цю форму за її особливу фонетичну мелодійність. Наприклад, відомий український поет Володимир Сосюра часто використовував такі форми, щоб додати своїм віршам надзвичайної глибини та сильної емоційності. Для студентів рівня B1 це дуже потужний інструмент, щоб якісно збагатити свій активний словниковий запас. Якщо ви хочете, щоб ваша українська мова звучала максимально автентично, природно та багато, намагайтеся частіше використовувати цю синтетичну форму. Вона одразу демонструє, що ви добре відчуваєте природний ритм нашої мови. Ще одна величезна перевага складної синтетичної форми — це її абсолютна і непохитна фонетична стабільність. Згадайте просту форму **доконаного виду** *(perfective aspect)*, де ми дуже часто бачимо складне **чергування приголосних** *(consonant alternations)*. Наприклад, слово «сидіти» раптово перетворюється на форму я «сиджу». У складній формі такого фонетичного хаосу ніколи не буває. Ви не змінюєте жодної літери в основі вашого дієслова. Дієслово **малювати** *(to draw/paint, impf)* завжди залишається цілим і неушкодженим: я **малюватиму** *(I will be drawing)*. Вам не потрібно довго думати про те, як саме змінюються звуки, і ви ніколи не скажете якесь помилкове слово на зразок «малююму». Це робить складну форму граматично жорсткою, але дуже легкою і приємною для швидкого запам'ятовування. Тепер ще раз порівняймо значення процесів і результатів у реальному життєвому контексті. Уявіть коротку розмову між друзями: > — **Анна:** Ти плануєш продовжувати навчання? *(Do you plan to continue studying?)* > — **Павло:** Так, я щотижня **ходитиму** *(will be going)* на заняття до кінця року. > — **Анна:** Чудово! Тоді я також обов'язково **прийду** *(will arrive)* завтра на перший урок. У цій ситуації Павло описує регулярний процес і тривалу дію. Це типовий недоконаний вид та складна форма. Анна ж фокусується на одноразовому результаті та факті свого прибуття завтра. Це яскрава проста форма доконаного виду. Завжди відчувайте цю важливу смислову різницю. <!-- INJECT_ACTIVITY: group-sort-future-forms -->
+**-ти**; you build upon it. The conjugation becomes **я житиму**, **ти житимеш**, **вона житиме**, **ми житимемо**, **ви житимете**, and **вони житимуть**. The critical structural detail is that the "ти" of the original infinitive is always preserved, making the synthetic future incredibly reliable to build. From a grammatical perspective, the synthetic future form is perfectly synonymous with the analytic, two-word form. Both accurately describe an ongoing or repeated action in the future. However, they carry slightly different stylistic nuances. The synthetic form often sounds more literary, elegant, or poetic. It is the form you will frequently encounter in classic Ukrainian literature—such as the poetry of Volodymyr Sosyura—and elevated public speaking. Багато українських письменників віддають перевагу саме синтетичним дієсловам, щоб створити особливий ритм у своїх творах. Завдяки цій формі поезія набуває унікальної мелодійності. Дієслова «кохатимуть» або «ходитимуть» звучать у текстах надзвичайно вишукано та природно. > *Many Ukrainian writers prefer synthetic verbs to create a special rhythm in their works. Thanks to this form, poetry acquires a unique musicality. Verbs like "кохатимуть" (they will love) or "ходитимуть" (they will walk) sound exceptionally refined and natural in texts.* Incorporating the synthetic future into your active vocabulary is a powerful way to elevate your Ukrainian. When you say **я читатиму** instead of using the two-word alternative, you signal a deeper comfort with the natural cadence of the language. :::tip **Did you know?** Because the synthetic future is a unique feature of Ukrainian among East Slavic languages, using it automatically makes your speech sound more authentic. It is a subtle but highly effective way to decolonize your Ukrainian language practice and sound much more natural. ::: One of the greatest advantages of the synthetic future is its absolute morphological stability. Unlike the simple future or the present tense, where you must constantly navigate complex consonant alternations, the synthetic future protects the root of the verb. The infinitive acts as a shield. The verb **малювати** remains **малюватиму**; it never shifts. The verb **писати** stays **писатиму**, completely avoiding the consonant shift that produces **пишу**. Ця стабільність робить синтетичну форму дуже передбачуваною. Якщо ви знаєте інфінітив, ви можете без жодних сумнівів утворити майбутній час. Наприклад, дієслово «ходити» повністю зберігає свою основу: «я ходитиму». > *This stability makes the synthetic form very predictable. If you know the infinitive, you can form the future tense without any doubts. For example, the verb "ходити" fully retains its stem: "я ходитиму".* It is vital to contrast this ongoing meaning with the perfective simple future. If you say **я ходитиму до спортзалу**, you are describing a continuous habit of going to the gym. If you say **я прийду**, you are talking about the completed result of arriving. The synthetic future guarantees the process, while the simple future guarantees the result. :::info **Grammar box** The synthetic future endings (**-му**, **-меш**, **-ме**, **-мемо**, **-мете**, **-муть**) are added directly to the full infinitive of an imperfective verb. The **-ти** ending of the infinitive is always preserved, giving you a completely stable stem. ::: <!-- INJECT_ACTIVITY: group-sort-future-forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,7 +596,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -609,14 +676,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

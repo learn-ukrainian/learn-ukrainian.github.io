@@ -1,0 +1,437 @@
+{
+  "total_items": 204,
+  "grounded_items": 135,
+  "ungrounded": [
+    {
+      "word": "розповідаючи",
+      "exercise_type": "fill-in",
+      "context": "розповідаючи",
+      "role": "answer"
+    },
+    {
+      "word": "лист",
+      "exercise_type": "fill-in",
+      "context": "Вони пишуть лист, _____ про свої новини.",
+      "role": "context"
+    },
+    {
+      "word": "вулицею",
+      "exercise_type": "fill-in",
+      "context": "Дівчина йшла вулицею, радісно _____.",
+      "role": "context"
+    },
+    {
+      "word": "хлопець",
+      "exercise_type": "fill-in",
+      "context": "Хлопець читав книгу, _____ на дивані.",
+      "role": "context"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "fill-in",
+      "context": "Хлопець читав книгу, _____ на дивані.",
+      "role": "context"
+    },
+    {
+      "word": "дивані",
+      "exercise_type": "fill-in",
+      "context": "Хлопець читав книгу, _____ на дивані.",
+      "role": "context"
+    },
+    {
+      "word": "вечерю",
+      "exercise_type": "fill-in",
+      "context": "_____ музику, я готував вечерю.",
+      "role": "context"
+    },
+    {
+      "word": "працював",
+      "exercise_type": "fill-in",
+      "context": "Він працював, _____ у вікно.",
+      "role": "context"
+    },
+    {
+      "word": "розмовляли",
+      "exercise_type": "fill-in",
+      "context": "_____ додому, ми розмовляли про кіно.",
+      "role": "context"
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "fill-in",
+      "context": "_____ додому, ми розмовляли про кіно.",
+      "role": "context"
+    },
+    {
+      "word": "хвилюватися",
+      "exercise_type": "match-up",
+      "context": "хвилюватися (хвилюються)",
+      "role": "answer"
+    },
+    {
+      "word": "хвилюються",
+      "exercise_type": "match-up",
+      "context": "хвилюватися (хвилюються)",
+      "role": "answer"
+    },
+    {
+      "word": "читаючі",
+      "exercise_type": "error-correction",
+      "context": "Вона радісно усміхалася, читаючі цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "сміючись",
+      "exercise_type": "error-correction",
+      "context": "сміючись",
+      "role": "answer"
+    },
+    {
+      "word": "йшли",
+      "exercise_type": "error-correction",
+      "context": "Ми йшли парком, голосно сміючися.",
+      "role": "context"
+    },
+    {
+      "word": "сміючися",
+      "exercise_type": "error-correction",
+      "context": "Ми йшли парком, голосно сміючися.",
+      "role": "context"
+    },
+    {
+      "word": "відповідали",
+      "exercise_type": "error-correction",
+      "context": "Студенти відповідали на питання, стоячі біля дошки.",
+      "role": "context"
+    },
+    {
+      "word": "стоячі",
+      "exercise_type": "error-correction",
+      "context": "Студенти відповідали на питання, стоячі біля дошки.",
+      "role": "context"
+    },
+    {
+      "word": "дошки",
+      "exercise_type": "error-correction",
+      "context": "Студенти відповідали на питання, стоячі біля дошки.",
+      "role": "context"
+    },
+    {
+      "word": "малюючи",
+      "exercise_type": "error-correction",
+      "context": "малюючи",
+      "role": "answer"
+    },
+    {
+      "word": "вчитель",
+      "exercise_type": "error-correction",
+      "context": "Вчитель пояснював правило, малюючі схему.",
+      "role": "context"
+    },
+    {
+      "word": "пояснював",
+      "exercise_type": "error-correction",
+      "context": "Вчитель пояснював правило, малюючі схему.",
+      "role": "context"
+    },
+    {
+      "word": "малюючі",
+      "exercise_type": "error-correction",
+      "context": "Вчитель пояснював правило, малюючі схему.",
+      "role": "context"
+    },
+    {
+      "word": "схему",
+      "exercise_type": "error-correction",
+      "context": "Вчитель пояснював правило, малюючі схему.",
+      "role": "context"
+    },
+    {
+      "word": "граючи",
+      "exercise_type": "error-correction",
+      "context": "граючи",
+      "role": "answer"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "error-correction",
+      "context": "Діти бігали по двору, граючі у квача.",
+      "role": "context"
+    },
+    {
+      "word": "бігали",
+      "exercise_type": "error-correction",
+      "context": "Діти бігали по двору, граючі у квача.",
+      "role": "context"
+    },
+    {
+      "word": "двору",
+      "exercise_type": "error-correction",
+      "context": "Діти бігали по двору, граючі у квача.",
+      "role": "context"
+    },
+    {
+      "word": "граючі",
+      "exercise_type": "error-correction",
+      "context": "Діти бігали по двору, граючі у квача.",
+      "role": "context"
+    },
+    {
+      "word": "квача",
+      "exercise_type": "error-correction",
+      "context": "Діти бігали по двору, граючі у квача.",
+      "role": "context"
+    },
+    {
+      "word": "голосного",
+      "exercise_type": "quiz",
+      "context": "Який суфікс використовується для дієслів першої дієвідміни п",
+      "role": "context"
+    },
+    {
+      "word": "читати'",
+      "exercise_type": "quiz",
+      "context": "Який суфікс використовується для дієслів першої дієвідміни п",
+      "role": "context"
+    },
+    {
+      "word": "читають'",
+      "exercise_type": "quiz",
+      "context": "Який суфікс використовується для дієслів першої дієвідміни п",
+      "role": "context"
+    },
+    {
+      "word": "усміхатися'",
+      "exercise_type": "quiz",
+      "context": "Як правильно утворити дієприслівник недоконаного виду від сл",
+      "role": "context"
+    },
+    {
+      "word": "сидіти'",
+      "exercise_type": "quiz",
+      "context": "Який суфікс використовується для дієслів другої дієвідміни (",
+      "role": "context"
+    },
+    {
+      "word": "сидять'",
+      "exercise_type": "quiz",
+      "context": "Який суфікс використовується для дієслів другої дієвідміни (",
+      "role": "context"
+    },
+    {
+      "word": "найпростіше",
+      "exercise_type": "quiz",
+      "context": "Як найпростіше відрізнити дієприслівник від дієприкметника?",
+      "role": "context"
+    },
+    {
+      "word": "відрізнити",
+      "exercise_type": "quiz",
+      "context": "Як найпростіше відрізнити дієприслівник від дієприкметника?",
+      "role": "context"
+    },
+    {
+      "word": "дієприкметника",
+      "exercise_type": "quiz",
+      "context": "Як найпростіше відрізнити дієприслівник від дієприкметника?",
+      "role": "context"
+    },
+    {
+      "word": "знаючи",
+      "exercise_type": "group-sort",
+      "context": "знаючи",
+      "role": "answer"
+    },
+    {
+      "word": "змінюватися",
+      "exercise_type": "true-false",
+      "context": "Дієприслівник може змінюватися за родами та числами.",
+      "role": "context"
+    },
+    {
+      "word": "голосних",
+      "exercise_type": "true-false",
+      "context": "Після голосних зворотна частка '-ся' зберігає свою повну фор",
+      "role": "context"
+    },
+    {
+      "word": "зворотна",
+      "exercise_type": "true-false",
+      "context": "Після голосних зворотна частка '-ся' зберігає свою повну фор",
+      "role": "context"
+    },
+    {
+      "word": "ся'",
+      "exercise_type": "true-false",
+      "context": "Після голосних зворотна частка '-ся' зберігає свою повну фор",
+      "role": "context"
+    },
+    {
+      "word": "стемніло",
+      "exercise_type": "true-false",
+      "context": "Речення «Читаючи книгу, на вулиці стемніло» граматично прави",
+      "role": "context"
+    },
+    {
+      "word": "пояснюючи",
+      "exercise_type": "fill-in",
+      "context": "Пояснюючи",
+      "role": "answer"
+    },
+    {
+      "word": "матеріал",
+      "exercise_type": "fill-in",
+      "context": "_____ новий матеріал, вчитель наводив багато прикладів.",
+      "role": "context"
+    },
+    {
+      "word": "наводив",
+      "exercise_type": "fill-in",
+      "context": "_____ новий матеріал, вчитель наводив багато прикладів.",
+      "role": "context"
+    },
+    {
+      "word": "багато",
+      "exercise_type": "fill-in",
+      "context": "_____ новий матеріал, вчитель наводив багато прикладів.",
+      "role": "context"
+    },
+    {
+      "word": "нотатки",
+      "exercise_type": "fill-in",
+      "context": "Студенти уважно слухали, _____ нотатки в зошитах.",
+      "role": "context"
+    },
+    {
+      "word": "зошитах",
+      "exercise_type": "fill-in",
+      "context": "Студенти уважно слухали, _____ нотатки в зошитах.",
+      "role": "context"
+    },
+    {
+      "word": "гуляючи",
+      "exercise_type": "fill-in",
+      "context": "Гуляючи",
+      "role": "answer"
+    },
+    {
+      "word": "давнього",
+      "exercise_type": "fill-in",
+      "context": "_____ в парку, я зустрів свого давнього друга.",
+      "role": "context"
+    },
+    {
+      "word": "дивилася",
+      "exercise_type": "fill-in",
+      "context": "Вона дивилася цікавий фільм, _____ на дивані.",
+      "role": "context"
+    },
+    {
+      "word": "фільм",
+      "exercise_type": "fill-in",
+      "context": "Вона дивилася цікавий фільм, _____ на дивані.",
+      "role": "context"
+    },
+    {
+      "word": "готуючись",
+      "exercise_type": "fill-in",
+      "context": "Готуючись",
+      "role": "answer"
+    },
+    {
+      "word": "іспиту",
+      "exercise_type": "fill-in",
+      "context": "_____ до іспиту, ми повторювали всі правила.",
+      "role": "context"
+    },
+    {
+      "word": "повторювали",
+      "exercise_type": "fill-in",
+      "context": "_____ до іспиту, ми повторювали всі правила.",
+      "role": "context"
+    },
+    {
+      "word": "плачучи",
+      "exercise_type": "fill-in",
+      "context": "плачучи",
+      "role": "answer"
+    },
+    {
+      "word": "хлопчик",
+      "exercise_type": "fill-in",
+      "context": "Хлопчик біг додому, гірко _____.",
+      "role": "context"
+    },
+    {
+      "word": "біг",
+      "exercise_type": "fill-in",
+      "context": "Хлопчик біг додому, гірко _____.",
+      "role": "context"
+    },
+    {
+      "word": "гірко",
+      "exercise_type": "fill-in",
+      "context": "Хлопчик біг додому, гірко _____.",
+      "role": "context"
+    },
+    {
+      "word": "відпочиваю",
+      "exercise_type": "unjumble",
+      "context": "відпочиваю.",
+      "role": "answer"
+    },
+    {
+      "word": "дивився",
+      "exercise_type": "unjumble",
+      "context": "дивився",
+      "role": "answer"
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "unjumble",
+      "context": "п'є",
+      "role": "answer"
+    },
+    {
+      "word": "говорили",
+      "exercise_type": "unjumble",
+      "context": "говорили",
+      "role": "answer"
+    },
+    {
+      "word": "сніданок",
+      "exercise_type": "unjumble",
+      "context": "сніданок.",
+      "role": "answer"
+    },
+    {
+      "word": "готую",
+      "exercise_type": "unjumble",
+      "context": "готую",
+      "role": "answer"
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "unjumble",
+      "context": "телефон.",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 20,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "біжучи",
+      "вид",
+      "додаткова",
+      "дія",
+      "логічний",
+      "недоконаний",
+      "незмінюваний",
+      "обставина",
+      "одночасність",
+      "підмет"
+    ]
+  },
+  "all_grounded": false
+}

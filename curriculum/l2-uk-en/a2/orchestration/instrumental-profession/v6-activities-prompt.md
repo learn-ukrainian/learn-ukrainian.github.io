@@ -91,13 +91,13 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Бути ким? Професія в орудному відмінку (~600 words total)
+## Бути ким? Професія в орудному відмінку (To Be Whom? Profession in the Instrumental)
 
 Як ми говоримо про **професію** *(profession)* українською мовою? Найпростіший спосіб — це використати називний відмінок. Ми ставимо тире між людиною і її професією. Наприклад, ми кажемо: «Мій тато — **інженер** *(engineer)*». Або ми можемо сказати: «Моя мама — **лікар** *(doctor)*». Це дуже зручна конструкція для теперішнього часу. In the present tense, when we simply state someone's static identity, we use the Nominative case. We do not use the verb «є» (is/are) in these sentences. The dash replaces the verb. Але що робити, коли ми говоримо про минулий чи майбутній час? As soon as we talk about the past, the future, or use specific action verbs, the rules change. The Nominative case is no longer enough. The Instrumental case becomes mandatory to show that someone holds a specific position. Ми використовуємо орудний відмінок, щоб показати тимчасову або набуту роль.
 
 Давайте уважно подивимося на дієслово «**бути**» *(to be)*. У теперішньому часі ми зазвичай пропускаємо слово «є». Ми просто кажемо: «Я — вчитель». Але ми не можемо ігнорувати дієслово «бути» у минулому та майбутньому часі. When we use words like «**був**» *(was)*, «**була**» *(was)*, «**буду**» *(will be)*, or «**буде**» *(will be)*, we are describing a status held over a certain period of time. Because this is an acquired role, the noun that follows must take the Instrumental case. Наприклад, ми кажемо: «Він був лікарем». Ми також кажемо: «Вона буде **програмісткою** *(programmer, female)*». Або: «Ми були студентами». You cannot say «Він був лікар». This is a very common grammatical mistake. Always remember this important rule: past and future forms of the verb «бути» require the Instrumental case for professions.
 
-Як правильно утворити орудний відмінок для жіночих професій? Сучасна українська мова дуже активно використовує фемінітиви. Це слова, які позначають професії жінок. Усі ці іменники належать до першої відміни. Feminine nouns ending in a hard consonant + -а take the ending **-ою**. Наприклад, слово «**вчителька**» *(teacher, female)* стає формою «вчителькою». Слово «**менеджерка**» *(manager, female)* стає формою «менеджеркою». Feminine nouns ending in a soft or mixed consonant + -я (or -а after soft sounds) take the ending **-ею**. Наприклад, слово «**будівельниця**» *(builder, female)* стає формою «будівельницею». Слово «**продавчиня**» *(seller/shop assistant, female)* стає формою «продавчинею». В українській мові це стандартна норма. Ми завжди кажемо: «Оксана була лікаркою». Ми не кажемо: «Оксана була лікар». Using feminine forms is the natural and grammatically correct way to speak about women's professions.
+Як правильно утворити орудний відмінок для жіночих професій? Сучасна українська мова дуже активно використовує фемінітиви. Це слова, які позначають професії жінок. Усі ці іменники належать до першої відміни. Feminine nouns ending in a hard consonant + -а take the ending **-ою**. Наприклад, слово «**вчителька**» *(teacher, female)* стає формою «вчителькою». Слово «**менеджерка**» *(manager, female)* стає формою «менеджеркою». Feminine nouns ending in a soft consonant + -я, or a mixed consonant + -а, take the ending **-ею**. Наприклад, слово «**будівельниця**» *(builder, female)* стає формою «будівельницею». Слово «**продавчиня**» *(seller/shop assistant, female)* стає формою «продавчинею». В українській мові це стандартна норма. Ми завжди кажемо: «Оксана була лікаркою». Ми не кажемо: «Оксана була лікар». Using feminine forms is the natural and grammatically correct way to speak about women's professions.
 
 Тепер давайте поговоримо про чоловічі професії. Більшість із них — це іменники чоловічого роду другої відміни. Masculine nouns ending in a hard consonant take the ending **-ом**. Наприклад, слово «інженер» стає формою «інженером». Слово «програміст» стає формою «програмістом». Masculine nouns ending in a soft consonant or a mixed consonant take the ending **-ем** or **-єм**. Наприклад, слово «**вчитель**» *(teacher, male)* стає формою «вчителем». Слово «**водій**» *(driver)* стає формою «водієм». Pay special attention to nouns ending in the letter -р. Some belong to the hard group and take -ом, while others belong to the soft or mixed group and take -ем. It is best to check a good dictionary. Наприклад, слово «**директор**» *(director)* має тверду основу. Тому правильна форма — «директором». Але слово «лікар» належить до м'якої групи. Тому ми завжди кажемо «лікарем».
 
@@ -105,8 +105,7 @@ required:
 
 <!-- INJECT_ACTIVITY: fill-in-put-profession-nouns-into-instrumental-after -->
 
-
-## Дієслова з орудним відмінком
+## Дієслова з орудним відмінком (Verbs That Take the Instrumental)
 
 Окрім назв професій, орудний відмінок має ще одну дуже важливу функцію в українській мові. In Ukrainian, there is a special group of verbs that always require the Instrumental case. They do not need any prepositions like «з» *(with)* or «над» *(above)*. These verbs usually describe our internal states, deep passions, or specific ways we engage with the world. Think of the object as the metaphorical "instrument" that causes your interest, pride, or activity. Коли ми говоримо про наші хобі чи інтереси, ми часто використовуємо саме ці дієслова. Це робить нашу щоденну мову багатою, точною та природною. Let us look at the most common verbs in this grammatical category. Вони будуть дуже корисні для щоденного спілкування з новими друзями.
 
@@ -122,8 +121,7 @@ required:
 
 <!-- INJECT_ACTIVITY: quiz-nom-vs-inst -->
 
-
-## Хто ти за фахом?
+## Хто ти за фахом? (What Is Your Profession?)
 
 Коли ми зустрічаємо нових людей, ми часто розмовляємо про роботу та кар'єру. How do we ask about someone's career in Ukrainian? У нас є кілька корисних запитань для різних життєвих ситуацій. Найбільш популярне запитання — це «**Ким ти працюєш?**» *(Who do you work as? / What is your job?)*. Це запитання завжди фокусується на вашій поточній роботі сьогодні. Якщо ми хочемо запитати про університетську освіту та спеціальність, ми говоримо інакше: «**Хто ти за фахом?**» *(What is your profession/specialty?)*. Слово «**фах**» *(profession, specialty)* — це чудовий український синонім до слів «**професія**» або «**спеціальність**». We use it when we talk about our formal training or our university degree. А якщо ми розмовляємо з дитиною або молодим студентом про майбутнє, ми запитуємо: «**Ким ти хочеш стати?**» *(Who do you want to become?)*. Усі ці запитання вимагають від нас логічної відповіді в орудному відмінку.
 
@@ -147,8 +145,7 @@ When we talk about our career goals and deep ambitions, we use the verb «**мр
 
 <!-- INJECT_ACTIVITY: fill-in-answer-questions-about-professions-using-full-instrumental-sentences -->
 
-
-## Практика: Ким бути?
+## Практика: Ким бути? (Practice: Who to Be?)
 
 Зараз ми будемо практикувати нові граматичні структури. Let's do a deep dive into transformation drills. We need to practice the mental shift from stating a simple identity to describing an action or a future goal. Візьмемо для прикладу слово «**художник**» *(artist)*.
 
@@ -183,7 +180,6 @@ When we talk about our career goals and deep ambitions, we use the verb «**мр
 > — **Мама:** Які у вас серйозні плани на майбутнє! *(What serious plans for the future you have!)*
 
 Notice how the child naturally uses the Instrumental case. The causal link between the passion and the goal makes the conversation sound authentic and logical.
-
 
 ## Підсумок
 

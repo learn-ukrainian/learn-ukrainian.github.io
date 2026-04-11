@@ -1,6 +1,6 @@
 # Build Summary: verbs-group-one (A1)
 
-Generated: 2026-04-09 04:21
+Generated: 2026-04-11 01:24
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 04:21
 | vocab | complete | 2026-04-09 02:16:26 |
 | enrich | complete | 2026-04-09 02:16:26 |
 | verify | complete | 2026-04-09 02:16:26 |
-| review | complete | 2026-04-09 02:21:15 |
 | stress | complete | 2026-04-09 02:21:17 |
-| publish | complete | 2026-04-09 02:21:19 |
+| review | complete | 2026-04-10 23:24:09 |
+| publish | complete | 2026-04-10 23:24:13 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | verbs-group-one-review-r1.md |
+| 2 | verbs-group-one-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,13 +39,16 @@ Generated: 2026-04-09 04:21
 | activities | gemini-tools (gemini-3.1-pro-preview) | 83s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 120s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 288s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 120s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

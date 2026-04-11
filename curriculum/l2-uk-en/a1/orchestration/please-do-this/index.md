@@ -1,6 +1,6 @@
 # Build Summary: please-do-this (A1)
 
-Generated: 2026-04-09 03:57
+Generated: 2026-04-11 01:53
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 03:57
 | vocab | complete | 2026-04-09 01:53:31 |
 | enrich | complete | 2026-04-09 01:53:31 |
 | verify | complete | 2026-04-09 01:53:31 |
-| review | complete | 2026-04-09 01:57:55 |
 | stress | complete | 2026-04-09 01:57:57 |
-| publish | complete | 2026-04-09 01:57:59 |
+| review | complete | 2026-04-10 23:53:38 |
+| publish | complete | 2026-04-10 23:53:42 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-09 03:57
 |-------|------|
 | 1 | please-do-this-review-r1.md |
 | 2 | please-do-this-review-r2.md |
+| 3 | please-do-this-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,14 +41,17 @@ Generated: 2026-04-09 03:57
 | vocab | gemini (gemini-3-flash-preview) | 114s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 133s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 131s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 134s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

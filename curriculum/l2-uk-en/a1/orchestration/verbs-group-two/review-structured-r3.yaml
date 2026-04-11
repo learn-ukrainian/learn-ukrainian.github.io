@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module strictly follows the outline. It includes both required dialogues
+    verbatim and hits all grammatical points (e.g., "Consonant changes in Group II
+    (я-form only)... робити → роблю...").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent grasp of the grammar and orthography rules (hissing consonants,
+    consonant mutations). Deducting only for the mistranslation of "Вона вчить мо́ву."
+    as "(She teaches the language.)" instead of
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Highly effective PPP flow. The module introduces verbs in a dialogue,
+    explains the pattern ("The characteristic vowel for all these new endings is the
+    sound **-и-**"), compares it to Group I, and prov
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (говорити, бачити, робити, вчити, просити, ходити)
+    and recommended vocabulary (дивитися, вчитися, любити, трохи, добре, увечері)
+    are integrated naturally into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise markers are present and correspond to the targeted plan
+    activities. They are placed perfectly to test what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'The tone is an encouraging teacher. Good framing of the conversational
+    context: "We meet our good friends **Тара́с** (Taras) and **Мико́ла** (Mykola)
+    at the local gym... They use entirely new action v'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Module word count is 1371 (exceeding the 1200 minimum). All H2 headings
+    from the plan are present and properly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Correctly attributes consonant changes to the Ukrainian focus on euphony:
+    "Ukrainian pronunciation prioritizes **милозву́чність** (euphony or melody)."'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Uses the exact dialogues requested by the plan, embedding them in well-described,
+    realistic situational contexts (at the gym, evening at home).
+findings: []

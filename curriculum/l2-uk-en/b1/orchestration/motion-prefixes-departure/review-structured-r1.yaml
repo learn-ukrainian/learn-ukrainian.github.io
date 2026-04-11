@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missing the explicitly required production model narrative in Section
+    5. The plan stated: "Production practice: learners narrate a friend''s trip using
+    all four prefix types in sequence. Model: Від''їха'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains several Russicisms ("Проводжаючі", "хвилюючий"), typos ("приїєхати",
+    "фокуються"), and severe phonetic hallucinations ("дзвінкий голосний звук", "[й]
+    вимовляється твердо").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Grammar is explained clearly and contextually. The
+    spatial contrast between destination (пі-/по-) and distance (від-) is brilliantly
+    illustrated with multiple scenarios.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are naturally
+    integrated into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 requested exercise markers are present and strategically placed
+    after the relevant grammatical theory.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The writer maintains an encouraging, natural teacher persona without resorting
+    to gamified language. The use of the "compass" metaphor is engaging and helpful.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 5142 (well above the 4000 target). All sections are present,
+    clearly delineated with H2 headers, and properly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The decolonization note regarding the Russicism "відправлятися" is accurately
+    explained and contrasted with authentic alternatives ("відбувати", "від'їжджати").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue at the train station is highly contextual and effectively
+    contrasts the usage of the various prefixes. (Minor deduction for the speaker
+    name "Проводжаючі", addressed in linguistic accurac
+findings: []

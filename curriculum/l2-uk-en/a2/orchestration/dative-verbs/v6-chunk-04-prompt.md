@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-років. *(Grandpa is eighty years old.)* The verb "to be" is completely omitted in the present tense, making the structure very concise and direct. The most complex part of stating your age is choosing the correct form for the word "year". В українській мові є три різні форми цього слова. *(In the Ukrainian language, there are three different forms of this word.)* The choice depends entirely on the last digit of the number you are using. 1. Форма **рік** *(year)* використовується для чисел, які закінчуються на 1, але не 11. 2. Форма **роки** *(years)* потрібна для чисел, які закінчуються на 2, 3, або 4, але не 12, 13, 14. 3. Форма **років** *(years [Genitive plural])* використовується для всіх інших чисел: 5, 6, 7, 8, 9, 0, а також для групи від 11 до 19. | Число (Number) | Форма (Form) | Приклад (Example) | | :--- | :--- | :--- | | 1, 21, 31... | рік | Моєму братові двадцять один рік. *(My brother is 21 years old.)* | | 2, 3, 4, 22, 23, 24... | роки | Моїй сестрі двадцять два роки. *(My sister is 22 years old.)* | | 5-20, 25-30, 35-40... | років | Моїй мамі п'ятдесят років. *(My mom is 50 years old.)* | Щоб запитати про вік, ми використовуємо слово **скільки** *(how many)*. *(To ask about age, we use the word "how many".)* Після слова «скільки» іменник завжди стоїть у родовому відмінку множини. *(After the word "how many", the noun always stands in the genitive case plural.)* That is why the question always uses the form «років», regardless of what the actual age might be. Людина, про яку ми запитуємо, залишається в давальному відмінку. *(The person about whom we are asking remains in the dative case.)* Скільки тобі років? *(How old are you?)* Скільки йому років? *(How old is he?)* Скільки років вашому синові? *(How old is your son?)* The structure of the question perfectly mirrors the structure of the answer you expect. Давайте подивимося, як люди говорять про вік у реальному житті. *(Let's see how people talk about age in real life.)* > — **Олена:** Привіт, Антоне! Скільки років твоєму татові? *(Hi, Anton! How old is your dad?)* > — **Антон:** Йому п'ятдесят два роки. А твоїй мамі? *(He is fifty-two years old. And your mom?)* > — **Олена:** Їй сорок дев'ять років. *(She is forty-nine years old.)* > — **Антон:** А скільки років твоїй бабусі? *(And how old is your grandma?)* > — **Олена:** Моїй бабусі сімдесят один рік. *(My grandma is seventy-one years old.)* Як бачите, ми часто запитуємо про вік родичів або друзів. *(As you can see, we often ask about the age of relatives or friends.)* Головне — пам'ятати про правильний відмінок для людини та правильну форму слова. *(The main thing is to remember about the correct case for the person and the correct form of the word.)* <!-- INJECT_ACTIVITY: true-false, focus: judging the correctness of age expressions (Dative form + correct year noun agreement), 8 items -->
+what happens to you. Therefore, the person always stands in the Dative case. I am twenty years old now. My older brother is thirty-one years old. And our little sister is only four years old. We never use the verb "to be" in the present tense for age.* When expressing age, the word for "year" changes depending on the number that comes right before it. There are three different forms of this word: **рік**, **роки**, and **років**. For numbers that end in 1 (except 11), use the singular form. For numbers that end in 2, 3, or 4 (except 12, 13, and 14), use the plural form. For all other numbers, including 5 through 20 and all tens, use the genitive plural form. :::info **The Forms of Year** - Use **рік** for 1, 21, 31, 41... **Мені двадцять один рік.** — *I am twenty-one years old.* - Use **роки** for 2, 3, 4, 22, 23, 24... **Йому тридцять два роки.** — *He is thirty-two years old.* - Use **років** for 5-20, 25, 30, 50... **Їй сорок років.** — *She is forty years old.* ::: Моєму дідусеві шістдесят один рік. Моїй бабусі п'ятдесят чотири роки. Моїй мамі сорок років, і моєму татові також сорок років. Моєму другові дванадцять років, а його сестрі тринадцять років. > *My grandfather is sixty-one years old. My grandmother is fifty-four years old. My mom is forty years old, and my dad is also forty years old. My friend is twelve years old, and his sister is thirteen years old.* To ask someone their age, you use the question word **скільки** (how much / how many). After this word, the noun must always be in the Genitive plural form. That is why the question always uses the word **років**. However, the person you are asking about must still be in the Dative case. Скільки тобі років? Скільки років твоєму братові? Скільки років вашій мамі? У цих питаннях слово «скільки» вимагає родового відмінка множини для слова «рік». Але людина, про яку ми питаємо, завжди стоїть у давальному відмінку. > *How old are you? How old is your brother? How old is your mother? In these questions, the word "how many" requires the genitive plural case for the word "year". But the person we are asking about always stands in the dative case.* Let's look at a short conversation where two friends ask about their family members. Notice how the Dative case is used for every person whose age is mentioned. > — **Олена:** Привіт, Антоне! Скільки тобі років? *(Hi, Anton! How old are you?)* > — **Антон:** Мені двадцять два роки. А тобі? *(I am twenty-two years old. And you?)* > — **Олена:** Мені двадцять один рік. А скільки років твоєму братові? *(I am twenty-one years old. And how old is your brother?)* > — **Антон:** Йому двадцять п'ять років. А твоїй сестрі? *(He is twenty-five years old. And your sister?)* > — **Олена:** Їй тільки вісімнадцять років. *(She is only eighteen years old.)* <!-- INJECT_ACTIVITY: true-false-age -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -504,7 +504,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -523,14 +590,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

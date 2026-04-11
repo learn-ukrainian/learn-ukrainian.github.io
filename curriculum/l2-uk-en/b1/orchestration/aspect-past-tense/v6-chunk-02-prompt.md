@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-ділитеся своїм досвідом *(experience)*. Ви ніби кажете: «Я добре провів час, я був приємно зайнятий цією справою». Ваш друг може запитати: «З ким ти дивився цей фільм?» або «Ти їв попкорн під час фільму?». Але якщо ви кажете «Я подивився фільм», ви активно пропонуєте обговорити фінал *(finale)* або деталі сюжету. Ви ніби кажете: «Моя дія повністю завершена, я готовий ділитися враженнями». Ваш друг, швидше за все, запитає: «І як тобі фінал?» або «Чи сподобався тобі фільм?». Таким чином, в українській мові ваш вибір виду дієслова відразу дає слухачеві зрозуміти, що саме ви цінуєте в цій розмові: сам тривалий процес чи фінальний результат. <!-- INJECT_ACTIVITY: quiz-aspect-intuition --> Щоб краще відчути цю тонку різницю, давайте послухаємо розмову двох колег. Тарас і Оксана зустрілися під час обідньої перерви *(lunch break)* і розповідають про свій вчорашній день. Зверніть увагу на те, як вибір виду дієслова забарвлює *(colors)* їхній емоційний настрій та показує особистість *(personality)* у цьому діалозі *(dialogue)*. > — **Тарас:** Привіт, Оксано! Як пройшов твій вчорашній день? *(Hi, Oksana! How did your day go yesterday?)* > — **Оксана:** Привіт. Це був жахливий день. Я цілий день **робила** *(was doing)* звіт, **писала** *(was writing)* листи клієнтам, **намагалася** *(was trying)* поговорити з директором. > — **Тарас:** Ого. І що, ти врешті-решт **поговорила** *(did you talk)* з ним? > — **Оксана:** Ні, він був занадто зайнятий. А я так втомилася. Я **вирішувала** *(was solving)* проблеми колег до пізнього вечора. А як твій день? > — **Тарас:** А мій день був дуже продуктивним. Я швидко **зробив** *(did)* свій звіт. Потім **написав** *(wrote)* три важливі листи і відразу їх **відправив** *(sent)*. > — **Оксана:** Тобі пощастило. А я тільки даремно **витрачала** *(was spending)* час на розмови. > — **Тарас:** Зате я нарешті **вирішив** *(solved)* ту складну проблему з нашим проєктом. Зверніть увагу на контраст. Тарас фокусується на своїх досягненнях. Він використовує дієслова доконаного виду: зробив, написав, відправив, вирішив. Його мовлення звучить енергійно та впевнено. Оксана ж описує свій виснажливий день *(exhausting day)* через дієслова недоконаного виду: робила, писала, намагалася, вирішувала. Її дії розтягнуті в часі, вони не мають видимого фіналу, і саме ця форма ідеально передає її втому та розчарування. Цей діалог ілюструє найважливішу концепцію: вид дієслова в українській мові — це не просто граматичне правило. Це ваш **спосіб мислення** *(mindset)*. Коли ви говорите українською, ви самі вирішуєте, як показати свою дію світу. Якщо для вас важливий **результат** *(result)*, ви обираєте доконаний вид. Ви хочете показати, що дія досягла своєї мети і принесла плоди. Якщо ж для вас важливіший **процес** *(process)*, ви обираєте недоконаний вид. Ви хочете занурити слухача у плин часу або показати рутину. Українська мова надає вам цей інструмент для керування увагою. Ви — режисер своєї розповіді. Кожне дієслово минулого часу вимагає від вас свідомого вибору. Ви повинні оцінити дію. Чи є тут завершеність? Чи є тут результат? Чи це була просто діяльність заради діяльності? У наступних розділах цього модуля ми розглянемо конкретні маркери часу *(time markers)* та чіткі правила, які допоможуть вам робити цей вибір максимально впевнено. Але пам'ятайте: все починається з вашого наміру *(intent)*.
+you "подивилися" (watched) a film, you are reporting a result. Perhaps it was a famous film that everyone is discussing, and now you also know the plot and are ready to share your thoughts.* In Ukrainian, your choice of aspect tells the listener what you value in that moment: the experience itself or the final completion. <!-- INJECT_ACTIVITY: quiz-aspect-intuition --> To see how aspect colors the personality and tone of a speaker, let us listen to a conversation between two colleagues. Pay attention to how Taras and Oksana describe their days using different verb forms. Their choice of verbs reveals how they feel about their work. One feels successful, while the other feels drained. > — **Тарас:** Привіт! Як твій день учора? Я вчора написав три звіти, відправив усі листи і зробив презентацію. *(Hi! How was your day yesterday? Yesterday I wrote three reports, sent all the letters, and made a presentation.)* > — **Оксана:** Привіт... А я цілий день писала один звіт, робила презентацію, намагалася знайти помилку в таблиці, але так нічого і не закінчила. *(Hi... And I spent the whole day writing one report, making a presentation, trying to find a mistake in the table, but I didn't finish anything.)* > — **Тарас:** Ого. Але ж ти працювала весь день? *(Wow. But you were working the whole day?)* > — **Оксана:** Так, я дуже втомилася, хоча результату немає. *(Yes, I am very tired, even though there is no result.)* Notice the stark contrast in their language. Taras uses the perfective aspect («написав», «відправив», «зробив»). His narrative is a checklist of victories and completed tasks. He focuses purely on results. Oksana, on the other hand, relies heavily on the imperfective aspect («писала», «робила», «намагалася»). Her verbs convey an exhausting, continuous process that dragged on without reaching a conclusion. The grammar directly reflects their emotional states: triumph versus frustration. This brings us to the core concept of this module. In Ukrainian grammar, aspect is not just a rigid set of rules; it is a mindset. The Ukrainian metalanguage uses specific terms to describe this phenomenon. The word **результат** (result) aligns with the perfective aspect, emphasizing that a goal was reached. The word **процес** (process) aligns with the imperfective aspect, focusing on the flow of time. :::info **Вид як спосіб мислення** When speaking Ukrainian, you must decide what your communicative goal is. Are you emphasizing **завершеність** (completeness) or simply stating that an activity took place? You are the director of your sentence. ::: Коли ви розмовляєте українською, ви не просто вибираєте форму дієслова. Ви вирішуєте, як ваш слухач побачить цю подію. Вид дієслова — це ваш інструмент, щоб показати, що для вас було найважливішим у тій ситуації. Від цього залежить уся атмосфера вашої розповіді. > *When you speak Ukrainian, you don't just choose a verb form. You decide how your listener will see this event. The verb aspect is your tool to show what was most important to you in that situation. The entire atmosphere of your story depends on this.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -585,7 +585,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -598,14 +665,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

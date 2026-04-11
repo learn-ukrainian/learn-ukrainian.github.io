@@ -1,6 +1,6 @@
 # Build Summary: transport (A1)
 
-Generated: 2026-04-09 00:41
+Generated: 2026-04-11 00:58
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 00:41
 | verify | complete | 2026-04-08 22:39:41 |
 | review | complete | 2026-04-08 22:41:47 |
 | stress | complete | 2026-04-08 22:41:49 |
-| publish | complete | 2026-04-08 22:41:52 |
+| publish | complete | 2026-04-10 22:58:41 |
+| audit | complete | 2026-04-10 22:58:41 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 00:41
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

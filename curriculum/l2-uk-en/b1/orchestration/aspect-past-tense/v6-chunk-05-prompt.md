@@ -21,7 +21,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-працює скрізь абсолютно однаково, і намагаються просто вгадувати українські слова за аналогією. Це дуже погана стратегія. Українська мова має свою власну, унікальну історію розвитку граматики та лексики. Хоча загальний принцип процес-результат є спільним для всіх слов'янських мов, конкретні **видові пари** *(aspectual pairs)* можуть кардинально відрізнятися. Іноді ці відмінності є дуже тонкими, а іноді — абсолютно очевидними. Наприклад, в українській мові існують абсолютно унікальні пари слів, які утворюються від різних коренів. Найяскравіші приклади: дієслово **брати** *(to take, impf)* має досконалу пару **взяти** *(to take, pf)*. Дієслово **ловити** *(to catch, impf)* має пару **піймати** *(to catch, pf)*. Ви ніколи не зможете вгадати ці форми, якщо будете спиратися на знання інших мов. Крім того, частотність використання певних префіксів для створення доконаного виду є глибоко специфічною для української мови. Російська або польська інтуїція тут часто призводить до кумедних або незрозумілих помилок. Тому наше головне правило звучить так: не намагайтеся вгадувати. Завжди перевіряйте нові видові пари у надійному українському словнику, такому як VESUM або Словник української мови. Повага до цих унікальних українських граматичних особливостей робить ваше мовлення по-справжньому природним, автентичним та деколонізованим. Ви вивчаєте не просто ще одну слов'янську мову, ви опановуєте самостійну і багату мовну систему. <!-- INJECT_ACTIVITY: error-correction-aspect --> Тепер настав час застосувати всі ваші нові знання на практиці. Ваше фінальне завдання в цьому модулі називається «Мій минулий тиждень». Це відкрите письмове завдання, де ви маєте самостійно розповісти про події своїх останніх семи днів. Але це не просто звичайний перелік подій. Ваша головна мета — свідомо та майстерно переплітати різні види дієслів у своєму тексті. Уявіть, що ви малюєте картину. Недоконаний вид — це ваше широке тло, це атмосфера і декорації вашого життя. Доконаний вид — це яскраві, динамічні події на передньому плані, які рухають ваш сюжет уперед. Без фону картина буде порожньою, а без яскравих подій — нудною. Ось чітка інструкція для вашої розповіді. По-перше, ви повинні описати три регулярні, звичні дії, які відбувалися протягом тижня. Використовуйте недоконаний вид, щоб створити своє тло. Наприклад, розкажіть, о котрій годині ви щоранку прокидалися, як часто ви пили каву, або що ви зазвичай робили вечорами після роботи. По-друге, додайте три конкретні, завершені події. Це ваші досягнення або несподіванки. Використовуйте доконаний вид, щоб показати чіткий результат. Наприклад, що важливе ви нарешті зробили минулого вівторка? Який проєкт ви успішно завершили в п'ятницю? По-третє, найцікавіша частина: створіть одну **перервану дію** *(interrupted action)* у межах одного речення. З'єднайте фоновий процес із раптовим результатом. Використайте класичну конструкцію з обов'язковим словом «коли». Наприклад: «Коли я спокійно читав новини, мені раптом зателефонував керівник». Під час написання цього тексту, обов'язково підкресліть або виділіть маркери часу (завжди, одного разу, раптом, щодня), які допомагають вам зробити правильний граматичний вибір. Не бійтеся робити помилки, адже саме через створення власних історій ви найкраще відчуєте ритм мови. Український минулий час — це завжди танець між стабільним процесом та яскравим результатом. Відчуйте цей танець, керуйте ним, і ваша українська мова звучатиме неймовірно живо і природно. А в наступному модулі ми підемо ще далі: ми дізнаємося, як цей самий вид дієслова повністю змінює структуру майбутнього часу. <!-- INJECT_ACTIVITY: open-writing-my-week -->
+a reliable dictionary is so important. Do not try to guess the perfective form of a new verb. When you learn a new action, you should always memorize it as an aspectual pair. The dictionary will show you whether the pair is formed by changing a suffix, adding a prefix, or using an entirely different word. Relying on authentic Ukrainian sources ensures that your speech remains natural and free from artificial constructions. <!-- INJECT_ACTIVITY: error-correction-aspect --> Now it is time to put this matrix into practice. Your final task for this module is to write a short story about your past week, titled "Мій минулий тиждень." In this story, you will intentionally weave both aspects together to create a dynamic and natural narrative. This is not just a grammar exercise; it is an exercise in controlling the listener's attention and structuring information. У вашій розповіді ви повинні використати щонайменше три дії недоконаного виду для опису ваших звичок, рутини або фонових процесів. Це можуть бути речі, які ви робили щодня, або процеси, які тривали довго. Потім вам потрібно додати щонайменше три дії доконаного виду, щоб описати конкретні досягнення, завершені події або раптові зміни. Нарешті, ви повинні створити хоча б одне речення, де обидва види зустрічаються разом: одна дія перериває іншу. > *In your story, you must use at least three actions of the imperfective aspect to describe your habits, routine, or background processes. These can be things you did every day, or processes that lasted a long time. Then you need to add at least three actions of the perfective aspect to describe specific achievements, completed events, or sudden changes. Finally, you must create at least one sentence where both aspects meet together: one action interrupts another.* For example, you might structure your narrative like this: "Минулого тижня я щоранку пив каву і читав новини. Це була моя рутина. Але в середу я не пив каву. Я прокинувся, швидко одягнувся і поїхав на важливу зустріч. Поки я їхав у метро, я перевіряв документи. Раптом мені зателефонував директор і сказав, що зустріч скасовано." > *Last week, I drank coffee and read the news every morning. This was my routine. But on Wednesday, I didn't drink coffee. I woke up, dressed quickly, and went to an important meeting. While I was riding in the subway, I was checking documents. Suddenly, the director called me and said that the meeting was canceled.* Notice how the imperfective verbs build the environment, while the perfective verbs drive the plot forward. By mastering this contrast, you transform a flat list of activities into a compelling story. Remember to use time markers to signal your intentions clearly. Use words like "щодня" or "завжди" to set up your imperfective habits, and use "одного разу" or "раптом" to introduce your perfective events. :::tip **Weaving the narrative** Think of the imperfective aspect as the stage design and the perfective aspect as the actors moving across the stage. Both are necessary for the play to make sense. ::: <!-- INJECT_ACTIVITY: open-writing-my-week -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -581,7 +581,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -594,14 +661,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

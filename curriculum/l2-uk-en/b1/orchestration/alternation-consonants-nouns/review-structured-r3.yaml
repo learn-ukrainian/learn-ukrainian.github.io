@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The module follows the plan closely, covering both the first and second
+    palatalizations, rules for proper names, and exceptions. However, the writer blindly
+    copied a flawed plan example (`колесо — на '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Identified a critical misspelled word (`вітязь` instead of `витязь`),
+    a hallucinated locative form (`на колішні`), and an incorrect usage of the linguistic
+    term "калька" (used to describe an accent).
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Excellent PPP flow and storytelling, but it presents the alternation
+    `[г]` to `[з'']` (`Прага` -> `празький`) under the section titled "Перша палаталізація:
+    [г/к/х] -> [ж/ч/ш]". This is confusing, as `'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended terminology (`задньоязиковий`, `відміна`,
+    `звертання`, `шиплячий`, etc.) is woven naturally into the explanations.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The exercise markers directly correspond to the plan's `activity_hints`
+    and test practical grammar application exactly where the learner needs them.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: A warm, encouraging teacher persona. Uses great real-world context (the
+    Lviv bookstore scenario) and cultural proverbs to demonstrate the language "alive."
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: The word count of 4841 easily meets the 4000-word target. However, there
+    are two dangling pronouns (`Вона також підкреслює...` and `Вона стосувалася виключно
+    іменників`) that hurt the flow.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Demonstrates excellent use of authentic Ukrainian contexts, naming conventions
+    (`Марічко`, `Олеже`), and decolonized explanations of the language's history.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The `Книгар`/`Покупець` dialogue is highly natural, contextually appropriate,
+    and efficiently sneaks in the exact grammar rules being taught (`друже`, `у книжці`,
+    `у руці`, `у вусі`).
+findings: []

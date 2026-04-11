@@ -1,0 +1,59 @@
+{
+  "module": "checkpoint-morphophonemics",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-10T21:26:05.956558Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-09T22:42:50.436479Z",
+    "meta": null,
+    "activities": "2026-04-09T22:37:46.836313Z",
+    "vocabulary": "2026-04-09T22:38:51.424052Z",
+    "research": null,
+    "plan": "2026-04-04T21:31:33.330377Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "4835/4000 (raw: 4895) | engagement: 0/5 | richness: 79% < 85% min (checkpoint)"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "11/0 | density: 4 < 6"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "36/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

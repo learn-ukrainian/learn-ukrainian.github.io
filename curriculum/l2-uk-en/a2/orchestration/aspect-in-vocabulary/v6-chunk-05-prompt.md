@@ -21,7 +21,7 @@ Grand total: ~2290 words
 <previous_context>
 [...previous sections truncated...]
 
-she took my phone.) Another incredibly common pair is the speech pair: **говорити / сказати** (to speak, talk / to say, tell). It is vital to understand the difference here. «Говорити» describes the ongoing act of communicating, having a conversation, or speaking a language. It is a continuous process. On the other hand, «сказати» is the act of delivering a specific message or making a single statement. It is the end result of the speaking process. «Ми довго говорили про життя.» (We talked about life for a long time.) «Він сказав правду.» (He told the truth.) You cannot use «сказати» to mean "having a conversation," and you cannot use «говорити» when you mean "he said one specific thing." Next, we must look at the "search versus find" distinction. Learners are almost always taught the verbs **шукати** (to search, look for) and **знайти** (to find) as an aspectual pair. While they function together logically in real life, they are technically two different actions. You search (the process), and as a result, you find (the result). The true perfective form of «шукати» is actually «пошукати» (to search for a little while), but in everyday situations, «знайти» is the result we are usually hoping for. Similarly, we have the pair **ловити / піймати** (to catch). You spend time trying to catch something («ловити»), but the moment of capture is instantaneous («піймати»). We have covered a lot of ground in this module. To help you organize your vocabulary, here is a summary table of the most important aspectual pairs you need for the A2 level, grouped by how they are formed. We have also included one more essential suffix pair to round out your daily vocabulary: **купувати / купити** (to buy). | Форма (Formation) | Недоконаний (Process) | Доконаний (Result) | Переклад (Translation) | | :--- | :--- | :--- | :--- | | **Префікс** | читати | **про**читати | to read | | | писати | **на**писати | to write | | | робити | **з**робити | to do | | | бачити | **по**бачити | to see | | | готувати | **при**готувати | to cook | | **Суфікс** | відчин**я**ти | відчин**и**ти | to open | | | куп**ува**ти | куп**и**ти | to buy | | | виріш**ува**ти | виріш**и**ти | to decide | | | запит**ува**ти | запит**а**ти | to ask | | **Корінь** | допом**ага**ти | допом**ог**ти | to help | | | відповід**а**ти | відповід**іс**ти | to answer | | **Інші слова** | брати | взяти | to take | | | говорити | сказати | to speak / to say | | | ловити | піймати | to catch | | | шукати | знайти* | to search / to find | *\*Ці слова пов'язані логічно, але не є граматичною парою (These words are logically linked, but are not a grammatical pair).* <!-- INJECT_ACTIVITY: match-up, Fill in the Blanks with the Correct Pair, 8 items --> <!-- INJECT_ACTIVITY: fill-in, Choose the Correct Aspect Partner, 8 items -->
+taking things from a shelf. This is a long process. But when you finally took the last thing, the action finished. That is why we have two words: "брати" (to be taking) for the process and "взяти" (to take) for the result.* Another essential pair relates to speech. The imperfective verb «говорити» describes the continuous act of speaking. It is a process that can last for hours. However, to express the result of delivering a single message, you must use the perfective verb «сказати». This is the instantaneous act of saying or telling a concrete fact. Вчора ми довго говорили про роботу. Ми говорили дві години, але колега так і не сказав мені новину. Тільки сьогодні він сказав правду. > *Yesterday we talked for a long time about work. We talked for two hours, but the colleague still did not tell me the news. Only today he told the truth.* Students always learn another famous pair together: «шукати» (to search) and «знайти» (to find). Strictly speaking, they are different actions rather than a true grammatical pair. The actual perfective partner for «шукати» is «пошукати» (to search for a bit). But in daily life, finding is the natural result of searching, so we treat them as a practical pair. A similar jump happens with «ловити» (to catch - process) and «піймати» (to catch - result). Мій брат любить ловити рибу. Він може ловити її цілий день. Але рідко він може дійсно піймати велику рибу. Коли він шукає гриби, він хоче їх знайти. > *My brother likes catching fish. He can be catching them all day. But rarely can he actually catch a big fish. When he searches for mushrooms, he wants to find them.* :::info **Grammar box** Always memorize verbs in their aspectual pairs. If you only know the imperfective form, you will never be able to express that you have successfully finished an action! ::: Now that you understand the three main ways Ukrainian forms aspectual pairs, let us look at the big picture. We have grouped twenty essential verb pairs for this level into a reference table. This includes examples of prefixation, suffix changes, and completely different words. Notice the essential pair «купувати» and «купити» (to buy), which drops its long suffix to form the perfective result. Ось найважливіші дієслова для вашого рівня. Вивчайте їх тільки парами. Так ви зможете завжди правильно описувати дію. > *Here are the most important verbs for your level. Learn them only in pairs. This way you will always be able to correctly describe the action.* | Спосіб | Недоконаний вид (Процес) | Доконаний вид (Результат) | | :--- | :--- | :--- | | **Префікс по-** | снідати, думати, бачити | поснідати, подумати, побачити | | **Інші префікси** | робити, читати, писати, пити | зробити, прочитати, написати, випити | | **Суфікси / Корінь**| купувати, допомагати, відчиняти | купити, допомогти, відчинити | | **Інші слова** | брати, говорити, шукати, ловити | взяти, сказати, знайти, піймати | <!-- INJECT_ACTIVITY: match-up-blanks-pairs --> <!-- INJECT_ACTIVITY: fill-in-aspect-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -471,7 +471,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -492,14 +559,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

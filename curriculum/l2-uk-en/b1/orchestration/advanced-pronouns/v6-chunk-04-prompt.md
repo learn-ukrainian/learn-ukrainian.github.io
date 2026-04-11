@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-критично важливе правило. Якщо між неозначеним займенником та його часткою з'являється **прийменник** *(preposition)*, то всі три частини потрібно писати окремо. Прийменник завжди розриває займенник і стає посередині. Наприклад, ви знаєте слово **будь-хто** *(anyone at all)*. Але якщо ми додамо прийменник **з** *(with)*, ми отримаємо конструкцію **будь з ким** *(with anyone)*. Ми не можемо сказати «з будь-ким», це груба помилка. Інші приклади: **казна у кого** *(at who knows whose place)*, **аби до чого** *(to just anything)*, **де з чим** *(with some things)*. Відмінювання цих займенників відбувається так само, як і звичайних питальних. Твірна частка ніколи не змінюється, змінюється лише основа: **хтось** (Називний), **когось** (Родовий), **комусь** (Давальний). Наприклад, якщо ми відмінюємо слово **що-небудь** *(anything)*, то форма Родового відмінка буде **чого-небудь**, а Орудного — **чим-небудь**. Головне правило тут — завжди орієнтуватися на базове питальне слово, ховаючи частку в голові під час відмінювання. Це значно спростить вам процес побудови речень. Для іноземних студентів найважче зрозуміти смислові нюанси між схожими займенниками. Розглянемо найпопулярнішу трійку, яка перекладається англійською дуже подібно, але працює по-різному. Займенник **хтось** використовується тоді, коли ви знаєте або підозрюєте, що людина точно існує, але ви не знаєте її імені або не хочете його називати. Наприклад: «У двері хтось дзвонить» *(Someone is ringing the door)*. Людина там точно є, це конкретний факт, але її особа вам невідома. Займенник **хто-небудь** використовується у гіпотетичних ситуаціях, питаннях або проханнях. Він означає одну людину з багатьох можливих. Наприклад: «Чи є тут хто-небудь?» *(Is anyone here?)* або «Покличте **кого-небудь** *(anyone)* на допомогу!». Ви не знаєте, чи існує ця людина в даний момент. Такі слова ідеально підходять для пропозицій чи загальних інструкцій, де важлива дія, а не конкретний виконавець. Нарешті, займенник **будь-хто** має найсильніше значення відкритого вибору. Він підкреслює, що обмежень абсолютно немає. Наприклад: «Цю просту задачу може вирішити будь-хто» *(Anyone at all can solve this simple task)*. Або: «Будь-який студент має право на помилку» *(Any student has the right to a mistake)*. Правильний вибір між цими займенниками зробить ваше мовлення дуже природним. Крім базових форм, в українській мові є слова, які додають мовленню сильного емоційного забарвлення. Займенники з префіксом **аби-** часто мають розмовний, зневажливий або байдужий відтінок. Наприклад, слово **абиякий** *(any old, mediocre)* означає щось поганої якості або обране без уваги. Якщо ви кажете: «Він зробив цю роботу **абияк** *(carelessly)* і використав **абиякі** *(any old)* матеріали», ви сильно критикуєте результат. Частки **казна-** та **хтозна-** є надзвичайно експресивними. Вони виражають високий ступінь невизначеності, іноді з відтінком роздратування, здивування або тривоги. Наприклад: «Він приніс додому **хтозна-що** *(who knows what)*». Або: «Цей старий лист надійшов від **казна-кого** *(who knows who)*». Ці слова роблять розповідь живою і емоційною. На противагу їм, займенники з префіксом **де-** звучать дуже стримано і об'єктивно. Слова **дехто** *(some people)* та **дещо** вказують на певну частину людей чи речей, про яку мовець говорить загально, хоча може знати їх конкретно. Наприклад: «**Дехто** з нас уже знає правильну відповідь» *(Some of us already know the correct answer)*. Тут мовець створює інтригу. Використання таких форм свідчить про високий рівень володіння мовою, оскільки ви починаєте відчувати тонкі психологічні нюанси. <!-- INJECT_ACTIVITY: indefinite-pronoun-choice -->
+to say "with anyone" using the pronoun «будь-хто», the preposition «з» physically splits the word. The particle detaches from the front, creating the phrase «будь з ким». The same happens with «казна-хто», which becomes «казна у кого» when combined with the preposition «у». Notice that suffixes like «-сь» and «-небудь» stay attached to the end of the declined pronoun, so the preposition simply goes before the whole word: «з кимось» or «до кого-небудь». :::info **Правопис неозначених займенників** - **Разом:** хтось, дещо, абиякий - **Через дефіс:** будь-хто, що-небудь, казна-чий - **Окремо:** будь до кого, казна з чим, аби в чому ::: While English relies heavily on words like "someone" or "anyone", Ukrainian nuances are much more precise. The difference between «хтось», «хто-небудь», and «будь-хто» lies entirely in the speaker's intention and the context of the sentence. Займенник «хтось» означає конкретну особу, про яку мовець знає, але не називає її прямо. Наприклад, у реченні «Хтось стукає у двері» ми розуміємо, що там стоїть реальна людина. Займенник «хто-небудь» використовується для гіпотетичних ситуацій, часто в питаннях чи проханнях, коли йдеться про невідому особу взагалі. Ви можете запитати: «Чи є тут хто-небудь?». А от займенник «будь-хто» підкреслює повну відсутність обмежень. Фраза «Будь-хто може це прочитати» означає, що абсолютно кожна людина має таку можливість, незалежно від її особистості. > *The pronoun "хтось" means a specific person whom the speaker knows about but does not name directly. For example, in the sentence "Someone is knocking on the door," we understand that a real person is standing there. The pronoun "хто-небудь" is used for hypothetical situations, often in questions or requests, when it is about an unknown person in general. You might ask: "Is anyone here?". But the pronoun "будь-хто" emphasizes a complete absence of restrictions. The phrase "Anyone can read this" means that absolutely every person has this opportunity, regardless of their identity.* Beyond the standard indefinite pronouns, Ukrainian has several highly expressive particles that add emotional color to your speech. These are often used in informal contexts or literature to convey dismissiveness, extreme uncertainty, or vagueness. Частка аби- часто додає відтінок зневаги або байдужості. Наприклад, слово «абиякий» описує предмет дуже низької якості, який зробили без старання. Частки казна- та хтозна- виражають надзвичайну невпевненість мовця, ніби лише вищі сили знають відповідь: «Він приніс хтозна-що». На противагу їм, займенники з часткою де-, такі як «дехто» або «дещо», вказують на певну групу людей чи речей, які добре відомі мовцю, але він навмисно згадує про них дуже туманно. > *The particle аби- often adds a shade of dismissiveness or indifference. For example, the word "абиякий" describes an object of very low quality, which was made without effort. The particles казна- and хтозна- express the speaker's extreme uncertainty, as if only higher powers know the answer: "He brought who knows what." In contrast to them, pronouns with the particle де-, such as "дехто" or "дещо", indicate a certain group of people or things that are well known to the speaker, but he deliberately mentions them very vaguely.* <!-- INJECT_ACTIVITY: indefinite-pronoun-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -581,7 +581,74 @@ _Джерела: 5-klas-ukrmova-zabolotnyi-2023_s0110, 10-klas-ukrmova-glazova-2
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -594,14 +661,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

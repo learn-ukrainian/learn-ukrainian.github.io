@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-його постійна риса, яка не залежить від конкретного моменту. Натомість дієприкметник називає зовсім інше явище — **ознаку предмета за дією або станом** *(quality arising from action or state)*. Відомий мовознавець Олександр Заболотний у своєму підручнику для восьмого класу підкреслює саме цю ключову відмінність. Коли ми кажемо «квітучий сад», ми говоримо не про сталу якість, а про тимчасову ознаку, яка виникла виключно внаслідок конкретної дії. Сад має цю чарівну ознаку лише тому, що він просто зараз виконує дію — активно квітне. Якщо природний процес цвітіння раптом зупиниться, сад одразу перестане бути квітучим, хоча він цілком може залишитися красивим. Дієприкметник — це ніби яскрава фотографія дії, зупинена на мить, яка тимчасово стала ознакою самого предмета. Усі дієприкметники в сучасній українській мові традиційно поділяються на дві великі категорії: **активні** *(active)* та **пасивні** *(passive)*. Цей важливий поділ цілком логічно залежить від того, хто саме виконує ту дію, що захована всередині слова. Активні дієприкметники виражають ознаку предмета за дією, яку цей предмет виконує абсолютно самостійно. Наприклад, уважно розглянемо словосполучення «**палаючий вогонь**» *(blazing fire)*. Вогонь сам виконує свою дію — він безперервно палає. Предмет є активним ініціатором та виконавцем процесу. Інший чудовий приклад активної форми: «**зів'ялий листок**» *(wilted leaf)*. Листок сам виконав цю дію у минулому — він зів'яв і тепер лежить на землі. З іншого боку, пасивні дієприкметники називають ознаку того предмета, який лише зазнає на собі відчутної дії іншого зовнішнього об'єкта. Наприклад, візьмемо фразу «**прочитана книга**» *(read book)*. Книга фізично не могла читати сама себе, цю дію над нею виконав зацікавлений читач. Книга є лише пасивним об'єктом. Або словосполучення «**збудований міст**» *(built bridge)* — цей міст збудували працьовиті будівельники. У цьому навчальному модулі ми зосередимо усю нашу увагу виключно на активних дієприкметниках. Про пасивні форми ми обов'язково та дуже детально поговоримо на наступних уроках. Як же студенту безпомилково відрізнити дієприкметник від звичайного прикметника чи форми дієслова у довгому тексті? Для цього в українській мові існує дуже проста логіка «потрійної перевірки». Давайте разом порівняємо три споріднені слова, які мають спільний корінь: «**зелений**» *(green)*, «**зеленіючий**» *(turning green)* та дієслово «**зеленіє**» *(is turning green)*. Крок перший: ми завжди ставимо питання до слова. Слово «зелений» чітко відповідає на питання «який?». Це класичний прикметник, що просто називає природний колір. Слово «зеленіє» відповідає на питання «що робить?». Це типове дієслово. А ось слово «зеленіючий» також відповідає на питання «який?», точнісінько як і прикметник. Крок другий: ми наполегливо шукаємо сховану дію. Чи є у слові «зелений» якийсь процес? Ні, це лише постійна візуальна характеристика. А от у слові «зеленіючий» ми одразу бачимо активний процес набуття зеленого кольору. Крок третій: ми ретельно аналізуємо будову самого слова. Справжній дієприкметник завжди містить корінь дієслова та свій специфічний суфікс часу, який геніально поєднує дію з ознакою. У слові «зеленіючий» ми маємо дієслівну основу та типовий суфікс «-юч-», який вказує на теперішній час. Отже, якщо слово відповідає на питання «який?», але містить у собі дієслівний корінь та специфічний суфікс (як-от «-уч-», «-юч-», «-ач-», «-яч-» або «-л-»), перед нами стовідсотково справжнісінький дієприкметник. <!-- INJECT_ACTIVITY: quiz-participle-definition, quiz, focus on identifying participles vs adjectives vs verbs, 12 items -->
+understand this dual nature, compare the regular verb "квітнути" and the participle "квітучий" formed from it. The verb simply states the fact of the action in time, while the participle turns this action into a vivid characteristic of the object itself, allowing us to paint deep and precise images with words.* Головна відмінність дієприкметника від звичайного прикметника полягає саме в джерелі походження цієї ознаки. Звичайний прикметник називає постійну, стабільну властивість предмета, яка зовсім не пов'язана з жодним процесом у часі. Наприклад, словосполучення «красивий сад» або «високий дуб» описують об'єкти, які мають ці якості постійно, від природи. Натомість дієприкметник виражає ознаку, яка виникає лише в результаті певної дії. Як зазначає підручник О. Заболотного для восьмого класу, дієприкметник виражає саме ознаку предмета за дією або станом. Словосполучення «квітучий сад» описує не просто гарне місце, а простір, який саме зараз перебуває у процесі інтенсивного цвітіння. Ця ознака тимчасова, вона жорстко прив'язана до конкретного моменту, коли дерева розкривають свої квіти. Такі слова, як «сяючий», «зів'ялий», «вишитий» або «розквітлий», завжди ховають усередині себе маленьку історію про те, що саме відбувалося з цим предметом раніше чи відбувається зараз. Усі дієприкметники в українській мові чітко поділяються на дві великі категорії залежно від того, хто саме виконує дію. Ці категорії називаються активними та пасивними дієприкметниками. Активні дієприкметники вказують на ознаку предмета, який самостійно виконує певну дію. Наприклад, коли ми кажемо «палаючий вогонь», ми чітко розуміємо, що вогонь сам виконує дію — він палає. Суб'єкт є повноцінним і активним учасником процесу. На противагу цьому, пасивні дієприкметники описують предмет, який зазнає на собі фізичної чи емоційної дії з боку когось іншого. Якщо перед нами «прочитана книга» або «збудований міст», це означає, що книгу хтось цілеспрямовано взяв і прочитав, а міст хтось спроєктував і збудував. Вони були лише пасивними об'єктами чиєїсь чужої діяльності. У цьому модулі ми зосередимося виключно на активних дієприкметниках, детально досліджуючи, як українська мова дозволяє предметам самим творити свої ознаки через власні динамічні дії. :::info **Граматична підказка** Активний дієприкметник завжди можна перетворити на конструкцію «той, який виконує дію». Якщо «вогонь палає», то він — «палаючий». Якщо «листя опало», то воно — «опале». ::: Щоб ніколи не плутати ці споріднені частини мови, використовуйте надійну логіку потрійної перевірки. Коли ви бачите нове слово, яке описує ознаку, поставте йому кілька уточнювальних запитань. Візьмемо для наочного прикладу три схожі слова: «зелений», «зеленіє» та «зеленіючий». Перше слово, «зелений», відповідає на питання «який?» і називає постійний колір, який просто існує в природі. Тому це звичайний прикметник, який не має ні часу, ні виду. Друге слово, «зеленіє», відповідає на питання «що робить?», вказує на теперішній час, недоконаний вид і третю особу. Тому це чисте дієслово. А тепер уважно подивіться на третє слово — «зеленіючий». Воно також відповідає на питання «який?» і узгоджується з іменником, але має дієслівний корінь та специфічний суфікс, який вказує на процес у теперішньому часі. Якщо слово відповідає на питання прикметника, але зберігає дієслівний корінь і суфікс часу, перед вами стовідсотковий дієприкметник. Цей простий, але ефективний алгоритм допоможе вам миттєво розпізнавати такі гібридні форми абсолютно в будь-якому тексті. <!-- INJECT_ACTIVITY: quiz-participle-definition -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -570,7 +570,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -583,14 +650,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

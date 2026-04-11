@@ -23,6 +23,7 @@ Read this short text titled **Моя́ кімна́та** (My room). Every singl
 - **Вона́ вели́ка і сві́тла.** (It is big and bright.)
 - **Ось мій стіл, він нови́й.** (Here is my table, it is new.)
 - **Тут є три си́ні кни́ги і одна́ жо́вта лампа.** (Here are three dark blue books and one yellow lamp.)
+- **Ця лампа коштує сто гривень.** (This lamp costs one hundred hryvnias.)
 - **Це вікно вели́ке, а те вікно мале́.** (This window is big, and that window is small.)
 - **Мої́ сті́ни бі́лі.** (My walls are white.)
 - **У мене́ є два стільці́.** (I have two chairs.)
@@ -34,7 +35,7 @@ Notice how the description naturally shifts between singular items and groups of
 
 ## Грама́тика (Grammar Summary)
 
-The absolute core of describing your world relies on determining the grammatical gender of a noun. In Ukrainian, every object is categorized as masculine, feminine, or neuter. You can always identify the gender by looking at the final letter of the dictionary form of the word. Masculine nouns usually end in a consonant, like **стіл** (table). Feminine nouns typically end in **-а** or **-я**, like **ру́чка** (pen). Neuter nouns end in **-о** or **-е**, like **дзе́ркало** (mirror). The personal pronouns **він** (he/it), **вона** (she/it), and **воно́** (it) are the essential keys that unlock the rest of the grammar patterns in a sentence.
+The absolute core of describing your world relies on determining the grammatical gender of a noun. In Ukrainian, every object is categorized as masculine, feminine, or neuter. You can usually identify the gender by looking at the final letter of the dictionary form of the word. Masculine nouns usually end in a consonant, like **стіл** (table). Feminine nouns typically end in **-а** or **-я**, like **ру́чка** (pen). Neuter nouns end in **-о** or **-е**, like **дзе́ркало** (mirror). The personal pronouns **він** (he/it), **вона** (she/it), and **воно́** (it) are the essential keys that unlock the rest of the grammar patterns in a sentence.
 
 Once you know a noun's gender, you must make sure any adjective describing it agrees with that gender. Adjectives change their endings to match the noun perfectly. For a masculine noun, you use a masculine adjective, as in **га́рний день** (beautiful day). A feminine noun requires a feminine adjective, like **га́рна пі́сня** (beautiful song). A neuter noun takes a neuter adjective, such as **га́рне фо́то** (beautiful photo). Remember that adjectives can have a hard stem, taking the ending **-ий** like **черво́ний** (red), or a soft stem, taking the ending **-ій** like **синій** (dark blue). 
 
@@ -53,7 +54,7 @@ Read the conversation between Іва́нко, a tourist, and his local friend К
 > **Іванко:** Подиви́сь! Це вишиванка? *(Look! Is this an embroidered shirt?)*
 > **Катя:** Так, це гарна бі́ла вишиванка. *(Yes, this is a beautiful white embroidered shirt.)*
 > **Іванко:** А та си́ня? *(And that dark blue one?)*
-> **Катя:** Той о́дяг теж гарний. *(That clothing is also beautiful.)*
+> **Катя:** Той ко́лір теж гарний. *(That color is also beautiful.)*
 > **Катя:** А ось ці писанки — ду́же краси́ві! *(And these decorated eggs — very beautiful!)*
 
 After choosing what they like, they need to find out how much the items cost to complete their purchase. Notice how the numbers and prices are stated directly and clearly.

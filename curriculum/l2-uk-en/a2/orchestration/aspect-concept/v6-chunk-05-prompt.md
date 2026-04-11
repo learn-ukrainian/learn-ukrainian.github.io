@@ -21,7 +21,7 @@ Grand total: ~2200 words
 <previous_context>
 [...previous sections truncated...]
 
-focus. You can say «Вчора я читав» *(Yesterday I was reading)* if you want to emphasize the process, or «Вчора я прочитав» *(Yesterday I finished reading)* if you want to emphasize the result. To truly understand the difference between the two aspects, let's look at a classic contrast: the concept of failure. Imagine you were looking for your keys. You can say: «Я шукав, але не знайшов» *(I looked for, but didn't find)*. The verb **шукав** (was looking for) is imperfective because the search was a process that took up your time. The verb **знайшов** (found) is perfective because finding is the ultimate result you were aiming for. By using the perfective aspect with a negative word, you are stating that the goal was never reached. The boundary was not crossed. <!-- INJECT_ACTIVITY: match-up-context-aspect --> ## Порівняння пар: Бачимо різницю Let's look at this in practice by comparing some common verb pairs side-by-side. Consider the verbs **писати** (to write, imperfective) and **написати** (to write, perfective). If you say «Він писав лист» *(He was writing a letter)*, you are describing a process. Maybe he was interrupted, or maybe he never finished. However, «Він написав лист» *(He wrote a letter)* means the letter is complete and ready to send. The same logic applies to food. «Ми пили каву» *(We were drinking coffee)* sets a scene, while «Ми випили каву» *(We drank the coffee)* means the cups are empty. «Вона їла борщ» *(She was eating borsch)* focuses on the activity, whereas «Вона поїла» *(She finished eating)* announces a clear result. We even see this with senses: «Я бачив це» *(I saw this, I was looking at it)* versus «Я побачив це» *(I spotted it)*. To truly grasp this concept, try visualizing these two aspects as lines drawn on a page. Imagine the imperfective aspect as a wavy, continuous line. It flows across the page, representing the passage of time without a clear beginning or end. It fills the space, just as imperfective verbs fill our stories with ongoing background activities. Now, imagine the perfective aspect as a straight, sharp line that suddenly stops with a bold "X". That "X" is the concrete result, the exact moment of completion. Perfective verbs do not flow; they punctuate time. They act as milestones in your narrative, marking the moments when an action definitively ends. You might have noticed a pattern in our examples. In Ukrainian, most perfective verbs are created by attaching a prefix to their imperfective partner. For instance, **робити** (to do) becomes **зробити** (to finish doing). **Читати** (to read) becomes **прочитати** (to read completely). There are many different prefixes used for this purpose, such as **на-**, **з-**, **про-**, **ви-**, and **по-**. Their primary job is to flip the grammatical switch from a process to a result. At the A2 level, you do not need to memorize every prefix rule. Your main goal is simply to recognize these pairs and understand that the prefix signals a change in the verb's aspect. <!-- INJECT_ACTIVITY: error-correction-aspect -->
+я пив чай і писав лист. Це був довгий і приємний процес. Потім я нарешті випив чай і написав лист. Тепер чашка порожня, а лист лежить у конверті. Ми також можемо сказати: ми довго їли піцу, а потім поїли. > *Yesterday evening I was drinking tea and writing a letter. This was a long and pleasant process. Then I finally drank the tea and wrote the letter. Now the cup is empty, and the letter is lying in an envelope. We can also say: we were eating pizza for a long time, and then we finished eating.* Notice how the base verbs just tell us what was happening in the background. But when we switch to the perfective form, the word tells us the job is done. We see this contrast clearly when the continuous process of eating turns into a finished meal, or when the process of looking («бачити») turns into the sudden result of spotting something («побачити»). If we draw these two aspects on a timeline, they look completely different. Imagine the imperfective aspect as a wavy, continuous line. It flows through time without a clear beginning or end, filling up the space with the process of the action. The perfective aspect, on the other hand, is a straight, direct line that suddenly stops with a bold "X". Недоконаний вид заповнює час. Дія триває, як музика. Доконаний вид зупиняє час. Дія має фінал, як крапка в кінці речення. > *The imperfective aspect fills the time. The action lasts, like music. The perfective aspect stops the time. The action has a finale, like a period at the end of a sentence.* :::note **Visualizing aspect** — Think of imperfective verbs as the background music of your story, and perfective verbs as the special sound effects (like a door slamming or a bell ringing) that move the plot forward. ::: You might have noticed a pattern in how these perfective verbs are created. In Ukrainian, most perfective verbs are formed simply by adding a small prefix to the front of the imperfective verb. For example, we take the base verb «писати» and add the prefix «на-» to get «написати». В українській мові є багато різних префіксів. Вони часто змінюють значення слова. Наприклад, ми часто використовуємо префікси «з-» та «про-». Але зараз найважливіше — просто бачити цю різницю між процесом і результатом. > *In the Ukrainian language, there are many different prefixes. They often change the meaning of the word. For example, we often use the prefixes "з-" and "про-". But right now the most important thing is simply to see this difference between process and result.* While these prefixes can sometimes add subtle new meanings to the verb, your primary goal at the A2 level is just to recognize when an aspect change has occurred. Do not worry about memorizing exactly which prefix goes with which verb right away. Your first task is to focus on spotting the difference between a wavy line and a bold "X". <!-- INJECT_ACTIVITY: error-correction-aspect -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -340,7 +340,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -361,14 +428,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

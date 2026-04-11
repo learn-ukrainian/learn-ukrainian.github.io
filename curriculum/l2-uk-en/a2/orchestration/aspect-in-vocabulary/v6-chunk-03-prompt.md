@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-encounter the productive prefix «на-». It often implies producing a physical, tangible result or successfully accumulating a certain amount of something. * **Писати / написати** — to write / to write down completely. * **Малювати / намалювати** — to draw / to finish drawing. Another highly common prefix is «про-», which we already saw successfully applied to the concept of reading. It often carries the subtle nuance of an action moving steadily through something, whether it is moving through a physical text or moving through a specific period of time. * **Жити / прожити** — to live / to live through a specific period. «Я жив там довго.» This sentence means "I lived there for a long time," and it strictly describes the continuous state of living. Conversely, look at the perfective version. «Я прожив там рік.» This means "I lived through a year there," and it firmly focuses on the completed block of time as a single, achieved result. Another fundamental prefix for creating perfective verbs is «з-». You will need to use it constantly in your daily life, most notably with the primary verb for doing or making things. * **Робити / зробити** — to do / to have done. However, this specific prefix comes with an incredibly important phonetic rule that you must remember. Ukrainian spelling and pronunciation always strive for natural harmony and ease of speech. If the root verb begins with a voiceless consonant, specifically the letters «к», «п», «т», «ф», or «х», the voiced prefix «з-» automatically transforms into the voiceless «с-». Ukrainian schoolchildren memorize these five specific letters using a simple, memorable mnemonic phrase. «Кафе Птах.» This translates to "Cafe Bird." Because of this strict phonetic rule, the prefix must adapt itself to perfectly match the voiceless sounds of the root verb. * **Казати / сказати** — to say / to tell. * **Фотографувати / сфотографувати** — to photograph / to take a photo. Finally, let us look at the highly productive prefixes «ви-» and «за-», which are frequently used for actions involving consumption, extraction, or complete mastery. The prefix «ви-» literally means "out," and it often implies using something up completely or extracting a final, definitive result from a process. * **Пити / випити** — to drink / to drink up completely. * **Вчити / вивчити** — to study / to master or memorize. Notice the crucial difference in the learning process depicted here. «Я вчив ці слова.» This sentence means "I was studying these words," and it simply describes the time and effort you spent looking at the textbook. However, look at the result. «Я вивчив ці слова.» This means "I have mastered these words," confirming that the specific information is now permanently stored in your head. The prefix «за-» is also incredibly common, particularly in administrative, financial, or modern transactional contexts. * **Платити / заплатити** — to pay / to complete a payment. * **Телефонувати / зателефонувати** — to call / to make a phone call. <!-- INJECT_ACTIVITY: quiz-find-partner -->
+And in the evening he finally "намалював" (has drawn/painted) it. The prefix "про-" often shows time. A person can just "жити" (live) in a city, but they can "прожити" (live through) ten years there.* One of the most essential verbs, **робити** (to do/make), takes the prefix **з-** to form its perfective partner **зробити**. However, there is a strict phonetic rule that dictates how this prefix sounds and is written. Before certain voiceless consonants, the prefix **з-** changes to **с-**. You can remember these consonants using the mnemonic phrase «Кафе Птах» (Cafe Bird), which contains the letters K, P, T, F, and Kh. Префікс «з-» є дуже популярним, але він має свій секрет. Якщо корінь слова починається на глухий звук з фрази «Кафе Птах», ми пишемо префікс «с-». Тому ми маємо базову пару «робити» та «зробити». Але дієслово «казати» перетворюється на «сказати», бо слово починається на літеру «к». Так само дієслово «фотографувати» стає доконаним у формі «сфотографувати». > *The prefix "з-" is very popular, but it has its secret. If the root of the word begins with a voiceless sound from the phrase "Кафе Птах" (K, P, T, F, Kh), we write the prefix "с-". Therefore, we have the basic pair "робити" (to do/make) and "зробити" (to have done/made). But the verb "казати" (to say/tell) turns into "сказати", because the word begins with the letter "к". Similarly, the verb "фотографувати" (to photograph) becomes perfective in the form "сфотографувати".* :::info **Grammar box** The "Кафе Птах" rule only applies to the prefix **з-**. Whenever you see an imperfective verb starting with K, P, T, F, or Kh (к, п, т, ф, х) and it uses this prefix to become perfective, it will always change to **с-**. This makes the pronunciation much smoother! ::: Finally, you will often encounter the prefixes **ви-** and **за-**, which frequently deal with consumption, mastery, and transactions. The prefix **ви-** often implies exhausting a resource completely or taking something out, while **за-** is frequently used for actions that secure a result or close a deal. Коли ми повністю закінчуємо напій, ми використовуємо префікс «ви-». Можна «пити» каву повільно, але потім «випити» її до дна. Цей префікс також працює з навчанням. Якщо ви просто сидите з книгою, ви можете «вчити» слова. Але якщо ви знаєте їх напам'ять, ви змогли їх успішно «вивчити». Префікс «за-» дуже важливий у магазині. Там ви повинні не просто «платити» гроші, а обов'язково «заплатити» за товар. > *When we completely finish a drink, we use the prefix "ви-". One can "пити" (be drinking) coffee slowly, but then "випити" (drink up) it to the bottom. This prefix also works with studying. If you just sit with a book, you can "вчити" (be studying) words. But if you know them by heart, you managed to successfully "вивчити" (master/memorize) them. The prefix "за-" is very important in a store. There you must not simply "платити" (be paying) money, but necessarily "заплатити" (pay off/complete payment) for the goods.* <!-- INJECT_ACTIVITY: quiz-find-partner --> [quiz, Find the Partner (Verb Matching), 8 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -474,7 +474,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -495,14 +562,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

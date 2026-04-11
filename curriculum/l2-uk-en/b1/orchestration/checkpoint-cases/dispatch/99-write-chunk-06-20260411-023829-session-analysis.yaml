@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-38-b6d8d288.json
+phase: write-chunk-06
+prompt_chars: 44798
+response_chars: 2379
+prompt_words: 6040
+response_words: 361
+sections:
+- name: header
+  start: 0
+  length: 410
+  fraction: 0.0092
+- name: skeleton
+  start: 410
+  length: 785
+  fraction: 0.0175
+- name: prior_summary
+  start: 1195
+  length: 3486
+  fraction: 0.0778
+- name: plan
+  start: 4681
+  length: 13804
+  fraction: 0.3081
+- name: wiki
+  start: 13633
+  length: 26185
+  fraction: 0.5845
+- name: output_spec
+  start: 44670
+  length: 128
+  fraction: 0.0029
+large_sections:
+- wiki
+directives_total: 3
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: Because they function like adjectives, they must agree with the noun they
+    modify in gender, number, and case.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: inject_activity
+  text: quiz-diagnostics-phase6
+  covered: false
+  coverage_note: marker missing

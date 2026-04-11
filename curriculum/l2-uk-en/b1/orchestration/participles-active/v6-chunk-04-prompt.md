@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-*(to blossom, to bloom)*. Суфікс випадає, і народжується прекрасне слово «**розквітлий**» *(blossomed)*. Якщо ви довго стояли на морозі, дієслово «**змерзнути**» *(to freeze)* перетвориться на дієприкметник «**змерзлий**» *(frozen)*. А якщо хліб довго лежав на столі, дієслово «**засохнути**» *(to dry up)* дасть нам форму «**засохлий**» *(dried up)*. Це просте випадання робить українське мовлення неймовірно плавним, ритмічним та приємним для слуху. Тепер давайте заглибимося в семантичний нюанс цих граматичних форм. Що саме вони означають і який прихований зміст несуть? Активні дієприкметники минулого часу завжди виражають **завершений стан** *(completed state)*, який настав у результаті якоїсь дії, що відбулася раніше. Предмет уже виконав цю дію, він змінився, і тепер ми просто описуємо його новий, фінальний статус. Розглянемо класичний осінній приклад: «**пожовклий листок**» *(a yellowed leaf)*. Це листок, який уже закінчив свій біологічний процес. Він пожовтів учора або тиждень тому, дія повністю завершилася, і зараз ми бачимо лише її незмінний наслідок. Контраст тут надзвичайно важливий. Якщо ви скажете «**жовтіючий листок**» *(a yellowing leaf)*, ви опишете незавершений процес, що триває саме зараз: листок ще зелений, але поступово, у цю хвилину, змінює свій колір. Або візьмемо слово «**зниклий**» *(disappeared)*. «**Зниклий собака**» *(a disappeared dog)* — це тварина, яка вже пропала, дія завершилась, і ми маємо справу з результатом цієї трагічної події. Цей акцент на завершеності робить ці слова ідеальним інструментом для опису наслідків. Як і всі інші дієприкметники в українській мові, активні дієприкметники минулого часу мають здатність повноцінно відмінюватися. Вони слухняно змінюють свої закінчення залежно від роду, числа та відмінка іменника, до якого вони належать у реченні. Гарна новина полягає в тому, що вам не потрібно вчити жодних нових чи складних правил відмінювання. Ці слова відмінюються абсолютно так само, як звичайні прикметники, що належать до так званої **твердої групи** *(hard group)*. Щоб ви могли впевнено використовувати їх у своєму письмі та усному мовленні, давайте розглянемо повну парадигму відмінювання на прикладі красивого слова «зів'ялий». Зверніть увагу на закінчення у різних формах. | Відмінок | Чоловічий рід (Він) | Жіночий рід (Вона) | Середній рід (Воно) | Множина (Вони) | | :--- | :--- | :--- | :--- | :--- | | **Називний (Хто? Що?)** | зів'ял**ий** | зів'ял**а** | зів'ял**е** | зів'ял**і** | | **Родовий (Кого? Чого?)** | зів'ял**ого** | зів'ял**ої** | зів'ял**ого** | зів'ял**их** | | **Давальний (Кому? Чому?)** | зів'ял**ому** | зів'ял**ій** | зів'ял**ому** | зів'ял**им** | | **Знахідний (Кого? Що?)** | зів'ял**ий** / зів'ял**ого** | зів'ял**у** | зів'ял**е** | зів'ял**і** / зів'ял**их** | | **Орудний (Ким? Чим?)** | зів'ял**им** | зів'ял**ою** | зів'ял**им** | зів'ял**ими** | | **Місцевий (На кому? На чому?)**| (на) зів'ял**ому** / зів'ял**ім**| (на) зів'ял**ій** | (на) зів'ял**ому** / зів'ял**ім**| (на) зів'ял**их** | Як ви можете бачити з цієї детальної таблиці, знахідний відмінок для чоловічого роду та множини традиційно залежить від того, чи є об'єкт живим (істота) чи неживим (неістота). Якщо ми кажемо про неживий предмет, наприклад «зів'ялий букет», форма збігається з називним відмінком: «я бачу зів'ялий букет». А місцевий відмінок чоловічого та середнього роду пропонує вам зручні паралельні форми на вибір, що додає вашому мовленню гнучкості та поетичності. <!-- INJECT_ACTIVITY: essay-response-nature -->
+колір просто зараз. Українська мова любить точність, тому для опису результату дії ми завжди обираємо минулий час. Ще один яскравий приклад — слово «зниклий» (від дієслова «зникнути»). Ми використовуємо його, щоб описати людину чи предмет, яких уже немає на місці. > *The semantic meaning of these participles is very clear: they always indicate a completely finished change of state. The object has already performed the action in the past, and now we only see its result. For example, «пожовклий листок» is a leaf that has already finished the process of changing color and has become yellow. This differs significantly from the form «жовтіючий», which would mean a leaf that is changing color right now. The Ukrainian language loves precision, so to describe the result of an action, we always choose the past tense. Another vivid example is the word «зниклий» (from the verb «зникнути»). We use it to describe a person or an object that is no longer in its place.* Because past active participles function syntactically like adjectives, they must decline to match the noun they modify in gender, number, and case. Fortunately, their declension paradigm is predictable and requires no new memorization. They follow the exact same pattern as regular adjectives belonging to the hard group (тверда група), such as «добрий» or «новий». This means they take the standard endings across all seven Ukrainian cases. Let us examine the complete declension paradigm using the participle «зів'ялий» (wilted) across masculine, feminine, neuter, and plural forms. | Відмінок (Case) | Чоловічий рід (m) | Жіночий рід (f) | Середній рід (n) | Множина (pl) | | :--- | :--- | :--- | :--- | :--- | | **Називний (N.)** | зів'ялий | зів'яла | зів'яле | зів'ялі | | **Родовий (G.)** | зів'ялого | зів'ялої | зів'ялого | зів'ялих | | **Давальний (D.)** | зів'ялому | зів'ялій | зів'ялому | зів'ялим | | **Знахідний (A.)** | зів'ялий/ого | зів'ялу | зів'яле | зів'ялі/их | | **Орудний (I.)** | зів'ялим | зів'ялою | зів'ялим | зів'ялими | | **Місцевий (L.)** | (на) зів'ялому/ім | (на) зів'ялій | (на) зів'ялому/ім | (на) зів'ялих | :::info **Граматична підказка** In the Accusative case (Знахідний відмінок) for masculine and plural forms, the ending depends on whether the noun is animate or inanimate. If you are describing a person, like «потерпілий» (a victim), use the Genitive ending («потерпілого»). For inanimate objects, like «опалий листок», use the Nominative ending («опалий»). ::: Notice how the feminine form takes «-ої» in the Genitive case and «-ою» in the Instrumental case, behaving exactly like a standard hard-stem adjective. The neuter form mirrors the masculine in almost all oblique cases, differing primarily in the Nominative and Accusative. When you encounter plural participles like «почорнілі» or «опалі» (fallen), they will reliably take «-их» in the Genitive and Locative cases, and «-ими» in the Instrumental. By treating these participles simply as regular hard-group adjectives, you can seamlessly integrate them into any sentence structure without having to second-guess the endings. <!-- INJECT_ACTIVITY: essay-response-nature -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -568,7 +568,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -581,14 +648,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

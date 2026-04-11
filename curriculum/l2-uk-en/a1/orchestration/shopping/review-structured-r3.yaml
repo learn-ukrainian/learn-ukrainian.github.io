@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module follows the `content_outline` perfectly. Dialogues match the
+    requested settings and situations (e.g., comparing prices, market transactions).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques found. Grammar forms (such as genitive
+    singular/plural forms like `молока`, `соку`, `помідорів`, `яблук`) are used correctly.
+    VESUM confirms the correct forms.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of the currency rules for numbers (1, 2-4, 5-0 and
+    teens) and clear explanation of the "hidden of" for quantity chunks (`літр молока`).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are integrated
+    naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 activity markers correspond directly to the plan's hints and test
+    what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Tone is warm and encouraging. The explanation of market diminutives (`картопелька`,
+    `яблучка`) is a fantastic cultural touch.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from the plan are present. Clean Docusaurus markdown.
+    The word count (1868) exceeds the target (1200).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The mention of Ukraine working to restore the historical `шаг` over the
+    imperial `копійка` is extremely accurate and up-to-date.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, feature appropriate polite formulas (`Дайте, будь
+    ласка`), and effectively model real-world interactions with correct math (40 +
+    35*2 = 110).
+findings: []

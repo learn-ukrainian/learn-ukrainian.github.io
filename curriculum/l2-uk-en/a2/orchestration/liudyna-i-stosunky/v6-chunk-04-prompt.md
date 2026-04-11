@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Ukrainian families, cousins are often as close as siblings. Now, we can use the adjectives we learned earlier to describe them completely. * Мій дядько — високий і дуже серйозний чоловік. *(My uncle is a tall and very serious man.)* * Моя тітка має світле волосся, вона дуже весела. *(My aunt has light hair, she is very cheerful.)* * Це мій двоюрідний брат, він надзвичайно працьовитий. *(This is my cousin, he is extremely hardworking.)* * У мене є багато родичів в Україні. *(I have many relatives in Ukraine.)* * Моя двоюрідна сестра — тиха, але дуже розумна людина. *(My cousin is a quiet, but very smart person.)* How do we act toward these people? To describe relationships, we use specific verbs of interaction. When we talk about helping or trusting someone, Ukrainian grammar requires the Dative case for the person receiving the action. For example, we use **допомагати** (to help) and **довіряти** (to trust) with the Dative. If we want to say we respect someone, we use the verb **поважати** (to respect) with the Accusative case. You will learn the full Dative case rules later, but for now, remember these common pronoun patterns: **мені** (to me) and **нам** (to us). * **Вона мені довіряє** свої таємниці. *(She trusts me with her secrets.)* * **Він нам завжди допомагає** в саду. *(He always helps us in the garden.)* * Я довіряю своєму другові. *(I trust my friend.)* * Ми дуже поважаємо нашого керівника. *(We highly respect our manager.)* * Хороший сусід завжди допомагає сусідам. *(A good neighbor always helps neighbors.)* * Батьки поважають мій вибір. *(Parents respect my choice.)* ### Читаємо українською (Reading Practice) Read this short dialogue where two friends look at some photos and discuss the people in them. Pay attention to how they describe relationships and character traits. > — **Оксана:** Хто це на фотографії? Це твій родич? *(Who is this in the photograph? Is this your relative?)* > — **Тарас:** Ні, це мій сусід і старий товариш, Ігор. Ми дружимо давно. *(No, this is my neighbor and old buddy, Ihor. We have been friends for a long time.)* > — **Оксана:** Який він? Він виглядає дуже серйозним. *(What is he like? He looks very serious.)* > — **Тарас:** Так, він серйозний, але дуже чуйний і добрий. Він завжди допомагає мені. *(Yes, he is serious, but very responsive and kind. He always helps me.)* > — **Оксана:** Це чудово, коли є такі знайомі. А поруч з ним — його сестра? *(It is great when there are such acquaintances. And next to him — is that his sister?)* > — **Тарас:** Ні, це його двоюрідна сестра, Марія. Я їй дуже довіряю. *(No, that is his cousin, Mariia. I trust her a lot.)* > — **Оксана:** Вона дуже симпатична і має гарні карі очі. *(She is very cute and has beautiful brown eyes.)* > — **Тарас:** І вона дуже працьовита. Ми всі її поважаємо. *(And she is very hardworking. We all respect her.)* <!-- INJECT_ACTIVITY: fill-in-adjective-agreement --> <!-- INJECT_ACTIVITY: group-sort-traits -->
+people who live in the same building or on the same street form a unique social circle. Людина, яка живе поруч із вами, — це сусід або сусідка. В Україні сусіди часто не просто живуть поруч, а активно спілкуються і допомагають одне одному. Мій сусід живе поруч, на першому поверсі. Він дуже привітний і чуйний чоловік. Ми часто зустрічаємося вранці і бажаємо одне одному гарного дня. У нашому будинку всі сусіди — це одна велика команда. > *The person who lives next to you is a neighbor (male or female). In Ukraine, neighbors often don't just live nearby, but actively communicate and help each other. My neighbor lives nearby, on the first floor. He is a very friendly and responsive man. We often meet in the morning and wish each other a good day. In our building, all the neighbors are one big team.* :::tip **Did you know?** — In Ukrainian apartment buildings, it is very common to know your neighbors well. People might borrow sugar or salt, help water the plants when someone is on vacation, or collectively take care of the yard. A good **сусід** is considered a blessing. ::: Beyond our friends and neighbors, our core support system is our family. Let's recap some family vocabulary and practice using the descriptive adjectives we learned earlier to talk about our relatives. Звісно, найважливіші люди — це наша родина. Ми можемо легко описувати наших родичів. У мене є впертий, але веселий дядько і дуже терпляча тітка. Мій двоюрідний брат — наполегливий студент, він живе в іншому місті. Усі мої родичі — це дуже працьовиті люди. Ми часто зустрічаємося на свята. > *Of course, the most important people are our family. We can easily describe our relatives. I have a stubborn but cheerful uncle and a very patient aunt. My cousin is a determined student; he lives in another city. All my relatives are very hardworking people. We often meet for holidays.* When we describe our relationships, we often focus on how people treat each other and what actions define their connection. To express this, we use specific verbs of interaction. Notice that some verbs, like "to trust" and "to help", preview a new grammatical pattern — the Dative case, which points to the receiver of the action. У хороших стосунках люди завжди підтримують одне одного. Часто наші стосунки залежать від характеру людини. Я довіряю своєму другові, тому що він щирий. Вона мені довіряє свої таємниці. Ми поважаємо наших батьків і старших родичів. Мій сусід нам завжди допомагає, коли ми маємо проблеми. Це показує, що ми маємо міцні стосунки з людьми навколо нас. > *In good relationships, people always support each other. Often, our relationships depend on a person's character. I trust my friend because he is sincere. She trusts me with her secrets. We respect our parents and older relatives. My neighbor always helps us when we have problems. This shows that we have strong relationships with the people around us.* <!-- INJECT_ACTIVITY: fill-in-adjective-agreement --> <!-- INJECT_ACTIVITY: group-sort-traits -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -514,7 +514,74 @@ This grammar topic is a hub that connects to several other key areas of Ukrainia
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -542,14 +609,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

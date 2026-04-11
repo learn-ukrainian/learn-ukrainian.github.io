@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Flawless mapping to the content outline. Incorporates the "day in my life"
+    vlog concept ("Снідаю теплою кашею", "їду на роботу трамваєм"). All 4 dialogue
+    situations and every single recommended vocabu
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Very strong overall, but contains two critical errors that must be patched.
+    "себе ви підводите" incorrectly teaches a Russian-style analytic reflexive (in
+    Ukrainian "підводити себе" means "to let ones
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The explanation of "відпочивати" never taking "-ся" is fantastic and anticipates
+    a very common learner error. The explanation of prefixes (за-, пере-, об-, до-)
+    is clear and effectively contextualized
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (розпорядок дня, хатні справи, обов'язки, співбесіда,
+    etc.) and recommended words (бутерброд, каша, велосипед, etc.) are integrated
+    smoothly in communicative contexts without feelin
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 required exercise markers are present, mapped correctly to the plan's
+    specs, and perfectly placed immediately following the grammatical/lexical concepts
+    they are meant to test.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Professional yet warm teacher persona. Transitions like "Давайте уважно
+    подивимося" and "Зверніть увагу" are perfectly balanced without resorting to generic
+    or gamified filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4700 (comfortably exceeding the 4000 target). All H2 headings
+    map cleanly to the plan. No trailing tags or markdown errors.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Brilliant decolonization points: explicitly teaches learners to avoid
+    the Russianisms *стирати and *пилесос. Captures modern Ukrainian gender-balanced
+    household dynamics naturally ("партнери намагають'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly authentic and rich in targeted grammar. Roommates
+    hurrying in the morning, polite requests between colleagues, and family chore
+    distribution all feature clear, distinct voices.
+findings: []

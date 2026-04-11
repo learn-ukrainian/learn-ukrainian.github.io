@@ -18,6 +18,14 @@
     "pre-verify": {
       "status": "complete",
       "ts": "2026-04-09T23:23:03.720918+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-10T22:40:44.338033+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T22:40:44.338182+00:00"
     }
   }
 }

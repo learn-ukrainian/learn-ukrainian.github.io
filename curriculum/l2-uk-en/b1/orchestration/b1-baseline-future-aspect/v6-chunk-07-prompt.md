@@ -27,7 +27,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-в майбутньому. Наприклад, ви можете сказати: «Взимку я завжди носитиму теплу шапку» або «Взимку я завжди буду носити теплу шапку». Це означає, що процес триватиме довго, ви робитимете це щодня. Отже, ми бачимо дуже чіткий граматичний контраст: одноразова дія з фінальним результатом («принесу») стоїть проти довгої звички або процесу («носитиму» або «буду носити»). Коли ви самостійно відмінюєте дієслова доконаного виду в простій формі, ви дуже часто зустрічатиметеся з фонетичними змінами. Це ті самі **чергування приголосних** *(consonant alternations)*, які ви вже добре знаєте з вивчення теперішнього часу на попередньому рівні. Якщо ви пам'ятаєте, як хитро змінюються звуки в теперішньому часі, то майбутній час доконаного виду зовсім не стане для вас проблемою. Насправді, це часто просто додавання нового префікса до вже знайомої вам форми. Згадайте дієслово **сидіти** *(to sit)*. У першій особі воно змінюється на «я сиджу». У доконаному виді це буде **посидіти** *(to sit for a while)*, і форма майбутнього часу звучатиме як «я посиджу». Аналогічно працює дієслово **летіти** *(to fly)*: «я лечу», а в майбутньому часі — «я полечу». Давайте подивимося на ще одне дуже корисне дієслово — **запросити** *(to invite)*. Це доконаний вид. У першій особі звук «с» закономірно змінюється на «ш»: «я запрошу». Але вже в другій особі повертається оригінальний звук: «ти запросиш», «він запросить». Проста форма майбутнього часу працює за абсолютно ідентичними правилами. Ще один надзвичайно важливий аспект граматики — це **зворотні дієслова** *(reflexive verbs)* у майбутньому часі. Вони завжди мають маленьку частку «-ся» або «-сь» у самому кінці. Як ця специфічна частка поводиться у наших трьох різних формах? У простій формі доконаного виду все дуже традиційно і звично: частка спокійно стоїть у самому кінці слова. Наприклад, візьмемо дієслово **повернутися** *(to return)*: ми кажемо «я повернуся», «ти повернешся», «вони повернуться». У складній формі недоконаного виду правило залишається точно таким самим. Зворотна частка завжди приєднується до самого кінця цього довгого слова: дієслово **повертатися** *(to be returning)* перетворюється на «я повертатимуся», «ти повертатимешся». Але найцікавіше і найважливіше відбувається у складеній формі недоконаного виду. Вона складається з двох окремих слів: «буду» та «повертатися». Запам'ятайте головне правило: частка «-ся» ніколи не відривається від основного дієслова і ніколи не стає між цими двома словами. Ви завжди кажете: «Я буду повертатися». Категорично не можна сказати «я будуся повертати» або «я повернуся буду». Частка надійно і міцно прикріплена до інфінітива наприкінці вашої конструкції. Тепер давайте практично подивимося, як природно всі ці різноманітні форми поєднуються в одному робочому контексті. Уявіть, що ви пишете важливий діловий **електронний лист** *(email)* своїм колегам. Правильне використання різних видів дієслова зробить ваш текст по-справжньому професійним, природним і дуже точним. Ви можете сміливо написати так: «Завтра вранці ми проведемо важливу зустріч. Ми будемо детально обговорювати наш новий великий **проєкт** *(project)*. Сподіваюся, що ми знайдемо гарне рішення». У цьому короткому, але змістовному повідомленні перше дієслово «проведемо» — це доконаний вид, який позначає конкретну заплановану подію. Наступне дієслово «будемо обговорювати» — це вже недоконаний вид, який яскраво показує тривалий, інтенсивний процес дискусії. І нарешті «знайдемо» — це знову доконаний вид, який повністю фокусується на фінальному, успішному результаті вашої зустрічі. <!-- INJECT_ACTIVITY: free-write-future-plans -->
+will do exactly the same thing when you add a prefix to make it perfective. You simply take the present tense conjugation pattern and attach the perfective prefix. **Я лечу на літаку.** — *I am flying on a plane.* **Я полечу на літаку.** — *I will fly on a plane.* **Я сиджу вдома.** — *I am sitting at home.* **Я посиджу вдома.** — *I will sit at home (for a while).* Так само поводяться й інші дієслова з чергуванням приголосних. Наприклад, дієслово «запросити» має типове чергування в першій особі однини. У майбутньому часі доконаного виду ми кажемо «я запрошу», змінюючи звук, але зберігаємо оригінальний кореневий приголосний в усіх інших особах: «ти запросиш», «вона запросить», «вони запросять». Це правило працює бездоганно і дуже полегшує вивчення нових слів: якщо ви знаєте теперішній час дієслова, ви автоматично знаєте просту форму майбутнього часу доконаного виду. Reflexive verbs require special attention in the future tense. The rule of thumb is that the reflexive particle always attaches to the very end of the main verb, no matter how long the word gets. In the simple perfective future, it attaches normally to the personal ending. In the synthetic imperfective future, the word becomes quite long because the particle attaches after the future suffix and the personal ending. **Я швидко повернуся.** — *I will return quickly. (Perfective)* **Я повертатимуся додому пізно.** — *I will be returning home late. (Synthetic imperfective)* Найбільше синтаксичних помилок виникає зі складеною формою недоконаного виду. Важливо завжди пам'ятати, що частка «-ся» ніколи не відривається від основного дієслова за жодних обставин. Вона залишається невіддільною частиною інфінітива, а допоміжне дієслово «бути» стоїть поруч як окреме слово. Ми кажемо: «Я буду повертатися», а не «Я будуся повертати» чи «Я повертатися буду». Дієслово «бути» змінює свою форму відповідно до особи, а основне дієслово разом із рефлексивною часткою назавжди залишається незмінним. :::info **Reflexive Particle Placement** When using the synthetic future form, notice how the word builds up layer by layer: base infinitive + future suffix + personal ending + reflexive particle. For example: **зустрічати** + **му** + **ся** = **зустрічатимуся**. ::: To see how seamlessly these aspects weave together in real life, let us look at a professional context, such as drafting a formal business email. We naturally use perfective verbs to state clear goals and deliver results, while we rely on imperfective verbs to describe the ongoing processes and meetings required to reach those milestones. Шановні колеги! Завтра ми проведемо важливу стратегічну зустріч. Ми будемо обговорювати наш новий проект протягом двох годин. Я щиро сподіваюся, що ми швидко знайдемо ефективне рішення для цієї проблеми. Після завершення нашої дискусії я обов'язково напишу детальний звіт і надішлю його всім учасникам електронною поштою. > *Dear colleagues! Tomorrow we will hold an important strategic meeting. We will be discussing our new project for two hours. I sincerely hope that we will quickly find an effective solution to this problem. After our discussion concludes, I will definitely write a detailed report and send it to all participants by email.* <!-- INJECT_ACTIVITY: free-write-future-plans -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -600,7 +600,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -613,14 +680,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

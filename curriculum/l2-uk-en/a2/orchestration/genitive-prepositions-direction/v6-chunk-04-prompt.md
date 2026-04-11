@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-new documents by tomorrow.)* — Цей концерт на площі триватиме до десятої. *(This concert on the square will last until ten.)* ::: To define a complete time range, you pair **до** *(to/until)* with **з** or **від** *(from)*. This creates the very common structure «from [start time] to [end time]». It is important to know that both the starting point and the ending point must be in the Genitive case. Both **з** and **від** are correct and interchangeable here. For instance, "from morning to evening" becomes **з ранку до вечора**. When talking about hours or days of the week, the rule remains exactly the same: both words take Genitive endings to show the start and the finish of the duration. :::note Проміжки часу (Time Ranges) **ранок, вечір** → **з ранку до вечора** *(from morning to evening)* **понеділок, п'ятниця** → **з понеділка до п'ятниці** *(from Monday to Friday)* **дев'ята, шоста** → **з дев'ятої до шостої** *(from nine to six)* ::: :::tip Читаємо українською — Наш новий офіс працює з понеділка до п'ятниці. *(Our new office works from Monday to Friday.)* — Я в університеті кожного дня з дев'ятої до шостої. *(I am at the university every day from nine to six.)* — Лікар приймає пацієнтів від другої до п'ятої години. *(The doctor sees patients from two to five o'clock.)* — Ми гуляли в парку з ранку до пізнього вечора. *(We walked in the park from morning to late evening.)* ::: <!-- INJECT_ACTIVITY: match-up-functions --> You will hear **до** used in many everyday fixed phrases. The most famous one is **до завтра**, which literally means "until tomorrow" but is used as a farewell, just like "see you tomorrow". You will also see it combined with words like **початок** *(start)* and **кінець** *(end)*. To say "by the end", you use the Genitive form **до кінця**. The item that is ending also takes the Genitive case, creating a natural chain of words: **до кінця липня** *(by the end of July)* or **до кінця тижня** *(by the end of the week)*. Remember that words like **місяць** *(month)* and **тиждень** *(week)* take the soft **-я** ending in the Genitive case: **місяця**, **тижня**. Do not confuse **до** *(until/by)* with **перед** *(before, immediately prior)* or **після** *(after)*. Use **до** when describing a clear limit. :::note Сталі вирази (Fixed Expressions) **початок уроку** *(start of lesson)* → **до початку уроку** *(by the start of the lesson)* **кінець літа** *(end of summer)* → **до кінця літа** *(by the end of summer)* **кінець місяця** *(end of month)* → **до кінця місяця** *(by the end of the month)* ::: > — **Олена:** Коли ти закінчиш цей складний проєкт? *(When will you finish this complicated project?)* > — **Максим:** Я зроблю все до кінця тижня. *(I will do everything by the end of the week.)* > — **Олена:** Добре. Тоді ми поговоримо про це в понеділок. *(Good. Then we will talk about it on Monday.)* > — **Максим:** Так, звичайно. До завтра! *(Yes, of course. See you tomorrow!)* > — **Олена:** До зустрічі! *(See you!)*
+шостої вечора. Концерт почнеться скоро, тому ми маємо бути там до сьомої. > *You must arrive at the station by eight o'clock. The restaurant takes orders only until nine. I have to finish this difficult work by six in the evening. The concert will start soon, so we have to be there by seven.* To describe a duration with a clear start and end point, we pair **до** with the prepositions **від** or **з** (both meaning "from"). This creates the "from... to..." structure. It is important to remember that both the starting point and the ending point must be in the Genitive case. Цей великий супермаркет працює з восьмої ранку до десятої вечора. Мій старший брат навчається в університеті з понеділка до п'ятниці. Ми плануємо нашу відпустку з першого до двадцятого серпня. Лікар приймає пацієнтів від дев'ятої до третьої години. > *This large supermarket is open from eight in the morning to ten in the evening. My older brother studies at the university from Monday to Friday. We are planning our vacation from the first to the twentieth of August. The doctor sees patients from nine to three o'clock.* > — **Олена:** Коли працює ваша нова бібліотека? *(When is your new library open?)* > — **Максим:** Вона відкрита з вівторка до суботи. *(It is open from Tuesday to Saturday.)* > — **Олена:** А в неділю ви працюєте? *(And do you work on Sunday?)* > — **Максим:** Ні, ми відпочиваємо з неділі до понеділка. *(No, we rest from Sunday to Monday.)* <!-- INJECT_ACTIVITY: match-up-functions --> The preposition **до** appears in many common daily phrases and fixed expressions related to time. You will hear these constantly in natural conversations. Some function as polite farewells, while others indicate events happening prior to something else. Дякую за приємний вечір, до завтра! Ми маємо знайти наші місця до початку вистави. Студенти дуже нервують до екзамену. Я не хочу нічого вирішувати до кінця цього складного тижня. > *Thank you for the pleasant evening, see you tomorrow! We have to find our seats before the start of the performance. The students are very nervous before the exam. I do not want to decide anything until the end of this difficult week.* Notice that sometimes **до** translates closely to "before" in English, especially when referring to the start of an event (like **до початку**). However, it has a slightly different nuance than the explicit prepositions **перед** (before) and **після** (after). While **перед** takes the Instrumental case and focuses on the position right in front of an event, **до** focuses on the buildup towards that time limit. Ми завжди п'ємо гарячу каву перед роботою. Але цей звіт треба написати до початку зустрічі. Після роботи ми підемо гуляти в парку. Він має закінчити всі домашні справи до вечора. > *We always drink hot coffee before work. But this report needs to be written by the start of the meeting. After work we will go for a walk in the park. He has to finish all domestic chores by the evening.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -478,7 +478,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -505,14 +572,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

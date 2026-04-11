@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-34-57708b1d.json
+phase: write-chunk-06
+prompt_chars: 46333
+response_chars: 3537
+prompt_words: 6335
+response_words: 511
+sections:
+- name: header
+  start: 0
+  length: 422
+  fraction: 0.0091
+- name: skeleton
+  start: 422
+  length: 900
+  fraction: 0.0194
+- name: prior_summary
+  start: 1322
+  length: 3704
+  fraction: 0.0799
+- name: plan
+  start: 5026
+  length: 14555
+  fraction: 0.3141
+- name: wiki
+  start: 14720
+  length: 26624
+  fraction: 0.5746
+- name: output_spec
+  start: 46205
+  length: 128
+  fraction: 0.0028
+large_sections:
+- wiki
+directives_total: 3
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: '- "Agreement: ordinal + noun must agree in gender, number, case.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: reading-ordinals
+  covered: false
+  coverage_note: marker missing

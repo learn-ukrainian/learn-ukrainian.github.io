@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-declension)*, які означають імена або малят тварин. Ми кажемо «два поросяти» або «три імені». Третя велика група охоплює числівники від «п'яти» до «двадцяти», число «тридцять» та всі круглі десятки. Після цих чисел іменник завжди стоїть у формі **родового відмінка множини** *(genitive plural)*. Це правило працює без винятків: «п'ять озер», «десять метрів», «сорок будинків», «сто книжок». Нарешті, як працюють великі складені числівники, наприклад, двадцять п'ять або сорок два? Правило дуже логічне: форму іменника визначає лише **останнє слово** *(last word)* у числі. Порівняйте: «сорок один студент» (однина), «сорок два студенти» (називний множини) та «сорок п'ять студентів» (родовий множини). <!-- INJECT_ACTIVITY: reading-numeral-agreement --> ## 2. Відмінювання кількісних числівників Тепер розглянемо, як змінюються кількісні числівники за відмінками. Числівник **«один»** *(one)* відмінюється точно так само, як звичайний прикметник твердої групи. Ми кажемо: «одного стола», «одному другу», «одним словом». Наступна група — це числівники **«два»** *(two)*, **«три»** *(three)* та **«чотири»** *(four)*. У **непрямих відмінках** *(oblique cases)* вони мають дуже схожі закінчення. Наприклад, у родовому та місцевому відмінках ми використовуємо закінчення -ох: **«двох»** *(of two)*, **«трьох»** *(of three)*, **«чотирьох»** *(of four)*. У давальному відмінку з'являється закінчення -ом: «двом», «трьом», «чотирьом». Порівняйте приклади: «У кімнаті немає двох столів» та «Ми маємо допомогти чотирьом друзям». В орудному відмінку форми будуть такими: «двома», «трьома», «чотирма» (зверніть увагу на відсутність м'якого знака). Числівники від **«п'яти»** *(five)* до **«двадцяти»** *(twenty)*, а також число **«тридцять»** *(thirty)* мають іншу систему відмінювання. Вони змінюються за правилами іменників третьої відміни, таких як «ніч» *(night)* або «піч» *(oven)*. У родовому, давальному та місцевому відмінках вони мають закінчення -и: «п'яти», «десяти», «двадцяти». Особливу увагу варто звернути на орудний відмінок. Тут існують дві паралельні форми, і обидві є абсолютно правильними. Ви можете використовувати закінчення -ма («п'ятьма», «шістьма») або закінчення -ома («п'ятьома», «шістьома»). Наприклад, ви можете сказати: «Я маю зустрітися з десятьма колегами» або «Я маю зустрітися з десятьома колегами» *(I have to meet with ten colleagues)*. Складні числівники, які позначають десятки від **«п'ятдесяти»** *(fifty)* до **«вісімдесяти»** *(eighty)*, мають дуже важливе правило. В українській мові у цих словах відмінюється **лише друга частина** *(only the second part)*. Корінь «п'ят-» або «шіст-» залишається незмінним. Наприклад, у родовому відмінку ми кажемо «п'ятдесяти» (змінюється тільки «-десяти»), у давальному — «п'ятдесятьом», а в орудному — «п'ятдесятьма». Ця група різко контрастує з числівниками **«сорок»** *(forty)*, **«дев'яносто»** *(ninety)* та **«сто»** *(one hundred)*. Для них діє надзвичайно просте правило: у всіх непрямих відмінках ці слова мають закінчення -а. Тому правильно казати: «немає сорока гривень», «додати до дев'яноста відсотків», «керувати ста людьми». Найбільше труднощів зазвичай викликають великі **складені числівники** *(compound numerals)* у непрямих відмінках. Літературна норма української мови має чітке правило: у таких числах відмінюються всі слова. Наприклад, якщо ви хочете сказати «з двадцятьма п'ятьма студентами» *(with twenty-five students)* в орудному відмінку, ви повинні змінити і слово «двадцять», і слово «п'ять». Аналогічно в родовому відмінку: «немає двадцяти п'яти студентів». В **усному мовленні** *(spoken language)* українці часто спрощують ці конструкції, відмінюючи лише останнє слово. Проте для офіційних документів, новин та іспитів вимагається суворе дотримання літературної норми. Там кожна частина складеного числа повинна стояти у правильному відмінку. <!-- INJECT_ACTIVITY: error-correction-declension -->
+— *Forty houses.* У складених числівниках форму іменника визначає лише останнє слово. Якщо число закінчується на одиницю, іменник стоїть в однині. Якщо на два, три чи чотири — у називному відмінку множини. А якщо число закінчується на п'ять і більше, ми використовуємо родовий відмінок множини. Тому ми говоримо «сорок один студент», «сорок два студенти» та «сорок п'ять студентів». <!-- INJECT_ACTIVITY: reading-numeral-agreement --> ## 2. Відмінювання кількісних числівників (~750 слів) The numeral one behaves exactly like a regular adjective. It changes endings to match the noun in gender, number, and case. **Він не має одного стола.** — *He does not have one table.* **Вона працює з одним другом.** — *She works with one friend.* The numerals two, three, and four share a distinct pattern. They take **-ох** in the genitive and locative, **-ом** in the dative, and **-ма** in the instrumental. Note that the instrumental form for four is **чотирма**, without the soft sign. У нашій аудиторії немає двох великих столів. Я хочу допомогти цим чотирьом новим друзям. Ми довго говорили про тих трьох студентів. > *There are not two large tables in our classroom. I want to help these four new friends. We talked for a long time about those three students.* Numbers from five to twenty, and thirty, decline like third declension feminine nouns such as **ніч** (night) and **піч** (oven). In the genitive, dative, and locative cases, they take the ending **-и**. In the instrumental case, you have two parallel forms. You can use either the shorter **-ма** or the longer **-ома**. Both are completely natural, but the longer form is slightly more common in formal writing. Сьогодні директор зустрічається з десятьма колегами. Вони обговорять проєкт з цими шістьома фахівцями. У мене залишилося близько дев'яти вільних хвилин. > *Today the director is meeting with ten colleagues. They will discuss the project with these six specialists. I have about nine free minutes left.* :::note **Quick tip** — When numbers are combined with prepositions, the case is determined by the preposition. The phrase **з десятьма** is in the instrumental case because of the preposition **з** (with). ::: The numbers from fifty to eighty are complex numerals. The critical rule is that both the first and second parts must change their endings. In the instrumental case, you can use the shorter or longer form. **Я маю справу з п'ятдесятьма людьми.** — *I am dealing with fifty people.* In sharp contrast, the numbers forty, ninety, and one hundred are incredibly simple. In all oblique cases, they simply take the ending **-а**. **Нам не вистачає сорока гривень.** — *We are short forty hryvnias.* **Він живе за сто кілометрів звідси.** — *He lives one hundred kilometers from here.* For compound numerals consisting of multiple words, the strict literary rule is that every single word must decline. **Вона працює з двадцятьма п'ятьма студентами.** — *She works with twenty-five students.* While native speakers often simplify this in everyday speech by declining only the last word, full declension is strictly required in writing. <!-- INJECT_ACTIVITY: error-correction-declension -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -546,7 +546,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -559,14 +626,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

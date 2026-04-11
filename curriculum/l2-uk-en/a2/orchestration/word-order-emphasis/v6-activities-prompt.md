@@ -108,7 +108,6 @@ required:
 
 Оленка запитує про посуд. Для Марійки посуд — це вже відома інформація, тобто **тема** *(theme)*. Тому слово «посуд» стоїть на початку речення. А слово «Тарас» — це нова інформація, або **рема** *(rheme)*. Тому це слово стоїть у кінці речення. Так само працює слово «підлога».
 
-
 ## Тема і рема: що відоме, що нове?
 
 Кожне речення має дві частини. Це те, про що ми говоримо, і що повідомляємо. У лінгвістиці їх називають **тема** *(theme)* і **рема** *(rheme)*. Тема — це відома інформація, яку співрозмовник уже знає. Рема — це нова інформація, або **фокус повідомлення** *(focus of the message)*. Українське речення зазвичай рухається від відомого до нового. Ми починаємо зі знайомих фактів і закінчуємо головною новиною.
@@ -122,7 +121,6 @@ Why can Ukrainian do this so effortlessly? Відповідь ховається
 There is also a psychological reason for this order. Люди інтуїтивно ставлять нові або довгі поняття в кінець речення. Це допомагає співрозмовнику легше сприймати інформацію. Спочатку людина чує знайомі слова, які готують ґрунт. Потім вона отримує свіжий **акцент** *(accent)*. Такий **порядок слів** *(word order)* робить українське мовлення виразним інструментом.
 
 <!-- INJECT_ACTIVITY: quiz-identify-rheme --> [quiz, Identify the rheme (new information) based on the context/question, 8 items]
-
 
 ## Прямий порядок слів
 
@@ -139,7 +137,6 @@ There is also a psychological reason for this order. Люди інтуїтивн
 <!-- INJECT_ACTIVITY: match-question-answer --> [match-up, Match questions with the correctly word-ordered answers, 8 items]
 
 <!-- INJECT_ACTIVITY: group-sort-neutral-marked --> [group-sort, Sort sentences into neutral word order vs. marked/emphatic order, 8 items]
-
 
 ## Діалог 2 та Інверсія для контрасту
 
@@ -161,7 +158,6 @@ In Ukrainian, you can freely move the object to the front of the sentence. Ми 
 
 <!-- INJECT_ACTIVITY: fill-in-reorder-words-to-create-the-correct-emphasis-for-a-given-context -->
 
-
 ## Порядок слів у реальному мовленні
 
 Уявіть звичайну розмову. Ми постійно передаємо нову інформацію. Як це працює на практиці? Дуже часто рема одного речення стає темою для наступного. Це наче ланцюжок. This chain structure helps speakers track what is already known and what is new. Подивіться на цей короткий діалог:
@@ -173,12 +169,13 @@ In Ukrainian, you can freely move the object to the front of the sentence. Ми 
 
 Тепер «парк» — це вже відома інформація. Це тема. Тому Максим ставить ці слова на початок свого питання. А нова інформація (що саме Андрій там робив) буде в кінці. Ця ланцюжкова структура робить розмову дуже логічною.
 
+Let's do a quick reading practice to see this in action. Read this short text: «На вулиці йшов дощ. Цей дощ не припинявся весь день. Раптом у двері постукали. Увійшов незнайомець». Why did the author choose this specific word order? «На вулиці йшов дощ» uses inversion to set the scene. «Цей дощ» moves to the front in the next sentence because it's now the theme (known info). «У двері постукали» puts the verb last to emphasize the sudden action. And «Увійшов незнайомець» uses verb-first inversion to introduce a brand new character. Analyzing these choices helps you understand the flow of the language!
+
 Коли ми говоримо, ми використовуємо не тільки порядок слів. Ми також використовуємо голос. Це називається **логічний наголос** *(logical stress)*. Ми робимо голос сильнішим на найважливішому слові. Usually, logical stress naturally falls on the rheme at the end of the sentence. But when we use inversion, we combine both tools. Ми змінюємо порядок слів і додаємо інтонацію. Наприклад, ви хочете підкреслити свою довіру до конкретної людини. Ви кажете: «Тобі я вірю». Слово «тобі» стоїть на початку. І ви також виділяєте його голосом. By moving the object to the front and stressing it with your voice, you create a powerful contrast. Цей подвійний **акцент** *(emphasis)* робить ваші емоції дуже зрозумілими. Українці постійно використовують цей прийом у щоденному спілкуванні.
 
 Є ще один дуже важливий **шаблон** *(template)*. Уявіть, що ви розповідаєте історію. Вам потрібно представити нового героя або нову подію. Як ви це зробите? In English, you would use "There is..." or just Subject + Verb ("A teacher entered"). В українській мові ми використовуємо інверсію. Ми ставимо дієслово перед підметом. Ми кажемо: «Увійшов старий вчитель» *(An old teacher entered)*. Чому ми не кажемо «Старий вчитель увійшов»? Тому що поява вчителя — це головна новина. When introducing a brand new subject into the narrative, the subject itself is the rheme, so it goes last. Ви часто почуєте такі фрази: «Прийшла весна» *(Spring came)*, «Почалася злива» *(A downpour started)*, «Настала ніч» *(Night fell)*. Це не просто художній стиль. Це найприродніший спосіб повідомити співрозмовнику про щось нове і раптове. Тепер ви знаєте, як зробити свою розповідь справді українською!
 
 <!-- INJECT_ACTIVITY: error-correction-fix-sentences-where-word-order-creates-unintended-emphasis -->
-
 
 ## Підсумок
 
@@ -188,7 +185,7 @@ First, you must understand the difference between theme and rheme. Чи розу
 
 Second, adjectives and nouns have a strict relationship. Що трапиться, якщо прикметник поставити після іменника? It is no longer just a simple modifier. Він відразу стане присудком. Наприклад, фраза «Холодний вітер» означає просто "a cold wind." Але речення «Вітер холодний» означає "The wind is cold." Це вже повна і самостійна думка.
 
-Third, fronting is your tool for contrast. Для чого виносити об'єкт на початок речення? We do this to create focus or a strong contrast. Коли ви кажете «Каву я вже пив», ви виділяєте саме слово «кава». You show that you drank the coffee, not the tea or juice.
+Third, fronting is your tool for contrast. Для чого виносити додаток на початок речення? We do this to create focus or a strong contrast. Коли ви кажете «Каву я вже пив», ви виділяєте саме слово «кава». You show that you drank the coffee, not the tea or juice.
 
 Finally, word order helps with numbers. Як виразити приблизну кількість за допомогою порядку слів? Якщо ви ставите числівник перед іменником, ви називаєте абсолютно точну кількість. Наприклад, «П'ять кілометрів» — це рівно п'ять. Але якщо ви ставите іменник перед числівником, ви говорите про приблизну кількість. Фраза «Кілометрів п'ять» означає "about five kilometers."
 

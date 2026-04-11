@@ -1,6 +1,6 @@
 # Build Summary: genitive-prepositions-direction (A2)
 
-Generated: 2026-04-07 22:30
+Generated: 2026-04-11 02:09
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-07 22:30
 | pre-verify | complete | 2026-04-07 20:01:23 |
 | write | complete | 2026-04-07 20:08:27 |
 | exercises | complete | 2026-04-07 20:08:27 |
-| activities | complete | 2026-04-07 20:17:59 |
+| activities | complete | 2026-04-11 00:05:39 |
 | verify-exercises | complete | 2026-04-07 20:17:59 |
 | annotate | complete | 2026-04-07 20:17:59 |
 | vocab | complete | 2026-04-07 20:22:07 |
 | enrich | complete | 2026-04-07 20:22:07 |
 | verify | complete | 2026-04-07 20:22:07 |
-| review | complete | 2026-04-07 20:30:37 |
 | stress | complete | 2026-04-07 20:30:37 |
-| publish | complete | 2026-04-07 20:30:39 |
+| publish | complete | 2026-04-11 00:09:47 |
+| audit | complete | 2026-04-11 00:09:47 |
 
 ## Reviews
 
@@ -36,16 +36,23 @@ Generated: 2026-04-07 22:30
 | skeleton | gemini (auto) | 224s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 346s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 226s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
 | vocab | gemini (auto) | 242s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 510s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 26s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 64s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 138s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 121s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`

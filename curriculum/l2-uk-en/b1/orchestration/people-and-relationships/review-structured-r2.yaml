@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'The module completely skips Section 6 «Опис людини: як писати портрет».
+    It omits the composition structure (Зачин, основна частина, кінцівка), the artistic
+    devices (епітети, порівняння, зменшувально-п'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Found two distinct calques («давайте розглянемо», «приймати рішення»)
+    and one instance of awkward phrasing («звертаємо першу увагу»). The rest of the
+    Ukrainian text is grammatically correct and correc
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'CRITICAL FLAW: The self-check at the end asks the learner to write a
+    text «обов''язково використовуючи правильну тричастинну структуру шкільного твору-опису
+    (зачин, основна частина, кінцівка)». This st'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Most required and recommended vocabulary is covered beautifully in context.
+    However, the required term «портретна деталь» and the recommended term «кохання»
+    are missing entirely.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: 'Four of the six `<!-- INJECT_ACTIVITY: -->` markers are well-placed.
+    However, the `free-write` and `role-play` markers are missing, causing the pipeline
+    to lose these exercises.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent tone. The writer acts as an encouraging teacher and provides
+    beautiful, culturally rooted explanations (e.g., explaining how «внутрішній світ»
+    reflects in «зовнішність»).
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: The word count is 3628 (below the 4000 target). Section 6 is entirely
+    missing, and the Section 7 H2 header is missing.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Flawless. Explains the profound cultural connection between «рід», «родина»,
+    and «Батьківщина», and correctly outlines Ukrainian family trees (e.g., свекруха
+    vs теща).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue at the Vinnytsia wedding is fantastic. It features natural
+    multi-turn conversation with named speakers and culturally appropriate introductions.
+findings: []

@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T22-57-a3ecb29a.json
+phase: write-chunk-05
+prompt_chars: 28596
+response_chars: 1509
+prompt_words: 4068
+response_words: 234
+sections:
+- name: header
+  start: 0
+  length: 445
+  fraction: 0.0156
+- name: skeleton
+  start: 445
+  length: 470
+  fraction: 0.0164
+- name: prior_summary
+  start: 915
+  length: 3151
+  fraction: 0.1102
+- name: plan
+  start: 4066
+  length: 10320
+  fraction: 0.3609
+- name: wiki
+  start: 8851
+  length: 14082
+  fraction: 0.4924
+- name: output_spec
+  start: 28468
+  length: 128
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 3
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: error-correction, focus on fixing incorrect aspect choices like *Він щодня
+    зробив вправи*, 6 items
+  covered: false
+  coverage_note: marker missing

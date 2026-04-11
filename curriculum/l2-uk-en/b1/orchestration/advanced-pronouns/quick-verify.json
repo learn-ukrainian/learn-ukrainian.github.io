@@ -6,13 +6,8 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: питально-відносний (interrogative-relative)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 6 exercise(s) but content has 4"
+      "message": "Missing 2/10 required vocab: питально-відносний (interrogative-relative), неозначений (indefinite — хтось, будь-хто)"
     }
   ],
-  "timestamp": "2026-04-09T21:15:58.741215+00:00"
+  "timestamp": "2026-04-11T00:18:05.312325+00:00"
 }

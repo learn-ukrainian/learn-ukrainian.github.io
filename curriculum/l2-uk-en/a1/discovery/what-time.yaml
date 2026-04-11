@@ -1,0 +1,26 @@
+discovered_at: '2026-04-10T22:21:35.397704+00:00'
+error: null
+query_keywords:
+- What Time?
+- Діалоги (Dialogues)
+- Котра година? (What Time Is It?)
+- О котрій? (At What Time?)
+- Підсумок — Summary
+- Ask and answer "What time is it?" (Котра година?)
+- Use "at" + time (о + locative as chunk — no case grammar)
+- година
+- котра
+- перша, друга, третя
+- ранок
+- вечір
+- день
+- ніч
+- четверта, п'ята, шоста
+- сьома, восьма, дев'ята
+- десята, одинадцята, дванадцята
+- пів
+- чверть
+- опівдні
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

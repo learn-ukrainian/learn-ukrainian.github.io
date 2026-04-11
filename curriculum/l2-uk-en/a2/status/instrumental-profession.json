@@ -1,0 +1,59 @@
+{
+  "module": "instrumental-profession",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:49:40.915148Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:39:30.742418Z",
+    "meta": null,
+    "activities": "2026-04-11T00:39:31.429901Z",
+    "vocabulary": "2026-04-07T23:51:38.723910Z",
+    "research": null,
+    "plan": "2026-04-04T22:04:59.963117Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2593/2000 (raw: 2652) | engagement: 0/3"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "7/0 | density: 1 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "47/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

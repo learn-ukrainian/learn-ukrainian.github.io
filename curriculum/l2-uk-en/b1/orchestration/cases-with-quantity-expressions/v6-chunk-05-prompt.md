@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-гривень», «додати до дев'яноста відсотків», «керувати ста людьми». Найбільше труднощів зазвичай викликають великі **складені числівники** *(compound numerals)* у непрямих відмінках. Літературна норма української мови має чітке правило: у таких числах відмінюються всі слова. Наприклад, якщо ви хочете сказати «з двадцятьма п'ятьма студентами» *(with twenty-five students)* в орудному відмінку, ви повинні змінити і слово «двадцять», і слово «п'ять». Аналогічно в родовому відмінку: «немає двадцяти п'яти студентів». В **усному мовленні** *(spoken language)* українці часто спрощують ці конструкції, відмінюючи лише останнє слово. Проте для офіційних документів, новин та іспитів вимагається суворе дотримання літературної норми. Там кожна частина складеного числа повинна стояти у правильному відмінку. <!-- INJECT_ACTIVITY: error-correction-declension --> ## 3. Збірні числівники: Коли і як? В українській мові існує особлива група чисел — **збірні числівники** *(collective numerals)*. Це такі слова, як **«двоє»** *(two of them)*, **«троє»** *(three of them)*, **«четверо»** *(four of them)*. Вони передають семантику цілісності: ми сприймаємо кілька об'єктів як єдину, неподільну групу. Ці форми утворюються від кількісних числівників. Найчастіше ми використовуємо збірні числа від двох до двадцяти (наприклад, п'ятеро, десятеро, двадцятеро), а також слово **«тридцятеро»** *(thirty of them)*. Більші числа таких форм не мають. Цікаво, що ці слова надають мовленню дуже природного, автентичного українського звучання. Коли саме ми використовуємо ці слова? Існують чіткі правила їхньої сполучуваності. Найчастіше збірні числівники поєднуються з іменниками **чоловічого роду** *(masculine gender)*, які означають осіб або тварин. Ми кажемо: «двоє хлопців», «троє коней», «п'ятеро горобців». Друга велика група — це слова, які означають дітей та малят тварин (іменники **четвертої відміни** *(fourth declension)*). Абсолютно природно звучить: «троє дітей», «семеро немовлят», «двоє ягнят» або «п'ятеро поросят». Збірні числівники мають виразний відтінок **розмовного стилю** *(spoken style)*. В офіційних документах їх використовують рідше, але в живій розмові чи художньому тексті вони є незамінними. Особливо важливо використовувати збірні числівники з іменниками, які мають **лише форму множини** *(pluralia tantum)*. До таких слів належать назви парних предметів або збірних понять. Ми не можемо сказати «два ножиці» або «три двері», бо ці слова не мають форми однини для побудови правильної граматичної конструкції. Тому ми використовуємо збірні форми: **«двоє ножиць»** *(two pairs of scissors)*, **«троє дверей»** *(three doors)*, **«четверо саней»** *(four sleds)*, **«п'ятеро воріт»** *(five gates)*. Це єдиний граматично правильний спосіб порахувати такі предмети від двох до чотирьох. Щоб ваше мовлення не містило помилок, варто запам'ятати суворі заборони. Збірні числівники **ніколи не вживаються** *(are never used)* з іменниками жіночого роду. Сказати «двоє дівчат» чи «троє жінок» — це груба помилка. Правильно казати лише «дві дівчини» та «три жінки». Єдиний виняток для жіночого роду — це слово **«обидві»** *(both)*. Також збірні форми не можна поєднувати з **неістотами** *(inanimate objects)* чоловічого роду. Ми не можемо сказати «двоє столів» або «троє комп'ютерів», правильно лише «два столи» та «три комп'ютери». Правило узгодження для цієї групи дуже просте і не має винятків. Після всіх збірних числівників іменник завжди стоїть у формі **родового відмінка множини** *(genitive plural)*. Порівняйте: кількісний числівник вимагає «два друзі» (називний множини), а збірний — «двоє друзів» (родовий множини). Інші приклади: «четверо коней», «п'ятеро вікон», «десятеро учнів». <!-- INJECT_ACTIVITY: match-up, З’єднати числівники з відповідними іменниками, пояснюючи вибір -->
+numerals consisting of multiple words, the strict literary rule is that every single word must decline. **Вона працює з двадцятьма п'ятьма студентами.** — *She works with twenty-five students.* While native speakers often simplify this in everyday speech by declining only the last word, full declension is strictly required in writing. <!-- INJECT_ACTIVITY: error-correction-declension --> ## 3. Збірні числівники: Коли і як? (~650 слів) Українська мова має особливу групу слів для опису кількості — збірні числівники. Ми використовуємо їх, коли хочемо показати групу людей або предметів як одне неподільне ціле. Наприклад, слова «двоє», «троє» або «четверо» підкреслюють єдність цієї групи. Збірні числівники можна утворити від чисел від двох до двадцяти, а також від числа тридцять. Так з'являються форми «п'ятеро», «десятеро», «двадцятеро» і навіть «тридцятеро». > *The Ukrainian language has a special group of words to describe quantity — collective numerals. We use them when we want to show a group of people or objects as one indivisible whole. For example, the words "двоє", "троє", or "четверо" emphasize the unity of this group. Collective numerals can be formed from numbers from two to twenty, as well as from the number thirty. This is how forms like "п'ятеро", "десятеро", "двадцятеро", and even "тридцятеро" appear.* Collective numerals are highly characteristic of spoken Ukrainian and literature. They add a natural, authentic flavor to your speech. We use them primarily with masculine nouns that denote people or animals. For instance, you might say **двоє хлопців** (two boys) to emphasize the group. They are also the standard choice when talking about children or baby animals, such as **троє дітей** (three children). Another crucial category for collective numerals is nouns that only exist in the plural form, known as pluralia tantum. You cannot use standard numbers like **два**, **три**, or **чотири** with these words. Instead, you must use collective numerals to count them. Therefore, we say **двоє ножиць** (two pairs of scissors) and **троє дверей** (three doors). Using regular numbers here would be a grammatical mistake. Збірні числівники мають суворі граматичні обмеження. Їх ніколи не можна використовувати з іменниками жіночого роду. Вираз «двоє дівчат» є граматичною помилкою, правильно говорити тільки «дві дівчини» або «три жінки». Єдиним винятком є слово «обидві», яке спеціально створене для жіночого роду. Також збірні числівники заборонено вживати з неістотами чоловічого роду. Ми використовуємо звичайні числа для предметів і кажемо «два столи» чи «три комп'ютери», але ніколи не «двоє столів». The agreement for collective numerals is very straightforward. In the nominative case, they always require the noun to be in the genitive plural. This is why we say **двоє друзів** (two friends) and **четверо коней** (four horses). In all oblique cases, the collective numerals decline just like the regular number **п'ять** and match the noun's case. :::note **Quick tip** — When you are unsure whether to use a collective numeral or a regular numeral for a group of men, remember that both **три хлопці** and **троє хлопців** are grammatically correct. The collective form just sounds more natural in casual storytelling. ::: <!-- INJECT_ACTIVITY: match-up-collective-usage -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -544,7 +544,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -557,14 +624,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

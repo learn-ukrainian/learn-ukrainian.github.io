@@ -3,14 +3,14 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 20: Місцевий відмінок у нових контекстах (A2, A2.3 [Dative Case])
-**Section to write:** Місцевий відмінок: від місця до сенсу (~350 words)
+**Section to write:** Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case) (~350 words)
 **Word target for this section:** 350 words (aim for 385 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Місцевий відмінок: від місця до сенсу (~350 words)
+## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case) (~350 words)
 - P1 (~100 words): [Synthesis of the "Locative Journey." Summarize how the case has evolved for the learner from identifying physical objects (на столі) to describing life phases (у дитинстві), professional spheres (у науці), and communication tools (по телефону).]
 - P2 (~100 words): [The "Locative Matrix" Consolidation Table. Create a text-based table structure with four columns: Function (Місце, Час, Сфера, Засіб), Preposition (в/у, на, по), and Example (в офісі, у січні, у житті, по радіо). This serves as the definitive reference point for the module.]
 - P3 (~150 words): [Final self-check and summary points. Use the plan's requirements for a recap.
@@ -27,7 +27,7 @@ Grand total: ~2000 words
 <previous_context>
 [...previous sections truncated...]
 
-walking. I am on the way home right now.)* > — **Оксана:** Купи хліб по дорозі, будь ласка. *(Buy bread on the way, please.)* > — **Тарас:** Добре. Я подзвоню тобі по телефону з магазину. *(Okay. I will call you by phone from the store.)* It is important to distinguish the *medium* of communication from the *topic* of communication. When the phone is the tool you are using to speak, you use the locative case: **говорити по телефону** *(to talk by phone)*. However, if you are discussing the device itself—for example, if you want to buy a new one—the phone becomes the subject of conversation. For topics, Ukrainian uses the preposition **про** *(about)* followed by the accusative case: **говорити про телефон** *(to talk about a phone)*. This logic applies to all communication subjects. **Читаємо українською (Reading in Ukrainian):** - Засіб: Я говорю по телефону. *(Means: I am talking by phone.)* - Тема: Я думаю про новий телефон. *(Topic: I am thinking about a new phone.)* - Засіб: Ми почули цю пісню по радіо. *(Means: We heard this song on the radio.)* - Тема: Ми говорили про українське радіо. *(Topic: We were talking about Ukrainian radio.)* - Засіб: Вона отримала листа по пошті. *(Means: She received a letter by mail.)* - Тема: Вона читала про нову пошту. *(Topic: She was reading about the new post office.)* In modern Ukrainian, you might sometimes hear native speakers use the instrumental case without a preposition to indicate means, such as **дзвонити телефоном** *(to call by phone)* or **надіслати поштою** *(to send by mail)*. While this is grammatically correct and elegant, the construction **по** + locative remains the most natural, frequent, and standard way to express communication channels in everyday speech. As an A2 learner, mastering the **по** + locative pattern will make your Ukrainian sound authentic and help you navigate modern digital life. You can easily adapt it to new technologies and internet platforms. **Читаємо українською (Reading in Ukrainian):** - Ми часто спілкуємося по скайпу. *(We often communicate on Skype.)* - Студенти отримали завдання по імейлу. *(The students received the task by email.)* - Я прочитав цю цікаву статтю по інтернету. *(I read this interesting article on the internet.)* > — **Ігор:** Привіт, Маріє! Я дзвонив тобі вчора по телефону. *(Hi, Maria! I called you yesterday by phone.)* > — **Марія:** Привіт! Вибач, я була на роботі. Я надіслала тобі повідомлення по імейлу. *(Hi! Sorry, I was at work. I sent you a message by email.)* > — **Ігор:** Так, я бачив. Ти купила каву по дорозі в офіс? *(Yes, I saw it. Did you buy coffee on the way to the office?)* > — **Марія:** Ні, я пила каву вдома, коли дивилася новини по телевізору. *(No, I drank coffee at home when I was watching the news on TV.)* <!-- INJECT_ACTIVITY: match-up, Match locative expressions with their English equivalents across all four function types --> <!-- INJECT_ACTIVITY: error-correction, Fix preposition errors (e.g., *у роботі → на роботі, *у телефону → по телефону) -->
+Я зустрів старого друга по дорозі додому. Ми купили гарячу каву по дорозі на роботу. По дорозі в магазин почався сильний дощ. Вони слухають музику по дорозі в університет. По дорозі в кіно ми зустріли сестру. > *I met an old friend on the way home. We bought hot coffee on the way to work. It started raining heavily on the way to the store. They listen to music on the way to the university. On the way to the cinema we met my sister.* As you expand your vocabulary, you must clearly distinguish between the channel of communication and the topic of conversation. This is where the Locative and Accusative cases contrast directly. Using the Locative case describes the tool you use to speak, like a telephone or an application. However, if you want to talk about the object itself, you must use the preposition **про** with the Accusative case. The rule remains consistent: the topic of your thought or conversation always requires the Accusative, regardless of how the conversation happens. Сьогодні ми говорили по телефону про нову роботу. Я думаю про тебе, коли слухаю пісню по радіо. Журналісти багато говорять про новий телевізор. Ми спілкувалися по скайпу про наші плани. > *Today we talked on the phone about the new job. I think about you when I listen to a song on the radio. Journalists talk a lot about the new TV. We communicated on Skype about our plans.* Let us look at a short conversation that highlights this difference: > — **Анна:** Ти вчора говорив по телефону з братом? *(Did you talk on the phone with your brother yesterday?)* > — **Марко:** Так, ми говорили про його нову машину. *(Yes, we talked about his new car.)* > — **Анна:** А я дізналася про це по радіо. *(And I found out about it on the radio.)* In modern Ukrainian, you might sometimes hear native speakers use the Instrumental case without a preposition to express the means of communication. While this is grammatically correct and often seen in formal writing, the construction using the Locative case remains the most natural standard for everyday conversations. As a learner, you should actively use this pattern because it easily adapts to modern technology. You can seamlessly apply it to digital platforms, new loanwords, and social media. It is a highly productive grammar rule that will serve you well in any communicative situation. Завтра я відправлю тобі документи по імейлу. Мої батьки часто дзвонять мені по скайпу. Ми знайшли цю корисну інформацію по інтернету. Студенти отримали результати тесту по електронній пошті. > *Tomorrow I will send you the documents by email. My parents often call me on Skype. We found this useful information on the internet. The students received the test results by email.* :::tip **Quick tip** When using modern loanwords like **імейл** or **скайп**, treat them as standard masculine nouns. In the Locative case after the preposition **по**, they take the **-у** ending. ::: <!-- INJECT_ACTIVITY: match-up-locative-types --> <!-- INJECT_ACTIVITY: error-correction-prepositions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -525,7 +525,74 @@ The vocative case is a powerful and immediate grammatical differentiator between
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -552,14 +619,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

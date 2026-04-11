@@ -1,0 +1,559 @@
+vocabulary:
+- word: медіаграмотність
+  translation: media literacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ярли́к
+  translation: label (simplistic categorization)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: спростува́ти
+  translation: to deny/refute
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підтве́рдити
+  translation: to confirm
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: благоді́йність
+  translation: charity
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: грома́да
+  translation: community
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пети́ція
+  translation: petition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прес-конфере́нція
+  translation: press conference
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: електора́т
+  translation: electorate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: засоби масової інформації
+  translation: mass media
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: суспі́льство
+  translation: society
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: громадя́нин
+  translation: citizen
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: публіцистичний стиль
+  translation: publicistic style
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: новина́
+  translation: news item
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: за́голо́вок
+  translation: headline
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ду́мка
+  translation: opinion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: маніпулюва́ння
+  translation: manipulation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: волонте́р
+  translation: volunteer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: джерело́
+  translation: source
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кореспонде́нт
+  translation: correspondent
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: повідо́мити
+  translation: to report
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ЗМІ
+  translation: mass media (abbreviation)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: масмедіа
+  translation: mass media
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: соціальні мережі
+  translation: social networks
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рекламний щит
+  translation: billboard
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: громадська думка
+  translation: public opinion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: суспільно-політична лексика
+  translation: socio-political vocabulary
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: уряд
+  translation: government
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ко́шти
+  translation: funds
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: кво́ти
+  translation: quotas
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́пис
+  translation: post
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: підписник
+  translation: subscriber
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стрі́чка
+  translation: feed
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поши́рити
+  translation: to share
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дієприкме́тник
+  translation: participle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієприслі́вник
+  translation: gerund
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: основна частина
+  translation: body (of an article)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поді́я
+  translation: event
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: повідо́млення
+  translation: report/message
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зая́ва
+  translation: statement
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: згідно з даними
+  translation: according to the data
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як повідомляють джерела
+  translation: as sources report
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: заяви́ти
+  translation: to state
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стве́рджувати
+  translation: to claim
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: наголоси́ти
+  translation: to emphasize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ма́бу́ть
+  translation: probably
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: імові́рно
+  translation: likely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: прийня́то
+  translation: is passed/accepted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: реалізо́вано
+  translation: is implemented
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відкри́то
+  translation: is opened
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: фейк
+  translation: fake
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: медіаманіпулювання
+  translation: media manipulation
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: емоційний вплив
+  translation: emotional influence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підміна фактів
+  translation: substitution of facts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вибіркове цитування
+  translation: selective quoting
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: навішування ярликів
+  translation: labeling
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: звернення до авторитету
+  translation: appeal to authority
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: культурна самооборона
+  translation: cultural self-defense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переві́рити
+  translation: to verify
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: достові́рне
+  translation: reliable
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: клікбейт
+  translation: clickbait
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: де́ржа́ва
+  translation: state
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: парла́мент
+  translation: parliament
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: громадянська позиція
+  translation: civic stance
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: громадянське суспільство
+  translation: civil society
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: волонтерський рух
+  translation: volunteer movement
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: те́за
+  translation: thesis
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: аргуме́нт
+  translation: argument
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́тинг
+  translation: rally
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: проте́ст
+  translation: protest
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: держа́вність
+  translation: statehood
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: незале́жність
+  translation: independence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сувереніте́т
+  translation: sovereignty
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: євроінтегра́ція
+  translation: European integration
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ви́бори
+  translation: elections
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Верховна Рада
+  translation: Verkhovna Rada
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: залу́чений
+  translation: involved
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: о́браний
+  translation: elected
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відповіда́льний
+  translation: responsible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: медіатекст
+  translation: media text
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: абревіату́ра
+  translation: abbreviation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ЗСУ
+  translation: Armed Forces of Ukraine
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: СБУ
+  translation: Security Service of Ukraine
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ГУР
+  translation: Main Intelligence Directorate
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: комента́р
+  translation: comment
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: заклик до дії
+  translation: call to action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: порівняльний аналіз
+  translation: comparative analysis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: узага́льнення
+  translation: summary
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: повідомля́ється
+  translation: it is reported
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за даними
+  translation: according to data
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вставні слова
+  translation: parenthetical words
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: без сумніву
+  translation: without a doubt
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як відомо
+  translation: as is known
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

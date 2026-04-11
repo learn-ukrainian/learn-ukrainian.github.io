@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'DEDUCT: The plan explicitly requires the dialogue in Scenario 3 to include
+    `ресторан (m)` and mentions specific narrative elements: "купили сувеніри (pf.)
+    і з''їли найсмачніший борщ (pf.)". These were '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Perfect. The explanation of imperfective/perfective past tense is accurate.
+    Gender agreement rules are clearly stated ("Я ходив" vs "Я ходила"). The distinction
+    between "поїхав" (left/departed) and "ї
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding use of the "Stage vs. Action" principle for teaching past
+    tense aspect. The explanations transition smoothly from grammar theory to concrete
+    dialogue examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '10 out of 10 required words are used contextually. 4 out of 5 recommended
+    words are used. DEDUCT: `сувенір` was missed.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise markers are present and correctly placed at the end of
+    the relevant instructional sections to test the newly acquired knowledge immediately.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly engaging without being gamified. The use of "Це гарні
+    декорації на вашій сцені" is a brilliant teacher's hook.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module contains 4 clearly defined H2 sections + summary. The word
+    count (2886) is well above the 2000 target. The model answer is correctly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of cultural notes, specifically the decolonized
+    guidance on using authentic city names (Київ, не Кієв) and the mention of the
+    historical word "двірець".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues sound natural, have named speakers, and accurately model the
+    target grammar (motion verbs and aspect) in real-world scenarios like booking
+    a cabin or asking about a trip.
+findings: []

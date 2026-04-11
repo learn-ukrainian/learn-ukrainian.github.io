@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-drawing, pf)*. П'яте: **їсти** *(to eat, impf)* — **поїсти** *(to eat/finish eating, pf)*. Ви бачите, що перше слово — це процес, а друге слово — це результат. Ці слова складають фундамент вашого словникового запасу. Якщо ви знаєте одне слово, вам треба одразу вивчити його пару. Більшість українських дієслів існують у таких «одружених» видових парах. Вони нероздільні, як права і ліва рука. Але як саме ці пари утворюються граматично? Існує три основні моделі. Перша і найпопулярніша модель — це додавання **префікса** *(prefix)*. Ми беремо дієслово недоконаного виду і додаємо до нього «на-», «про-», «з-» або інший префікс. Наприклад, ми вже бачили пари «читати — прочитати» або «робити — зробити». Друга модель — це зміна **суфікса** *(suffix)* всередині або в кінці слова. Ми часто змінюємо суфікси «-а-», «-и-», «-ва-». Подивіться на пару **відповідати** *(to answer, impf)* та **відповісти** *(to answer, pf)*. Або інший приклад: **записувати** *(to record/write down, impf)* та **записати** *(to record/write down, pf)*. Третя модель є найскладнішою, але дуже цікавою. Це **суплетивні форми** *(suppletive forms)*, коли ми використовуємо абсолютно різні корені слів для різних видів. Найвідоміший приклад — це **говорити** *(to speak/say, impf)* і **сказати** *(to say/tell, pf)*. Або пара **брати** *(to take, impf)* та **взяти** *(to take, pf)*. Чому так сталося? Історично ці слова походили з різних давніх діалектів або мали різні початкові значення, але потім об'єдналися в одну смислову пару. Ці слова треба просто запам'ятати як єдине ціле. Однак, у нашій мові є винятки, коли дієслова не мають пари. Вони існують як «самотні» слова. Перша група — це **двовидові дієслова** *(biaspectual verbs)*. Вони можуть позначати і процес, і результат. Їхній вид залежить виключно від контексту речення. Наприклад, слова **атакувати** *(to attack)* або **телеграфувати** *(to telegraph)*. Зрозуміти їхній вид можна лише тоді, коли ми читаємо весь текст. Друга група — це **одновидові дієслова** *(single-aspect verbs)*. Вони завжди існують тільки в одному виді. Наприклад, слово **сподіватися** *(to hope)* означає безперервний внутрішній стан, тому воно має лише недоконаний вид. Ми не можемо «завершити» надію. З іншого боку, дієслово **схаменутися** *(to come to one's senses)* позначає миттєву емоційну реакцію. Тому воно завжди має виключно доконаний вид. Такі слова дуже цікаві, бо вони віддзеркалюють українське бачення світу, де деякі процеси або емоції є унікальними за своєю природою. Давайте подивимося, як вибір виду кардинально змінює значення ситуації. Прочитайте цей короткий текст про плани студента на суботу в місті Харкові. > — **Студент:** У суботу вранці я **буду читати** *(will be reading, impf)* новий підручник з історії. Але я обіцяю, що до дванадцятої години дня я обов'язково **прочитаю** *(will read/finish reading, pf)* перший розділ. Потім я піду гуляти в парк Шевченка. Тут ми чітко бачимо контраст. Фраза «буду читати» описує його розклад, процес, який заповнить ранок. Він планує сидіти з книгою. Але форма «прочитаю» фокусується на конкретному досягненні. Він гарантує, що розділ буде повністю завершений до обіду. Вибір правильного слова показує вашому співрозмовнику, на що саме ви звертаєте його увагу. Вид дієслова керує часом і логікою всієї розповіді. Це робить вашу українську мову дуже точною та інформативною. <!-- INJECT_ACTIVITY: quiz-aspect-identification --> <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
+зробити?". The imperfective aspect answers the question "Що робити?" because it focuses purely on the doing itself, without any concern for the end. The perfective aspect answers "Що зробити?", where the added prefix "з-" in the question explicitly signals the search for a completed result. Notice how the question itself physically changes to match the exact aspect you are looking for in the answer. Щоб перевірити вид дієслова, ми завжди ставимо питання до інфінітива. Якщо дія є звичайним процесом, ми питаємо «що робити?», наприклад: читати, писати, робити, малювати, їсти. Якщо ж дія вже має результат, ми питаємо «що зробити?», наприклад: прочитати, написати, зробити, намалювати, поїсти. :::info **Grammar box** Every verb you learn in Ukrainian belongs to one of these two categories. They are the foundation upon which you will build all your sentences, especially when discussing past events and future plans. ::: Most Ukrainian verbs do not exist in isolation; they live together in "married" pairs called **видові пари**. These aspect pairs share the exact same core meaning but differ entirely in their completeness. The most common way a pair is formed is through prefixation, where adding a simple prefix like **на-**, **про-**, or **з-** permanently turns an imperfective process into a perfective result. Another very common method is a suffix change, where alternating suffixes like **-а-**, **-и-**, or **-ва-** shift the aspect entirely, as seen in the verb **відповідати** changing to **відповісти**, or **записувати** becoming **записати**. Finally, there is the fascinating phenomenon of suppletion, where the pair consists of two entirely different root words. This is why you must memorize from the beginning that the perfective partner of **говорити** is **сказати**, and for the verb **брати** it is **взяти**. The vast majority of verbs you encounter will belong to one of these married pairs. While the vast majority of verbs have a dedicated partner, there are special categories of "lonely" verbs that completely ignore the standard pair system. Biaspectual verbs, known in Ukrainian grammar as **двовидові дієслова**, can function as either imperfective or perfective depending entirely on the surrounding context of the sentence. Common examples include words of foreign origin like **атакувати** or **телеграфувати**. On the other hand, there are single-aspect verbs, called **одновидові дієслова**, which only ever exist in one strict form. Some are strictly imperfective, such as **сподіватися**, because hoping is inherently an ongoing emotional state without a definitive end point. Others are strictly perfective, like **схаменутися**, because realizing something suddenly is an instantaneous, completed event that cannot be stretched out over time. These lonely verbs remind us that aspect is deeply tied to the logical nature of the action itself. У суботу в Харкові студент Тарас планує свій вихідний день. Зранку він буде довго читати новий історичний роман, пити гарячу каву та просто насолоджуватися тишею у квартирі. Він точно знає, що до обіду обов'язково прочитає перший великий розділ. Цей вибір виду дієслова змінює весь розклад: читати — це приємний ранковий процес, а прочитати — це конкретна досягнута мета. <!-- INJECT_ACTIVITY: quiz-aspect-identification --> <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -595,7 +595,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -608,14 +675,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

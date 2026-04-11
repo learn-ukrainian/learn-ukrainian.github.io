@@ -1,6 +1,6 @@
 # Build Summary: verbs-group-two (A1)
 
-Generated: 2026-04-09 04:44
+Generated: 2026-04-11 01:26
 
 ## Pipeline Phases
 
@@ -18,9 +18,10 @@ Generated: 2026-04-09 04:44
 | vocab | complete | 2026-04-09 02:40:46 |
 | enrich | complete | 2026-04-09 02:40:46 |
 | verify | complete | 2026-04-09 02:40:46 |
-| review | complete | 2026-04-09 02:44:51 |
 | stress | complete | 2026-04-09 02:44:54 |
-| publish | complete | 2026-04-09 02:44:55 |
+| publish | complete | 2026-04-10 22:54:27 |
+| audit | complete | 2026-04-10 22:54:27 |
+| review | complete | 2026-04-10 23:26:49 |
 
 ## Reviews
 
@@ -28,6 +29,7 @@ Generated: 2026-04-09 04:44
 |-------|------|
 | 1 | verbs-group-two-review-r1.md |
 | 2 | verbs-group-two-review-r2.md |
+| 3 | verbs-group-two-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,14 +42,17 @@ Generated: 2026-04-09 04:44
 | vocab | gemini (gemini-3-flash-preview) | 154s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 127s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 118s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 155s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

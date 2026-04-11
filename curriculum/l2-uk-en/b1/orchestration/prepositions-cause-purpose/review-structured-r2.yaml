@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Covers all requested sections perfectly, hitting all required and recommended
+    vocabulary points. Length requirements are met and exceeded (Actual word count:
+    4930).'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent grammar rules but contains a tautology ("Давайте глибше заглибимося"),
+    uses the colloquial "давайте + дієслово" instead of standard imperative forms,
+    and features 2 instances of the outdated
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding PPP flow. The explanations are extremely clear, especially
+    the analytical test questions "Чому?" (past cause) vs "Навіщо?" (future purpose)
+    and the distinction between "від" (reaction) and
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (`причина`, `мета`, `через`, `завдяки`, `від`, `для`,
+    `заради`, `щоб`) and recommended phrases (`у зв'язку з`, `з метою`, `з цікавості`,
+    `від сорому`, `навіщо`, `чому`) are woven na
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers exactly match the plan's specifications in order and
+    type. Placement accurately reflects the plan's focus constraints.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and academically rigorous without being
+    dry. Highlighting the "золоте правило деколонізованої української граматики причини"
+    is an excellent addition.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All Markdown headers are present, word count of 4930 generously exceeds
+    the 4000-word target, and formatting/tables are clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Effectively champions Ukrainian grammar on its own terms. Mentions that
+    "по + Знахідний відмінок" is "глибоко вкорінена в багатій українській народній
+    традиції", tying grammar elegantly to cultural re
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogue smoothly integrates the target grammar points ("через хворобу",
+    "для отримання стипендії", "завдяки допомозі", "заради майбутнього") in a realistic
+    university setting.
+findings: []

@@ -1,0 +1,52 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-32-7389c9b1.json
+phase: write-chunk-05
+prompt_chars: 47020
+response_chars: 6879
+prompt_words: 6415
+response_words: 989
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0095
+- name: skeleton
+  start: 446
+  length: 1433
+  fraction: 0.0305
+- name: prior_summary
+  start: 1879
+  length: 3834
+  fraction: 0.0815
+- name: plan
+  start: 5713
+  length: 14555
+  fraction: 0.3095
+- name: wiki
+  start: 15407
+  length: 26624
+  fraction: 0.5662
+- name: output_spec
+  start: 46892
+  length: 128
+  fraction: 0.0027
+large_sections:
+- wiki
+directives_total: 5
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: The language used in these contexts must leave no room for ambiguity.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- "Agreement: ordinal + noun must agree in gender, number, case.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: match-up, match adverbs of sequence and formal citations
+  covered: false
+  coverage_note: marker missing

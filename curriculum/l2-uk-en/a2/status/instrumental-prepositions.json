@@ -1,0 +1,59 @@
+{
+  "module": "instrumental-prepositions",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:49:40.245159Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:39:39.920476Z",
+    "meta": null,
+    "activities": "2026-04-08T00:35:25.484981Z",
+    "vocabulary": "2026-04-08T00:38:38.744824Z",
+    "research": null,
+    "plan": "2026-04-04T22:04:59.966702Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2529/2000 (raw: 2724) | immersion: 26.9% LOW (target 50-80% (A2.2))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "38/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

@@ -27,13 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: group-sort-verb-forms -->`
-- `<!-- INJECT_ACTIVITY: fill-in-aspect-choice -->`
-- `<!-- INJECT_ACTIVITY: motion-verb-preposition-match -->`
-- `<!-- INJECT_ACTIVITY: imperative-formation-drill -->`
-- `<!-- INJECT_ACTIVITY: quiz-verb-errors -->`
-- `<!-- INJECT_ACTIVITY: error-correction-integrated -->`
-- `<!-- INJECT_ACTIVITY: story-completion-verbs -->`
+- `<!-- INJECT_ACTIVITY: group-sort -->`
+- `<!-- INJECT_ACTIVITY: fill-in -->`
+- `<!-- INJECT_ACTIVITY: quiz -->`
+- `<!-- INJECT_ACTIVITY: error-correction -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -93,7 +90,7 @@ required:
 <module_content>
 ## Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect in Past and Future)
 
-**Ласкаво просимо на контрольну точку!** (Welcome to the checkpoint!) The A2.6 level focuses on three core pillars of Ukrainian grammar: **вид дієслова** (verb aspect), tenses, and **дієслова руху** (motion verbs). These concepts are the final hurdle to intermediate fluency. When you understand the "Verb Trinity," your Ukrainian stops sounding translated from English and starts sounding authentic. We will review how a single prefix can change the entire meaning of a sentence from "I was doing it" (process) to "I got it done" (result). You already know that Ukrainian verbs work in pairs. The **недоконаний вид** (imperfective aspect) describes the action itself, while the **доконаний вид** (perfective aspect) describes the finish line. Let's see how this works in practice.
+У цій **контрольній точці** (checkpoint) ми об'єднаємо три ключові теми граматики: **вид дієслова** (verb aspect), часи та **дієслова руху** (motion verbs). Ми повторимо, як один префікс може змінити значення всього речення з процесу на результат. Ви вже знаєте, що українські дієслова працюють у парах. The **недоконаний вид** (imperfective aspect) describes the action itself, while the **доконаний вид** (perfective aspect) describes the finish line. Let's see how this works in practice.
 
 In the past tense, aspect is a choice between a process (or habit) and a result. Use the **недоконаний вид** when you want to emphasize *that* you did something, or *how long* it took. Use the **доконаний вид** when you want to emphasize the final product.
 
@@ -109,17 +106,14 @@ The future tense also forces you to choose between process and result. Ukrainian
 *   **Ми будемо готувати обід разом.** (We will be preparing lunch together.) — The focus is on the activity of cooking.
 *   **Ми приготуємо обід дуже швидко.** (We will prepare lunch very quickly.) — The focus is on the finished lunch.
 
-Ukrainian has a unique, rhythmic alternative to the "буду + infinitive" future tense: the synthetic future (**складена синтетична форма**). This form is used only for the **недоконаний вид** (process/intent). It adds the endings **-му, -меш, -ме, -мемо, -мете, -муть** directly to the infinitive (without the final -ти). Historically, this comes from the infinitive plus an old form of the verb **мати** (to have). It sounds very authentic and is widely used in modern Ukrainian.
+Ukrainian has a unique, rhythmic alternative to the "буду + infinitive" future tense: the synthetic future (**складна форма**). This form is used only for the **недоконаний вид** (process/intent). It adds the endings **-му, -меш, -ме, -мемо, -мете, -муть** directly to the infinitive (without the final -ти). Historically, this comes from the infinitive plus an old form of the verb **мати** (to have). It sounds very authentic and is widely used in modern Ukrainian.
 
 *   **Завтра я працюватиму вдома.** (Tomorrow I will be working at home.) — This is exactly the same meaning as "я буду працювати".
 *   **Ти знатимеш усі правила.** (You will know all the rules.) — Same as "ти будеш знати".
 *   **Ми читатимемо цю статтю на уроці.** (We will be reading this article in class.)
 *   **Вони житимуть у Києві.** (They will live in Kyiv.)
 
-<!-- INJECT_ACTIVITY: group-sort-verb-forms -->
-
-<!-- INJECT_ACTIVITY: fill-in-aspect-choice -->
-
+<!-- INJECT_ACTIVITY: group-sort -->
 
 ## Частина 2: Дієслова руху та наказовий спосіб (Part 2: Motion Verbs and Imperatives)
 
@@ -152,16 +146,13 @@ Sometimes we need to give a command or express a wish indirectly to a 3rd person
 *   **Маріє, будь щасливою!** (Maria, be happy!) — The name is in the Vocative, the adjective is in the Instrumental.
 *   **Друже, будь обережним!** (Friend, be careful!)
 
-<!-- INJECT_ACTIVITY: motion-verb-preposition-match -->
-
-<!-- INJECT_ACTIVITY: imperative-formation-drill -->
-
+<!-- INJECT_ACTIVITY: fill-in -->
 
 ## Частина 3: Комплексні завдання (Part 3: Integrated Tasks)
 
 Let's look at how all these elements work together in a real situation. Here is an oral review where a teacher asks a student to retell his weekend.
 
-> **Пані Олена:** Марку, розкажи, що ти робив на вихідних? *(Marko, tell me, what did you do on the weekend?)*
+> **Пані Олена:** Марку, розкажи, що ти робив у вихідні? *(Marko, tell me, what did you do on the weekend?)*
 > **Марко:** У суботу я довго спав. Потім я ходив у магазин. *(On Saturday I slept for a long time. Then I went to the store.)*
 > **Пані Олена:** Добре. А що ти купив? *(Good. And what did you buy?)*
 > **Марко:** Я купив хліб і молоко. У неділю я поїхав до брата. Я нарешті написав есе для університету. *(I bought bread and milk. On Sunday I went to my brother's. I finally wrote the essay for the university.)*
@@ -192,20 +183,17 @@ Andriy uses the perfective future **поїдемо** for the planned trip, while
 
 Let's integrate all these skills into a short narrative. Imagine a traveler visiting Kyiv for the first time.
 
-**Влітку мій друг приїхав до Києва. Він ніколи раніше не був в Україні. У перший день він просто йшов вулицями і дивився на архітектуру. Він часто заходив у кав'ярні, пив каву і слухав людей. Увечері він сказав мені: "Завтра я піду в музеї. Я оглядатиму місто цілий день. Ходімо зі мною!" Я відповів: "Звичайно, я покажу тобі найкращі місця". Ми чудово провели час.** (In the summer my friend arrived in Kyiv. He had never been to Ukraine before. On the first day he just walked the streets and looked at the architecture. He often went into cafes, drank coffee and listened to people. In the evening he told me: "Tomorrow I will go to the museums. I will be viewing the city all day. Let's go with me!" I answered: "Of course, I will show you the best places." We had a wonderful time.)
+**Влітку мій друг приїхав до Києва. Він ніколи раніше не був в Україні. У перший день він просто йшов вулицями і дивився на архітектуру. Він часто заходив у кав'ярні, пив каву і слухав людей. Увечері він сказав мені: "Завтра я піду в музеї. Я оглядатиму місто цілий день. Ходімо разом!" Я відповів: "Звичайно, я покажу тобі найкращі місця". Ми чудово провели час.** (In the summer my friend arrived in Kyiv. He had never been to Ukraine before. On the first day he just walked the streets and looked at the architecture. He often went into cafes, drank coffee and listened to people. In the evening he told me: "Tomorrow I will go to the museums. I will be viewing the city all day. Let's go together!" I answered: "Of course, I will show you the best places." We had a wonderful time.)
 
 Notice how the prefixes **по-** and **при-** interact with aspect and motion. The imperfective verb **ішов** (was walking) describes the process of movement through the streets. But when we add **при-** to form **приїхав** (arrived by transport), it becomes a perfective result — the arrival is complete. When the traveler plans his next day, he says **піду** (I will go/set off). The prefix **по-** adds the meaning of starting a journey, creating a perfective future verb. He then contrasts this with **оглядатиму** (I will be viewing) — the synthetic future describing the continuous process of exploring the city.
 
-<!-- INJECT_ACTIVITY: quiz-verb-errors -->
+<!-- INJECT_ACTIVITY: quiz -->
 
-<!-- INJECT_ACTIVITY: error-correction-integrated -->
-
-<!-- INJECT_ACTIVITY: story-completion-verbs -->
-
+<!-- INJECT_ACTIVITY: error-correction -->
 
 ## Підсумок
 
-This checkpoint wraps up the core mechanics of Ukrainian verbs. Now it is time for a **самоперевірка** (self-check). Ask yourself the following questions. If you can answer "так" (yes) to all of them, you have successfully mastered the "Verb Trinity" and are ready to move forward.
+Ця **перевірка** (review, check) охоплює основні механізми українських дієслів. Час для **самоперевірки** (self-check). Ask yourself the following questions. If you can answer "так" (yes) to all of them, 
 
 *   Чи можу я обрати правильний вид дієслова у минулому часі? (Do I know when to use the imperfective for a process or habit, and the perfective for a result?)
 *   Чи розрізняю я "буду читати" та "прочитаю"? (Can I form both the analytical future for process and the simple future for result?)
@@ -213,7 +201,7 @@ This checkpoint wraps up the core mechanics of Ukrainian verbs. Now it is time f
 *   Чи вмію я утворювати наказовий спосіб для всіх осіб? (Can I form commands for "you", "let's", and use "хай" for 3rd person without using Russian calques?)
 *   Чи можу я побажати комусь чогось (Vocative + будь + Instrumental)?
 
-If you confidently answered "так" to these questions, you are ready for A2.7! Якщо є якась **помилка** (error), you can always review the previous modules and **виправити** (to correct) your understanding. Рухаймося далі! (Let's move forward!)
+Якщо ви **впевнено** (confidently) відповіли «так» на ці питання, ви добре засвоїли матеріал. Якщо є якась **помилка** (error), ви завжди можете повернутися до попередніх уроків і **виправити** (to correct) свої знання.
 
 </module_content>
 

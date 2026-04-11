@@ -1,0 +1,324 @@
+{
+  "total_items": 186,
+  "grounded_items": 135,
+  "ungrounded": [
+    {
+      "word": "привіт",
+      "exercise_type": "fill-in",
+      "context": "Привіт, ____! Як твої справи?",
+      "role": "context"
+    },
+    {
+      "word": "твої",
+      "exercise_type": "fill-in",
+      "context": "Привіт, ____! Як твої справи?",
+      "role": "context"
+    },
+    {
+      "word": "справи",
+      "exercise_type": "fill-in",
+      "context": "Привіт, ____! Як твої справи?",
+      "role": "context"
+    },
+    {
+      "word": "ти",
+      "exercise_type": "fill-in",
+      "context": "____, ти вже зробила це завдання?",
+      "role": "context"
+    },
+    {
+      "word": "зробила",
+      "exercise_type": "fill-in",
+      "context": "____, ти вже зробила це завдання?",
+      "role": "context"
+    },
+    {
+      "word": "завдання",
+      "exercise_type": "fill-in",
+      "context": "____, ти вже зробила це завдання?",
+      "role": "context"
+    },
+    {
+      "word": "запрошую",
+      "exercise_type": "fill-in",
+      "context": "Дорогі ____! Запрошую вас на свято.",
+      "role": "context"
+    },
+    {
+      "word": "братику",
+      "exercise_type": "fill-in",
+      "context": "братику",
+      "role": "answer"
+    },
+    {
+      "word": "слухай",
+      "exercise_type": "fill-in",
+      "context": "Слухай, ____, принеси мені воду.",
+      "role": "context"
+    },
+    {
+      "word": "принеси",
+      "exercise_type": "fill-in",
+      "context": "Слухай, ____, принеси мені воду.",
+      "role": "context"
+    },
+    {
+      "word": "воду",
+      "exercise_type": "fill-in",
+      "context": "Слухай, ____, принеси мені воду.",
+      "role": "context"
+    },
+    {
+      "word": "чекаємо",
+      "exercise_type": "fill-in",
+      "context": "____, ми чекаємо тільки на тебе!",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "fill-in",
+      "context": "____, ми чекаємо тільки на тебе!",
+      "role": "context"
+    },
+    {
+      "word": "хлопця",
+      "exercise_type": "quiz",
+      "context": "Як правильно звернутися до хлопця на ім'я Олександр?",
+      "role": "context"
+    },
+    {
+      "word": "отримує",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення у кличному відмінку отримує ім'я Ігор?",
+      "role": "context"
+    },
+    {
+      "word": "пестливі",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення отримують пестливі слова типу «братик» або «Т",
+      "role": "context"
+    },
+    {
+      "word": "типу",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення отримують пестливі слова типу «братик» або «Т",
+      "role": "context"
+    },
+    {
+      "word": "формальний",
+      "exercise_type": "match-up",
+      "context": "формальний, пов'язаний з державною або діловою сферою",
+      "role": "context"
+    },
+    {
+      "word": "державною",
+      "exercise_type": "match-up",
+      "context": "формальний, пов'язаний з державною або діловою сферою",
+      "role": "context"
+    },
+    {
+      "word": "діловою",
+      "exercise_type": "match-up",
+      "context": "формальний, пов'язаний з державною або діловою сферою",
+      "role": "context"
+    },
+    {
+      "word": "сферою",
+      "exercise_type": "match-up",
+      "context": "формальний, пов'язаний з державною або діловою сферою",
+      "role": "context"
+    },
+    {
+      "word": "словосполучення",
+      "exercise_type": "match-up",
+      "context": "слово або словосполучення, яким називають того, до кого гово",
+      "role": "context"
+    },
+    {
+      "word": "яким",
+      "exercise_type": "match-up",
+      "context": "слово або словосполучення, яким називають того, до кого гово",
+      "role": "context"
+    },
+    {
+      "word": "називають",
+      "exercise_type": "match-up",
+      "context": "слово або словосполучення, яким називають того, до кого гово",
+      "role": "context"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "match-up",
+      "context": "слово або словосполучення, яким називають того, до кого гово",
+      "role": "context"
+    },
+    {
+      "word": "говорять",
+      "exercise_type": "match-up",
+      "context": "слово або словосполучення, яким називають того, до кого гово",
+      "role": "context"
+    },
+    {
+      "word": "частина",
+      "exercise_type": "match-up",
+      "context": "частина повного імені, утворена від імені батька",
+      "role": "context"
+    },
+    {
+      "word": "утворена",
+      "exercise_type": "match-up",
+      "context": "частина повного імені, утворена від імені батька",
+      "role": "context"
+    },
+    {
+      "word": "родинне",
+      "exercise_type": "match-up",
+      "context": "родинне найменування, яке передається з покоління в поколінн",
+      "role": "context"
+    },
+    {
+      "word": "найменування",
+      "exercise_type": "match-up",
+      "context": "родинне найменування, яке передається з покоління в поколінн",
+      "role": "context"
+    },
+    {
+      "word": "покоління",
+      "exercise_type": "match-up",
+      "context": "родинне найменування, яке передається з покоління в поколінн",
+      "role": "context"
+    },
+    {
+      "word": "службове",
+      "exercise_type": "match-up",
+      "context": "службове становище, пов'язане з виконанням певних обов'язків",
+      "role": "context"
+    },
+    {
+      "word": "становище",
+      "exercise_type": "match-up",
+      "context": "службове становище, пов'язане з виконанням певних обов'язків",
+      "role": "context"
+    },
+    {
+      "word": "пов'язане",
+      "exercise_type": "match-up",
+      "context": "службове становище, пов'язане з виконанням певних обов'язків",
+      "role": "context"
+    },
+    {
+      "word": "виконанням",
+      "exercise_type": "match-up",
+      "context": "службове становище, пов'язане з виконанням певних обов'язків",
+      "role": "context"
+    },
+    {
+      "word": "певних",
+      "exercise_type": "match-up",
+      "context": "службове становище, пов'язане з виконанням певних обов'язків",
+      "role": "context"
+    },
+    {
+      "word": "обов'язків",
+      "exercise_type": "match-up",
+      "context": "службове становище, пов'язане з виконанням певних обов'язків",
+      "role": "context"
+    },
+    {
+      "word": "обмін",
+      "exercise_type": "match-up",
+      "context": "обмін письмовими повідомленнями, електронними або паперовими",
+      "role": "context"
+    },
+    {
+      "word": "письмовими",
+      "exercise_type": "match-up",
+      "context": "обмін письмовими повідомленнями, електронними або паперовими",
+      "role": "context"
+    },
+    {
+      "word": "повідомленнями",
+      "exercise_type": "match-up",
+      "context": "обмін письмовими повідомленнями, електронними або паперовими",
+      "role": "context"
+    },
+    {
+      "word": "електронними",
+      "exercise_type": "match-up",
+      "context": "обмін письмовими повідомленнями, електронними або паперовими",
+      "role": "context"
+    },
+    {
+      "word": "паперовими",
+      "exercise_type": "match-up",
+      "context": "обмін письмовими повідомленнями, електронними або паперовими",
+      "role": "context"
+    },
+    {
+      "word": "листами",
+      "exercise_type": "match-up",
+      "context": "обмін письмовими повідомленнями, електронними або паперовими",
+      "role": "context"
+    },
+    {
+      "word": "готовий",
+      "exercise_type": "error-correction",
+      "context": "Пані Оксано Петрівна, коли буде готовий звіт?",
+      "role": "context"
+    },
+    {
+      "word": "підпишіть",
+      "exercise_type": "error-correction",
+      "context": "Пане Петренку, підпишіть цей документ.",
+      "role": "context"
+    },
+    {
+      "word": "розпочинаємо",
+      "exercise_type": "error-correction",
+      "context": "Шановні пани, розпочинаємо нашу зустріч.",
+      "role": "context"
+    },
+    {
+      "word": "потрібна",
+      "exercise_type": "error-correction",
+      "context": "Лікарю Іван, потрібна ваша допомога.",
+      "role": "context"
+    },
+    {
+      "word": "допомога",
+      "exercise_type": "error-correction",
+      "context": "Лікарю Іван, потрібна ваша допомога.",
+      "role": "context"
+    },
+    {
+      "word": "професію",
+      "exercise_type": "true-false",
+      "context": "Коли ви поєднуєте професію та власне ім'я (наприклад: лікар ",
+      "role": "context"
+    },
+    {
+      "word": "лікар",
+      "exercise_type": "true-false",
+      "context": "Коли ви поєднуєте професію та власне ім'я (наприклад: лікар ",
+      "role": "context"
+    },
+    {
+      "word": "професія",
+      "exercise_type": "true-false",
+      "context": "Коли ви поєднуєте професію та власне ім'я (наприклад: лікар ",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "вельмишановний",
+      "добродій",
+      "добродійка",
+      "діловий",
+      "шановна"
+    ]
+  },
+  "all_grounded": false
+}

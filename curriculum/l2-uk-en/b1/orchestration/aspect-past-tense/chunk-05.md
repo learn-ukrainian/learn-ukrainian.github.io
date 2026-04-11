@@ -1,11 +1,14 @@
 ## Підсумок — Summary
 
-Отже, підсумуймо найголовніше. Вибір виду в минулому часі — це не просто механічне граматичне правило, це ваш особистий спосіб мислення та вираження думок. **Недоконаний вид** *(imperfective aspect)* — це завжди **процес** *(process)*, **тривалість** *(duration)* або **повторюваність** *(recurrence)*. Натомість **доконаний вид** *(perfective aspect)* — це конкретний **результат** *(result)*, **завершеність** *(completedness)* або яскрава **однократність** *(single occurrence)* події.
+Understanding aspect in the past tense transforms how you tell stories in Ukrainian. The imperfective aspect is your tool for describing processes, durations, and repeated actions. The perfective aspect is your tool for delivering results, showing completion, and marking single, unique events. Remember that aspect is not just a rigid rule; it is a conscious choice you make to express your specific communicative intent. While time markers are helpful signals, you should always trust what you actually want to emphasize.
 
-Такі часові маркери, як «щодня», «завжди», «раптом» або «одного разу», є чудовими підказками. Проте завжди довіряйте своєму головному комунікативному наміру, а не лише словам-маркерам. Перед тим, як сказати чи написати речення в минулому часі, поставте собі три контрольні запитання:
+Коли ви сумніваєтеся, який вид обрати, поставте собі три запитання. Чи є в цій дії результат? Чи була ця дія регулярною? Чи хочу я наголосити на процесі? Ваші відповіді завжди підкажуть правильне слово.
 
-1. Чи є тут чіткий, досягнутий результат?
-2. Чи була ця дія вашою регулярною звичкою?
-3. Чи хочу я зараз наголосити саме на процесі, а не на фіналі?
+> *When in doubt about which aspect to choose, ask yourself three questions. Is there a result in this action? Was this action regular? Do I want to emphasize the process? Your answers will always suggest the right word.*
 
-Щойно ви свідомо відповісте на ці питання, ви автоматично оберете правильний вид. Це надійний граматичний фундамент, який ви щойно успішно заклали. А вже в наступному модулі ми застосуємо цю саму логіку до майбутнього часу, де вид дієслова повністю змінює саму граматичну структуру речення.
+:::tip
+**The director's chair**
+Think of yourself as a film director. You alone decide whether to show the audience the ongoing journey (недоконаний) or the final destination (доконаний).
+:::
+
+In the next module, we will apply this exact logic to the future tense, where your choice of aspect fundamentally changes the entire grammatical structure of the sentence.

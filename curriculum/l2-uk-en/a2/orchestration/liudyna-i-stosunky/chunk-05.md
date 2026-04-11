@@ -1,16 +1,11 @@
-## Підсумок — Summary
+## Підсумок — Summary (~150 words)
 
-We have learned how to fully describe the people in our lives. Now you can talk about someone's appearance, whether they are **високий** *(tall)* or have **карі очі** *(brown eyes)*. You also know how to describe their inner qualities, such as being **щирий** *(sincere)* or **працьовитий** *(hardworking)*. Finally, you can explain who this person is to you: a **знайомий** *(acquaintance)*, a **родич** *(relative)*, or a **сусід** *(neighbor)*.
+In this module, we learned how to fully describe the people in our lives. We started with physical appearance, discussing height, hair, and eye color. Then, we explored personality, covering important traits like being sincere, hardworking, or patient. We also practiced identifying our relationships with others, from close relatives to neighbors and acquaintances. By combining appearance, character, and relationship, you can now paint a complete and natural picture of anyone you know. 
 
-Let’s look at one final example that brings everything together:
+Спробуйте відповісти на ці запитання українською мовою. Як виглядає ваша найкраща подруга або ваш найкращий друг? Який характер у вашого сусіда? І головне: яка ви людина — тиха чи весела, серйозна чи дуже товариська? Опишіть своїх рідних та знайомих.
 
-* Це мій новий знайомий Віктор. *(This is my new acquaintance Viktor.)*
-* Він високий чоловік із темним волоссям. *(He is a tall man with dark hair.)*
-* Віктор — дуже привітна і розумна людина. *(Viktor is a very welcoming and smart person.)*
-* Він завжди допомагає іншим. *(He always helps others.)*
+> *Try to answer these questions in Ukrainian. What does your best friend look like? What kind of character does your neighbor have? And most importantly: what kind of person are you — quiet or cheerful, serious or very sociable? Describe your relatives and acquaintances.*
 
-Now it is your turn to practice. Try to answer these questions in Ukrainian:
-
-1. **Як виглядає ваша найкраща подруга?** *(What does your best friend look like?)*
-2. **Який характер у вашого сусіда?** *(What is your neighbor's character like?)*
-3. **Яка ви людина — тиха чи весела?** *(What kind of person are you — quiet or cheerful?)*
+:::note
+**Quick tip** — The best way to remember these new adjectives is to look at photos of your friends and family and describe them out loud in Ukrainian.
+:::

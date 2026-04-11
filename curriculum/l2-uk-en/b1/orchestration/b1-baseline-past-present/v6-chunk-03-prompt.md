@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-просто використовуємо саму основу. Але тут відбувається дуже цікаве фонетичне явище — **чергування** *(alternation)* голосних. Голосні «о» або «е» в закритому складі часто переходять у звук «і». Тому форма чоловічого роду від «нести» звучить як він **ніс** *(he carried)*. Проте, коли ми утворюємо форми для жіночого, середнього роду та множини, ми знову додаємо суфікс **-л-** із відповідними закінченнями. Склад стає відкритим, і голосний «е» повертається на своє місце: вона **несла**, воно **несло**, вони **несли**. Те саме чітке правило працює для дієслова **могти** *(to be able to)*: він **міг** *(he could)*, але вона **могла**, вони **могли**. Ще один важливий приклад — дієслово **бігти** *(to run)*: він **біг** *(he ran)*, вона **бігла**, вони **бігли**. Від дієслова **вести** *(to lead)* ми утворюємо форму він **вів** *(he led)*, вона **вела**. А від дієслова **померти** *(to die)* ми утворюємо форми він **помер** *(he died)*, вона **померла**. Давайте знову повернемося до нашого вступного діалогу в кафе. Згадайте, як Олексій описував своє літо: «Я **працював** у видавництві». Оскільки Олексій — чоловік, він логічно використав форму чоловічого роду із суфіксом **-в** від дієслова **працювати** *(to work)*. Якби на місці Олексія була Дарина, вона б обов'язково сказала інакше: «Я **працювала** у видавництві». Далі у цій же розмові ми почули ще одну важливу фразу: «Минулого літа ми **їздили** до Львова». Тут використано дієслово **їздити** *(to go by vehicle)* у формі множини, оскільки підмет «ми» вимагає закінчення **-ли**. Незалежно від того, з кого саме складається група — з чоловіків, з жінок, чи це змішана компанія, — форма множини для минулого часу завжди залишається незмінною. Глибоке розуміння механізму узгодження є критично важливим для правильного мовлення. Ігнорування роду підмета — це одна з найпоширеніших і найпомітніших помилок серед студентів. Англомовні мовці часто намагаються механічно перенести логіку своєї рідної мови на українську граматику. Наприклад, вони можуть випадково сказати фразу: «Моя сестра **сказав** мені про це». Це серйозна граматична помилка, яка одразу ріже слух. Слово «сестра» — жіночого роду, тому дієслово в минулому часі повинно мати відповідне жіноче закінчення. Правильно буде сказати: «Моя сестра **сказала** мені про це». Те саме правило стосується випадків, коли жінки розповідають про себе особисто. Якщо жінка говорить: «Я **зробив** домашнє завдання», це звучить абсолютно неприродно для українського вуха. Жінка завжди повинна використовувати форму на **-ла**: «Я **зробила** домашнє завдання». Завжди пам'ятайте: дієслово в минулому часі — це своєрідне дзеркало суб'єкта, яке відображає його гендерну ідентичність. Насамкінець варто сказати кілька важливих слів про загальне вживання минулого часу. Ми використовуємо його для опису послідовності певних подій або для констатації фактів у минулому. Проте саме тут ми стикаємося з ще однією фундаментальною категорією українського дієслова — **видом** *(aspect)*. В українській мові існують дієслова, які описують процес дії, наприклад, **робив** *(was doing)*. Також існують дієслова, які вказують на конкретний завершений результат, наприклад, **зробив** *(did/have done)*. Обидві ці форми належать до минулого часу, але вони передають кардинально різні значення. Вибір між процесом і результатом є настільки критичним для правильного спілкування, що ми детально розглянемо видові пари у наступному розділі цього модуля. А поки що зосередьтеся на правильному утворенні самих часових форм. <!-- INJECT_ACTIVITY: fill-in-tense-forms -->
+opens up again, and the original vowel returns. This gives us the forms **несла**, **несло**, and **несли**. Важливо пам'ятати ці особливі форми, адже вони зустрічаються дуже часто в повсякденному спілкуванні. Коли ви читаєте або слухаєте українські тексти, звертайте увагу на дієслова з основою на приголосний. З часом ви почнете інтуїтивно відчувати ці зміни голосних. Let us look back at the dialogue from the beginning of this module to see these rules in action. When Олексій talks about his summer, he says, "Я працював у видавництві." Because Олексій is male, he naturally uses the masculine form **працював**. Later, when discussing a shared experience, Дарина says, "Минулого літа ми їздили до Львова." Here, the pronoun **ми** (we) is plural, so the verb must take the plural ending **-ли**, resulting in **їздили**. Notice how the verbs seamlessly adapt to the subjects. The speakers do not even think about these endings; it is an automatic reflex. As a learner, your goal is to build this same reflex so that the gender of your subject immediately dictates the shape of your verb. Під час розмови українці автоматично узгоджують дієслова минулого часу зі своїм родом або родом співрозмовника. Коли ви розповідаєте про свої минулі вихідні, ви повинні постійно тримати в голові власний рід. Це вимагає практики, але швидко стає звичкою. One of the most common mistakes English speakers make when speaking Ukrainian is forgetting this gender agreement in the past tense. It is easy to accidentally say "Моя сестра сказав" because the English brain treats "said" as a fixed, unchanging word. However, in Ukrainian, **сестра** is a feminine noun, so the verb must reflect that femininity: **Моя сестра сказала**. Another frequent error occurs when learners try to apply present tense personal endings to past tense verbs. You must strictly separate the two systems in your mind. Present tense is about person; past tense is about gender and number. Always double-check your sentence: if the subject is "вона" or a feminine noun, your verb must end in **-ла**. :::tip **The Mirror Rule** Think of the past tense verb as a mirror. If a woman looks into the mirror, the reflection must be feminine (**-ла**). If a man looks, it must be masculine (**-в** or consonant). If a crowd looks, it must be plural (**-ли**). ::: Finally, it is crucial to understand how the past tense is actually used in narrative contexts. When you are telling a story, you will frequently alternate between describing ongoing states or backgrounds and narrating a sequence of completed events. This brings us to the concept of verbal aspect. Both imperfective verbs and perfective verbs exist in the past tense, but they serve entirely different narrative functions. You use imperfective past tense verbs to set the scene or talk about actions that were in progress. You use perfective past tense verbs to list the concrete steps that moved the story forward. We will explore this vital distinction between **робив** and **зробив** in much greater detail in the next section. <!-- INJECT_ACTIVITY: fill-in-tense-forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -610,7 +610,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -623,14 +690,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T21-54-5a3fd746.json
+phase: write-chunk-04
+prompt_chars: 29343
+response_chars: 2198
+prompt_words: 4177
+response_words: 388
+sections:
+- name: header
+  start: 0
+  length: 474
+  fraction: 0.0162
+- name: skeleton
+  start: 474
+  length: 1080
+  fraction: 0.0368
+- name: prior_summary
+  start: 1554
+  length: 3259
+  fraction: 0.1111
+- name: plan
+  start: 4813
+  length: 10320
+  fraction: 0.3517
+- name: wiki
+  start: 9598
+  length: 14082
+  fraction: 0.4799
+- name: output_spec
+  start: 29215
+  length: 128
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 8
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: However, you must be careful with neutral time markers like **вчора** (yesterday).
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '* To truly master the difference between the two aspects, you must understand
+    the "failure" contrast.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: match-up-context-aspect
+  covered: false
+  coverage_note: marker missing

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-your words. Think of a simple, foundational interaction: «Я даю книгу тобі» *(I give the book to you)*. Here, **«я»** *(I)* is the active doer in the Nominative case. The word **«книгу»** *(the book)* is the direct object being physically moved, so it takes the Accusative case. Finally, the word **«тобі»** *(to you)* is the ultimate recipient, taking the Dative case. The dative always marks the end destination of the giving or telling process. Understanding this relationship is the key to mastering Ukrainian sentence structure. > Читаємо українською: > Брат зараз читає казку. *(The brother is reading a fairytale now.)* > Брат читає казку малій сестрі. *(The brother is reading a fairytale to the little sister.)* > Вчитель добре пояснює правило. *(The teacher explains the rule well.)* > Вчитель пояснює правило новому студенту. *(The teacher explains the rule to the new student.)* To start using this case immediately, you need a "Starter Kit" of verbs that naturally trigger the dative. Focus on these high-frequency verbs of communication and transfer. The verb **дарувати** *(to gift)* is essential for holidays. The verbs **казати** *(to say)* and **говорити** *(to speak/tell)* introduce shared information. The verb **писати** *(to write)* is used for messages, and **допомагати** *(to help)* shows who receives assistance. Whenever you use these verbs, the person receiving the action must take the dative form. > Читаємо українською: > Я даю тобі синю ручку. *(I am giving you a blue pen.)* > Він часто дарує мені квіти. *(He often gifts me flowers.)* > Вона завжди каже йому правду. *(She always tells him the truth.)* > Ми сьогодні пишемо вам довгого листа. *(We are writing a long letter to you today.)* > Вони із радістю допомагають нам. *(They happily help us.)* > Вчитель пояснює їм нове правило. *(The teacher explains the new rule to them.)* Let us see how these forms work in a natural setting. Imagine a family gathering where a birthday is being celebrated, and the host is enthusiastically distributing gifts to everyone in the room. This scene relies heavily on personal pronouns in their dative forms. > — **Іменинник:** Цей великий пакунок — це мій подарунок! *(This big package is my gift!)* > — **Мама:** Кому цей подарунок? *(To whom is this gift?)* > — **Іменинник:** **Мені** — цікаву книгу. **Тобі** — солодкий шоколад. *(For me — an interesting book. For you — sweet chocolate.)* > — **Брат:** А що є для тата? *(And what is there for dad?)* > — **Іменинник:** **Йому** — теплий зимовий шарф. *(For him — a warm winter scarf.)* > — **Мама:** А нашій бабусі? *(And for our grandma?)* > — **Іменинник:** **Їй** — дуже гарні квіти. *(For her — very beautiful flowers.)* > — **Брат:** А що ми всі будемо їсти? *(And what will we all eat?)* > — **Іменинник:** **Нам** — великий і смачний торт! *(For us — a big and tasty cake!)* <!-- INJECT_ACTIVITY: match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→їм), 8 items -->
+бо це активний суб'єкт. Слово «книгу» стоїть у знахідному відмінку, бо це прямий об'єкт моєї дії. А займенник «тобі» показує фінального отримувача у давальному відмінку. > *Today I give a new book to you. In this simple sentence, the pronoun "I" is in the nominative case because it is the active subject. The word "book" is in the accusative case because it is the direct object of my action. And the pronoun "to you" shows the final recipient in the dative case.* To start using the Dative case naturally and confidently, you need a solid starter kit of verbs that frequently trigger it. These are high-frequency transaction verbs that you already use every day. The most essential ones include **давати** (to give), **дарувати** (to gift), and **допомагати** (to help). You will also need verbs related to sharing information. These include **казати** (to say), **говорити** (to tell), and **писати** (to write). Whenever you use any of these verbs, the person receiving the physical item, hearing the message, or accepting the help must be placed in the Dative case. Я часто пишу тобі довгі електронні листи. Моя старша сестра завжди допомагає мені робити домашнє завдання. Мій друг завжди каже мені правду. Ми з радістю даруємо їй красиві квіти на свято. Вони дають йому гарячий чай. > *I often write long emails to you. My older sister always helps me do homework. My friend always tells me the truth. We joyfully gift her beautiful flowers for the holiday. They give him hot tea.* :::info **Grammatical direction** Notice a beautiful feature of Ukrainian grammar: we usually do not need extra prepositions like "to" or "for" when indicating the recipient. The Dative case ending itself acts as the built-in direction marker. You simply say «я даю тобі» instead of inserting an unnecessary preposition. This makes sentences highly efficient. ::: Let us look at a typical family scene where various gifts are being happily distributed at a birthday gathering. Notice how the Dative pronouns are used repeatedly in a natural way to indicate exactly who receives each specific item. > — **Іменинник:** Що ви мені подаруєте сьогодні на свято? *(What will you gift to me today for the holiday?)* > — **Родина:** Ми маємо дуже багато чудових подарунків! *(We have very many wonderful gifts!)* > — **Іменинник:** Чудово! Кому ми даємо ці корисні речі? *(Great! To whom do we give these useful things?)* > — **Родина:** Мені — нову цікаву книгу. *(To me — a new interesting book.)* > — **Іменинник:** А тобі — солодкий шоколад. *(And to you — sweet chocolate.)* > — **Родина:** Йому ми даємо теплий зимовий шарф. *(To him we give a warm winter scarf.)* > — **Іменинник:** Їй — дуже красиві весняні квіти. *(To her — very beautiful spring flowers.)* > — **Родина:** А нам усім — неймовірно смачний торт! *(And to all of us — an incredibly tasty cake!)* <!-- INJECT_ACTIVITY: match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→їм), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -505,7 +505,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -532,14 +599,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

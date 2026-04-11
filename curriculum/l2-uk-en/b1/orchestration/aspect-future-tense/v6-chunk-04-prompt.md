@@ -32,7 +32,7 @@ Grand total: ~4190 words
 <previous_context>
 [...previous sections truncated...]
 
-робити** *(will be doing, impf)* його відразу після нашого смачного обіду. > — **Мама:** Мені абсолютно не потрібен твій довгий процес. Мені потрібен готовий результат. Коли ти **напишеш** *(will write, pf)* цей складний шкільний твір? > — **Дмитро:** Я спочатку цілих дві години **писатиму** *(will be writing, impf)* тести з математики, бо там дуже багато завдань. > — **Мама:** А як щодо твору? Ти хоча б **прочитаєш** *(will read, pf)* необхідний матеріал до нього сьогодні? > — **Дмитро:** Я весь довгий вечір уважно **читатиму** *(will be reading, impf)* підручник з історії. Обіцяю, що я буду дуже сильно зайнятий! > — **Мама:** Ти дуже хитро уникаєш прямих відповідей, сину. Цей кумедний побутовий діалог чудово демонструє цікаве мовне явище, яке можна назвати «захистом через процес». Сувора мама Дмитра використовує у своїх запитаннях виключно доконаний вид. Вона вимагає від сина чітких результатів і конкретних відповідей: «зробиш», «напишеш», «прочитаєш». Вона хоче знати точний момент завершення його шкільної роботи. Але Дмитро є дуже хитрим комунікатором. Він майстерно ухиляється від прямих зобов'язань, використовуючи лише недоконаний вид: «буду робити», «писатиму», «читатиму». Він постійно і дуже вміло зміщує фокус уваги своєї мами з очікуваного фінального результату на свою важку, тривалу працю. Він ніби каже: «Подивись, як довго і тяжко я буду працювати, хіба ти можеш вимагати від мене ще й гарантованого результату?». Це дуже точна і абсолютно свідома мовна гра. Дмитро використовує недоконаний вид, щоб надійно захистити себе від критики. Він обіцяє лише свої зусилля, але не готове завдання. Це показує, наскільки глибоко вид дієслова впливає на психологію нашого повсякденного спілкування та переговорів. Дмитро яскраво показує нам, що граматика може бути чудовим дипломатичним інструментом у складних сімейних ситуаціях. У нашому реальному повсякденному житті ми майже ніколи не говоримо виключно одним єдиним видом дієслова. Коли ми детально плануємо свій завтрашній день або складаємо серйозний робочий розклад, ми природно змішуємо обидва види. Це дозволяє нам щоразу створювати дуже деталізовану, реалістичну і динамічну картину нашого власного майбутнього. Уявіть собі типовий ранковий план. Ви можете сказати: «Завтра я дуже рано **встану** *(will get up, pf)*». Це одна коротка, миттєва і повністю завершена дія. Після цього ви продовжуєте: «Потім я довго і спокійно **снідатиму** *(will be having breakfast, impf)*». Це вже надзвичайно приємний, розтягнутий у часі процес, який має свою комфортну тривалість. Далі ви кажете: «О дев'ятій годині я швидко **поїду** *(will leave/go, pf)* на роботу». Знову дуже коротка дія з чітким результатом — ви успішно змінили свою локацію. «Там я активно **працюватиму** *(will be working, impf)* до шостої години вечора». Це об'єктивно найдовший процес вашого дня, який триває багато довгих годин. І нарешті: «А ввечері я смачно **приготую** *(will cook/prepare, pf)* вечерю для всієї нашої родини». Ви знову впевнено фіксуєте конкретний результат вашого дня. Якби ви використовували лише доконаний вид, ваш день здавався б серією нервових, миттєвих стрибків. А лише недоконаний вид швидко перетворив би його на одну нескінченну і неймовірно нудну рутину. Тільки правильна і гармонійна комбінація двох видів створює природний ритм нашого життя. <!-- INJECT_ACTIVITY: match-up, Match communicative situations (promise, duration, result) to the best future form, 8 items -->
+between a mother and her son highlights a brilliant tactical use of grammatical aspect, often called the "Process Defense." The mother is asking for a concrete, measurable result. Her questions consistently use the perfective aspect («зробиш», «напишеш», «закінчиш») because she wants the homework to be fully completed. She is demanding accountability and a final product, pushing for a definitive answer. Дмитро чудово розуміє її вимоги, але уникає прямих обіцянок результату. Замість цього він будує свій захист навколо процесу. Відповідаючи формами недоконаного виду («буду робити», «писатиму», «читатиму», «робитиму»), він підкреслює кількість зусиль, які планує витратити. Він ніби каже: "Дивись, як багато часу і праці я вкладатиму в це завдання". Це дуже точне ведення переговорів за допомогою граматики. Він демонструє свою зайнятість, але обережно уникає використання дієслова «зроблю», яке б зобов'язало його надати готовий і ідеальний результат до певного часу. > *Dmytro perfectly understands her demands, but avoids direct promises of a result. Instead, he builds his defense around the process. By answering with imperfective forms ("буду робити", "писатиму", "читатиму", "робитиму"), he emphasizes the amount of effort he plans to spend. It is as if he is saying: "Look how much time and labor I will invest in this task." This is very precise negotiation using grammar. He demonstrates his busyness, but carefully avoids using the verb "зроблю" (I will get it done), which would obligate him to provide a finished and perfect result by a certain time.* In real life, our plans for the future are rarely just one long, unbroken process or a simple, dry list of completed tasks. A natural narrative about tomorrow will seamlessly weave both aspects together. This mixing of forms allows you to create a realistic, three-dimensional picture of your day, showing both the major milestones you intend to pass and the continuous activities that comfortably fill the space between them. Наприклад, ви можете розповісти про свій розклад так: «Завтра я встану о сьомій ранку. Потім я пів години снідатиму і читатиму новини. О дев'ятій годині я поїду в офіс, де працюватиму до шостої вечора. А коли я повернуся додому, я приготую смачну вечерю». У цьому тексті ідеально поєднуються різні конструкції. Дієслова доконаного виду («встану», «поїду», «повернуся», «приготую») слугують точками на часовій шкалі — це ключові події, які просувають розповідь вперед. А дієслова недоконаного виду («снідатиму», «читатиму», «працюватиму») заповнюють ці проміжки часу фоновою діяльністю. > *For example, you can talk about your schedule like this: "Tomorrow I will get up at seven in the morning. Then I will be having breakfast for half an hour and reading the news. At nine o'clock I will go to the office, where I will be working until six in the evening. And when I return home, I will prepare a delicious dinner." This text perfectly combines different constructions. The perfective verbs ("встану", "поїду", "повернуся", "приготую") serve as points on the timeline — these are key events that move the narrative forward. And the imperfective verbs ("снідатиму", "читатиму", "працюватиму") fill these time gaps with background activity.* <!-- INJECT_ACTIVITY: match-up-situations -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -598,7 +598,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -611,14 +678,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

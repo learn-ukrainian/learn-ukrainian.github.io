@@ -1,0 +1,59 @@
+{
+  "module": "health",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T01:02:05.003152Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T01:02:04.302106Z",
+    "meta": null,
+    "activities": "2026-04-09T11:12:04.007417Z",
+    "vocabulary": "2026-04-09T11:16:29.398378Z",
+    "research": null,
+    "plan": "2026-03-30T22:17:20.657684Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1639/1200 (raw: 1669)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "28/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

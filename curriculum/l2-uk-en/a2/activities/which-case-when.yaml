@@ -196,17 +196,17 @@ workbook:
   type: fill-in
   instruction: Вставте іменник у правильній відмінковій формі
   items:
-  - sentence: Він телефонує (сестра) _____.
+  - sentence: Він телефонує _____.
     answer: сестрі
-  - sentence: Я бачу (друг) _____.
+  - sentence: Я бачу _____.
     answer: друга
-  - sentence: Ми цікавимося (історія) _____.
+  - sentence: Ми цікавимося _____.
     answer: історією
-  - sentence: У мене немає (час) _____.
+  - sentence: У мене немає _____.
     answer: часу
-  - sentence: Діти йдуть в (школа) _____.
+  - sentence: Діти йдуть в _____.
     answer: школу
-  - sentence: Я працюю на (робота) _____.
+  - sentence: Я працюю на _____.
     answer: роботі
 - id: error-correction-cases
   type: error-correction

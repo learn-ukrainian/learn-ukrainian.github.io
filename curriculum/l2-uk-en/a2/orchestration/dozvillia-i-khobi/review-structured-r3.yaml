@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text misses some required vocabulary from the plan (`баскетбол`, `волейбол`,
+    `біг`, `вишивання`). It also misses demonstrating the locative vs accusative contrast
+    for `басейн` (`у басейні`) in the
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian is grammatically correct and natural. Cases and gender agreements
+    are handled flawlessly. No Russianisms or calques detected.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The grammar rule for feminine instrumental ends states it takes `-ою`,
+    but provides `кулінарією` (`-єю`) as an example without explaining the soft group
+    variant. There is also a logical pronoun error '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is used. However, the recommended word `вподобання`
+    only appears in the H2 heading and is not contextualized in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All five injected activities match the plan perfectly in type and focus,
+    and are placed logically after the relevant instructional content.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent encouraging teacher persona. The text is warm but substantial
+    ("Це дуже важливе та корисне питання", "Ці маленькі слова роблять...").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module is cleanly formatted with correct H2 headers and a healthy
+    2597 word count well above the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately references Ukrainian cultural norms like visiting the Carpathians,
+    mushroom hunting ("тихе полювання"), and berry picking.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel natural, featuring specific plans, polite rejections, and
+    correct usage of cases in spoken context.
+findings: []

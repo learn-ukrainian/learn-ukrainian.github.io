@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-до якої господині щедро додають свіжі або розморожені **ягоди** (berries), горіхи та трохи меду. Якщо вранці зовсім немає зайвого часу довго готувати, українці швидко роблять простий **бутерброд** (sandwich) із чорним хлібом, сиром чи скибочкою ковбаси. І, звісно ж, жоден ранок не може обійтися без гарячих напоїв: хтось із задоволенням п'є зелений або чорний чай, а для багатьох дорослих людей ранок взагалі не починається, поки не випита перша міцна **кава** (coffee). Історичні традиційні українські сніданки в селах колись були надзвичайно ситними — зранку могли подавати навіть гарячий борщ, картоплю або вареники зі сметаною, щоб люди мали достатньо енергії на весь довгий день важкої фізичної роботи в полі. Проте сучасний, швидкий ритм міського життя диктує нам зовсім інші правила харчування, тому зараз кияни чи львів'яни переважно обирають легкі, дуже швидкі страви, або взагалі снідають по дорозі на роботу у затишних кав'ярнях. Після смачного сніданку нарешті настає час швидко збиратися на роботу чи навчання. У цей момент ми часто використовуємо популярний вираз **виходити з дому** (to leave the house). Якщо ми випадково прокинулися надто пізно і не встигли випити каву, нам доводиться дуже сильно **поспішати** (to hurry), щоб не запізнитися. Коли ми детально говоримо про те, як саме ми щодня добираємося до свого офісу, школи чи університету, ми використовуємо **Орудний відмінок** (Instrumental case) для позначення засобів транспорту. Замість того, щоб казати довгу фразу «я їду на трамваї», сучасні українці набагато частіше кажуть коротше та природніше: «Я їду на роботу **трамваєм** (by tram), **автобусом** (by bus) або **метро** (by metro — пам'ятайте, що це незмінюване слово іншомовного походження)». Використання Орудного відмінка без прийменників робить нашу розповідь про щоденний маршрут набагато більш динамічною, плавною та стилістично правильною для рівня B1. Тепер давайте спробуємо об'єднати всі ці нові лексичні та граматичні елементи у велику, зв'язну розповідь про один типовий київський ранок. «Мій гучний **будильник** (alarm clock) несподівано дзвонить рівно **о сьомій ранку** *(at seven in the morning)*. Я повільно **прокидаюся** *(wake up)*, відкриваю очі, але ще кілька приємних хвилин лежу в теплому ліжку. **О чверть на восьму** *(at a quarter past seven)* я нарешті **підводжуся** *(get up)* і одразу йду до своєї ванної кімнати. Там я ретельно **вмиваюся** *(wash myself)* холодною водою, довго чищу зуби та обережно **зачісуюся** *(comb my hair)* перед великим дзеркалом. Потім я швидко повертаюся в кімнату і **одягаюся** *(get dressed)*. **О восьмій годині** *(at eight o'clock)* я йду на світлу кухню, щоб приготувати собі швидкий і корисний сніданок. Зазвичай я роблю міцну чорну каву та варю вівсянку зі свіжими фруктами. **О пів на дев'яту** *(at half past eight)* я дуже швидко **збираюся** *(get ready)*, беру свій ноутбук, робочу сумку і виходжу з дому на вулицю. **За чверть до дев'ятої** *(at a quarter to nine)* я вже спускаюся в глибоке метро і їду на роботу. Я страшенно не люблю **запізнюватися** *(to be late)* на важливі зустрічі, тому завжди намагаюся не **затримуватися** *(delay/linger)*. Саме так активно **починається** *(begins)* мій кожен новий, цікавий день у великому місті». <!-- INJECT_ACTIVITY: fill-in, Complete a daily routine text with correct reflexive and prefixed verb forms, 12 items -->
+For instance, you would use it to explain a regular, expected morning occurrence that happens every day. «Зазвичай я снідаю гарячою кашею.» — *Usually I have hot porridge for breakfast.* However, when talking about a specific planned action with a clear, successful result, the perfective aspect is strictly required. You would use it to indicate a completed, one-time action in the near future. «Завтра я поснідаю значно раніше.» — *Tomorrow I will have breakfast much earlier.* Understanding this precise aspectual contrast is absolutely crucial for accurately planning your schedule, making promises, and discussing your daily habits with colleagues or friends. Український сніданок може бути дуже різним, і це часто залежить від того, скільки у вас є вільного часу зранку. Традиційно багато людей готують гарячу кашу з ягодами, горіхами або медом, яка дає багато енергії на весь довгий день. Якщо ж ви дуже поспішаєте і не маєте часу на приготування їжі, можна швидко зробити звичайний бутерброд із сиром, маслом або ковбасою. Звісно, невіддільною частиною сучасного міського життя є міцна чорна кава або ароматний чай. У великих містах, таких як Київ чи Львів, молодь часто купує ці напої у кав'ярнях дорогою на роботу чи навчання. :::tip **Cultural note** — While traditional breakfasts might include heartier meals, the modern urban rhythm in cities like Kyiv often shifts toward a quick coffee and a sandwich on the go. ::: Once breakfast is successfully finished, it is time to leave the house and face the day. Morning routines in a bustling modern city often involve a bit of a rush, so you will frequently hear people say that they need to hurry to avoid being late for their morning meetings. When it comes to the daily commute, Ukrainian efficiently uses the Instrumental case to describe the specific mode of transportation you choose. You do not use an extra preposition like "by" or "on" as you naturally might in English. Instead, you simply put the vehicle noun directly into the Instrumental case as you head to the office or university. «Я їду трамваєм на роботу.» — *I am going to work by tram.* «Вона їде автобусом до школи.» — *She is going to school by bus.* «Ми їдемо поїздом в інше місто.» — *We are going to another city by train.* Зазвичай мій розпорядок дня починається дуже рано, коли надворі ще досить тихо. Я прокидаюся о шостій ранку, відразу вимикаю будильник, швидко підводжуся та йду в душ. Там я довго вмиваюся прохолодною водою, щоб остаточно прокинутися, а потім ретельно чищу зуби. Після цього я повертаюся у свою кімнату, одягаюся, зачісуюся і уважно дивлюся у дзеркало. О пів на сьому я йду на кухню, де із задоволенням готую свій ранковий сніданок: варю каву та роблю великий бутерброд. Я ніколи не запізнююся на роботу, тому завжди дуже швидко збираюся. За чверть до восьмої я беру сумку і виходжу з дому. Я часто поспішаю, тому щодня їду на роботу швидкісним трамваєм. <!-- INJECT_ACTIVITY: fill-in-routine-verbs, Complete a daily routine text with correct reflexive and prefixed verb forms, 12 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -587,7 +587,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -600,14 +667,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -198,34 +198,33 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
 We have spent recent modules learning how to buy food, order drinks, and talk about objects in our daily environment. The Ukrainian language treats objects in a specific way. However, our world is mostly filled with people. We interact with family members, meet friends, and speak to professionals. When we talk about people rather than objects, Ukrainian grammar shifts its focus. The rules change because the language makes a sharp distinction between a living person and an inanimate object. We must now learn how to name the people around us when they are the target of our actions.
 
 Read this conversation between a bride and her friend at a wedding reception. They are showing wedding photos and identifying people. Pay close attention to the word endings for people.
 
-> **Друг:** Кого ти бачиш? *(Who do you see?)*
-> **Наречена:** Я бачу маму і тата. *(I see mom and dad.)*
+> **Друг:** Кого ти ба́чиш? *(Who do you see?)*
+> **Нарече́на:** Я ба́чу ма́му і та́та. *(I see mom and dad.)*
 > **Друг:** А хто це? *(And who is this?)*
-> **Наречена:** Це мій дядько. А це тітка. *(This is my uncle. And this is the aunt.)*
-> **Друг:** Знаєш Олену? *(Do you know Olena?)*
-> **Наречена:** Так. А це мій брат. Ти знаєш мого брата? *(Yes. And this is my brother. Do you know my brother?)*
-> **Друг:** Ні, я не знаю твого брата. *(No, I do not know your brother.)*
-> **Наречена:** Ходімо! Я тебе познайомлю! *(Let's go! I will introduce you!)*
-> **Друг:** Ось наречена і наречений. *(Here is the bride and the groom.)*
+> **Наречена:** Це мій дя́дько. А це ті́тка. *(This is my uncle. And this is the aunt.)*
+> **Друг:** Зна́єш Оле́ну? *(Do you know Olena?)*
+> **Наречена:** Так. А це мій брат. Ти знаєш мого бра́та? *(Yes. And this is my brother. Do you know my brother?)*
+> **Друг:** Ні, я не зна́ю твого́ брата. *(No, I do not know your brother.)*
+> **Наречена:** Ході́мо! Я тебе́ познайо́млю! *(Let's go! I will introduce you!)*
+> **Друг:** Ось наречена і нарече́ний. *(Here is the bride and the groom.)*
 
-Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **мама** (mom) and **тато** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
+Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **ма́ма** (mom) and **та́то** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
 
 This rule applies to all people around you, including professionals and colleagues. Read this short exchange between two colleagues at a school.
 
-> **Колега 1:** Ти знаєш нашу вчительку? *(Do you know our teacher?)*
-> **Колега 2:** Так, я знаю Олену Петрівну. *(Yes, I know Olena Petrivna.)*
-> **Колега 1:** А нового лікаря? *(And the new doctor?)*
+> **Коле́га 1:** Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*
+> **Колега 2:** Так, я знаю Олену Петрі́вну. *(Yes, I know Olena Petrivna.)*
+> **Колега 1:** А ново́го лі́каря? *(And the new doctor?)*
 > **Колега 2:** Ні, я ще не знаю лікаря. *(No, I do not know the doctor yet.)*
-> **Колега 1:** Він дуже добрий. *(He is very kind.)*
-> **Колега 1:** Я чекаю його зараз. *(I am waiting for him right now.)*
+> **Колега 1:** Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He is very kind. I am waiting for him right now.)*
 
-The word for a female teacher is **вчителька**. It changes to **вчительку**. The female name **Олена Петрівна** becomes **Олену Петрівну**. The masculine word for a doctor is **лікар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
+The word for a female teacher is **вчи́телька**. It changes to **вчительку**. The female name **Оле́на Петрі́вна** becomes **Олену Петрівну**. The masculine word for a doctor is **лі́кар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
 
 ## Кого? (Whom?)
 
@@ -245,7 +244,7 @@ Ukrainian children learn this logic early in Grade 4. Their teachers use a speci
 We have a reliable pattern for these masculine people. For a masculine person, we use the exact same ending we will later use to show possession. This is the key distinction for L2 learners. The object receives the action, and the ending marks the object as a living person. Observe how the words change:
 
 *   **брат** → **брата** (brother)
-*   **друг** → **друга** (friend)
+*   **друг** → **дру́га** (friend)
 *   **тато** → **тата** (dad)
 *   **лікар** → **лікаря** (doctor)
 
@@ -253,20 +252,20 @@ This is why animate accusative matters — it changes masculine nouns.
 
 <!-- INJECT_ACTIVITY: sort-animate-inanimate -->
 
-## Знахідний відмінок — живе (Accusative Animate)
+## Знахі́дний відмі́нок — живе́ (Accusative Animate)
 
-Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **кава** changes to **каву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
+Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **ка́ва** changes to **ка́ву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
 
 *   **мама** → **маму** (mom)
-*   **сестра** → **сестру** (sister)
+*   **сестра́** → **сестру́** (sister)
 *   **Олена** → **Олену** (Olena)
-*   **подруга** → **подругу** (female friend)
+*   **по́друга** → **по́другу** (female friend)
 *   **Я бачу маму.** (I see mom.)
 *   **Я знаю сестру.** (I know the sister.)
 *   **Я чекаю Олену.** (I wait for Olena.)
-*   **Я люблю подругу.** (I love the female friend.)
+*   **Я люблю́ подругу.** (I love the female friend.)
 
-Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусід** (male neighbor) becomes **сусіда**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
+Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусі́д** (male neighbor) becomes **сусі́да**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
 
 *   **брат** → **брата** (brother)
 *   **друг** → **друга** (male friend)
@@ -279,15 +278,15 @@ Masculine animate nouns introduce THE new rule. The Accusative case equals the G
 
 :::caution
 **Don't Forget the Men!**
-English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефон** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
+English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефо́н** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
 :::
 
 Some masculine nouns end in a soft consonant or the suffix **-ар**. These words require a soft vowel ending. They take the **-я** ending instead of the hard **-а**. Many professions fall into this category.
 
 *   **лікар** → **лікаря** (doctor)
-*   **вчитель** → **вчителя** (male teacher)
-*   **продавець** → **продавця** (male seller)
-*   **колега** → **колегу** (colleague)
+*   **вчи́тель** → **вчи́теля** (male teacher)
+*   **продаве́ць** → **продавця́** (male seller)
+*   **колега** → **коле́гу** (colleague)
 *   **Я чекаю лікаря.** (I wait for the doctor.)
 *   **Я знаю вчителя.** (I know the teacher.)
 *   **Я бачу продавця.** (I see the seller.)
@@ -303,32 +302,32 @@ The complete picture of the Accusative case organizes these rules into a clear v
 | :--- | :--- | :--- |
 | **Masculine** | = nominative (**хліб**) | = genitive (**брата**) |
 | **Feminine** | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
-| **Neuter** | = nominative (**молоко**) | (rare at A1) |
+| **Neuter** | = nominative (**молоко́**) | (rare at A1) |
 
 The feminine nouns always change the final vowel. They change **-а** to **-у** and **-я** to **-ю**. The masculine nouns remain unchanged for inanimate objects. They adopt the genitive ending for living people. The neuter nouns do not change.
 
 Certain verbs appear constantly in social interactions. These key verbs with animate accusative require the change to identify the target of the action. You must memorize these words.
 
-*   **бачити** (to see)
-*   **знати** (to know)
-*   **любити** (to love)
-*   **чекати** (to wait for)
-*   **шукати** (to look for)
+*   **ба́чити** (to see)
+*   **зна́ти** (to know)
+*   **люби́ти** (to love)
+*   **чека́ти** (to wait for)
+*   **шука́ти** (to look for)
 
-These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шукаю сусіда** (I look for the neighbor).
+These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шука́ю сусіда** (I look for the neighbor).
 
 You can practice these patterns with simple questions and answers. Read the questions and notice the noun endings in the responses.
 
-*   **Кого ти любиш?** (Whom do you love?)
+*   **Кого ти лю́биш?** (Whom do you love?)
     **Я люблю маму і тата.** (I love mom and dad.)
-*   **Кого ти чекаєш?** (Whom are you waiting for?)
+*   **Кого ти чека́єш?** (Whom are you waiting for?)
     **Я чекаю друга.** (I am waiting for a friend.)
-*   **Кого ти знаєш у школі?** (Whom do you know at school?)
+*   **Кого ти знаєш у шко́лі?** (Whom do you know at school?)
     **Я знаю вчителя.** (I know the teacher.)
 *   **Кого ти бачиш?** (Whom do you see?)
-    **Я бачу покупця.** (I see the buyer.)
-*   **Кого ти шукаєш?** (Whom are you looking for?)
-    **Я шукаю викладача.** (I am looking for the lecturer.)
+    **Я бачу покупця́.** (I see the buyer.)
+*   **Кого ти шука́єш?** (Whom are you looking for?)
+    **Я шукаю викладача́.** (I am looking for the lecturer.)
 
 :::tip
 **Colleagues and Professions**
@@ -341,7 +340,7 @@ Check your understanding of the pattern. Let us complete this Self-check: **Я �
 <!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1684 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1681 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -517,15 +516,38 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 79 words | Not found: 4 words
+Verified: 70 words | Not found: 27 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Діало — NOT IN VESUM
+  ✗ Знахі — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
   ✗ Олену — NOT IN VESUM
-  ✗ Петрівна — NOT IN VESUM
+  ✗ Петрі — NOT IN VESUM
   ✗ Петрівну — NOT IN VESUM
+  ✗ биш — NOT IN VESUM
+  ✗ вна — NOT IN VESUM
+  ✗ вну — NOT IN VESUM
+  ✗ відмі — NOT IN VESUM
+  ✗ дний — NOT IN VESUM
+  ✗ дру — NOT IN VESUM
+  ✗ дько — NOT IN VESUM
+  ✗ каря — NOT IN VESUM
+  ✗ млю — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ познайо — NOT IN VESUM
+  ✗ продаве — NOT IN VESUM
+  ✗ телефо — NOT IN VESUM
+  ✗ тель — NOT IN VESUM
+  ✗ телька — NOT IN VESUM
+  ✗ тельку — NOT IN VESUM
+  ✗ тка — NOT IN VESUM
+  ✗ чити — NOT IN VESUM
+  ✗ чиш — NOT IN VESUM
+  ✗ шко — NOT IN VESUM
 
-All 79 other words are confirmed to exist in VESUM.
+All 70 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

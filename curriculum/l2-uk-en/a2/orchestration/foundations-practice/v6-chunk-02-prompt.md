@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-about quantities using words like **багато** (much/many) and **мало** (little/few). Since a successful party usually requires multiple items for the guests, you will often use the plural Genitive form here. * Нам треба купити **багато фруктів**. *(We need to buy many fruits.)* * У нас є **багато холодних напоїв**. *(We have many cold drinks.)* * На столі залишилося **мало паперових серветок**. *(There are few paper napkins left on the table.)* * У мене є **багато нових ідей**. *(I have many new ideas.)* * Тут дуже **мало вільного місця**. *(There is very little free space here.)* ### Читаємо українською (Reading Practice) Зараз ми організовуємо велике свято вдома. *(Right now we are organizing a big holiday at home.)* У нас є багато цікавих ідей. *(We have many interesting ideas.)* Але у нас зовсім немає часу. *(But we have absolutely no time.)* Моя сестра буде готувати смачну рибу. *(My sister will be cooking delicious fish.)* А я буду купувати солодкий торт. *(And I will be buying a sweet cake.)* Нам треба багато свіжих овочів. *(We need many fresh vegetables.)* У магазині мало хороших фруктів. *(There are few good fruits in the store.)* Тому ми йдемо на великий ринок. *(That is why we are going to the big market.)* Там ми купимо все необхідне. *(There we will buy everything necessary.)* Let us continue our dialogue. Fast forward a few hours. The long planning phase is finally over, and it is time to confirm the completed tasks. For this confirmation, we switch to the perfective past tense to show that the expected result has been fully achieved. > — **Олена:** Максиме, ти вже купив торт і фрукти? *(Maksym, have you already bought the cake and fruits?)* > — **Максим:** Так, я купив великий торт і яблука. *(Yes, I bought a big cake and apples.)* > — **Олена:** А що з нашою вечерею? *(And what about our dinner?)* > — **Максим:** Ми замовили піцу. Вона скоро буде тут. *(We ordered pizza. It will be here soon.)* > — **Олена:** Я вже приготувала салат і закуски. *(I have already prepared the salad and snacks.)* > — **Максим:** Чудово! Я вже поставив тарілки на стіл. *(Great! I have already put the plates on the table.)* > — **Олена:** Тоді усе готово до вечірки. *(Then everything is ready for the party.)* In this second part, they do not use «купував» (was buying) or «замовляв» (was ordering). Instead, they use «купив» (bought) and «замовили» (ordered) because the action is absolutely complete and the pizza is already on its way. :::tip Українська гостинність (Ukrainian Hospitality) When hosting guests, Ukrainians love to use diminutive suffixes to make the atmosphere warmer and more inviting. Instead of a standard **торт** (cake), a host might offer you **тортик** (a nice little cake). A regular **салат** (salad) becomes a delicious **салатик**. You might even hear slang like **винишко** (wine) instead of **вино**. These small changes show care, emotion, and true hospitality. ::: <!-- INJECT_ACTIVITY: quiz, Role-play: Planning a Party (aspect in future tense), 8 items -->
+will inevitably find that some crucial things are missing. To express absence or lack in Ukrainian, we rely on the word **немає** (there is no). This word is a powerful trigger for the Genitive case. Коли ми кажемо «немає», наступне слово завжди стоїть у родовому відмінку. Це суворе граматичне правило чудово працює для живих людей, фізичних предметів та абстрактних понять. > *When we say "немає", the next word is always in the Genitive case. This strict grammatical rule works perfectly for living people, physical objects, and abstract concepts.* You can use this structure to complain about an empty new apartment or missing items: **У нас немає музики.** — *We have no music.* **Немає торта.** — *There is no cake.* **Немає великого столу.** — *There is no big table.* The Genitive case is also absolutely essential when you are talking about quantities for your event. Words like **багато** (many) and **мало** (few) strictly require the noun that follows them to take the Genitive form. For countable party items, this is usually the Genitive plural. Для гарної вечірки господарям треба купити багато свіжих фруктів і багато холодних напоїв. Якщо у вас дуже мало паперових серветок, гості будуть незадоволені. > *For a good party, the hosts need to buy a lot of fresh fruits and a lot of cold drinks. If you have very few paper napkins, the guests will be unsatisfied.* Remembering these specific plural endings will help you accurately describe the exact scale of your exciting preparations. Let us rejoin our friends a few days later to see their actual progress. Now, they are completely focusing on their completed results, which requires switching to the perfective past tense. > — **Максим:** Олено, як наші справи? Ти вже приготувала салат? *(Olena, how are our things? Have you already prepared the salad?)* > — **Олена:** Так, я все успішно зробила. А ти купив напої? *(Yes, I successfully did everything. And did you buy the drinks?)* > — **Максим:** Я вже купив торт і газовану воду, але зовсім забув про яблучний сік. *(I already bought the cake and sparkling water, but I completely forgot about the apple juice.)* > — **Олена:** Нічого страшного, ми замовили велику піцу, а кур'єр може привезти сік. *(No worries, we ordered a big pizza, and the courier can bring juice.)* > — **Максим:** Чудово! Я також успішно запланував музику для нашого вечора. *(Great! I also successfully planned the music for our evening.)* :::tip **Did you know?** Ukrainians absolutely love using diminutive suffixes in everyday speech, especially when talking about delicious food and warm hospitality. Calling a standard cake a **тортик** instead of «торт» or a fresh salad a **салатик** instead of «салат» makes the invitation sound much warmer and more welcoming. You might even hear informal slang like **винишко** or the more traditional Ukrainian diminutive **винце** for wine among very close friends. These small changes in word endings actively show deep affection and help create a beautifully cozy, relaxed atmosphere for your happy guests. ::: <!-- INJECT_ACTIVITY: quiz-party-aspect -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -467,7 +467,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -495,14 +562,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

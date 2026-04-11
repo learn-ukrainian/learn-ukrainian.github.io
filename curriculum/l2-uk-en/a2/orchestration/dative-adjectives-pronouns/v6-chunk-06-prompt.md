@@ -29,7 +29,7 @@ Grand total: ~2250 words
 <previous_context>
 [...previous sections truncated...]
 
-friend.)* ❌ Ми допомагаємо нашій нова сусідка. ✅ Ми допомагаємо **нашій новій сусідці**. *(We are helping our new neighbor.)* <!-- INJECT_ACTIVITY: fill-in-dative-phrases --> <!-- INJECT_ACTIVITY: error-correction-agreement --> ## Порівняння відмінків (Comparing Cases So Far) It is very common to confuse the Genitive and Dative cases, especially for masculine and neuter words. The Genitive ending is **-ого**, while the Dative ending is **-ому**. The letter "м" in **-ому** is your unique marker for the Dative case. When you hear or write "м", you are usually directing an action to someone. «Читаємо українською» У мене немає **нового друга**. *(I do not have a new friend.)* [Родовий / Genitive] Я телефоную **новому другові**. *(I am calling a new friend.)* [Давальний / Dative] Вона не бачить **мого старшого брата**. *(She does not see my older brother.)* [Родовий / Genitive] Вона купує каву **моєму старшому братові**. *(She is buying coffee for my older brother.)* [Давальний / Dative] For feminine words, you must contrast the Genitive ending **-ої** with the Dative ending **-ій**. Notice that the Dative **-ій** is exactly identical to the Locative form you use with the prepositions **на** *(on)* or **в** *(in)*. «Читаємо українською» Тут немає **нашої нової вчительки**. *(Our new teacher is not here.)* [Родовий / Genitive] Ми даруємо квіти **нашій новій вчительці**. *(We are gifting flowers to our new teacher.)* [Давальний / Dative] Я не знаю **твоєї молодшої сестри**. *(I do not know your younger sister.)* [Родовий / Genitive] Я допомагаю **твоїй молодшій сестрі**. *(I am helping your younger sister.)* [Давальний / Dative] How do you know which case to choose? The verb or the preposition in your sentence is always the "driver." Prepositions like **для** *(for)* or **без** *(without)* always require the Genitive case. Verbs of giving, telling, and helping always require the Dative case. > — **Анна:** Це подарунок для **твого найкращого друга**? *(Is this a gift for your best friend?)* > — **Марк:** Так, я завжди купую подарунки **моєму найкращому другові**. *(Yes, I always buy gifts for my best friend.)* > — **Анна:** А що ти подаруєш **твоїй дівчині**? *(And what will you gift to your girlfriend?)* > — **Марк:** Я ще не знаю. Я запитаю **її старшу сестру**. *(I do not know yet. I will ask her older sister.)* > — **Анна:** Ти часто телефонуєш **її старшій сестрі**? *(Do you often call her older sister?)* > — **Марк:** Так, ми дуже добре спілкуємося. *(Yes, we communicate very well.)* Here is a quick reference for common verbs that require the Dative case for your noun phrases. «Читаємо українською» **Дієслова для давального відмінка** *(Verbs for the dative case)* **давати / дати** *(to give)* → даю **цьому чоловікові** *(giving to this man)* **дарувати / подарувати** *(to gift)* → дарую **моїй мамі** *(gifting to my mom)* **телефонувати / зателефонувати** *(to call)* → телефоную **нашому лікарю** *(calling our doctor)* **допомагати / допомогти** *(to help)* → допомагаю **старому сусідові** *(helping the old neighbor)* **дякувати / подякувати** *(to thank)* → дякую **вашому синові** *(thanking your son)* <!-- INJECT_ACTIVITY: match-up --> <!-- INJECT_ACTIVITY: group-sort -->
+new colleague.)* <!-- INJECT_ACTIVITY: fill-in-dative-phrases --> <!-- INJECT_ACTIVITY: error-correction-agreement --> ## Порівняння відмінків Now that we have learned the Dative case, it is time to compare it with the Genitive case. For masculine and neuter words, both cases change the ends of adjectives and pronouns, but they use different sounds. The Genitive case uses the ending «-ого», while the Dative case uses «-ому». That letter «м» is your unique signal for the Dative case when talking about masculine or neuter objects. У мене немає нового друга. Я телефоную новому другу. Ми прийшли без його старшого брата. Вони купили подарунок його старшому братові. Це ключ від нашого старого будинку. Ми радіємо нашому старому будинку. > *I do not have a new friend. I am calling a new friend. We arrived without his older brother. They bought a gift for his older brother. This is the key to our old house. We rejoice in our old house.* For feminine words, the difference is also very clear. The feminine Genitive ending is «-ої», but the feminine Dative ending is «-ій». If you remember our previous lessons, you might notice that this Dative «-ій» is exactly the same as the feminine Locative ending. Context will always tell you which case is being used. Тут немає моєї нової подруги. Я завжди допомагаю моїй новій подрузі. Вони прийшли без тієї молодої жінки. Петро зараз телефонує тій молодій жінці. У нашої розумної вчительки сьогодні свято. Ми несемо квіти нашій розумній вчительці. > *My new friend is not here. I always help my new friend. They arrived without that young woman. Petro is calling that young woman right now. Our smart teacher has a holiday today. We are bringing flowers to our smart teacher.* How do you know which case to choose? The verb or preposition in your sentence is the driver. If you use a preposition of location or purpose, you need the Genitive case. However, verbs that describe giving, communicating, or assisting will drive the entire descriptive phrase into the Dative case. Слова для родового відмінка: немає, для, без, біля, від. Дієслова для давального відмінка: допомагати, дякувати, телефонувати, дарувати, пояснювати. > *Words for the Genitive case: there is no, for, without, near, from. Verbs for the Dative case: to help, to thank, to call, to gift, to explain.* :::info **Find the driver** Always look at the verb first. If the verb implies transferring something to a receiver, you need the Dative wave across the whole noun phrase. ::: Вони купили смачний торт для мого маленького брата. Вони подарували смачний торт моєму маленькому братові. Я стою біля твоєї нової машини. Цей колір дуже пасує твоїй новій машині. У нас немає вашого старого номера. Ми надіслали повідомлення вашому старому номеру. > *They bought a delicious cake for my little brother. They gifted a delicious cake to my little brother. I am standing near your new car. This color really suits your new car. We do not have your old number. We sent a message to your old number.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -514,7 +514,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -541,14 +608,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

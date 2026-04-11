@@ -92,7 +92,7 @@ required:
 > — **Пасажир:** Добрий день! Мені потрібно до вокзалу *(to the station)*, будь ласка. Ви вільні?
 > — **Таксист:** Добрий день! Так, сідайте. Їдемо до центрального вокзалу?
 > — **Пасажир:** Так. Але спочатку, будь ласка, поїдемо до аптеки *(to the pharmacy)*. Мені дуже треба купити ліки.
-> — **Таксист:** Добре, я знаю, де є аптека. Вона знаходиться біля старого парку.
+> — **Таксист:** Добре, я знаю, де є аптека. Вона біля старого парку.
 > — **Пасажир:** Дякую. Скажіть, а ви можете чекати мене там до п'ятої години *(until five o'clock)*?
 > — **Таксист:** Звичайно, я можу чекати вас до п'ятої години. Це не проблема.
 > — **Пасажир:** Чудово! А вже потім ми поїдемо до готелю *(to the hotel)* «Україна».
@@ -109,8 +109,7 @@ The most important rule to remember is that the preposition **до** always requ
 Вона чекає до завтра. *(She is waiting until tomorrow.)*
 :::
 
-
-## Куди ти йдеш? До + родовий для напрямку
+## Куди ти йдеш? До + родовий для напрямку (Where Are You Going? До + Genitive for Direction)
 
 Коли ми плануємо подорож, ми завжди маємо **напрямок** *(direction)*. To express your destination, Ukrainian uses the preposition **до** *(to, toward)* followed by the Genitive case *(родовий відмінок)*. Let us start with geographical locations like cities and countries. For masculine cities, the Genitive ending is usually **-а** or **-я**. For feminine countries, the ending is usually **-и** or **-ії**. This is how we build the phrase "to the city" or "to the country". When talking about moving towards places, these endings are extremely consistent.
 
@@ -170,6 +169,9 @@ To form the Genitive case correctly with **до**, pay close attention to the st
 школа *(school)* → до школи
 станція *(station)* → до станції
 площа *(square)* → до площі
+
+**Середній рід (Neuter):**
+море *(sea)* → до моря
 :::
 
 :::tip Читаємо українською
@@ -207,7 +209,6 @@ There is one special word you will use every single day: **додому** *(home
 — Коли ти поїдеш додому сьогодні? *(When will you go home today?)*
 :::
 
-
 ## До якого часу? До + родовий для часу (Until When? До + Genitive for Time)
 
 When you want to say how long an action continues, you use **до** *(until)* plus the Genitive case. This marks the absolute boundary or the end of a time period. If you start a task in the morning and stop in the evening, you work until the evening arrives. 
@@ -232,7 +233,7 @@ It is crucial to remember the endings for masculine nouns when talking about tim
 > — **Анна:** Ти довго вчора працював? *(Did you work long yesterday?)*
 > — **Сергій:** Так, я писав звіт до пізнього вечора. *(Yes, I was writing the report until late evening.)*
 > — **Анна:** Тобі треба більше відпочивати. *(You need to rest more.)*
-> — **Сергій:** Знаю. Але я маю дуже багато роботи. *(I know. But I have very much work.)*
+> — **Сергій:** Знаю. Але я маю дуже багато роботи. *(I know. But I have a lot of work.)*
 
 The preposition **до** also translates to "by" when you are setting a strict deadline. It shows the exact moment when a task must be finished, or when an event will definitely happen. If your teacher wants homework on Friday, you must do it by Friday.
 
@@ -286,10 +287,9 @@ You will also see it combined with words like **початок** *(start)* and *
 > — **Максим:** Так, звичайно. До завтра! *(Yes, of course. See you tomorrow!)*
 > — **Олена:** До зустрічі! *(See you!)*
 
+## До + родовий: решта значень та узагальнення (До + Genitive: Other Meanings and Summary)
 
-## До + родовий: решта значень та узагальнення
-
-Beyond physical movement and time, the preposition **до** *(to/for/until)* frequently expresses purpose, readiness, and abstract goals. When you are prepared for an event, you are "ready to" it in Ukrainian. We use the adjective **готовий** *(ready)* followed by **до** and the Genitive case. For example, **готовий до екзамену** *(ready for the exam)*, or **готовий до роботи** *(ready for work)*. This preposition also shows purpose in everyday fixed expressions. The common farewell **до побачення** *(goodbye)* literally means "until seeing". The conversational phrase **до речі** *(by the way)* translates directly to "to the point". If you buy a ticket, it is also a ticket "to" a specific destination: **квиток до Львова** *(ticket to Lviv)* or **квиток до театру** *(ticket to the theater)*.
+Beyond physical movement and time, the preposition **до** *(to/for/until)* frequently expresses purpose *(мета)*, readiness, and abstract goals. When you are prepared for an event, you are "ready to" it in Ukrainian. We use the adjective **готовий** *(ready)* followed by **до** and the Genitive case. For example, **готовий до екзамену** *(ready for the exam)*, or **готовий до роботи** *(ready for work)*. This preposition also shows purpose in everyday fixed expressions. The common farewell **до побачення** *(goodbye)* literally means "until seeing". The conversational phrase **до речі** *(by the way)* translates directly to "to the point". If you buy a ticket, it is also a ticket "to" a specific destination: **квиток до Львова** *(ticket to Lviv)* or **квиток до театру** *(ticket to the theater)*.
 
 :::note Мета і готовність (Purpose and Readiness)
 **готовий до екзамену** *(ready for the exam)*
@@ -339,7 +339,6 @@ Let us consolidate what we know about the Genitive case by comparing three essen
 <!-- INJECT_ACTIVITY: quiz-meaning-choice -->
 
 Finally, it is crucial to avoid a common mistake influenced by Russian syntax. In Russian, movement toward a person is expressed with "к" and the Dative case. In Ukrainian, movement toward a person always requires **до** and the Genitive case. You must say **до мами** *(to mom)*, **до лікаря** *(to the doctor)*, or **до друга** *(to a friend)*. Using "к" for direction is a calque that sounds unnatural and incorrect in modern Ukrainian. The preposition **до** is the only authentic way to express movement toward people and time limits. Embrace this preposition as a core feature of natural Ukrainian sentence structure. Using it correctly will make your speech sound significantly more fluent.
-
 
 ## Підсумок — Summary
 

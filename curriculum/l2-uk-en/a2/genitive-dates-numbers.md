@@ -1,205 +1,207 @@
 ## Яке сьогодні число? Котра година?
 
-When you want to know the current date in Ukrainian, you ask: «Яке сьогодні число?» (What is today's date?). The word «число» literally means "number," but in this context, it translates to "date." If you want to know *when* a specific event happens, you ask: «Коли?» (When?) or «Якого числа?» (On what date?).
+Asking for the date and time is a daily necessity. In Ukrainian, these questions rely on the Genitive case and ordinal numerals. When you want to know today's date, you ask «Яке сьогодні число?». The word **число** (date) means "number," but here it describes the calendar date. If you want to ask when an event is happening, you use the Genitive form and ask «Якого числа?».
 
-Here are a few quick examples of asking and answering about today's date:
-* «Яке сьогодні число?» — «Сьогодні десяте березня.» (What is the date today? — Today is the tenth of March.)
-* «Яке завтра число?» — «Завтра одинадцяте березня.» (What is the date tomorrow? — Tomorrow is the eleventh of March.)
-* «Яке вчора було число?» — «Вчора було дев'яте березня.» (What was the date yesterday? — Yesterday was the ninth of March.)
+Яке сьогодні число? Сьогодні десяте березня. Якого числа твій день народження? Мій день народження двадцятого березня. Коли ми їдемо до Києва? Ми їдемо п'ятого травня. Якого числа починається відпустка? Відпустка починається сьомого серпня.
 
-Let's look closer at the formula for stating the date. In English, you might simply say "January first." In Ukrainian, you use a specific grammatical structure. The day is expressed as an ordinal numeral (first, second, third) in the neuter nominative case, because it agrees with the implied neuter word «число». The month that follows must be in the Genitive singular case, acting like the English "of January."
+> *What is the date today? Today is the tenth of March. On what date is your birthday? My birthday is on the twentieth of March. When are we going to Kyiv? We are going on the fifth of May. On what date does the vacation start? The vacation starts on the seventh of August.*
 
-So, the formula is: **Ordinal Numeral (Neuter) + Month (Genitive)**.
+To state today's date, we use a specific grammatical formula. We start with an ordinal numeral in the neuter Nominative form. This numeral agrees with the implied neuter noun «число». Then, we add the name of the month in the Genitive singular. Ukrainian logic translates closer to "the first of January." The number changes its ending, but the month stays in the Genitive case.
 
-Look at these examples:
-* «перше січня» (the first of January)
-* «друге лютого» (the second of February)
-* «двадцять четверте серпня» (the twenty-fourth of August)
-* «Сьогодні п'яте травня.» (Today is the fifth of May.)
-* «Завтра шосте листопада.» (Tomorrow is the sixth of November.)
+:::info
+**Grammar box**
+Always put the month in the Genitive case when giving a date. The day itself is an ordinal number like **перше** (first) or **друге** (second).
+:::
 
-To master dates, you need to know the twelve months (місяці) and their Genitive forms. All Ukrainian month names are masculine. Most of them take the standard Genitive ending «-я» or «-а». A very important spelling rule to remember is that many months have a mobile vowel «-е-» that disappears when you add the Genitive ending. For example, «січень» (January) becomes «січня» (of January).
+Сьогодні перше січня. Завтра буде друге лютого. День Незалежності України — двадцять четверте серпня. Мій іспит буде дев'ятого вересня. Новий рік ми святкуємо першого січня. Коли ти працюєш? Я працюю третього квітня.
 
-Here is the complete list of months and their Genitive forms used for dates:
-* «січень» (January) — «січня» (Mobile «-е-» drops out)
-* «лютий» (February) — «лютого» (This month is an adjective, so it takes an adjectival ending)
-* «березень» (March) — «березня» (Mobile «-е-» drops out)
-* «квітень» (April) — «квітня» (Mobile «-е-» drops out)
-* «травень» (May) — «травня» (Mobile «-е-» drops out)
-* «червень» (June) — «червня» (Mobile «-е-» drops out)
-* «липень» (July) — «липня» (Mobile «-е-» drops out)
-* «серпень» (August) — «серпня» (Mobile «-е-» drops out)
-* «вересень» (September) — «вересня» (Mobile «-е-» drops out)
-* «жовтень» (October) — «жовтня» (Mobile «-е-» drops out)
-* «листопад» (November) — «листопада» (Takes the «-а» ending)
-* «грудень» (December) — «грудня» (Mobile «-е-» drops out)
+> *Today is the first of January. Tomorrow will be the second of February. The Independence Day of Ukraine is the twenty-fourth of August. My exam will be on the ninth of September. We celebrate the New Year on the first of January. When do you work? I work on the third of April.*
 
-Now, let's talk about time. To ask "What time is it?", use the phrase: «Котра година?». To ask "At what time?" an event happens, use: «О котрій годині?».
+Let's look at all twelve months and their Genitive forms. In Ukrainian, all month names are masculine. Most end in a consonant in the Nominative case, taking the ending **-я** or **-а** in the Genitive. Notice that some months lose the fleeting vowel **-е-** when they change form, like «січень» becoming «січня». The only exception is **лютий** (February), which takes the adjectival Genitive ending **-ого**.
 
-In Ukrainian, we use ordinal numerals (first, second, third) to name the hour. Because the word «година» (hour) is feminine, the numeral must also be feminine.
-* «Зараз друга година.» (It is two o'clock now. — *Literally: It is the second hour.*)
-* «Зараз п'ята година.» (It is five o'clock now.)
+Січень — перше січня. Лютий — друге лютого. Березень — третє березня. Квітень — четверте квітня. Травень — п'яте травня. Червень — шосте червня. Липень — сьоме липня. Серпень — восьме серпня. Вересень — дев'яте вересня. Жовтень — десяте жовтня. Листопад — одинадцяте листопада. Грудень — дванадцяте грудня. Я дуже люблю травень. Ми чекаємо снігу у кінці листопада. Вона народилася п'ятнадцятого грудня. Я відпочиваю з першого липня до десятого серпня. Твій брат приїде п'ятого вересня.
 
-To say "half past," we use the construction «пів на» (half to) followed by the *next* hour in the accusative case.
-* «пів на другу» (half past one — *Literally: half to the second*)
-* «пів на шосту» (half past five)
+> *January — the first of January. February — the second of February. March — the third of March. April — the fourth of April. May — the fifth of May. June — the sixth of June. July — the seventh of July. August — the eighth of August. September — the ninth of September. October — the tenth of October. November — the eleventh of November. December — the twelfth of December. I really love May. We are waiting for snow at the end of November. She was born on the fifteenth of December. I am resting from the first of July until the tenth of August. Your brother will arrive on the fifth of September.*
 
-To answer «О котрій годині?» (At what time?), use the preposition «о» (or «об» before a vowel) and the locative case.
-* «Зустріч о дев'ятій.» (The meeting is at nine.)
-* «Кіно об одинадцятій.» (The movie is at eleven.)
+:::tip
+**Did you know?**
+Ukrainian month names are deeply connected to nature and traditional activities. For example, **листопад** (November) literally describes the falling of leaves, and **квітень** (April) is the time of blooming flowers.
+:::
 
-Let's see how these phrases work in a real-life situation. In this dialogue, a client is calling a beauty salon to book an appointment. Notice the contrast between stating today's date and booking for a specific time.
+To ask "What time is it?", you say «Котра година?». Because «година» is feminine, we use feminine ordinal numerals for the hours. To ask "At what time?", use «О котрій годині?», placing the numeral in the Locative case. To say "half past," we use the preposition «на» followed by the *next* hour in the Accusative case. «Пів на другу» means "half toward the second hour" (1:30).
 
-> — **Клієнтка:** Добрий день! Підкажіть, будь ласка, яке сьогодні число? *(Good day! Could you tell me, please, what is the date today?)*
-> — **Адміністраторка:** Добрий день! Сьогодні п'яте травня. *(Good day! Today is the fifth of May.)*
-> — **Клієнтка:** Дякую. Я хочу записатися на манікюр на шосте травня. *(Thank you. I want to book an appointment for a manicure for the sixth of May.)*
-> — **Адміністраторка:** Добре, о котрій годині вам зручно? *(Good, at what time is it convenient for you?)*
-> — **Клієнтка:** Об одинадцятій годині, якщо можна. *(At eleven o'clock, if possible.)*
-> — **Адміністраторка:** Так, одинадцята година вільна. Чекаємо на вас! *(Yes, eleven o'clock is free. We are waiting for you!)*
+Вибачте, котра зараз година? Зараз п'ята година. О котрій годині починається фільм? Фільм починається о дев'ятій годині. Коли у нас зустріч? Зустріч о пів на другу. Урок закінчується об одинадцятій. Ми йдемо додому о пів на шосту.
 
-<!-- INJECT_ACTIVITY: quiz-what-s-the-date-drill -->
+> *Excuse me, what time is it now? It is five o'clock now. At what time does the movie start? The movie starts at nine o'clock. When is our meeting? The meeting is at half past one. The lesson ends at eleven. We are going home at half past five.*
 
-## Рахуємо предмети: правило «1, 2-4, 5+» (Counting Items: The "1, 2-4, 5+" Rule)
+Here is a short conversation where a client is booking an appointment at a salon. Notice how the client and the administrator use both Nominative and Genitive forms for the dates.
 
-When you want to count objects in Ukrainian, the number you use dictates the grammatical form of the noun that follows it. Unlike English, where you simply use the singular form for "one" and the plural form for everything else, Ukrainian counting is divided into three distinct grammatical tiers. The numeral is the absolute boss in these phrases; it tells the noun whether it should be singular or plural, and exactly which case it must take. We call this the "1, 2-4, 5+" rule. To understand this hierarchy clearly, we will use the masculine word «стіл» (table) as our core example. Depending on how many tables you actually have, the word will change its form to perfectly match the specific tier of the number.
+> — **Клієнтка:** Добрий день! Яке сьогодні число? *(Good day! What is the date today?)*
+> — **Адміністратор:** Добрий день! Сьогодні п'яте травня. *(Good day! Today is the fifth of May.)*
+> — **Клієнтка:** Я хочу записатися на стрижку. Коли у вас є вільний час? *(I want to book an appointment for a haircut. When do you have free time?)*
+> — **Адміністратор:** Ми маємо час завтра, шостого травня. *(We have time tomorrow, the sixth of May.)*
+> — **Клієнтка:** Чудово. Я хочу записатися на шосте травня. *(Great. I want to book for the sixth of May.)*
+> — **Адміністратор:** Добре, о котрій годині вам зручно? *(Good, at what time is convenient for you?)*
+> — **Клієнтка:** Об одинадцятій годині. А скільки коштує стрижка? *(At eleven o'clock. And how much does a haircut cost?)*
+> — **Адміністратор:** Триста гривень. Домовилися. Чекаємо на вас об одинадцятій. *(Three hundred hryvnias. Agreed. We are waiting for you at eleven.)*
 
-### Рівень 1: Правило одиниці (Tier 1: The "1" Rule)
+Here is another situation. Two friends are meeting at a train station.
 
-The first tier is the simplest and applies to the number 1, as well as any compound number that ends in 1, such as 21, 31, or 101 (but excluding 11, which falls into a different category). For this tier, the noun remains in the Nominative singular case, just as you would find it in a dictionary. However, the number "one" in Ukrainian behaves exactly like an adjective, meaning it must agree with the gender of the noun it describes. You must choose between «один» for masculine nouns, «одна» for feminine nouns, and «одне» for neuter nouns. Even when you are counting a very large quantity like 101, if the number ends in the digit 1, the noun stays strictly singular.
-
-* «У кімнаті стоїть один стіл.» (One table stands in the room.)
-* «На столі лежить одна книга.» (One book lies on the table.)
-* «Тут є тільки одне вікно.» (There is only one window here.)
-* «Мені двадцять один рік.» (I am twenty-one years old.)
-* «У цьому будинку сто один номер.» (There is one hundred and one room in this building.)
-
-### Рівень 2: Правило двох, трьох і чотирьох (Tier 2: The "2, 3, 4" Rule)
-
-The second tier applies to the numbers 2, 3, and 4. When you use these numbers, the noun must be placed in the Nominative plural case. This is where Ukrainian starts to differ significantly from English logic. In English, saying "two tables" just uses the standard plural form without any special rules. In Ukrainian, the specific numbers "two," "three," and "four" trigger the Nominative plural form. For masculine and feminine nouns, this usually means adding an «-и» or «-і» ending to the root word. Remember that the number 2 also has gender agreement: «два» is used for masculine and neuter nouns, while the special form «дві» is used exclusively for feminine nouns.
-
-* «У кабінеті стоять два столи.» (Two tables stand in the office.)
-* «Я купив три книги.» (I bought three books.)
-* «У цій кімнаті є чотири вікна.» (There are four windows in this room.)
-* «На столі лежать два телефони.» (Two phones lie on the table.)
-* «Ми маємо дві машини.» (We have two cars.)
-
-### Рівень 3: Правило п'яти і більше (Tier 3: The "5-20" Rule)
-
-The third tier is often the most challenging for language learners. It applies to numbers 5 through 20. When counting from 5 upwards, the noun drops into the Genitive plural case. This is the biggest mental shift you need to make when speaking Ukrainian. Historically, numbers from five and above functioned as nouns themselves, meaning "a five of tables," which is why they require the Genitive case to show relation. For masculine nouns, the Genitive plural often ends in «-ів». For feminine nouns, it usually has a zero ending, meaning the final vowel simply disappears. For neuter nouns, it can have a zero ending or «-ів». Notice the stark contrast between counting just one item and counting five.
-
-* «У нас є п'ять столів.» (We have five tables.)
-* «Я прочитав шість книг.» (I read six books.)
-* «У будинку сім вікон.» (There are seven windows in the building.)
-* «Там працює десять людей.» (Ten people work there.)
-* «Це коштує двадцять гривень.» (This costs twenty hryvnias.)
-
-### Складені числівники (Compound Numbers)
-
-When you are dealing with compound numbers like 22, 35, or 144, the grammar rule always follows the *last* word in the numeral. You ignore the tens, hundreds, or thousands and only look at the final digit. If the number ends in 2, 3, or 4, you use the Nominative plural. If it ends in 5, 6, 7, 8, 9, or 0, you use the Genitive plural. If it ends in 1 (except 11), you use the Nominative singular. Let's look at how this works in practice when counting hotel rooms (the word «номер» is masculine).
-
-* «Наш готель має двадцять один номер.» (Our hotel has twenty-one rooms.)
-* «На поверсі є двадцять два номери.» (There are twenty-two rooms on the floor.)
-* «Ми забронювали двадцять п'ять номерів.» (We booked twenty-five rooms.)
-* «Там працюють тридцять три людини.» (Thirty-three people work there.)
-* «Вони мають сорок вісім машин.» (They have forty-eight cars.)
-
-### Фокус на іменниках жіночого роду (Focus on Feminine Nouns)
-
-Feminine nouns require some special attention because their Nominative plural form (which is used with the numbers 2, 3, and 4) can look completely identical to their Genitive singular form. For example, the word «сестра» (sister) becomes «сестри» in both of these cases. However, their underlying grammatical function in the sentence is different. When you say «дві сестри», you are using the Nominative plural specifically for counting. Sometimes, the stress shifts to distinguish the two forms, but the spelling remains exactly the same. The key is to remember the consistent pattern: «дві» plus the Nominative plural ending «-и» or «-і».
-
-* «Одна сестра живе тут, а дві сестри живуть там.» (One sister lives here, and two sisters live there.)
-* «Я маю одну книгу, а він має три книги.» (I have one book, and he has three books.)
-* «Одна машина червона, а чотири машини чорні.» (One car is red, and four cars are black.)
-* «На столі лежить одна ручка і дві лінійки.» (One pen and two rulers lie on the table.)
-* «У мене є дві проблеми.» (I have two problems.)
-
-### Діалог: На рецепції готелю (Dialogue: At the Hotel Reception)
-
-Let's see how these rules work in a practical situation. Pay close attention to how the receptionist and the guest use different forms of the words «номер» (room) and «гість» (guest) depending on the numbers they use.
-
-> — **Адміністратор:** Добрий день! Чим я можу вам допомогти? *(Good day! How can I help you?)*
-> — **Гість:** Добрий день! Мені потрібно три номери. *(Good day! I need three rooms.)*
-> — **Адміністратор:** Добре. На скільки людей? *(Good. For how many people?)*
-> — **Гість:** На п'ять гостей. *(For five guests.)*
-> — **Адміністратор:** У нас є два великих номери і один малий номер. *(We have two large rooms and one small room.)*
-> — **Гість:** Чудово. Скільки це коштує? *(Great. How much does this cost?)*
-> — **Адміністратор:** Це коштує дві тисячі гривень за добу. *(This costs two thousand hryvnias per day.)*
-> — **Гість:** Дякую, я беру ці три номери. *(Thank you, I will take these three rooms.)*
+> — **Максим:** Привіт! Котра зараз година? *(Hi! What time is it now?)*
+> — **Анна:** Привіт! Зараз пів на десяту. *(Hi! It is half past nine now.)*
+> — **Максим:** О котрій годині прибуває поїзд з Одеси? *(At what time does the train from Odesa arrive?)*
+> — **Анна:** Поїзд прибуває о десятій годині. Ми маємо тридцять хвилин. *(The train arrives at ten o'clock. We have thirty minutes.)*
+> — **Максим:** Добре. Хочеш випити кави? *(Good. Do you want to drink coffee?)*
+> — **Анна:** Так, із задоволенням. *(Yes, with pleasure.)*
 
 ### Читаємо українською (Reading Practice)
 
-«У нашому офісі є один великий кабінет. Там працюють три менеджери. Вони мають три столи і шість стільців. На столі лежить один комп'ютер. У шафі стоять десять тек. Ми купили двадцять один новий маркер. Також ми маємо два принтери. Це дуже зручно для роботи.»
-*(In our office there is one large office. Three managers work there. They have three tables and six chairs. One computer lies on the table. Ten folders stand in the cabinet. We bought twenty-one new markers. Also we have two printers. This is very convenient for work.)*
+Сьогодні десяте березня. Зараз восьма година ранку. Я п'ю каву і планую свій день. Об одинадцятій годині у мене важлива зустріч у центрі міста. Після обіду, о пів на третю, я йду до лікаря. Завтра буде одинадцяте березня, і мій старший брат приїжджає до Києва. Ми зустрічаємо його о п'ятій годині вечора на центральному вокзалі. Я дуже чекаю цього дня, тому що ми рідко бачимося. Він працює в іншому місті з першого жовтня.
 
-<!-- INJECT_ACTIVITY: fill-in-counting-objects-1-2-4-5-rule -->
-<!-- INJECT_ACTIVITY: match-up-q-a-about-quantities-and-dates -->
+<!-- INJECT_ACTIVITY: quiz-dates-drill -->
 
-## Заперечення з прямим додатком (Negation with a Direct Object)
+## Рахуємо предмети: правило «1, 2-4, 5+»
 
-When you build a positive sentence in Ukrainian, the object that receives the action usually takes the Accusative case (Знахідний відмінок). For example, if you have a ticket, you use the Accusative form for the word "ticket". However, when you turn that exact same sentence into a negative one by adding the word «не» (not), a fascinating shift happens in Slavic languages. The direct object often drops the Accusative case and takes the Genitive case (Родовий відмінок) instead. This grammatical transformation is a hallmark of Ukrainian syntax. It signals that the action did not happen, and therefore, the object itself is completely uninvolved or absent from the situation.
-* «Я маю квиток.» (I have a ticket. — Accusative)
-* «Я не маю квитка.» (I do not have a ticket. — Genitive)
-* «Він знає цю пісню.» (He knows this song. — Accusative)
-* «Він не знає цієї пісні.» (He does not know this song. — Genitive)
+In English, counting objects is straightforward: you have one singular object or multiple plural objects. In Ukrainian, the number itself dictates the grammatical case and number of the noun that follows it. We divide counting into three distinct tiers based on the numeral. Tier one is for the number 1, tier two is for the numbers 2, 3, and 4, and tier three is for numbers 5 through 20. Let's use the word «стіл» to see how it changes.
 
-You might hear Ukrainians using the Accusative case after negation in modern, casual speech. It is not strictly forbidden, but using the Genitive case is the grammatical standard and carries a specific nuance of emphasis. Using the Genitive creates a sense of total negation. It changes the meaning from "I didn't read *the* specific book" to "I didn't read *a single* book" or "I haven't been reading at all". When you want to sound natural and emphasize that an action absolutely did not occur regarding an object, the Genitive is your best choice. Let's compare the feeling of these two sentences:
-* «Я не читав книгу.» (I didn't read the book. — Accusative. Perhaps I read a magazine instead, or I will read the book later.)
-* «Я не читав книги.» (I didn't read any book. — Genitive. I was not engaged in the action of reading books at all.)
-* «Вона не п'є каву.» (She is not drinking the coffee. — Accusative)
-* «Вона не п'є кави.» (She doesn't drink coffee at all. — Genitive)
+У кімнаті стоїть один стіл. Поруч стоять два столи. А в ресторані є двадцять столів.
 
-Let's look at how this transformation works in practice with common masculine and feminine nouns. For masculine nouns ending in a consonant, the Genitive singular ending is usually «-а» or «-у». For feminine nouns ending in «-а» or «-я», the Genitive singular ending is «-и» or «-і». Pay attention to how the ending changes the moment the word «не» appears before the verb.
-* «Я купую свіжий хліб.» (I am buying fresh bread.)
-* «Я не купую свіжого хліба.» (I am not buying fresh bread.)
-* «Він бачить нову машину.» (He sees a new car.)
-* «Він не бачить нової машини.» (He does not see a new car.)
-* «Ми розуміємо це правило.» (We understand this rule.)
-* «Ми не розуміємо цього правила.» (We do not understand this rule.)
-* «Вона пише довгий лист.» (She is writing a long letter.)
-* «Вона не пише довгого листа.» (She is not writing a long letter.)
-* «Я їм смачну піцу.» (I am eating a tasty pizza.)
-* «Я не їм смачної піци.» (I am not eating a tasty pizza.)
+> *One table stands in the room. Two tables stand nearby. And in the restaurant, there are twenty tables.*
 
-There is a special word in Ukrainian that absolutely always triggers the Genitive case: **немає** (there is no / is not present). Do not confuse «немає» with the verb phrase «не маю» (I do not have). «Не маю» is a regular negated verb (я маю -> я не маю) where you are the subject. «Немає» is an impersonal word denoting total absence, and the thing that is absent must be in the Genitive.
-* «Тут немає кави.» (There is no coffee here. — Absence)
-* «Я не маю кави.» (I do not have coffee. — Possession negated)
-* «У кімнаті немає стола.» (There is no table in the room.)
-* «Сьогодні немає дощу.» (There is no rain today.)
-* «У нас немає проблем.» (We have no problems.)
+The first rule is the most logical one. The number «один» always takes a noun in the Nominative singular case. However, because it acts like an adjective, it must agree with the gender of the noun. You use «один» for masculine, «одна» for feminine, and «одне» for neuter. This rule applies to any compound number ending in one, such as twenty-one or one hundred and one. The noun remains singular because the final word in the number is singular.
 
-The rule of Genitive negation is especially strong when we talk about abstract concepts. Words like **час** (time), **гроші** (money), or **допомога** (help) almost always take the Genitive case in negative sentences. With abstract nouns, the idea of "total negation" makes the most sense. You either have time, or you have no time at all.
-* «Я не маю часу.» (I do not have time.)
-* «У мене немає грошей.» (I have no money.)
-* «Він не потребує допомоги.» (He does not need help.)
-* «Вона не каже правди.» (She is not telling the truth.)
-* «Ми не бачимо різниці.» (We do not see a difference.)
+У мене є один стіл, одна книга і одне вікно. У бібліотеці є двадцять одна книга. Мій друг має один комп'ютер. У квартирі є одна кімната. Тут працює тридцять одна людина. Це велика школа, тут працює сто один вчитель.
 
-### Діалог: У магазині (Dialogue: In the Store)
-Let's see how these negative forms are used in a typical conversation at a grocery store. Notice how the Genitive case naturally follows verbs with «не» and the word «немає».
+> *I have one table, one book, and one window. There are twenty-one books in the library. My friend has one computer. There is one room in the apartment. Thirty-one people work here. This is a large school, one hundred and one teachers work here.*
+
+:::tip
+**Did you know?**
+Because «один» is treated as an adjective, it also changes depending on the case of the sentence. But for basic counting and quantities, you will always use its Nominative dictionary forms.
+:::
+
+The second tier applies to the numbers 2, 3, and 4. When you use these numbers, the noun must be in the Nominative plural case. While English simply makes the noun plural for any amount over one, Ukrainian has this dedicated category. For masculine nouns, you often add «-и» or «-і». Feminine nouns ending in «-а» change to «-и». Neuter nouns usually change «-о» to «-а». Remember that «два» has two forms: «два» for masculine and neuter, and «дві» for feminine.
+
+Я хочу купити два столи для нового офісу. Вона читає три книги. У цій кімнаті є чотири вікна. Він купив два квитки на концерт. На столі лежать три ручки. Ми маємо чотири дні на відпочинок. Мій брат має два телефони.
+
+> *I want to buy two tables for the new office. She is reading three books. There are four windows in this room. He bought two tickets to the concert. Three pens lie on the table. We have four days for rest. My brother has two phones.*
+
+The third tier is where the biggest shift happens. For numbers 5 through 20, the noun must be in the Genitive plural case. Historically, these numbers functioned as nouns meaning "a group of five", requiring the following noun to indicate "of what". Therefore, we literally say "five of tables". Masculine nouns typically take the ending «-ів» or «-їв». Feminine nouns often drop their ending vowel, taking a zero ending. Neuter nouns also frequently take a zero ending or «-ів». 
+
+В офісі стоїть п'ять столів. На полиці лежить шість книг. У великому будинку є десять вікон. У класі сидять дванадцять учнів. Я купив шість бананів. На вулиці стоять сім машин. Він має п'ятнадцять друзів. Студент знає двадцять слів.
+
+> *Five tables stand in the office. Six books lie on the shelf. There are ten windows in the large house. Twelve students sit in the class. I bought six bananas. Seven cars stand on the street. He has fifteen friends. The student knows twenty words.*
+
+Let's look at a short conversation at a market. Notice how the quantity changes the noun.
+
+> — **Покупець:** Дайте мені, будь ласка, два кілограми помідорів. *(Give me, please, two kilograms of tomatoes.)*
+> — **Продавець:** Ось, будь ласка. Що ще? *(Here, please. What else?)*
+> — **Покупець:** Ще один кілограм огірків і п'ять яблук. *(Another one kilogram of cucumbers and five apples.)*
+> — **Продавець:** Добре. З вас сто чотири гривні. *(Good. From you one hundred four hryvnias.)*
+
+When dealing with larger quantities, compound numbers strictly follow the rule of their final element. The first part of the number does not affect the noun at all. If you say twenty-two, the rule for two applies, meaning you use the Nominative plural. If you say twenty-five, the rule for five applies, meaning you use the Genitive plural. As you count upwards, the grammatical case alternates depending entirely on the last digit.
+
+Ми бронюємо двадцять один номер у готелі. Наша група займає двадцять чотири номери. Туристи замовили двадцять п'ять номерів. Вона прочитала двадцять дві сторінки. Студент написав тридцять п'ять слів. У цьому будинку сорок чотири квартири.
+
+> *We are booking twenty-one rooms in the hotel. Our group occupies twenty-four rooms. The tourists ordered twenty-five rooms. She read twenty-two pages. The student wrote thirty-five words. There are forty-four apartments in this house.*
+
+:::info
+**Grammar box**
+The word «гривня» follows these exact same counting rules: одна гривня, дві гривні, п'ять гривень. When you hear prices, pay attention to how the word changes based on the last digit.
+:::
+
+Feminine nouns present a unique challenge because their Nominative plural form often looks identical to their Genitive singular form. When you see a phrase with a number between two and four, the noun is grammatically in the Nominative plural. While native speakers might shift the stress on the vowel to distinguish the forms, the spelling remains the same. You just need to remember the rule category.
+
+Тут стоять дві машини. Я бачу три сестри. Ми купуємо чотири книги. На парковці є дві вільні машини. У мене є три старші сестри. Вона купила чотири нові книги.
+
+> *Two cars stand here. I see three sisters. We are buying four books. There are two free cars in the parking lot. I have three older sisters. She bought four new books.*
+
+Here is a conversation at a hotel reception that demonstrates these shifting rules in action.
+
+> — **Гість:** Добрий день! Мені потрібно три номери. *(Good day! I need three rooms.)*
+> — **Адміністратор:** Добрий день! На скільки людей? *(Good day! For how many people?)*
+> — **Гість:** На п'ять гостей. *(For five guests.)*
+> — **Адміністратор:** Добре. У нас є два великих номери і один малий. *(Good. We have two large rooms and one small.)*
+> — **Гість:** Чудово. Скільки це коштує? *(Great. How much does it cost?)*
+> — **Адміністратор:** Це коштує дві тисячі гривень за добу. *(It costs two thousand hryvnias per day.)*
+> — **Гість:** Я беру ці три номери. *(I'll take these three rooms.)*
+
+### Читаємо українською (Reading Practice)
+
+Вчора я був у магазині і купив багато речей для дому. Я взяв один великий хліб і дві пляшки свіжого молока. Потім я пішов у відділ фруктів. Я купив три кілограми червоних яблук і п'ять жовтих бананів. У магазині було дуже багато людей. Біля каси стояли чотири жінки і два чоловіки. Касир сказав, що мої покупки коштують сто двадцять одну гривню. Я дав йому двісті гривень. Він дав мені сімдесят дев'ять гривень здачі. Я сказав «дякую» і пішов додому. Я дуже люблю купувати продукти і рахувати гроші українською мовою.
+
+<!-- INJECT_ACTIVITY: fill-in-counting-rule -->
+<!-- INJECT_ACTIVITY: match-up-quantity-qa -->
+
+## Заперечення з прямим додатком
+
+When you express an action happening to an object in an affirmative sentence, you use the Accusative case, which serves as the direct object. However, Ukrainian syntax has a unique and highly important rule for negative sentences. When a positive sentence with a direct object is turned into a negative sentence using the negative particle **не**, the object very often shifts from the Accusative case into the Genitive case. This transformation is a classic hallmark of Slavic grammar and is widely known as the Genitive of negation. It emphasizes the total absence of the action affecting the object in question. For example, if you have a physical ticket, you use the standard Accusative case to show that you possess it. If you do not have a ticket, the word for ticket shifts immediately into the Genitive case to reflect that negation.
+
+Я маю новий квиток на потяг. Ти маєш квиток на автобус. Я не маю нового квитка. Ти не маєш квитка на автобус. Вона має гарну сумку. Вона не має гарної сумки.
+
+> *I have a new train ticket. You have a bus ticket. I do not have a new ticket. You do not have a bus ticket. She has a beautiful bag. She does not have a beautiful bag.*
+
+You might naturally wonder if you can just keep using the Accusative case after a negative verb, just like you do in English. While native Ukrainian speakers do sometimes use the Accusative in modern, casual speech after negation, the Genitive case remains the absolute standard for expressing total negation. Using the Genitive case creates a subtle nuance of emphasis that native speakers feel intuitively. It signals that you are not just denying a specific instance of an action, but rather you are denying the action in its entirety regarding that object. For instance, using the Accusative might suggest you did not read a specific book that was mentioned earlier, while using the Genitive suggests you did not read any book at all, or that you have not been reading recently.
+
+Вчора я читав дуже цікаву книгу. Сьогодні я не читав цієї книги. Мій друг купив дорогу машину. Його брат не купив машини. Студент написав довгий текст. Студент не написав тексту.
+
+> *Yesterday I read a very interesting book. Today I did not read this book. My friend bought an expensive car. His brother did not buy a car. The student wrote a long text. The student did not write a text.*
+
+Let us look at a practical comparison using common masculine and feminine nouns to see exactly how this grammatical shift works in everyday speech. For masculine nouns ending in a consonant, the Genitive singular usually takes the ending **-а** or **-у**. For feminine nouns ending in **-а**, the Genitive singular ending is **-и**. When you change a positive statement into a negative one, the object drops its Accusative form and adopts these specific Genitive endings instead. This pattern is very consistent across everyday vocabulary, whether you are talking about buying food, seeing objects, or reading texts. Memorizing this shift will make your Ukrainian sound much more natural and idiomatic.
+
+Я купую свіжий хліб у магазині. Я не купую свіжого хліба сьогодні. Він бачить велику машину на вулиці. Він не бачить великої машини там. Вона п'є гарячу каву щоранку. Вона не п'є гарячої кави.
+
+> *I buy fresh bread in the store. I am not buying fresh bread today. He sees a large car on the street. He does not see a large car there. She drinks hot coffee every morning. She does not drink hot coffee.*
+
+:::info
+**Grammar box**
+The shift from Accusative to Genitive is especially strong with verbs of possessing, acquiring, perceiving, and consuming. Always try to default to the Genitive case when you place the particle **не** before verbs like **мати**, **купувати**, **бачити**, and **читати**.
+:::
+
+There is one specific vocabulary word that acts as an absolute and undeniable trigger for the Genitive case, and that is the word **немає** (there is no / is absent). While the phrase **не маю** translates to "I do not have" and acts as a regular negated verb, the word **немає** is an impersonal construct denoting complete physical or conceptual absence. It always demands the Genitive case for the thing or person that is missing. You will use this word constantly in daily conversations when explaining that a certain place lacks something, a store is out of stock, or a person is absent from a meeting.
+
+Тут є смачна кава. Тут немає смачної кави. У центрі міста є новий театр. У місті немає нового театру. На столі лежить книга. На столі немає книги.
+
+> *There is delicious coffee here. There is no delicious coffee here. There is a new theater in the city center. There is no new theater in the city. A book lies on the table. There is no book on the table.*
+
+This negation rule applies to all types of objects, but it is particularly strict and noticeable when you are dealing with abstract concepts or uncountable substances. Words representing abstract ideas like **час** (time), **гроші** (money), or **допомога** (help) almost always take the Genitive case in negative sentences without exception. When you cannot physically count or touch the object, the sense of total absence feels much stronger, making the Genitive case feel like the only natural and correct choice. Furthermore, certain verbs like **потребувати** (to need) always require the Genitive case for their object, regardless of whether the sentence is positive or negative.
+
+Зараз я не маю вільного часу на це. У мене немає грошей на цей дорогий квиток. Він не потребує вашої допомоги сьогодні. Вони не мають бажання працювати.
+
+> *Right now I do not have free time for this. I do not have money for this expensive ticket. He does not need your help today. They do not have the desire to work.*
+
+Here is a practical dialogue demonstrating these negation patterns in a real-life situation. Notice carefully how the customer and the seller shift fluently between the Nominative, Accusative, and Genitive cases depending entirely on whether an item is present in the store, physically absent, or being actively looked for on the shelves. Reading this dialogue will help you understand the rhythm of negated sentences.
 
 > — **Покупець:** Добрий день! Чи є у вас свіжий хліб? *(Good day! Do you have fresh bread?)*
-> — **Продавець:** Добрий день! Ні, на жаль, сьогодні немає хліба. *(Good day! No, unfortunately, there is no bread today.)*
-> — **Покупець:** Зрозуміло. А молоко є? *(I understand. And milk?)*
-> — **Продавець:** Я не бачу молока на полиці. Напевно, вже продали. *(I do not see milk on the shelf. Probably, they already sold it.)*
-> — **Покупець:** Шкода. Тоді дайте, будь ласка, сік. *(It's a pity. Then give me juice, please.)*
-> — **Продавець:** Вибачте, але я не маю соку. Є тільки вода. *(Sorry, but I do not have juice. There is only water.)*
-> — **Покупець:** Добре, я беру воду. Я не маю часу шукати інший магазин. *(Good, I will take water. I do not have time to look for another store.)*
+> — **Продавець:** Ні, на жаль, сьогодні немає хліба. *(No, unfortunately, there is no bread today.)*
+> — **Покупець:** А молоко? Я хочу купити молоко. *(And milk? I want to buy milk.)*
+> — **Продавець:** Я не бачу молока на полиці. *(I do not see milk on the shelf.)*
+> — **Покупець:** Шкода. Тоді я піду в інший магазин. *(It is a pity. Then I will go to another store.)*
+> — **Продавець:** Почекайте, машина з молоком уже тут. *(Wait, the car with milk is already here.)*
+> — **Покупець:** Вибачте, я не маю часу чекати. *(Sorry, I do not have time to wait.)*
 
-### Читаємо українською (Reading Practice)
-«Мій друг Максим сьогодні дуже сумний. Він каже: "Я не маю настрою. Я не маю енергії працювати". Я питаю його: "Ти не хочеш кави?". Він відповідає: "Ні, я не п'ю кави вранці. І я не маю часу на відпочинок. У мене багато роботи, але я не бачу результату". Я хочу допомогти йому. Я кажу: "Максиме, у тебе немає проблем. Тобі просто треба поспати. Коли людина не має сну, вона не бачить позитиву". Максим слухає мене, але не каже ні слова. Він тільки зітхає. Я розумію, що зараз він не потребує моїх порад.»
-*(My friend Maksym is very sad today. He says: "I have no mood. I have no energy to work." I ask him: "Do you not want coffee?". He answers: "No, I do not drink coffee in the morning. And I do not have time for rest. I have a lot of work, but I do not see a result." I want to help him. I say: "Maksym, you have no problems. You just need to sleep. When a person has no sleep, they do not see positivity." Maksym listens to me, but does not say a word. He only sighs. I understand that right now he does not need my advice.)*
+:::tip
+**Did you know?**
+The highly common phrase **У мене немає** (I don't have) is actually built directly on the impersonal word **немає** (there is not). It literally means "at me there is no". This underlying grammar is exactly why the object that follows it must always be placed in the Genitive case rather than the Accusative.
+:::
 
-<!-- INJECT_ACTIVITY: match-up-accusative-to-genitive-negation -->
+<!-- INJECT_ACTIVITY: match-up-negation-shift -->
 
 ## Підсумок — Summary
 
-You have learned three essential ways to use the Genitive case in daily life. Let's review the main rules. Can you answer these self-check questions?
+You have learned how the Genitive case brings precision to Ukrainian quantities, dates, and absences. Use this checklist to verify your understanding:
 
-*   **Яке сьогодні число?** *(What is today's date?)* Remember that the day is an ordinal number, but the month must be in the Genitive singular.
-    *   «Сьогодні десяте травня.» *(Today is the tenth of May.)*
-*   **How do you count to five?** The numbers 2, 3, and 4 take the Nominative plural, but numbers from 5 and above require the Genitive plural.
-    *   «Один стіл, два столи, п'ять столів.» *(One table, two tables, five tables.)*
-*   **How do you negate «Я бачу фільм»?** When you negate a verb that takes a direct object, the object often changes from the Accusative to the Genitive case to emphasize the total absence of the action or object.
-    *   «Я не бачу фільму.» *(I do not see a film.)*
+*   **Dates:** When stating the date, the month always takes the Genitive case.
+    **Яке сьогодні число? Десяте травня.** — *What is the date today? The tenth of May.*
+*   **Counting:** Remember the "1, 2-4, 5+" rule for counting objects.
+    **Один стіл, два столи, п'ять столів.** — *One table, two tables, five tables.*
+*   **Negation:** Negating a direct object shifts it into the Genitive case to emphasize complete absence.
+    **Я бачу фільм. Я не бачу фільму.** — *I see a movie. I do not see a movie.*
 
-The Genitive case is fundamental to Ukrainian grammar. It brings precision when we talk about exact quantities, specific dates, and total absences. Whether you are checking your calendar, counting items on your desk, or explaining that you do not have time, you are relying on this case. As you continue to practice, using the Genitive with words like «немає» and numbers from five upwards will become a natural habit.
+Родовий відмінок робить українську мову дуже точною. Він допомагає нам рахувати предмети, називати дати та говорити про те, чого ми не маємо.
+
+> *The Genitive case makes the Ukrainian language very precise. It helps us count objects, name dates, and talk about what we do not have.*
+
+:::note
+**Quick tip**
+Mastering the Genitive case with numbers and negation is a major milestone. These patterns will become completely natural with consistent practice.
+:::

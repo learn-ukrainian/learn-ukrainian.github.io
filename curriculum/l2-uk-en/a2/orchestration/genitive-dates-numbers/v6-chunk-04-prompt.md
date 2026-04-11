@@ -21,7 +21,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-Genitive negation is especially strong when we talk about abstract concepts. Words like **час** (time), **гроші** (money), or **допомога** (help) almost always take the Genitive case in negative sentences. With abstract nouns, the idea of "total negation" makes the most sense. You either have time, or you have no time at all. * «Я не маю часу.» (I do not have time.) * «У мене немає грошей.» (I have no money.) * «Він не потребує допомоги.» (He does not need help.) * «Вона не каже правди.» (She is not telling the truth.) * «Ми не бачимо різниці.» (We do not see a difference.) ### Діалог: У магазині (Dialogue: In the Store) Let's see how these negative forms are used in a typical conversation at a grocery store. Notice how the Genitive case naturally follows verbs with «не» and the word «немає». > — **Покупець:** Добрий день! Чи є у вас свіжий хліб? *(Good day! Do you have fresh bread?)* > — **Продавець:** Добрий день! Ні, на жаль, сьогодні немає хліба. *(Good day! No, unfortunately, there is no bread today.)* > — **Покупець:** Зрозуміло. А молоко є? *(I understand. And milk?)* > — **Продавець:** Я не бачу молока на полиці. Напевно, вже продали. *(I do not see milk on the shelf. Probably, they already sold it.)* > — **Покупець:** Шкода. Тоді дайте, будь ласка, сік. *(It's a pity. Then give me juice, please.)* > — **Продавець:** Вибачте, але я не маю соку. Є тільки вода. *(Sorry, but I do not have juice. There is only water.)* > — **Покупець:** Добре, я беру воду. Я не маю часу шукати інший магазин. *(Good, I will take water. I do not have time to look for another store.)* ### Читаємо українською (Reading Practice) «Мій друг Максим сьогодні дуже сумний. Він каже: "Я не маю настрою. Я не маю енергії працювати". Я питаю його: "Ти не хочеш кави?". Він відповідає: "Ні, я не п'ю кави вранці. І я не маю часу на відпочинок. У мене багато роботи, але я не бачу результату". Я хочу допомогти йому. Я кажу: "Максиме, у тебе немає проблем. Тобі просто треба поспати. Коли людина не має сну, вона не бачить позитиву". Максим слухає мене, але не каже ні слова. Він тільки зітхає. Я розумію, що зараз він не потребує моїх порад.» *(My friend Maksym is very sad today. He says: "I have no mood. I have no energy to work." I ask him: "Do you not want coffee?". He answers: "No, I do not drink coffee in the morning. And I do not have time for rest. I have a lot of work, but I do not see a result." I want to help him. I say: "Maksym, you have no problems. You just need to sleep. When a person has no sleep, they do not see positivity." Maksym listens to me, but does not say a word. He only sighs. I understand that right now he does not need my advice.)* <!-- INJECT_ACTIVITY: match-up, Accusative to Genitive Negation -->
+that a certain place lacks something, a store is out of stock, or a person is absent from a meeting. Тут є смачна кава. Тут немає смачної кави. У центрі міста є новий театр. У місті немає нового театру. На столі лежить книга. На столі немає книги. > *There is delicious coffee here. There is no delicious coffee here. There is a new theater in the city center. There is no new theater in the city. A book lies on the table. There is no book on the table.* This negation rule applies to all types of objects, but it is particularly strict and noticeable when you are dealing with abstract concepts or uncountable substances. Words representing abstract ideas like **час** (time), **гроші** (money), or **допомога** (help) almost always take the Genitive case in negative sentences without exception. When you cannot physically count or touch the object, the sense of total absence feels much stronger, making the Genitive case feel like the only natural and correct choice. Furthermore, certain verbs like **потребувати** (to need) always require the Genitive case for their object, regardless of whether the sentence is positive or negative. Зараз я не маю вільного часу на це. У мене немає грошей на цей дорогий квиток. Він не потребує вашої допомоги сьогодні. Вони не мають бажання працювати. > *Right now I do not have free time for this. I do not have money for this expensive ticket. He does not need your help today. They do not have the desire to work.* Here is a practical dialogue demonstrating these negation patterns in a real-life situation. Notice carefully how the customer and the seller shift fluently between the Nominative, Accusative, and Genitive cases depending entirely on whether an item is present in the store, physically absent, or being actively looked for on the shelves. Reading this dialogue will help you understand the rhythm of negated sentences. > — **Покупець:** Добрий день! Чи є у вас свіжий хліб? *(Good day! Do you have fresh bread?)* > — **Продавець:** Ні, на жаль, сьогодні немає хліба. *(No, unfortunately, there is no bread today.)* > — **Покупець:** А молоко? Я хочу купити молоко. *(And milk? I want to buy milk.)* > — **Продавець:** Я не бачу молока на полиці. *(I do not see milk on the shelf.)* > — **Покупець:** Шкода. Тоді я піду в інший магазин. *(It is a pity. Then I will go to another store.)* > — **Продавець:** Почекайте, машина з молоком уже тут. *(Wait, the car with milk is already here.)* > — **Покупець:** Вибачте, я не маю часу чекати. *(Sorry, I do not have time to wait.)* :::tip **Did you know?** The highly common phrase **У мене немає** (I don't have) is actually built directly on the impersonal word **немає** (there is not). It literally means "at me there is no". This underlying grammar is exactly why the object that follows it must always be placed in the Genitive case rather than the Accusative. ::: <!-- INJECT_ACTIVITY: match-up-negation-shift -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -558,7 +558,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -586,14 +653,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

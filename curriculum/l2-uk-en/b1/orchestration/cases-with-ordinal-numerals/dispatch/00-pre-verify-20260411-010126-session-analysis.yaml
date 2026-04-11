@@ -1,0 +1,36 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T22-58-ac3c2a06.json
+phase: pre-verify
+prompt_chars: 6496
+response_chars: 880
+prompt_words: 1001
+response_words: 135
+sections:
+- name: preamble
+  start: 0
+  length: 558
+  fraction: 0.0859
+- name: plan
+  start: 558
+  length: 5557
+  fraction: 0.8554
+- name: output_spec
+  start: 6115
+  length: 381
+  fraction: 0.0587
+large_sections:
+- plan
+directives_total: 3
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You MUST verify linguistic facts using the tools below BEFORE writing begins.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: '; Agreement: ordinal + noun must agree in gender, number, case.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: Each task MUST include at least one tool call.
+  covered: false
+  coverage_note: 0/8 keywords (0%)

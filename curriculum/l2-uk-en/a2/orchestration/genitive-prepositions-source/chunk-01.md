@@ -1,13 +1,16 @@
 ## Вступ: Вечірка в друзів
 
-Сьогодні у нас міжнародна вечеря. *(Today we have an international dinner.)* Let's see what everyone brought.
+Imagine you are at an international potluck dinner with your friends. Everyone has brought something special, and naturally, people are asking where the food and drinks came from. This is the perfect situation to practice three very common Ukrainian prepositions: **з** (from a place), **від** (from a person), and **після** (after an event).
 
-> — **Олена:** Привіт усім! Що ви принесли? *(Hi everyone! What did you bring?)*
-> — **П'єр:** Це сир **з Франції** *(from France)*.
-> — **Нікос:** А це оливки **з Греції** *(from Greece)*. Вони дуже свіжі. *(They are very fresh.)*
-> — **Анна:** Я принесла шоколад **від бабусі** *(from grandma)*. Вона живе в Бельгії. *(She lives in Belgium.)*
-> — **Олена:** Чудово! А це вино ми п'ємо **після подорожі** *(after a trip)*.
+> — **Марко:** Привіт усім! Який великий стіл. Що це? *(Hi everyone! What a big table. What is this?)*
+> — **Анна:** Це сир з Франції. А ці смачні оливки — з Греції. *(This is cheese from France. And these tasty olives are from Greece.)*
+> — **Марко:** Дуже добре! А звідки цей шоколад? *(Very good! And where is this chocolate from?)*
+> — **Олена:** Це шоколад від бабусі з Бельгії. *(This is chocolate from grandma from Belgium.)*
+> — **Анна:** А що ти приніс, Марку? *(And what did you bring, Marko?)*
+> — **Марко:** А це вино після подорожі Італією. *(And this is wine after a trip through Italy.)*
+> — **Олена:** Чудово! Тоді давайте вечеряти. *(Wonderful! Then let's have dinner.)*
 
-Notice how the friends describe where things come from or when things happen. They use the prepositions **з** *(from)*, **від** *(from a person)*, and **після** *(after)*. 
-
-Ці маленькі слова дуже важливі для спілкування. *(These small words are very important for communication.)* In this module, you will learn how to use them to talk about origins, materials, and time.
+:::note
+**Quick tip**
+Notice how the prepositions **з**, **від**, and **після** change the ending of the noun that follows them. For example, *Франція* becomes *Франції*, *бабуся* becomes *бабусі*, and *подорож* becomes *подорожі*. This is the Genitive case in action!
+:::

@@ -41,7 +41,7 @@ Here are three examples using different subjects to practice this sound:
 - **Діти їдять бана́н.** (The children eat a banana.)
 - **Він їсть сир.** (He eats cheese.)
 
-The verb **пити** (to drink) is a bit friendlier for learners. It officially follows the Group I conjugation pattern, but it features a unique spelling shift in the present tense. Notice how the vowel **и** completely disappears from the stem, and the endings start with an apostrophe, resulting in the distinct sounds **'ю** or **'є**. This apostrophe indicates a brief pause before the soft vowel. Here is the complete paradigm:
+The verb **пити** (to drink) is a bit friendlier for learners. It officially follows the Group I conjugation pattern, but it features a unique spelling shift in the present tense. Notice how the vowel **и** completely disappears from the stem, and the endings start with an apostrophe, resulting in the distinct sounds **'ю** or **'є**. This apostrophe indicates that the preceding consonant remains hard and the following vowel is pronounced as two distinct sounds. Here is the complete paradigm:
 
 | English | Ukrainian |
 |---------|-----------|

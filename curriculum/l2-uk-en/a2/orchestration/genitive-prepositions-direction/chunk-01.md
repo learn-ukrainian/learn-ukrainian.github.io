@@ -1,21 +1,20 @@
 ## Вступ та діалог
 
-> — **Пасажир:** Добрий день! Мені потрібно до вокзалу *(to the station)*, будь ласка. Ви вільні?
-> — **Таксист:** Добрий день! Так, сідайте. Їдемо до центрального вокзалу?
-> — **Пасажир:** Так. Але спочатку, будь ласка, поїдемо до аптеки *(to the pharmacy)*. Мені дуже треба купити ліки.
-> — **Таксист:** Добре, я знаю, де є аптека. Вона знаходиться біля старого парку.
-> — **Пасажир:** Дякую. Скажіть, а ви можете чекати мене там до п'ятої години *(until five o'clock)*?
-> — **Таксист:** Звичайно, я можу чекати вас до п'ятої години. Це не проблема.
-> — **Пасажир:** Чудово! А вже потім ми поїдемо до готелю *(to the hotel)* «Україна».
-> — **Таксист:** Зрозумів вас. Наш маршрут: спочатку до аптеки, чекаємо до п'ятої години, а потім їдемо до готелю. Поїхали!
+> — **Пасажир:** Добрий день! Мені потрібно до вокзалу, будь ласка. *(Good afternoon! I need to go to the station, please.)*
+> — **Таксист:** Добрий день! Сідайте. До центрального вокзалу? *(Good afternoon! Have a seat. To the central station?)*
+> — **Пасажир:** Так. А потім ми поїдемо до аптеки. *(Yes. And then we will go to the pharmacy.)*
+> — **Таксист:** Добре. Яка адреса аптеки? *(Okay. What is the address of the pharmacy?)*
+> — **Пасажир:** Вулиця Шевченка. Мені треба купити ліки до п'ятої години. *(Shevchenko street. I need to buy medicine by five o'clock.)*
+> — **Таксист:** Ми встигнемо. А після аптеки куди? *(We will make it. And after the pharmacy, where to?)*
+> — **Пасажир:** Після аптеки поїдемо до готелю. *(After the pharmacy, we will go to the hotel.)*
+> — **Таксист:** Зрозумів. Поїхали! *(Understood. Let's go!)*
 
-In the A1 level, we learned how to describe where something is located. Now, in A2, we are moving beyond simple location to express direction, purpose, and time limits. The key to all of these is the small but powerful preposition **до** *(to, toward, until)*. Whether you are traveling to a specific destination, setting a deadline, or going to see a person, **до** is your primary tool. It translates to "toward" when discussing movement, and "until" when discussing time.
+In earlier lessons, you learned how to say where you are located using the Locative case. Now, we are moving beyond simple location to talk about direction, movement, and time limits. When you want to express that you are moving *toward* a destination or doing something *until* a certain deadline, you need the preposition **до**. This is a powerful word that connects movement in space with movement in time, and it always requires the Genitive case.
 
-The most important rule to remember is that the preposition **до** always requires the Genitive case *(родовий відмінок)*. When you say "to the station," **вокзал** *(station)* becomes **до вокзалу**. When you say "until morning," **ранок** *(morning)* becomes **до ранку**. Let us explore how this works in practice.
+У цьому уроці ми вивчаємо напрямок і час. Ви вже знаєте, як сказати, де ви знаходитеся. Тепер ми будемо говорити, куди ми йдемо або їдемо. Прийменник «до» завжди вимагає родового відмінка.
 
-:::tip Читаємо українською
-Я йду до парку. *(I am going to the park.)*
-Ми їдемо до Києва. *(We are traveling to Kyiv.)*
-Він працює до вечора. *(He works until evening.)*
-Вона чекає до завтра. *(She is waiting until tomorrow.)*
+> *In this lesson, we study direction and time. You already know how to say where you are located. Now we will talk about where we are walking or driving. The preposition "до" always requires the Genitive case.*
+
+:::tip
+**Direction and Time** — Whether you are heading to the pharmacy, visiting a doctor, or waiting until evening, **до** is your guide. It is the most common way to express your goal or your deadline.
 :::

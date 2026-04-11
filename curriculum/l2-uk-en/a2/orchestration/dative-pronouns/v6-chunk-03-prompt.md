@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-them)*. Notice how these endings share a similar 'м' sound, making them easier to group together in your memory. These plural forms are essential for addressing groups or talking about collective experiences. > Читаємо українською: > Наш новий вчитель добре пояснює нам правило. *(Our new teacher explains the rule to us well.)* > Я щиро дякую вам за вашу допомогу. *(I sincerely thank you for your help.)* > Нам потрібно їм швидко зателефонувати. *(We need to call them quickly.)* > Батьки дають нам гроші на нову квартиру. *(Parents give us money for a new apartment.)* > Директор розповідає їм про важливий проєкт. *(The director tells them about the important project.)* > Ми радіємо вам і вашим добрим новинам. *(We are happy for you and your good news.)* When learning the Genitive and Accusative cases, you likely learned that third-person pronouns gain an initial letter 'н' after prepositions (for example, «до нього» or «у неї»). However, the Dative case behaves differently. First, the dative is very rarely used with prepositions in basic speech. When it is used with rare prepositions like **«завдяки»** *(thanks to)*, the pronoun generally does NOT gain an 'н'. Therefore, you will almost always use the standard forms «йому», «їй», and «їм» for the recipient. Do not over-generalize the rule from other cases. Keep it simple: when you give something, tell something, or help someone, use the base dative forms without the extra letter. > Читаємо українською: > Завдяки йому ми маємо ці квитки. *(Thanks to him, we have these tickets.)* > Я розказую їй цю стару історію. *(I am telling her this old story.)* > Ми допомагаємо їм робити домашнє завдання. *(We are helping them do their homework.)* > Завдяки їй наш проєкт працює добре. *(Thanks to her, our project works well.)* > Дай йому трохи часу на відпочинок. *(Give him a little time for rest.)* > Напиши їм адресу нашого нового офісу. *(Write them the address of our new office.)* Let us see how these pronouns naturally shift during a conversation. Read this dialogue where two friends are planning a surprise and discussing who gets to know the secret. Pay attention to how the pronouns change based on who is receiving the information. > — **Максим:** Я маю великий секрет. Я скажу йому цей секрет сьогодні. *(I have a big secret. I will tell him this secret today.)* > — **Олена:** Це дуже цікаво! А нам ти скажеш? *(This is very interesting! And will you tell us?)* > — **Максим:** Так, вам я скажу трохи пізніше. *(Yes, I will tell you a little later.)* > — **Олена:** А що ми скажемо нашим друзям? *(And what will we tell our friends?)* > — **Максим:** Їм ми скажемо все завтра вранці. *(We will tell them everything tomorrow morning.)* > — **Олена:** Добре, а їй ми нічого не скажемо? *(Good, and will we not tell her anything?)* > — **Максим:** Ні, їй це буде великий сюрприз! *(No, for her it will be a big surprise!)* <!-- INJECT_ACTIVITY: fill-in-dative-pronouns -->
+to remember and use confidently. This is because they feel significantly more symmetrical and logical compared to the highly irregular singular forms. The pronoun **ми** (we) becomes **нам**, the formal or plural pronoun **ви** (you) becomes **вам**, and the pronoun **вони** (they) becomes **їм**. If you look closely at these three specific words, you will notice a clear visual and phonetic pattern: they all end in the letter 'м'. This consistent ending makes it incredibly simple to recognize them as plural recipients whenever you hear them spoken in a sentence. Наш розумний вчитель пояснює нам складне граматичне правило дуже просто. Я щиро дякую вам за вашу велику допомогу вчора у школі. Мої старі друзі зараз живуть у Києві, тому потрібно їм зателефонувати сьогодні ввечері. Ми готуємо їм смачну українську вечерю на вихідних. > *Our smart teacher explains the complex grammar rule to us very simply. I sincerely thank you for your great help yesterday at school. My old friends live in Kyiv now, so it is necessary to call them tonight. We are preparing a tasty Ukrainian dinner for them on the weekend.* :::tip **The missing letter "н"** Unlike the Genitive case (where "he" becomes "нього" after a preposition like "до"), the Dative case behaves quite differently. Because the Dative case inherently implies direction toward a recipient, it rarely requires prepositions. Even when it does occur with a preposition (such as "завдяки" — thanks to), the third-person pronouns **do not** gain an initial 'н'. They strictly remain **йому**, **їй**, and **їм**. Do not over-generalize the "initial н" rule from the Genitive case when using the Dative! ::: Let us see how these pronouns work together dynamically in a real, everyday conversation. In this dialogue, two friends are organizing a surprise party and deciding who gets to know the secret plan. Notice how the speakers shift naturally between different Dative pronouns, demonstrating how fluid and efficient the language becomes once you master these short forms. > — **Олена:** Я маю великий секрет про наше майбутнє свято! *(I have a big secret about our future holiday!)* > — **Марко:** Дуже цікаво! Кому ти розкажеш цей секрет сьогодні? *(Very interesting! To whom will you tell this secret today?)* > — **Олена:** Я скажу йому секрет зараз, бо він мій старший брат. *(I will tell him the secret now, because he is my older brother.)* > — **Марко:** А нам ти скажеш? Ми теж хочемо знати всі важливі деталі! *(And will you tell us? We also want to know all the important details!)* > — **Олена:** Вам я скажу трохи пізніше, коли ми будемо вдома самі. *(To you I will tell a little later, when we are at home alone.)* > — **Марко:** Зрозуміло. А що робити з нашими спільними друзями? *(Understood. And what to do with our mutual friends?)* > — **Олена:** А їм ми скажемо тільки завтра вранці, щоб це був справжній сюрприз. *(And to them we will tell only tomorrow morning, so it is a real surprise.)* <!-- INJECT_ACTIVITY: fill-in-dative-pronouns -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -504,7 +504,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -531,14 +598,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

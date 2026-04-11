@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-my-world (A1)
 
-Generated: 2026-04-09 03:46
+Generated: 2026-04-11 01:22
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 03:46
 | vocab | complete | 2026-04-09 01:45:22 |
 | enrich | complete | 2026-04-09 01:45:22 |
 | verify | complete | 2026-04-09 01:45:22 |
-| review | complete | 2026-04-09 01:46:30 |
 | stress | complete | 2026-04-09 01:46:31 |
-| publish | complete | 2026-04-09 01:46:33 |
+| review | complete | 2026-04-10 23:22:01 |
+| publish | complete | 2026-04-10 23:22:08 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | checkpoint-my-world-review-r1.md |
+| 2 | checkpoint-my-world-review-r2.md |
 
 ## Dispatch Log
 
@@ -39,13 +40,16 @@ Generated: 2026-04-09 03:46
 | activities | gemini-tools (gemini-3.1-pro-preview) | 66s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 123s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 170s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

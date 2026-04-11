@@ -102,13 +102,13 @@ Notice how the friends describe where things come from or when things happen. Th
 
 Ці маленькі слова дуже важливі для спілкування. *(These small words are very important for communication.)* In this module, you will learn how to use them to talk about origins, materials, and time.
 
-
 ## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive)
 
 «Звідки ти?» *(Where are you from?)*
 Це дуже часте запитання. *(This is a very frequent question.)*
 Сьогодні ми вивчаємо новий прийменник. *(Today we are learning a new preposition.)*
 Цей прийменник завжди вимагає після себе родовий відмінок. *(This preposition always requires the Genitive case after it.)*
+Він показує ваше походження або джерело дії. *(It shows your origin or the source of an action.)*
 
 The core meaning of this preposition is the starting point of an action or the geographic origin of a person. When you state your origin, you take the name of the place and apply the rules for the Genitive case. It answers the fundamental question of where someone or something comes from. For feminine nouns, the ending typically changes to the feminine Genitive ending. For masculine cities, countries, and objects, the ending changes to the masculine Genitive ending. This pattern is consistent and very important for basic conversations.
 
@@ -218,9 +218,9 @@ Just as this preposition shows the starting point in space, it also shows the st
 > — **Ірина:** Ого! А я працюю з понеділка без вихідних. *(Wow! And I am working since Monday without days off.)*
 > — **Павло:** Тобі треба відпочити. *(You need to rest.)*
 
-> — **Максим:** Коли ми починаємо новий проект? *(When do we start the new project?)*
-> — **Директор:** Ми працюємо з вівторка. *(We are working since Tuesday.)*
-> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready since morning.)*
+> — **Максим:** Коли ми починаємо новий проєкт? *(When do we start the new project?)*
+> — **Директор:** Ми починаємо з вівторка. *(We start on Tuesday.)*
+> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready from the morning.)*
 
 Говоріть правильно. *(Speak correctly.)*
 Важливо знати історію слів. *(It is important to know the history of words.)*
@@ -230,7 +230,6 @@ The only correct way to express origin from Ukraine is «з України». Th
 :::
 
 <!-- INJECT_ACTIVITY: quiz-euphony-variants -->
-
 
 ## Від кого? Від + родовий (From Whom? Від + Genitive)
 
@@ -274,7 +273,7 @@ Very often, English speakers confuse "з" and "від" because both translate to
 > — **Олег:** А від кого він? *(And from whom is it?)*
 > — **Марія:** Це приємний сюрприз від друзів. *(This is a pleasant surprise from friends.)*
 
-Як далеко це знаходиться? *(How far is it located?)* The preposition "від" is also used to describe how far or near something is from a reference point in space. We frequently pair it with adverbs like "далеко" (far) and "недалеко" (not far, nearby). The reference point is always in the Genitive case. For places and abstract concepts, masculine nouns often take the "-у" or "-ю" ending. Neuter nouns take "-а" or "-я".
+Як далеко це розташовано? *(How far is it located?)* The preposition "від" is also used to describe how far or near something is from a reference point in space. We frequently pair it with adverbs like "далеко" (far) and "недалеко" (not far, nearby). The reference point is always in the Genitive case. For places and abstract concepts, masculine nouns often take the "-у" or "-ю" ending. Neuter nouns take "-а" or "-я".
 
 «центр → далеко від центру» *(far from the center)*
 «вокзал → недалеко від вокзалу» *(not far from the station)*
@@ -324,7 +323,6 @@ As a bonus, Ukrainian has a compound preposition "з-під" which means "from u
 > — **Олена:** Дякую, я вже знайшла їх. *(Thank you, I already found them.)*
 
 <!-- INJECT_ACTIVITY: fill-in-focus-complete-sentences-with-or-correct-genitive-noun-form -->
-
 
 ## Що було потім? Після + родовий (What Happened Next? Після + Genitive)
 
@@ -389,7 +387,7 @@ Notice that **після** often starts the sentence when describing a routine. 
 — Вони читають новини **після пробудження** *(after waking up)*.
 
 > — **Марія:** Як проходить твій звичайний день? *(How does your usual day go?)*
-> — **Олег:** **Після ранкового сніданку** я відразу починаю працювати. *(After morning breakfast I immediately start working.)*
+> — **Олег:** **Після сніданку** я відразу починаю працювати. *(After breakfast I immediately start working.)*
 > — **Марія:** Ти працюєш вдома чи в офісі? *(Do you work at home or in the office?)*
 > — **Олег:** Вдома, а **після роботи** я йду на пробіжку. *(At home, and after work I go for a jog.)*
 > — **Марія:** Що ти робиш **після довгої пробіжки**? *(What do you do after a long jog?)*
@@ -419,7 +417,7 @@ Use the pair **до** and **після** together to describe a complete timelin
 > — **Віктор:** Ти п'єш каву **до сніданку** чи **після сніданку**? *(Do you drink coffee before breakfast or after breakfast?)*
 > — **Катерина:** Я завжди п'ю каву тільки **після сніданку**. *(I always drink coffee only after breakfast.)*
 > — **Віктор:** А я люблю випити чашку ще **до роботи**. *(And I like to drink a cup even before work.)*
-> — **Катерина:** Я розумію, але я не можу пити каву **до їжі**. *(I understand, but I cannot drink coffee before food.)*
+> — **Катерина:** Я розумію, але я не можу пити каву **до їди**. *(I understand, but I cannot drink coffee before food.)*
 > — **Віктор:** Це логічно. А що ти робиш **після вечері**? *(This is logical. And what do you do after dinner?)*
 > — **Катерина:** **До сну** я просто читаю цікаву книгу. *(Before sleep I just read an interesting book.)*
 > — **Віктор:** А я **після фільму** відразу йду спати. *(And I immediately go to sleep after a film.)*
@@ -427,6 +425,9 @@ Use the pair **до** and **після** together to describe a complete timelin
 <!-- INJECT_ACTIVITY: match-up-preposition-meanings -->
 <!-- INJECT_ACTIVITY: group-sort-preposition-usage -->
 
+:::note Джерела
+Цей модуль використовує матеріали: Заболотний Grade 5, §31 та ULP: 10 Uses of Genitive Case.
+:::
 
 ## Підсумок — Summary
 

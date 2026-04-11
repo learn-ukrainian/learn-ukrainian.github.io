@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-actions (A1)
 
-Generated: 2026-04-09 05:58
+Generated: 2026-04-11 00:57
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 05:58
 | verify | complete | 2026-04-09 03:57:17 |
 | review | complete | 2026-04-09 03:58:29 |
 | stress | complete | 2026-04-09 03:58:31 |
-| publish | complete | 2026-04-09 03:58:33 |
+| publish | complete | 2026-04-10 22:57:22 |
+| audit | complete | 2026-04-10 22:57:22 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 05:58
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

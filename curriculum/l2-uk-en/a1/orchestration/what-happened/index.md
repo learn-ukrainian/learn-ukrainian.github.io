@@ -1,6 +1,6 @@
 # Build Summary: what-happened (A1)
 
-Generated: 2026-04-09 05:50
+Generated: 2026-04-11 01:01
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 05:50
 | verify | complete | 2026-04-09 03:42:34 |
 | review | complete | 2026-04-09 03:50:29 |
 | stress | complete | 2026-04-09 03:50:31 |
-| publish | complete | 2026-04-09 03:50:33 |
+| publish | complete | 2026-04-10 23:01:17 |
+| audit | complete | 2026-04-10 23:01:17 |
 
 ## Reviews
 
@@ -42,6 +43,7 @@ Generated: 2026-04-09 05:50
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

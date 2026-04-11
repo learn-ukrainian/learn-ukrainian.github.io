@@ -1,0 +1,187 @@
+vocabulary:
+- word: дієприслі́вник
+  translation: adverbial participle / gerund
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: незмі́нюваний
+  translation: invariable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: додаткова дія
+  translation: secondary action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: одноча́сність
+  translation: simultaneity
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: логічний підмет
+  translation: logical subject
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: що роблячи?
+  translation: doing what?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чита́ючи
+  translation: while reading
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: слу́хаючи
+  translation: while listening
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: пи́шучи
+  translation: while writing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: гово́рячи
+  translation: while speaking
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: біжучи́
+  translation: while running
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: сидячи́
+  translation: while sitting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: стоячи́
+  translation: while standing
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: усміха́ючись
+  translation: while smiling
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ди́влячись
+  translation: while watching
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: хвилю́ючись
+  translation: while worrying
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: перехо́дячи
+  translation: while crossing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ди́хаючи
+  translation: while breathing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ба́чачи
+  translation: while seeing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: лежачи́
+  translation: while lying down
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ся́ючи
+  translation: while shining
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: незважаючи на
+  translation: despite
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: включа́ючи
+  translation: including
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: починаючи з
+  translation: starting from
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підніма́ючись
+  translation: while climbing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ро́блячи
+  translation: while making / doing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: осві́тлюючи
+  translation: while illuminating
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ідучи́
+  translation: while walking
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: відпочива́ючи
+  translation: while resting
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: фотографу́ючи
+  translation: while photographing
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: спуска́ючись
+  translation: while descending
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true

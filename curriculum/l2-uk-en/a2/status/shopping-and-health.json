@@ -1,0 +1,68 @@
+{
+  "module": "shopping-and-health",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T02:23:07.022638Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T02:23:04.013254Z",
+    "meta": null,
+    "activities": "2026-04-07T23:44:00.579456Z",
+    "vocabulary": "2026-04-07T23:46:24.511232Z",
+    "research": null,
+    "plan": "2026-04-04T22:04:59.931236Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3202/2000 (raw: 3257)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "63/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -5 | premature=1 | gaps=0 | well-paced=0",
+      "delta": -5,
+      "premature": 1,
+      "gaps": 0,
+      "well_paced": 0
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

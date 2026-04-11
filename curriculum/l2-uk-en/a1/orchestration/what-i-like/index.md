@@ -1,6 +1,6 @@
 # Build Summary: what-i-like (A1)
 
-Generated: 2026-04-09 04:02
+Generated: 2026-04-11 00:54
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 04:02
 | verify | complete | 2026-04-09 02:01:22 |
 | review | complete | 2026-04-09 02:02:44 |
 | stress | complete | 2026-04-09 02:02:45 |
-| publish | complete | 2026-04-09 02:02:47 |
+| publish | complete | 2026-04-10 22:54:13 |
+| audit | complete | 2026-04-10 22:54:13 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 04:02
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

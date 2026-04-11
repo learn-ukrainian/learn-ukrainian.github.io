@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-I have a lot of work.)* - Ми були в театрі на минулому тижні. *(We were at the theater last week.)* - На наступному тижні вона їде у відрядження. *(Next week she is going on a business trip.)* We also use the locative case to talk about broad periods of life and historical eras. These are treated like abstract conceptual spaces where events happen, taking the preposition **у/в**. When sharing stories, you will frequently use phrases like **у дитинстві** *(in childhood)*, **у молодості** *(in youth)*, and **у старості** *(in old age)*. We extend this logic to general historical time, using **у минулому** *(in the past)* and **у майбутньому** *(in the future)*. **Читаємо українською (Reading in Ukrainian):** - У дитинстві я жив у маленькому селі. *(In childhood I lived in a small village.)* - Мій дідусь багато подорожував у молодості. *(My grandfather traveled a lot in his youth.)* - У минулому люди не мали інтернету. *(In the past people did not have the internet.)* - Я сподіваюся, що у майбутньому все буде добре. *(I hope that in the future everything will be fine.)* - У старості вона хоче жити біля моря. *(In old age she wants to live near the sea.)* Let's see how these temporal and abstract locative phrases blend naturally in conversation. Here, a student is discussing their schedule and interests with a tutor. > — **Студент:** Добрий день! На цьому тижні у мене три заняття. *(Good day! This week I have three classes.)* > — **Викладач:** Це дуже добре. Ви маєте час на домашнє завдання? *(That is very good. Do you have time for homework?)* > — **Студент:** Так. У вільний час я читаю про Україну — у підручнику з історії. *(Yes. In my free time I read about Ukraine — in a history textbook.)* > — **Викладач:** Це цікаво! Що саме ви читаєте зараз? *(That is interesting! What exactly are you reading right now?)* > — **Студент:** В дитинстві я мало знав про українську культуру, тому зараз читаю все. *(In childhood I knew little about Ukrainian culture, so now I am reading everything.)* It is crucial to understand the difference between a point in time and a duration. The locative case strictly answers the question **Коли?** *(When?)* to pinpoint an exact moment, such as **у січні** *(in January)*. To answer **Як довго?** *(How long?)*, you must use the accusative case, like **увесь січень** *(all January)*. Mixing these is a common mistake. Remember the strict preposition rules: never use «на» for months, and never use «у» for weeks. **Читаємо українською (Reading in Ukrainian):** - Коли? Ми зустрілися у травні. *(When? We met in May.)* - Як довго? Ми працювали весь травень. *(How long? We worked all May.)* - Коли? Він купив машину на минулому тижні. *(When? He bought a car last week.)* - Як довго? Він читав цю книгу цілий тиждень. *(How long? He read this book for a whole week.)* <!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct locative form (months, weeks, life periods), 8 items -->
+"у тижні" or "на січні". Mixing these prepositions is a very common mistake for learners, so memorize them as fixed phrases. ::: The Locative case is also essential when talking about broader periods of your life or general historical eras. Just like with months, these life stages use the preposition **у** or **в** to pinpoint when an experience occurred. You can talk about your past using phrases like **у дитинстві**, **у молодості**, or **у старості**. You can also extend this logic to talk about time itself in a general sense, using expressions such as **у минулому** and **у майбутньому**. У дитинстві я жив у маленькому селі і дуже часто грався на вулиці. У молодості мій дідусь багато подорожував і працював у різних країнах. Я впевнений, що у майбутньому ми будемо жити краще і матимемо менше проблем. > *In childhood, I lived in a small village and played outside very often. In his youth, my grandfather traveled a lot and worked in different countries. I am sure that in the future we will live better and have fewer problems.* Let us look at a conversation where a student and a tutor discuss learning and schedules. Notice how naturally the temporal expressions blend with the abstract domains we learned in the previous section. > — **Студент:** Добрий день! На цьому тижні у мене три заняття з української мови. *(Good day! This week I have three Ukrainian language classes.)* > — **Викладач:** Це дуже добре. А що ви зазвичай робите у вільний час? *(That is very good. And what do you usually do in your free time?)* > — **Студент:** У вільний час я читаю про Україну. Зараз я читаю цікавий текст у підручнику з історії. *(In my free time I read about Ukraine. Right now I am reading an interesting text in a history textbook.)* > — **Викладач:** Це чудово. Ви раніше цікавилися нашою історією? *(That is wonderful. Were you interested in our history before?)* > — **Студент:** Ні, в дитинстві я мало знав про українську культуру. *(No, in childhood I knew little about Ukrainian culture.)* A critical distinction you must master is the difference between a specific point in time and the duration of an event. The Locative phrases we just learned, like **у січні** or **у минулому місяці**, answer the specific question of when an event occurred. However, if you want to express how long an action lasted, you must use the Accusative case without any preposition. This is a very common area of confusion for learners. For example, if an event happened at a specific moment during a month, use the Locative. If an action took up the entire month, use the Accusative. Ми вперше зустрілися у травні на концерті. Ми готували цей проект увесь травень. Важлива конференція була у січні. Мій брат відпочивав удома весь січень. > *We first met in May at a concert. We prepared this project all May. An important conference was in January. My brother rested at home all January.* <!-- INJECT_ACTIVITY: fill-in-temporal-locative -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -522,7 +522,74 @@ The vocative case is a powerful and immediate grammatical differentiator between
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -549,14 +616,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

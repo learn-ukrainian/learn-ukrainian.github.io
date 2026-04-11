@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-є випадковим, він суворо залежить від семантичної категорії самого слова. Закінчення «-а» або «-я» ми традиційно використовуємо для конкретних, чітко окреслених предметів, які можна легко порахувати. Наприклад: немає **стола** *(of a table)*, немає **рюкзака** *(of a backpack)*. Також це конкретне закінчення завжди мають назви живих істот (брата, студента, лікаря) та назви конкретних міст: вулиці **Києва** *(of Kyiv)*, архітектура Львова. Натомість закінчення «-у» або «-ю» ми свідомо обираємо для абстрактних, широких понять, які неможливо порахувати поштучно. Це стосується часу, складних почуттів та простору: мало **часу** *(of time)*, багато нестерпного болю, багато страху. Також це плинне закінчення завжди отримують різні речовини та матеріали: кілограм сухого **піску** *(of sand)*, ложка цукру, тарілка борщу. Крім того, закінчення «-у» мають тривалі процеси та спортивні ігри: правила **футболу** *(of football)*, результати складного іспиту, початок ремонту. Мнемонічне правило: якщо конкретний предмет можна порахувати, це зазвичай «-а». Якщо це щось велике, абстрактне або плинне, це частіше «-у». Далі ми переходимо до Давального відмінка *(Dative Case)*. Його найголовніша семантична роль — це **«суб'єкт стану»** *(experiencer role)* або прямий адресат. Коли ми детально описуємо фізичний чи емоційний стан людини, ми завжди ставимо цю особу в Давальний відмінок. Людина ніби пасивно отримує цей стан ззовні. Наприклад, ми кажемо: зараз **мені холодно** *(I am cold)*, сьогодні **дитині весело** *(the child is having fun)*, тобі дуже сумно. Ця ж сама логіка чудово працює, коли ми говоримо про точний вік людини. Роки життя даються особі долею, тому ми завжди правильно кажемо **«мені тридцять років»** *(I am thirty years old)*. Також Давальний відмінок є критично важливим для багатьох **безособових конструкцій** *(impersonal constructions)*. Це речення, де взагалі немає прямого активного підмета у Називному відмінку, але є особа, якій доводиться щось робити або якій щось вдається. Наприклад: **йому вдалося знайти** *(he managed to find)* нову роботу, або **нам довелося чекати** *(we had to wait)* поїзд дві години. У таких випадках Давальний відмінок показує, на кого саме спрямована об'єктивна життєва ситуація. Нарешті, ми маємо ґрунтовно повторити Орудний відмінок *(Instrumental Case)*. Його перша ключова семантична роль — це чітка **характеристика** *(characterization)* та соціальний статус людини у суспільстві. Коли ми говоримо про професію як про набутий статус або тимчасову роль, ми завжди використовуємо Орудний відмінок. Наприклад, ми кажемо: він мріє **працювати архітектором** *(to work as an architect)*, вона змогла **стати переможцем** *(to become a winner)*. Друга класична роль — це зрозумілий **засіб** *(means)* або фізичний інструмент дії. Ми граматично показуємо, за допомогою якого саме предмета виконується певна дія: зручно **писати олівцем** *(to write with a pencil)*, швидко їхати новим автобусом. Третя дуже важлива і поетична роль — це просторовий **шлях руху** *(path)*. Коли великий простір використовується просто як зручний засіб для переміщення, ми ставимо цей простір в Орудний відмінок абсолютно без прийменника. Наприклад: швидко **їхати дорогою** *(to drive along the road)*, повільно **іти парком** *(to walk through the park)*. Зверніть увагу на цей зв'язок в українській мові: і олівець, яким ми щодня пишемо, і довга дорога, якою ми їдемо, є нашими інструментами. <!-- INJECT_ACTIVITY: fill-in, focus on correct case endings for Genitive, Dative, and Instrumental semantic roles, 12 items -->
+imagine whether the noun can be broken into distinct, countable pieces without losing its core identity. If it flows freely, represents an internal feeling, or is a sprawling concept, it generally requires the **-у/-ю** ending. **У нас немає вільного часу та дрібного піску.** — *We have no free time and fine sand.* Mastering this underlying semantic split allows you to instinctively guess the correct ending for new vocabulary without constantly checking a dictionary. Давальний відмінок найчастіше виступає в ролі суб'єкта стану або того, хто відчуває певні сильні емоції чи фізичні впливи. У таких поширених безособових конструкціях немає активного діяча в називному відмінку, натомість дія ніби відбувається сама собою і спрямовується безпосередньо на людину. Наприклад, коли взимку несподівано падає сніг, мені стає дуже холодно, а малій дитині завжди весело гратися надворі. Ми також постійно використовуємо давальний відмінок для позначення точного віку, оскільки роки просто непомітно додаються до нашого життя. Зараз мені рівно тридцять років, а моєму найкращому другові зовсім скоро виповниться двадцять п'ять. Крім того, давальний відмінок є абсолютно невіддільною частиною тих безособових дієслів, які описують життєву необхідність, випадковий успіх або зовнішній примус. Сучасним студентам потрібно дуже багато вчитися, щоб скласти всі складні іспити максимально успішно. Вчора нам неймовірно пощастило знайти вільне затишне місце в кафе, але потім довелося досить довго чекати на офіціанта. У всіх цих життєвих випадках людина не контролює ситуацію безпосередньо, а лише пасивно сприймає її наслідки, відчуває необхідність або отримує результат обставин. Розуміння цієї специфічної ролі «сприймача» або «експериєнцера» допомагає будувати природні українські речення, які часто зовсім не мають прямих аналогів в англійській мові. :::tip **Did you know?** In English, you say "I am cold," putting yourself as the active subject. Ukrainian uses the Dative "Experiencer" role: **мені холодно** (to me it is cold), treating the environment as the force acting upon you. ::: Орудний відмінок також має надзвичайно багатий набір семантичних ролей, серед яких найважливішими є особиста характеристика, інструмент дії та шлях постійного руху. Коли ми говоримо про престижну професію, соціальний статус або тимчасову роль людини, орудний відмінок стає просто незамінним граматичним інструментом. Мій старший брат зараз працює талановитим архітектором, а його молода дружина дуже хоче стати відомою письменницею. Це зовсім не просто базовий опис, а чітка вказівка на певну важливу функцію, яку людина щодня виконує в сучасному суспільстві. Інша фундаментальна роль цього відмінка — це засіб або знаряддя, за допомогою якого людина фізично виконує певну дію. Ви можете легко написати довгий лист синьою кульковою ручкою, обережно різати свіжий хліб гострим ножем або впевнено керувати швидким автомобілем. Але орудний відмінок також чудово описує той відкритий простір, через який пролягає рух, тобто фізичний шлях. Ми дуже любимо довго гуляти тихим вечірнім містом, повільно іти великим тінистим парком або швидко їхати широкою асфальтованою дорогою. Надзвичайно важливо розуміти та чітко розрізняти ці граматичні нюанси. Їхати міським автобусом — це використання конкретного засобу пересування, тоді як їхати новою трасою — це рух певним визначеним шляхом. Ця унікальна багатогранність робить орудний відмінок одним із найвиразніших елементів української граматики, дозволяючи передавати тонкі деталі дії без використання додаткових прийменників. <!-- INJECT_ACTIVITY: fill-in-cases-review -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -528,7 +528,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -541,14 +608,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

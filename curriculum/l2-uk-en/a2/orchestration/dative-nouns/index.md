@@ -1,6 +1,6 @@
 # Build Summary: dative-nouns (A2)
 
-Generated: 2026-04-09 01:31
+Generated: 2026-04-11 02:36
 
 ## Pipeline Phases
 
@@ -17,10 +17,10 @@ Generated: 2026-04-09 01:31
 | vocab | complete | 2026-04-07 22:50:03 |
 | enrich | complete | 2026-04-07 22:50:03 |
 | verify | complete | 2026-04-07 22:50:04 |
-| review | complete | 2026-04-07 22:51:51 |
 | stress | complete | 2026-04-07 22:51:51 |
-| publish | complete | 2026-04-07 22:51:52 |
 | skeleton | complete | 2026-04-08 23:31:11 |
+| publish | complete | 2026-04-11 00:36:37 |
+| audit | complete | 2026-04-11 00:36:37 |
 
 ## Reviews
 
@@ -40,10 +40,22 @@ Generated: 2026-04-09 01:31
 | activities | gemini-tools (gemini-3.1-pro-preview) | 110s | ✅ |
 | vocab | gemini (auto) | 181s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 107s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 20s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 59s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 20s | ✅ |
 
 ## Files
 
 - `.build.lock`
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
+- `chunk-05.md`
+- `chunk-06.md`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`
@@ -52,6 +64,12 @@ Generated: 2026-04-09 01:31
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
+- `v6-chunk-01-prompt.md`
+- `v6-chunk-02-prompt.md`
+- `v6-chunk-03-prompt.md`
+- `v6-chunk-04-prompt.md`
+- `v6-chunk-05-prompt.md`
+- `v6-chunk-06-prompt.md`
 - `v6-pre-verify-prompt.md`
 - `v6-prompt.md`
 - `v6-review-prompt.md`

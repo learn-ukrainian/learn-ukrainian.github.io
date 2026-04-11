@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-*(aspectual pair)* складається з двох дієслів, які означають абсолютно однакову дію. Проте одне дієслово є недоконаним, а інше — доконаним. Як ми створюємо ці пари? Найпоширеніший шлях — це **префіксальний спосіб** *(prefixal method)*. Ми беремо базове дієслово недоконаного виду і додаємо **префікс** *(prefix)*, щоб обмежити дію і показати результат. Наприклад, дієслово **читати** *(to read)* перетворюється на **прочитати** *(to read completely)*, а слово **робити** *(to do)* стає словом зробити. Другий шлях — це **суфіксальний спосіб** *(suffixal method)*. Іноді базове дієслово вже є доконаним, і ми додаємо або змінюємо **суфікс** *(suffix)*, щоб зробити дію тривалим процесом. Наприклад, дієслово **вирішити** *(to decide)* перетворюється на **вирішувати** *(to be deciding)*, а дієслово **дати** *(to give)* стає словом **давати** *(to be giving)*. Нарешті, деякі фундаментальні дії використовують абсолютно різні корені. Це так звані **суплетивні пари** *(suppletive pairs)*, які потрібно просто запам'ятати. Наприклад, дієслово **брати** *(to take)* утворює пару зі словом **взяти** *(to have taken)*, а дієслово **говорити** *(to speak)* — зі словом **сказати** *(to say)*. Це унікальна історична особливість мови. Граматичні правила дуже важливі, але вибір правильного виду — це завжди питання змісту і значення. Коли ви розмовляєте українською мовою, ви повинні постійно вирішувати, на чому ви хочете наголосити: на процесі чи на результаті. Порівняйте два дуже поширені запитання в минулому часі. Якщо ваш друг запитує: **«Що ти робив учора?»** *(What were you doing yesterday?)*, його цікавить, як саме ви проводили свій час. Він хоче дізнатися про процес. Ви можете відповісти: **«Я читав книжку дві години»** *(I was reading a book for two hours)*. Дія була тривалою, і ми маємо вказівку на час. Але якщо друг запитує: **«Що ти зробив учора?»** *(What did you get done yesterday?)*, його увага зосереджується на конкретних досягненнях та результатах. У такому разі ви відповідаєте інакше: **«Я прочитав книжку»** *(I read the book completely)*. Ви маєте готовий результат — повністю прочитану книгу. Ви не можете сказати «Я прочитав книжку три години», тому що результат стається в один момент, він не може тривати годинами. Якщо ви хочете вказати на те, скільки часу зайняв процес читання, ви зобов'язані використати недоконаний вид. Недоконаний вид створений для опису тривалості, а доконаний вид потрібен для констатації завершеного факту. Тому завжди запитуйте себе перед тим, як побудувати речення: чи важливий для мене кінцевий результат? Для англомовних студентів поняття виду часто є найскладнішою частиною української граматики. Англійська мова використовує багато різних часів, щоб передати ці тонкі граматичні нюанси. Натомість українська мова покладається майже виключно на вид дієслова. Якщо ви хочете, щоб ваша українська звучала справді природно та автентично, вам потрібно припинити перекладати англійські часи слово за словом у своїй голові. Замість цього, почніть мислити категоріями процесу та результату. Використання правильного виду — це саме те, що відрізняє носія мови від людини, яка просто перекладає свої думки з іншої мови. Відчуйте цю фундаментальну різницю між безперервним потоком дії та її конкретним, відчутним завершенням. Ця зміна мислення — ваш головний ключ до вільного та впевненого спілкування з носіями української мови. Коли ви опануєте цю навичку, ваше мовлення стане значно багатшим і точнішим. <!-- INJECT_ACTIVITY: quiz-aspect-id --> <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
+is by adding a prefix to the beginning of the word. For example, the base verb «читати» becomes «прочитати», and the base verb «робити» becomes «зробити». This prefixation strategy is extremely common, but the specific prefix used can vary depending on the verb. Another frequent method is suffixation, where the internal structure of the word changes rather than adding a prefix. In these cases, the perfective verb often looks shorter or simpler, while the imperfective verb relies on a longer, extended suffix like **-ува-**, **-ва-**, or **-а-**. For instance, the perfective «вирішити» pairs with the extended imperfective «вирішувати», and the perfective «показати» pairs with «показувати». Sometimes, a vowel inside the root alternates to mark the difference, such as the perfective «допомогти» pairing with the imperfective «допомагати». Найскладнішими для запам'ятовування є суплетивні пари. Це слова, які утворюють видову пару, але мають абсолютно різні корені. Вони виглядають як два зовсім різних слова, хоча описують одну дію. Найвідоміші приклади таких пар: «брати» і «взяти», «говорити» і «сказати», «шукати» і «знайти». Їх потрібно просто вивчити напам'ять, адже вони дуже часто зустрічаються в повсякденних розмовах. The choice between the two aspects depends entirely on your intention and the specific meaning you want to convey in a conversation. This semantic choice is what allows you to narrate events accurately and vibrantly. When you say «вона писала лист», you paint a picture of her sitting at a desk with a pen in hand for a period of time. You do not reveal whether the letter was ever finished. However, when you say «вона написала лист і пішла на пошту», you describe a completed milestone that allows the next action in the sequence to happen. The perfective aspect pushes the narrative forward, while the imperfective aspect provides the background details and the duration of events. Якщо ваш співрозмовник запитує «Що ти робив учора?», він цікавиться вашим процесом та тим, як ви витратили свій час. Відповідь «Я читав книжку дві години» ідеально підходить, адже вона описує тривалу дію без акценту на фіналі. Але якщо питання звучить як «Що ти зробив учора?», людину цікавить ваш конкретний результат або досягнення. Тоді ви повинні відповісти «Я прочитав книжку», що означає успішне завершення дії від початку до кінця. Mastering the correct use of aspect is a crucial step in sounding natural when speaking Ukrainian. Beginners often overuse imperfective verbs because they map directly to English past and present simple tenses. However, native speakers constantly shift between aspects to add nuance, emphasize achievements, or set a dynamic scene. When you use perfective verbs to highlight completed milestones, your sentences stop sounding like translated English and gain the authentic rhythm of native Ukrainian discourse. The feeling for verb aspect comes with practice and constant listening to live speech. When you read Ukrainian texts or listen to dialogues, always pay attention to which aspect the speaker chooses. Ask yourself why the process was used here instead of the result. Eventually, this choice will become completely intuitive for you. <!-- INJECT_ACTIVITY: quiz-aspect-id --> <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -609,7 +609,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -622,14 +689,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

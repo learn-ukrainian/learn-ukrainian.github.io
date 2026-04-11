@@ -1,0 +1,59 @@
+{
+  "module": "checkpoint-food-shopping",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:59:43.005747Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:59:42.320638Z",
+    "meta": null,
+    "activities": "2026-04-09T03:27:29.604047Z",
+    "vocabulary": "2026-04-09T03:28:20.617128Z",
+    "research": null,
+    "plan": "2026-03-30T22:17:20.653351Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1292/1000 (raw: 1332)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "29/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

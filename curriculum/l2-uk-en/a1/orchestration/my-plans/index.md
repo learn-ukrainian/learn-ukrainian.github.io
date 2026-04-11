@@ -1,6 +1,6 @@
 # Build Summary: my-plans (A1)
 
-Generated: 2026-04-09 06:55
+Generated: 2026-04-11 01:01
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 06:55
 | verify | complete | 2026-04-09 04:52:02 |
 | review | complete | 2026-04-09 04:55:25 |
 | stress | complete | 2026-04-09 04:55:26 |
-| publish | complete | 2026-04-09 04:55:28 |
+| publish | complete | 2026-04-10 23:01:54 |
+| audit | complete | 2026-04-10 23:01:54 |
 
 ## Reviews
 
@@ -42,6 +43,7 @@ Generated: 2026-04-09 06:55
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

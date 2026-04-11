@@ -40,8 +40,6 @@ Don't overthink it — native speakers use euphony instinctively. The goal is to
 
 <!-- INJECT_ACTIVITY: quiz-u-v-choice -->
 
-<!-- INJECT_ACTIVITY: quiz-naturalness-comparison -->
-
 ## І чи Й? З, із, чи зі?
 According to **Літвінова Grade 5** (p.176), the **і/й** (and) alternation follows a very similar and highly intuitive logic. The letter **й** is a semivowel that creates a fast, natural glide. You use **й** after a word ending in a vowel to avoid a vowel clash. On the other hand, **і** is a full, distinct vowel used between consonants to physically separate them.
 *   **Ма́ма й та́то вдо́ма.** (Mom and dad are at home. — **Й** after a vowel)
@@ -58,7 +56,7 @@ As highlighted in **Літвінова Grade 5** (p.177), the **з/із/зі** (
 *   **Він іде́ з дру́гом.** (He is walking with a friend.)
 *   **Вона гуля́є з бра́том.** (She is walking with a brother.)
 
-To successfully prevent the **з** from sticking to already difficult consonant clusters, Ukrainian uses the extended variants **із** and **зі**. You use **із** between consonants to expertly avoid an uncomfortable cluster. The special, distinct form **зі** is reserved for use before **з**, **с**, **ш**, **щ** or thick consonant clusters, as well as the fixed phrase **зі мно́ю** (with me). This is a smaller rule than **у/в**, but it is highly important for natural speech.
+To successfully prevent the **з** from sticking to already difficult consonant clusters, Ukrainian uses the extended variants **із** and **зі**. You use **із** between consonants, or before words starting with **з**, **с**, **ш**, **щ**, to expertly avoid an uncomfortable cluster. The special, distinct form **зі** is specifically used before thick consonant clusters (especially those starting with sibilants), as well as the fixed phrase **зі мною** (with me). This is a smaller rule than **у/в**, but it is highly important for natural speech.
 *   **Він бере́ із ша́фи.** (He takes from the wardrobe.)
 *   **Максим із Семе́ном там.** (Maksym with Semen are there.)
 *   **Віта́ємо зі свя́том.** (We congratulate with the holiday.)
@@ -85,3 +83,5 @@ Here is a self-check list to review the three euphony pairs we have learned toda
     **A:** **Мама й тато.** (Mom and dad.)
 
 Practice time: read your own sentences aloud — do they flow smoothly? If you find your tongue twisting over a pile of consonants, check if you need to shift one of these three euphonic gears to keep the melody flowing.
+
+<!-- INJECT_ACTIVITY: quiz-naturalness-comparison -->

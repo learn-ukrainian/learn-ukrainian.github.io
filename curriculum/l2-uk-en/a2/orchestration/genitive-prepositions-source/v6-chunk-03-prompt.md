@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-> — **Марія:** Ні, вона з пластику. *(No, it is from plastic.)* > — **Олег:** А цей стіл з дерева? *(And is this table from wood?)* > — **Марія:** Так, це дуже дороге дерево. *(Yes, it is very expensive wood.)* > — **Олег:** У тебе гарний смак. *(You have good taste.)* > — **Катерина:** Який смачний торт! З чого він? *(What a tasty cake! What is it from?)* > — **Олена:** Це торт із шоколаду. *(This is a cake from chocolate.)* > — **Катерина:** Я думала, що він із фруктів. *(I thought that it was from fruits.)* Коли це почалося? *(When did this start?)* Ми використовуємо цей прийменник для часу. *(We use this preposition for time.)* Він показує початок дії. *(It shows the start of an action.)* Just as this preposition shows the starting point in space, it also shows the starting point in time. When you want to say that something has been happening since a certain time or day, you use this preposition with the Genitive case. It marks the exact moment an action began and often implies it continues into the present. Later in this module, we will contrast this with the word for "after", which describes what happens following a completely finished event. «ранок → з ранку» *(since morning)* «понеділок → з понеділка» *(since Monday)* «дитинство → з дитинства» *(since childhood)* «канікули → з канікул» *(since vacation)* Читаємо українською: — Я працюю тут **з ранку** *(since morning)*. — Цей магазин відкритий **з понеділка** *(since Monday)*. — Ми знаємо одне одного **з дитинства** *(since childhood)*. — Вони повернулися **з канікул** *(from vacation)*. — Він читає цю книгу **з вечора** *(since evening)*. — Студенти чекають **з обіду** *(since lunch)*. > — **Ірина:** Ти давно тут чекаєш? *(Have you been waiting here long?)* > — **Павло:** Так, я тут з ранку. *(Yes, I have been here since morning.)* > — **Ірина:** Ого! А я працюю з понеділка без вихідних. *(Wow! And I am working since Monday without days off.)* > — **Павло:** Тобі треба відпочити. *(You need to rest.)* > — **Максим:** Коли ми починаємо новий проект? *(When do we start the new project?)* > — **Директор:** Ми працюємо з вівторка. *(We are working since Tuesday.)* > — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready since morning.)* Говоріть правильно. *(Speak correctly.)* Важливо знати історію слів. *(It is important to know the history of words.)* :::tip Деколонізація (Decolonization) The only correct way to express origin from Ukraine is «з України». This derives directly from the correct locative form «в Україні» *(in Ukraine)*. You may sometimes hear obsolete forms that treat Ukraine as a region rather than a sovereign independent state; those are incorrect and stem from colonial influence. Furthermore, the rich system of euphony with three distinct preposition forms is a beautiful, defining phonetic feature of the language that clearly distinguishes it from neighboring Slavic systems. Embrace these phonetic variants because they make your speech sound naturally and authentically Ukrainian. ::: <!-- INJECT_ACTIVITY: quiz-euphony-variants -->
+великий стіл з дерева. Я зробив його сам учора. *(This large table is made of wood. I made it myself yesterday.)* > — **Оксана:** Дуже добре. А що ти п'єш? Це сік? *(Very good. And what are you drinking? Is this juice?)* > — **Тарас:** Так, це свіжий сік з яблук. Будеш пити? *(Yes, this is fresh juice made of apples. Will you drink?)* > — **Оксана:** Ні, дякую. Я буду їсти пиріжки з калини. *(No, thank you. I will eat buns made of viburnum.)* ### Читаємо українською У моїй кімнаті стоїть новий стіл з дерева. Моя сестра купила прозору склянку зі скла. Мама одягнула красиву сукню з шовку на свято. Я люблю пити холодний сік з яблук влітку. Сьогодні на обід у нас смачні пиріжки з калини. > *In my room stands a new table made of wood. My sister bought a transparent glass made of glass. Mom put on a beautiful dress made of silk for the holiday. I like to drink cold juice made of apples in the summer. Today for lunch we have tasty buns made of viburnum.* Use **з** + Genitive to indicate the starting point of an action in time ("since" or "from"). We will contrast this later with the preposition **після** (after). Цей прийменник чудово показує час, коли саме почалася ваша дія. Це може бути певна частина дня, конкретний день тижня або довгий період життя. Українці постійно використовують такі зручні фрази. Вони допомагають нам бути точними у розмові. > *This preposition perfectly shows the time when your action exactly began. This can be a certain part of the day, a specific day of the week, or a long period of life. Ukrainians constantly use such convenient phrases. They help us to be precise in conversation.* > — **Ірина:** Ти виглядаєш дуже втомленим. Що сталося? *(You look very tired. What happened?)* > — **Олег:** Я інтенсивно працюю з ранку. Дуже багато складної роботи. *(I have been working intensively since morning. A lot of difficult work.)* > — **Ірина:** Тобі треба добре відпочити. Ми вільні з понеділка. *(You need to rest well. We are free since Monday.)* > — **Олег:** Це чиста правда. Я не спав нормально з канікул. *(That is the pure truth. I haven't slept normally since the holidays.)* ### Читаємо українською Я дуже багато працюю з ранку до вечора. Ми чекаємо на ці новини з понеділка. Мій дідусь знає цю пісню з дитинства. Студенти мають чудовий настрій з канікул. Час летить дуже швидко. The only correct way to say "from Ukraine" is **з України**. Українська мова має власну незалежну граматичну систему. Наша милозвучність та логіка використання прийменників сильно відрізняють українську мову від інших. Завжди свідомо використовуйте правильні форми. Це показує вашу щиру повагу до нашої культури. :::tip **Did you know?** Forms that use "на" and "з" for Ukraine treat the state as a region and are incorrect calques from Russian. Embracing **з України** and **зі Львова** is the best way to sound like an authentic, respectful speaker. ::: <!-- INJECT_ACTIVITY: quiz-euphony-variants -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -472,7 +472,74 @@ These examples are drawn from the provided sources and demonstrate natural usage
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -499,14 +566,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

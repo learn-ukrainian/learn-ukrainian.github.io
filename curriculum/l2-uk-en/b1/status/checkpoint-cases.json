@@ -1,0 +1,68 @@
+{
+  "module": "checkpoint-cases",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T02:39:30.851436Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T02:38:29.802217Z",
+    "meta": null,
+    "activities": "2026-04-11T02:30:39.455181Z",
+    "vocabulary": "2026-04-09T23:44:22.802079Z",
+    "research": null,
+    "plan": "2026-04-05T19:21:47.102046Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "5597/4000 (raw: 5651) | immersion: 37.1% LOW (target 85-100% (B1.5-6 Vocab)) | richness: 70% < 85% min (checkpoint)"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "8/0 | density: 6 < 6"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "55/25"
+    },
+    "vocab_progression": {
+      "status": "pass",
+      "violations": 0,
+      "message": "\u0394 +2 | premature=0 | gaps=0 | well-paced=1",
+      "delta": 2,
+      "premature": 0,
+      "gaps": 0,
+      "well_paced": 1
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

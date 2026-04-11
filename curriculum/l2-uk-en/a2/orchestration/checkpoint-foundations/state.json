@@ -25,7 +25,7 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-04-07T20:56:31.583196+00:00"
+      "ts": "2026-04-10T23:52:06.336007+00:00"
     },
     "verify-exercises": {
       "status": "complete",
@@ -47,21 +47,21 @@
       "status": "complete",
       "ts": "2026-04-07T21:03:03.291985+00:00"
     },
-    "review": {
-      "status": "complete",
-      "ts": "2026-04-07T21:06:47.479952+00:00"
-    },
     "stress": {
       "status": "complete",
       "ts": "2026-04-07T21:06:47.481921+00:00"
     },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-07T21:06:49.288397+00:00"
-    },
     "skeleton": {
       "status": "complete",
       "ts": "2026-04-08T23:22:43.992620+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-10T23:53:30.579497+00:00"
+    },
+    "audit": {
+      "status": "complete",
+      "ts": "2026-04-10T23:53:30.579686+00:00"
     }
   }
 }

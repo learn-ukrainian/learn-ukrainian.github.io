@@ -133,12 +133,12 @@ objectives:
 - Learner can apply Genitive structures in real-life contexts (shopping, health, directions, time expressions).
 dialogue_situations:
 - setting: 'Role-play: tour guide describing Kyiv landmarks — using all genitive patterns: Біля Софійського
-    собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатику (m)
+    собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатика (m)
     п''ять хвилин.'
   speakers:
   - Гід
   - Туристи
-  motivation: 'All genitive patterns: біля собору, без квитка, для групи, до Хрещатику'
+  motivation: 'All genitive patterns: біля собору, без квитка, для групи, до Хрещатика'
 content_outline:
 - section: 'Частина 1: Впізнавання форм (Part 1: Recognizing Forms)'
   words: 450
@@ -737,9 +737,9 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
 
   **Module-specific dialogue settings (from plan):**
-  1. **Role-play: tour guide describing Kyiv landmarks — using all genitive patterns: Біля Софійського собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатику (m) п'ять хвилин.**
+  1. **Role-play: tour guide describing Kyiv landmarks — using all genitive patterns: Біля Софійського собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатика (m) п'ять хвилин.**
      Speakers: Гід, Туристи
-     Why: All genitive patterns: біля собору, без квитка, для групи, до Хрещатику
+     Why: All genitive patterns: біля собору, без квитка, для групи, до Хрещатика
 
   Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:

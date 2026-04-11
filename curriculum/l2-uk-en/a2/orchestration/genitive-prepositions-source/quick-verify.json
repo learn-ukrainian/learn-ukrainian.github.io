@@ -6,7 +6,7 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 2/10 required vocab: джерело (source), походження (origin)"
+      "message": "Missing 3/10 required vocab: джерело (source), сніданок (breakfast), канікули (vacation, holidays)"
     },
     {
       "check": "EXERCISES",
@@ -14,5 +14,5 @@
       "message": "Plan expects 4 exercise(s) but content has 3"
     }
   ],
-  "timestamp": "2026-04-07T21:44:28.104224+00:00"
+  "timestamp": "2026-04-10T23:59:08.034154+00:00"
 }

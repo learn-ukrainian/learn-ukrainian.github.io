@@ -27,7 +27,7 @@ Grand total: ~4300 words
 <previous_context>
 [...previous sections truncated...]
 
-для студентів, а іноді навіть для носіїв мови, є правильний **правопис** *(spelling)* цих дієслів. Головне правило стосується закінчень **-ться** та **-шся**. У третій особі (він, вона, воно, вони) ми завжди пишемо м’який знак: **він вчиться** *(he studies)*, **вона сміється** *(she laughs)*, **вони дивляться** *(they look)*. Щоб ніколи не помилятися, поставте перевірочне запитання: **що робить?** *(what does he/she do?)* або **що роблять?** *(what do they do?)*. Оскільки в запитанні є м’який знак наприкінці, він обов’язково буде і в дієслові. Фонетично ми вимовляємо це закінчення як довгий м'який звук, тобто «цця». Саме через цю різницю між вимовою та написанням виникають орфографічні помилки. З іншого боку, у другій особі (ти) ми ніколи не пишемо м’який знак: **ти вчишся** *(you study)*, **ти смієшся** *(you laugh)*, **ти дивишся** *(you look)*. Перевірочне запитання тут звучить так: **що робиш?** *(what are you doing?)*. М’якого знака в запитанні немає, тому немає його і в дієслові. Фонетично це закінчення вимовляється як довгий м'який звук «сся». Ви повинні запам'ятати це золоте правило рівня B1: третя особа завжди має м'який знак перед -ся, а друга особа — ніколи. Тепер давайте розглянемо, як саме ці дієслова змінюються в теперішньому та минулому часі. Ви вже знаєте, що цей постфікс має дві форми: **-ся** та **-сь**. Головне правило вибору дуже просте: після приголосних звуків ми завжди використовуємо -ся, а після голосних звуків дуже часто використовуємо -сь для кращого звучання. Подивимося на парадигму теперішнього часу на прикладі дієслова вчитися. Ми кажемо: **я вчуся** або **я вчусь**, ти вчишся, він вчиться, **ми вчимося** або **ми вчимось**, **ви вчитеся** або **ви вчитесь**, **вони вчаться**. У минулому часі правило чергування -ся та -сь стає ще більш помітним. Візьмемо дієслово **вмиватися** *(to wash one's face)*. Для чоловічого роду ми маємо форму **він вмивався** *(he washed himself)*. Слово закінчується на приголосний «в», тому ми додаємо -ся. Для жіночого роду ми кажемо **вона вмивалася** *(she washed herself)* або частіше **вона вмивалась**. Для множини ми використовуємо форму **вони вмивалися** *(they washed themselves)* або **вони вмивались**. Форми на -сь роблять наше мовлення більш плавним і швидким, особливо в неофіційних розмовах. Щоб закріпити ці знання, подивіться на природні діалоги з повсякденного життя. Зворотні дієслова є абсолютно незамінними, коли ми говоримо про наші емоції, фізичний стан чи домовляємося про плани. Уявіть ситуацію перед важливим іспитом або складною співбесідою на роботу. > — **Олена:** Привіт! Як ти **почуваєшся** *(feel)* сьогодні? > — **Марко:** Привіт. Я трохи **хвилююся** *(am worrying)*. Це дуже важливий день для мене. > — **Олена:** Не **переживай** *(don't worry)*! Ти чудово підготувався. Я впевнена, що все **вдасться** *(will work out)*. > — **Марко:** Дякую за підтримку. А коли ми **зустрінемося** *(will meet)* після іспиту? > — **Олена:** Давай о шостій вечора. Ми **прогуляємося** *(will walk)* парком і вип'ємо кави. Зверніть увагу, як часто ми використовуємо ці дієслова в звичайній розмові. Марко використовує форму першої особи «хвилююся», щоб описати свій внутрішній емоційний стан. Олена використовує безособову форму третьої особи «вдасться», щоб висловити віру в успішний результат подій. А наприкінці діалогу вони використовують дієслова «зустрінемося» та «прогуляємося» для спільної взаємної дії. Практикуйте ці форми щодня.
+the soft sign and when not to. The golden rule is extremely simple and is based on questions. If you can ask the question "what is he doing?" (що робить?), then you strictly write "-ться" with a soft sign. This applies to the third person: he studies (він вчиться), she smiles (вона усміхається), it hides (воно ховається). If the question sounds like "what are you doing?" (що робиш?), then you write "-шся" without a soft sign. This is the second person form: you study (ти вчишся), you smile (ти усміхаєшся).* :::info **Grammar box** — Pay attention to the pronunciation. The letter combination «-ться» phonetically sounds like a prolonged soft «цця», but in writing, we always preserve the historical form with the soft sign. ::: Conjugating these verbs introduces another mechanical rule that you will quickly master. The postfix physically changes its shape depending on the letter that immediately precedes it. If the verb form ends in a consonant, you attach the full «-ся». However, if the verb form ends in a vowel, the postfix shrinks into the shorter «-сь» to maintain a smooth phonetic flow and avoid awkward vowel clusters. Let us look at the verb «вмиватися» (to wash one's face) in the past tense. The masculine form ends in a consonant, so it takes the full postfix: «він вмивався». The feminine and plural forms end in vowels, so they take the shortened version: «вона вмивалася», «вони вмивалися». The exact same principle applies to the present tense paradigm of a verb like «вчитися» (to study). The first person singular ends in a vowel, so it becomes «я вчуся», whereas the third person singular ends in a consonant, yielding «він вчиться». Memorizing this alternating rhythm is crucial for natural speech. Using reflexive verbs correctly allows you to express your internal states, emotions, and daily routines with much greater naturalness. Often, the most authentic way to ask about someone's well-being relies entirely on these verbs. Notice how the speakers in the following dialogue describe their feelings and plans without ever translating the English "I am" directly. > — **Оксана:** Привіт! Як ти почуваєшся перед іспитом? *(Hi! How are you feeling before the exam?)* > — **Степан:** Привіт. Я трохи хвилююся, якщо чесно. Мені зовсім не спиться останні дні. *(Hi. I am worrying a bit, to be honest. I haven't been able to sleep at all these last few days.)* > — **Оксана:** Не переживай так сильно, усе вдасться. Ти ж довго готувався. *(Don't worry so much, everything will work out. You prepared for a long time, after all.)* > — **Степан:** Сподіваюся. А ти чим займаєшся зараз? *(I hope so. And what are you doing now?)* > — **Оксана:** Я збираюся в бібліотеку. Ми зустрічаємося з друзями, щоб разом повторити матеріал. *(I am getting ready for the library. We are meeting with friends to review the material together.)* > — **Степан:** О, це чудова ідея. Приєднуюся до вас через годину. *(Oh, that's a great idea. I am joining you in an hour.)*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -612,7 +612,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -625,14 +692,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

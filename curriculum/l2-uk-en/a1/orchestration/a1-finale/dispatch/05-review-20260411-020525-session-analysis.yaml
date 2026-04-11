@@ -1,0 +1,32 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-02-6387adb9.json
+phase: review
+prompt_chars: 32899
+response_chars: 5452
+prompt_words: 5158
+response_words: 801
+sections:
+- name: preamble
+  start: 0
+  length: 449
+  fraction: 0.0136
+- name: plan
+  start: 449
+  length: 28464
+  fraction: 0.8652
+- name: output_spec
+  start: 28913
+  length: 3986
+  fraction: 0.1212
+large_sections:
+- plan
+directives_total: 13
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '- The `find` string MUST be an EXACT copy-paste from the module content.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

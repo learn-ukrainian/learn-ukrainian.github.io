@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-30-738cde05.json
+phase: write-chunk-03
+prompt_chars: 50288
+response_chars: 10847
+prompt_words: 6832
+response_words: 1746
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0087
+- name: skeleton
+  start: 440
+  length: 1867
+  fraction: 0.0371
+- name: prior_summary
+  start: 2307
+  length: 3502
+  fraction: 0.0696
+- name: plan
+  start: 5809
+  length: 16454
+  fraction: 0.3272
+- name: wiki
+  start: 17401
+  length: 27897
+  fraction: 0.5547
+- name: output_spec
+  start: 50160
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 11
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: If you want to express the future accurately, you must first pause and ask
+    yourself what you truly mean to say.
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P1 (200w): Analyzing Dialogue 1 — breaking down why Marina''s ''забронюю''
+    (pf) signals a completed task while Andriy''s ''відпочиватимемо'' (impf) signals
+    a duration of joy. The choice of aspect reveals the speaker''s priority.'
+  covered: false
+  coverage_note: 5/22 keywords (23%)
+- kind: inject_activity
+  text: fill-in-future-forms
+  covered: false
+  coverage_note: marker missing

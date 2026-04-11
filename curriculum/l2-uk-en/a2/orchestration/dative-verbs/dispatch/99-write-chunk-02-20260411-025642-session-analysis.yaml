@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-55-4fac2816.json
+phase: write-chunk-02
+prompt_chars: 40298
+response_chars: 3808
+prompt_words: 5685
+response_words: 610
+sections:
+- name: header
+  start: 0
+  length: 490
+  fraction: 0.0122
+- name: skeleton
+  start: 490
+  length: 1600
+  fraction: 0.0397
+- name: prior_summary
+  start: 2090
+  length: 3398
+  fraction: 0.0843
+- name: plan
+  start: 5488
+  length: 10917
+  fraction: 0.2709
+- name: wiki
+  start: 11077
+  length: 23765
+  fraction: 0.5897
+- name: output_spec
+  start: 40170
+  length: 128
+  fraction: 0.0032
+large_sections:
+- wiki
+directives_total: 8
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P3 (120w): Personalizing the ''like'' experience with Dative pronouns. Provide
+    a paradigm table in prose: ''тобі подобається'' (you like), ''йому подобається''
+    (he likes), ''їй подобається'' (she likes), ''нам подобається'' (we like), ''вам
+    подобається'' (you all like), ''їм подобаються'' (they like).'
+  covered: false
+  coverage_note: 9/24 keywords (38%)
+- kind: skeleton_para
+  text: 'P5 (100w): Negation and questions. Using ''не'' before the verb: ''Тобі не
+    подобається ця пісня?''. Practice common A2 questions: ''Що вам подобається в
+    Україні?'' or ''Тобі подобається вивчати українську мову?''.'
+  covered: false
+  coverage_note: 7/18 keywords (39%)
+- kind: inject_activity
+  text: fill-in-dative-verbs
+  covered: false
+  coverage_note: marker missing

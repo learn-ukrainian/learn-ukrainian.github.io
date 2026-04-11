@@ -1,0 +1,396 @@
+{
+  "total_items": 271,
+  "grounded_items": 207,
+  "ungrounded": [
+    {
+      "word": "порозі",
+      "exercise_type": "fill-in",
+      "context": "_____ двері, я побачив кота на порозі.",
+      "role": "context"
+    },
+    {
+      "word": "викликав",
+      "exercise_type": "fill-in",
+      "context": "Увійшовши в кімнату, детектив побачив сліди, а _____ місце з",
+      "role": "context"
+    },
+    {
+      "word": "поліцію",
+      "exercise_type": "fill-in",
+      "context": "Увійшовши в кімнату, детектив побачив сліди, а _____ місце з",
+      "role": "context"
+    },
+    {
+      "word": "другом",
+      "exercise_type": "fill-in",
+      "context": "_____ з другом у парку, ми обговорили всі наші плани.",
+      "role": "context"
+    },
+    {
+      "word": "парку",
+      "exercise_type": "fill-in",
+      "context": "_____ з другом у парку, ми обговорили всі наші плани.",
+      "role": "context"
+    },
+    {
+      "word": "обговорили",
+      "exercise_type": "fill-in",
+      "context": "_____ з другом у парку, ми обговорили всі наші плани.",
+      "role": "context"
+    },
+    {
+      "word": "наші",
+      "exercise_type": "fill-in",
+      "context": "_____ з другом у парку, ми обговорили всі наші плани.",
+      "role": "context"
+    },
+    {
+      "word": "спільним",
+      "exercise_type": "quiz",
+      "context": "Що завжди має бути спільним для додаткової дії (дієприслівни",
+      "role": "context"
+    },
+    {
+      "word": "зрозумів",
+      "exercise_type": "error-correction",
+      "context": "Прочитаючи цю книгу, я багато зрозумів про історію.",
+      "role": "context"
+    },
+    {
+      "word": "історію",
+      "exercise_type": "error-correction",
+      "context": "Прочитаючи цю книгу, я багато зрозумів про історію.",
+      "role": "context"
+    },
+    {
+      "word": "зробиши",
+      "exercise_type": "error-correction",
+      "context": "Зробиши домашнє завдання, він пішов гуляти з друзями.",
+      "role": "context"
+    },
+    {
+      "word": "домашнє",
+      "exercise_type": "error-correction",
+      "context": "Зробиши домашнє завдання, він пішов гуляти з друзями.",
+      "role": "context"
+    },
+    {
+      "word": "гуляти",
+      "exercise_type": "error-correction",
+      "context": "Зробиши домашнє завдання, він пішов гуляти з друзями.",
+      "role": "context"
+    },
+    {
+      "word": "принісвши",
+      "exercise_type": "error-correction",
+      "context": "Принісвши смачну каву, офіціант привітно усміхнувся.",
+      "role": "context"
+    },
+    {
+      "word": "смачну",
+      "exercise_type": "error-correction",
+      "context": "Принісвши смачну каву, офіціант привітно усміхнувся.",
+      "role": "context"
+    },
+    {
+      "word": "офіціант",
+      "exercise_type": "error-correction",
+      "context": "Принісвши смачну каву, офіціант привітно усміхнувся.",
+      "role": "context"
+    },
+    {
+      "word": "привітно",
+      "exercise_type": "error-correction",
+      "context": "Принісвши смачну каву, офіціант привітно усміхнувся.",
+      "role": "context"
+    },
+    {
+      "word": "усміхнувся",
+      "exercise_type": "error-correction",
+      "context": "Принісвши смачну каву, офіціант привітно усміхнувся.",
+      "role": "context"
+    },
+    {
+      "word": "дізнавшися",
+      "exercise_type": "error-correction",
+      "context": "Дізнавшися правду, ми одразу почали діяти.",
+      "role": "context"
+    },
+    {
+      "word": "напишучи",
+      "exercise_type": "error-correction",
+      "context": "Напишучи довгого листа, вона одразу відправила його.",
+      "role": "context"
+    },
+    {
+      "word": "листа",
+      "exercise_type": "error-correction",
+      "context": "Напишучи довгого листа, вона одразу відправила його.",
+      "role": "context"
+    },
+    {
+      "word": "відправила",
+      "exercise_type": "error-correction",
+      "context": "Напишучи довгого листа, вона одразу відправила його.",
+      "role": "context"
+    },
+    {
+      "word": "повернувшися",
+      "exercise_type": "error-correction",
+      "context": "Повернувшися додому пізно, я просто відпочивав.",
+      "role": "context"
+    },
+    {
+      "word": "відпочивав",
+      "exercise_type": "error-correction",
+      "context": "Повернувшися додому пізно, я просто відпочивав.",
+      "role": "context"
+    },
+    {
+      "word": "умитися",
+      "exercise_type": "match-up",
+      "context": "умитися",
+      "role": "answer"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "quiz",
+      "context": "_____ сніданок, він уважно читав новини. (Дії відбуваються п",
+      "role": "context"
+    },
+    {
+      "word": "відчинені",
+      "exercise_type": "quiz",
+      "context": "_____ двері, я побачив кота. (Двері вже повністю відчинені)",
+      "role": "context"
+    },
+    {
+      "word": "рука",
+      "exercise_type": "quiz",
+      "context": "_____ двері, я побачив кота. (Процес відчинення ще триває, р",
+      "role": "context"
+    },
+    {
+      "word": "відправив",
+      "exercise_type": "quiz",
+      "context": "_____ цей лист, я відразу відправив його керівнику. (Лист уж",
+      "role": "context"
+    },
+    {
+      "word": "керівнику",
+      "exercise_type": "quiz",
+      "context": "_____ цей лист, я відразу відправив його керівнику. (Лист уж",
+      "role": "context"
+    },
+    {
+      "word": "готовий",
+      "exercise_type": "quiz",
+      "context": "_____ цей лист, я відразу відправив його керівнику. (Лист уж",
+      "role": "context"
+    },
+    {
+      "word": "приємну",
+      "exercise_type": "quiz",
+      "context": "_____ цей лист, я слухав приємну музику. (Дві дії відбувалис",
+      "role": "context"
+    },
+    {
+      "word": "найкращим",
+      "exercise_type": "fill-in",
+      "context": "_____ з найкращим другом, ми обговорили плани.",
+      "role": "context"
+    },
+    {
+      "word": "дав",
+      "exercise_type": "fill-in",
+      "context": "Після того як я прочитав книгу, я дав її другу. ➔ _____ книг",
+      "role": "context"
+    },
+    {
+      "word": "повернулися",
+      "exercise_type": "fill-in",
+      "context": "Коли ми повернулися додому, ми зателефонували мамі. ➔ _____ ",
+      "role": "context"
+    },
+    {
+      "word": "мамі",
+      "exercise_type": "fill-in",
+      "context": "Коли ми повернулися додому, ми зателефонували мамі. ➔ _____ ",
+      "role": "context"
+    },
+    {
+      "word": "дізнався",
+      "exercise_type": "fill-in",
+      "context": "Коли він дізнався новину, він дуже зрадів. ➔ _____ новину, в",
+      "role": "context"
+    },
+    {
+      "word": "зрадів",
+      "exercise_type": "fill-in",
+      "context": "Коли він дізнався новину, він дуже зрадів. ➔ _____ новину, в",
+      "role": "context"
+    },
+    {
+      "word": "написав",
+      "exercise_type": "fill-in",
+      "context": "Після того як я написав звіт, я пішов додому. ➔ _____ звіт, ",
+      "role": "context"
+    },
+    {
+      "word": "знайшла",
+      "exercise_type": "fill-in",
+      "context": "Після того як вона знайшла ключі, вона відчинила двері. ➔ __",
+      "role": "context"
+    },
+    {
+      "word": "ключі",
+      "exercise_type": "fill-in",
+      "context": "Після того як вона знайшла ключі, вона відчинила двері. ➔ __",
+      "role": "context"
+    },
+    {
+      "word": "відчинила",
+      "exercise_type": "fill-in",
+      "context": "Після того як вона знайшла ключі, вона відчинила двері. ➔ __",
+      "role": "context"
+    },
+    {
+      "word": "світло",
+      "exercise_type": "error-correction",
+      "context": "Коли я увійшов у темну кімнату, світло раптом згасло.",
+      "role": "answer"
+    },
+    {
+      "word": "згасло",
+      "exercise_type": "error-correction",
+      "context": "Коли я увійшов у темну кімнату, світло раптом згасло.",
+      "role": "answer"
+    },
+    {
+      "word": "велика",
+      "exercise_type": "error-correction",
+      "context": "Коли я прочитав цей лист, велика радість переповнила мене.",
+      "role": "answer"
+    },
+    {
+      "word": "радість",
+      "exercise_type": "error-correction",
+      "context": "Коли я прочитав цей лист, велика радість переповнила мене.",
+      "role": "answer"
+    },
+    {
+      "word": "переповнила",
+      "exercise_type": "error-correction",
+      "context": "Коли я прочитав цей лист, велика радість переповнила мене.",
+      "role": "answer"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "error-correction",
+      "context": "Коли я прочитав цей лист, велика радість переповнила мене.",
+      "role": "answer"
+    },
+    {
+      "word": "зібралися",
+      "exercise_type": "error-correction",
+      "context": "Після того як ми зібралися разом, свято пройшло просто чудов",
+      "role": "answer"
+    },
+    {
+      "word": "свято",
+      "exercise_type": "error-correction",
+      "context": "Після того як ми зібралися разом, свято пройшло просто чудов",
+      "role": "answer"
+    },
+    {
+      "word": "пройшло",
+      "exercise_type": "error-correction",
+      "context": "Після того як ми зібралися разом, свято пройшло просто чудов",
+      "role": "answer"
+    },
+    {
+      "word": "приїхав",
+      "exercise_type": "error-correction",
+      "context": "Коли я приїхав на місце злочину, мене зустріли патрульні.",
+      "role": "answer"
+    },
+    {
+      "word": "зустріли",
+      "exercise_type": "error-correction",
+      "context": "Коли я приїхав на місце злочину, мене зустріли патрульні.",
+      "role": "answer"
+    },
+    {
+      "word": "патрульні",
+      "exercise_type": "error-correction",
+      "context": "Коли я приїхав на місце злочину, мене зустріли патрульні.",
+      "role": "answer"
+    },
+    {
+      "word": "завершену",
+      "exercise_type": "match-up",
+      "context": "форма дієслова, що означає завершену додаткову дію",
+      "role": "context"
+    },
+    {
+      "word": "додається",
+      "exercise_type": "match-up",
+      "context": "додається до основи, що закінчується на голосний звук",
+      "role": "context"
+    },
+    {
+      "word": "дізнаючись",
+      "exercise_type": "group-sort",
+      "context": "дізнаючись",
+      "role": "answer"
+    },
+    {
+      "word": "повертаючись",
+      "exercise_type": "group-sort",
+      "context": "повертаючись",
+      "role": "answer"
+    },
+    {
+      "word": "зустрічаючись",
+      "exercise_type": "group-sort",
+      "context": "зустрічаючись",
+      "role": "answer"
+    },
+    {
+      "word": "стосуватися",
+      "exercise_type": "true-false",
+      "context": "Дієприслівник у реченні може стосуватися іншого суб'єкта, ні",
+      "role": "context"
+    },
+    {
+      "word": "іншого",
+      "exercise_type": "true-false",
+      "context": "Дієприслівник у реченні може стосуватися іншого суб'єкта, ні",
+      "role": "context"
+    },
+    {
+      "word": "суб'єкта",
+      "exercise_type": "true-false",
+      "context": "Дієприслівник у реченні може стосуватися іншого суб'єкта, ні",
+      "role": "context"
+    },
+    {
+      "word": "вільно",
+      "exercise_type": "true-false",
+      "context": "В українській мові можна вільно використовувати активні дієп",
+      "role": "context"
+    },
+    {
+      "word": "активні",
+      "exercise_type": "true-false",
+      "context": "В українській мові можна вільно використовувати активні дієп",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 17,
+    "not_tested": []
+  },
+  "all_grounded": false
+}

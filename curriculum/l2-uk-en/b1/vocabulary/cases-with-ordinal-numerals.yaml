@@ -1,0 +1,211 @@
+vocabulary:
+- word: складений числівник
+  translation: compound numeral
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вдру́ге
+  translation: for the second time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: утре́тє
+  translation: for the third time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: в першу чергу
+  translation: first of all
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: двадцять перше століття
+  translation: twenty-first century
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: порядковий числівник
+  translation: ordinal numeral
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: да́та
+  translation: date
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: котра година?
+  translation: what time is it?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пове́рх
+  translation: floor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: столі́ття
+  translation: century
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: полови́на
+  translation: half
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хвили́на
+  translation: minute
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: рік
+  translation: year
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: число́
+  translation: date (of the month)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: о пів на
+  translation: 'half past (literally: at half toward)'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чверть
+  translation: quarter (fifteen minutes)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: перший раз
+  translation: for the first time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вчетве́рте
+  translation: for the fourth time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наса́мперед
+  translation: first of all
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: передусі́м
+  translation: first of all
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-пе́рше
+  translation: firstly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-дру́ге
+  translation: secondly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-тре́тє
+  translation: thirdly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: стаття́
+  translation: article (in a document)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пункт
+  translation: point
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пара́граф
+  translation: paragraph
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ро́зділ
+  translation: chapter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: буди́нок
+  translation: building
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кварти́ра
+  translation: apartment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кабіне́т
+  translation: office (room)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ваго́н
+  translation: train car
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перо́н
+  translation: platform
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́лія
+  translation: track
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́са
+  translation: ticket office
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

@@ -183,30 +183,30 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-A typical Saturday morning in a Ukrainian home is a lively and sensory experience. The kitchen smells of fresh herbs, earthy vegetables, and warm bread. An older woman, a **бабуся** (grandma), is standing by the stove, preparing to cook. Her granddaughter, an **онучка** (granddaughter), comes in for a morning meal. They are about to cook the national dish, but first, they need to eat.
+A typical Saturday morning in a Ukrainian home is a lively and sensory experience. The kitchen smells of fresh herbs, earthy vegetables, and warm bread. An older woman, a **бабу́ся** (grandma), is standing by the stove, preparing to cook. Her granddaughter, an **ону́чка** (granddaughter), comes in for a morning meal. They are about to cook the national dish, but first, they need to eat.
 
 They begin their day with a conversation about food. Notice how they use the preposition **з** (with) to describe food pairings as they decide what to eat. 
 
-> **Бабуся:** Що ти хочеш на сніданок? *(What do you want for breakfast?)*
-> **Онучка:** Каву з молоком і хліб з маслом. *(Coffee with milk and bread with butter.)*
-> **Бабуся:** А я хочу чай з цукром і кашу. *(And I want tea with sugar and porridge.)*
+> **Бабуся:** Що ти хо́чеш на сніда́нок? *(What do you want for breakfast?)*
+> **Онучка:** Ка́ву з молоко́м і хліб з ма́слом. *(Coffee with milk and bread with butter.)*
+> **Бабуся:** А я хо́чу чай з цу́кром і ка́шу. *(And I want tea with sugar and porridge.)*
 
 Then, they prepare the fresh ingredients for their soup. Grandma uses this moment to explain that every single ingredient has a grammatical gender, reinforcing a core rule of the language while they cook. 
 
-> **Бабуся:** Для борщу потрібен буряк. Це він. *(For borshch, beetroot is needed. It is a "he".)*
-> **Онучка:** А картопля і капуста? *(And potato and cabbage?)*
-> **Бабуся:** Це вона. Морква і цибуля — теж вона. *(That is a "she". Carrot and onion are also "she".)*
-> **Онучка:** А м'ясо? *(And meat?)*
-> **Бабуся:** М'ясо — воно. А в кінці буде сметана! *(Meat is an "it". And at the end there will be sour cream!)*
+> **Бабуся:** Для борщу́ потрі́бен буря́к. Це він. *(For borshch, beetroot is needed. It is a "he".)*
+> **Онучка:** А карто́пля і капу́ста? *(And potato and cabbage?)*
+> **Бабуся:** Це вона́. Мо́рква і цибу́ля — теж вона. *(That is a "she". Carrot and onion are also "she".)*
+> **Онучка:** А м'я́со? *(And meat?)*
+> **Бабуся:** М'ясо — воно́. А в кінці́ бу́де смета́на! *(Meat is an "it". And at the end there will be sour cream!)*
 
 Food structures our entire day. Ukrainians divide their daily eating habits into three main meals:
 * **сніданок** — breakfast
 * **обід** — lunch
-* **вечеря** — dinner
+* **вече́ря** — dinner
 
-In the morning, you eat a **сніданок**. In the middle of the day, usually early afternoon, you eat an **обід**, which is traditionally the largest meal. In the evening, you gather with family for a **вечеря**. The verb meaning "to eat" is **їсти**. Learning to talk about these meals helps you describe your daily routine.
+In the morning, you eat a **сніданок**. In the middle of the day, usually early afternoon, you eat an **обід**, which is traditionally the largest meal. In the evening, you gather with family for a **вечеря**. The verb meaning "to eat" is **ї́сти**. Learning to talk about these meals helps you describe your daily routine.
 
 :::note Culture
 Ukrainian hospitality is deeply connected to food. Being invited to share a meal, whether it is a simple **сніданок** or a festive **вечеря**, is a true sign of friendship and respect.
@@ -214,36 +214,36 @@ Ukrainian hospitality is deeply connected to food. Being invited to share a meal
 
 People frequently talk about their food preferences and ask what others eat. When ordering or asking for food, you use the accusative case for the direct object. Combinations like meat with potatoes form memorized phrases that you can use immediately. 
 
-> **Онучка:** Що ти зазвичай їш на обід? *(What do you usually eat for lunch?)*
-> **Бабуся:** Суп і салат. *(Soup and salad.)*
-> **Онучка:** А на вечерю? *(And for dinner?)*
-> **Бабуся:** М'ясо з картоплею або рибу з рисом. *(Meat with potatoes or fish with rice.)*
+> **Онучка:** Що ти зазвича́й їш на обід? *(What do you usually eat for lunch?)*
+> **Бабуся:** Суп і сала́т. *(Soup and salad.)*
+> **Онучка:** А на вече́рю? *(And for dinner?)*
+> **Бабуся:** М'ясо з карто́плею або́ ри́бу з ри́сом. *(Meat with potatoes or fish with rice.)*
 
-## Їжа (Food)
+## Ї́жа (Food)
 
-The general word for food is **їжа** (food). Grains and bakery products are fundamental to the Ukrainian diet. The most sacred and respected food on the table is **хліб** (bread). It accompanies almost every meal, and offering bread is a traditional sign of hospitality. You will also frequently eat **каша** (porridge or cereal), which is a common dish for breakfast or served as a warm side dish. Other staple carbohydrates that you will find in any pantry include **рис** (rice) and **макарони** (pasta). 
+The general word for food is **їжа** (food). Grains and bakery products are fundamental to the Ukrainian diet. The most sacred and respected food on the table is **хліб** (bread). It accompanies almost every meal, and offering bread is a traditional sign of hospitality. You will also frequently eat **ка́ша** (porridge or cereal), which is a common dish for breakfast or served as a warm side dish. Other staple carbohydrates that you will find in any pantry include **рис** (rice) and **макаро́ни** (pasta). 
 
-For proteins and dairy, the Ukrainian kitchen offers many rich options. The general word for meat is **м'ясо** (meat), and a very common, affordable type is **курка** (chicken). If you prefer seafood, you can eat **риба** (fish). A basic ingredient used for a quick breakfast or for baking is an **яйце** (egg). Dairy products are also essential to everyday meals. You will often drink **молоко** (milk) or eat **йогурт** (yogurt). You spread **масло** (butter) on your bread, and you add a spoonful of **сметана** (sour cream) to your soup. 
+For proteins and dairy, the Ukrainian kitchen offers many rich options. The general word for meat is **м'ясо** (meat), and a very common, affordable type is **ку́рка** (chicken). If you prefer seafood, you can eat **ри́ба** (fish). A basic ingredient used for a quick breakfast or for baking is an **яйце́** (egg). Dairy products are also essential to everyday meals. You will often drink **молоко́** (milk) or eat **йо́гурт** (yogurt). You spread **ма́сло** (butter) on your bread, and you add a spoonful of **сметана** (sour cream) to your soup. 
 
 :::caution Russianisms
 Never use the Russian word «творог» for cottage cheese or quark. The authentic Ukrainian word for all types of cheese, both yellow hard cheese and soft farmer's cheese, is **сир** (cheese). Context will always tell you which one a person means.
 :::
 
-A Ukrainian garden provides abundant and fresh produce. Common **овочі** (vegetables) form the base for many salads and hearty soups. You will frequently cook with **картопля** (potato), **морква** (carrot), **цибуля** (onion), **помідор** (tomato), and **огірок** (cucumber). For a sweet snack or dessert, you eat **фрукти** (fruits). Popular choices include a **яблуко** (apple), a **банан** (banana), or an **апельсин** (orange). For basic cooking, your pantry needs **цукор** (sugar) for sweetness, **сіль** (salt) for flavor, and liquid **олія** (oil) for frying.
+A Ukrainian garden provides abundant and fresh produce. Common **о́вочі** (vegetables) form the base for many salads and hearty soups. You will frequently cook with **картопля** (potato), **морква** (carrot), **цибуля** (onion), **помідо́р** (tomato), and **огіро́к** (cucumber). For a sweet snack or dessert, you eat **фру́кти** (fruits). Popular choices include a **я́блуко** (apple), a **бана́н** (banana), or an **апельси́н** (orange). For basic cooking, your pantry needs **цу́кор** (sugar) for sweetness, **сіль** (salt) for flavor, and liquid **олі́я** (oil) for frying.
 
-Cultural spotlight: iconic Ukrainian dishes. The absolute national symbol of Ukrainian cuisine is **борщ** (beet soup). It is recognized as a UNESCO intangible cultural heritage and serves as a point of immense national pride. Borshch is definitively Ukrainian, not a generic Eastern European soup. Another beloved favorite is **вареники** (filled dumplings), which are stuffed with potato, cabbage, meat, or sweet cherries. A highly traditional and culturally significant ingredient is **сало** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Finally, **деруни** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream. For a modern, quick meal, many people simply order a hot **піца** (pizza), or they prepare a light **суп** (soup) and a fresh **салат** (salad).
+Cultural spotlight: iconic Ukrainian dishes. The absolute national symbol of Ukrainian cuisine is **борщ** (beet soup). It is recognized as a UNESCO intangible cultural heritage and serves as a point of immense national pride. Borshch is definitively Ukrainian, not a generic Eastern European soup. Another beloved favorite is **варе́ники** (filled dumplings), which are stuffed with potato, cabbage, meat, or sweet cherries. A highly traditional and culturally significant ingredient is **са́ло** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Another classic is **галушки́** (dumplings), which are soft, thick dough dumplings. Finally, **деруни́** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream. For a modern, quick meal, many people simply order a hot **пі́ца** (pizza), or they prepare a light **суп** (soup) and a fresh **салат** (salad).
 
 <!-- INJECT_ACTIVITY: match-up-food-vocab -->
 
-## Напої (Drinks)
+## Напо́ї (Drinks)
 
-Daily hydration involves both hot and cold choices. The general word for a drink is a **напій** (drink). For a hot drink, many people start the day with a strong **кава** (coffee). Alternatively, you can drink a warm **чай** (tea). For cold drinks, the most basic necessity is **вода** (water) or a sweet fruit **сік** (juice). If you order water in a cafe, a waiter might ask if you want **вода з газом** (sparkling water, literally "water with gas") or **вода без газу** (still water).
+Daily hydration involves both hot and cold choices. The general word for a drink is a **напі́й** (drink). For a hot drink, many people start the day with a strong **ка́ва** (coffee). Alternatively, you can drink a warm **чай** (tea). For cold drinks, the most basic necessity is **вода́** (water) or a sweet fruit **сік** (juice). If you order water in a cafe, a waiter might ask if you want **вода з га́зом** (sparkling water, literally "water with gas") or **вода без га́зу** (still water).
 
 :::caution Russianisms
-Do not use the Russian word «кофе». The correct Ukrainian word for coffee is always **кава**.
+Do not use the Russian word «ко́фе». The correct Ukrainian word for coffee is always **кава**.
 :::
 
-Traditional beverages and milk-based drinks hold a special place on the table. A very popular homemade sweet drink is **компот** (fruit water), made by boiling fresh berries or fruits. In a modern restaurant, you might order a cold **лимонад** (lemonade). During winter holidays, families prepare **узвар** (dried fruit drink), which has a rich, slightly smoky flavor and deep cultural roots. For dairy drinks, the most common choice is **молоко** (milk), but many people also drink **кефір** (a fermented milk drink) for its health benefits. Adults might also recognize alcoholic options like **пиво** (beer) and **вино** (wine).
+Traditional beverages and milk-based drinks hold a special place on the table. A very popular homemade sweet drink is **компо́т** (fruit water), made by boiling fresh berries or fruits. In a modern restaurant, you might order a cold **лимона́д** (lemonade). During winter holidays, families prepare **узва́р** (dried fruit drink), which has a rich, slightly smoky flavor and deep cultural roots. For dairy drinks, the most common choice is **молоко** (milk), but many people also drink **кефі́р** (a fermented milk drink) for its health benefits. Adults might also recognize alcoholic options like **пи́во** (beer) and **вино́** (wine).
 
 The 'з + Noun' formula is your key to describing what goes into your drink or meal. In Ukrainian, you often describe drinks and dishes with additions using the preposition **з** (with). At this early stage of learning, you should treat these combinations as single, memorized chunks rather than complex grammar rules. By treating the preposition and the noun as a single unit representing the flavor profile, you can speak fluently now without worrying about the full instrumental case table. 
 
@@ -251,7 +251,7 @@ Learn these common combinations as fixed phrases:
 * **кава з молоком** — coffee with milk
 * **чай з цукром** — tea with sugar
 * **вода з газом** — sparkling water
-* **чай з лимоном** — tea with lemon (using the word **лимон**, lemon)
+* **чай з лимо́ном** — tea with lemon (using the word **лимо́н**, lemon)
 * **м'ясо з картоплею** — meat with potatoes
 
 <!-- INJECT_ACTIVITY: group-sort-food-drinks -->
@@ -264,10 +264,10 @@ You can now name what you eat and drink in a Ukrainian kitchen. You know that th
 
 To test your reading comprehension, read these short texts about daily routines:
 
-> **Я снідаю вдома. Я їм хліб з сиром. Я п'ю каву з молоком. На обід я їм суп і салат. На вечерю я готую рибу. Це дуже смачно!**
+> **Я сні́даю вдо́ма. Я їм хліб з си́ром. Я п'ю каву з молоком. На обід я їм суп і салат. На вечерю я готу́ю рибу. Це ду́же сма́чно!**
 > *(I have breakfast at home. I eat bread with cheese. I drink coffee with milk. For lunch I eat soup and salad. For dinner I cook fish. It is very tasty!)*
 
-> **Я люблю холодний компот. Мій друг любить гарячий чай з лимоном. У кафе ми замовляємо воду з газом.**
+> **Я люблю́ холо́дний компот. Мій друг лю́бить гаря́чий чай з лимоном. У кафе́ ми замовля́ємо воду́ з газом.**
 > *(I love cold fruit water. My friend loves hot tea with lemon. In a cafe we order sparkling water.)*
 
 Before moving forward, verify that you can confidently answer the following questions:
@@ -282,7 +282,7 @@ Before moving forward, verify that you can confidently answer the following ques
 If you can answer these questions and name your favorite foods, you are ready to practice.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1509 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1520 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -458,13 +458,59 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 106 words | Not found: 2 words
+Verified: 77 words | Not found: 48 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ кофе — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Напо — NOT IN VESUM
+  ✗ апельси — NOT IN VESUM
+  ✗ бана — NOT IN VESUM
+  ✗ блуко — NOT IN VESUM
+  ✗ вдо — NOT IN VESUM
+  ✗ вече — NOT IN VESUM
+  ✗ вочі — NOT IN VESUM
+  ✗ гаря — NOT IN VESUM
+  ✗ дний — NOT IN VESUM
+  ✗ зазвича — NOT IN VESUM
+  ✗ замовля — NOT IN VESUM
+  ✗ зом — NOT IN VESUM
+  ✗ кефі — NOT IN VESUM
+  ✗ компо — NOT IN VESUM
+  ✗ кор — NOT IN VESUM
+  ✗ кром — NOT IN VESUM
+  ✗ кти — NOT IN VESUM
+  ✗ лимо — NOT IN VESUM
+  ✗ м'я — NOT IN VESUM
+  ✗ макаро — NOT IN VESUM
+  ✗ напі — NOT IN VESUM
+  ✗ ники — NOT IN VESUM
+  ✗ нок — NOT IN VESUM
+  ✗ ном — NOT IN VESUM
+  ✗ огіро — NOT IN VESUM
+  ✗ олі — NOT IN VESUM
+  ✗ ону — NOT IN VESUM
+  ✗ плею — NOT IN VESUM
+  ✗ пля — NOT IN VESUM
+  ✗ помідо — NOT IN VESUM
+  ✗ потрі — NOT IN VESUM
+  ✗ рка — NOT IN VESUM
+  ✗ рква — NOT IN VESUM
+  ✗ сло — NOT IN VESUM
+  ✗ слом — NOT IN VESUM
+  ✗ сма — NOT IN VESUM
+  ✗ смета — NOT IN VESUM
+  ✗ сти — NOT IN VESUM
   ✗ творог — NOT IN VESUM
+  ✗ узва — NOT IN VESUM
+  ✗ фру — NOT IN VESUM
+  ✗ холо — NOT IN VESUM
+  ✗ цибу — NOT IN VESUM
+  ✗ чеш — NOT IN VESUM
+  ✗ чка — NOT IN VESUM
+  ✗ чно — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
 
-All 106 other words are confirmed to exist in VESUM.
+All 77 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

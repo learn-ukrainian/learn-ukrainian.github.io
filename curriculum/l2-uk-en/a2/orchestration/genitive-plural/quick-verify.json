@@ -1,18 +1,19 @@
 {
   "attempt": 1,
-  "passed": true,
-  "errors": [],
+  "passed": false,
+  "errors": [
+    {
+      "check": "TOXIC",
+      "severity": "ERROR",
+      "message": "Severe Russianisms: хорошо"
+    }
+  ],
   "warnings": [
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: людина (person) / люди (people)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 3"
+      "message": "Missing 1/10 required vocab: множина (plural)"
     }
   ],
-  "timestamp": "2026-04-07T21:16:32.982243+00:00"
+  "timestamp": "2026-04-11T00:22:55.532233+00:00"
 }

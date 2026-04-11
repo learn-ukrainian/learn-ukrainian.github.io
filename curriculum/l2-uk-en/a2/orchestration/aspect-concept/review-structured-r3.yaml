@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The writer successfully incorporated the plan structure, analogy, and
+    textbook references. However, the writer omitted two specifically requested examples
+    from the plan outline: describing an action i'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian. Excellent handling of aspect prefixes, vocabulary,
+    and grammar rules. No calques, Surzhyk, or spelling issues detected. All forms
+    verified against VESUM.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The explanation of aspect is vivid, clear, and uses an excellent movie
+    analogy. However, missing the "interrupted action" example slightly weakened the
+    imperfective process explanation. Otherwise, the
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (`недоконаний вид`, `процес`, etc.) and recommended (`завершений`,
+    `одноразовий`) vocabulary are integrated naturally into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The exercise markers match the plan's requirements exactly, but three
+    markers were clustered together in a block at the end of Section 3.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The teacher persona is encouraging without being patronizing. The analogies
+    ("The End" screen, wavy vs. sharp lines) are highly engaging and helpful for learners.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan exactly. Clean formatting. The word count
+    (2521) comfortably exceeds the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally accurate and completely decolonized. Integrates references
+    to the standard Ukrainian Grade 6 textbook (Заболотний) seamlessly.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The brief football commentary dialogue perfectly models imperfective vs
+    perfective in a realistic, multi-turn, named-speaker context.
+findings: []

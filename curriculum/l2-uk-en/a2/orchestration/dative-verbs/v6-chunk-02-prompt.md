@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-the Dative case. Я з радістю допомагаю **татові** *(dad)*. Мій малий син допомагає старшому **братові** *(brother)* робити уроки. Він завжди допомагає своєму найкращому **другові** *(friend)*. Ці закінчення роблять вашу українську мову дуже природною і правильною. *(These endings make your Ukrainian language very natural and correct.)* Тепер поговоримо про дієслово **дякувати** *(to thank)*. Це абсолютно критичне слово для ввічливого спілкування. *(This is an absolutely critical word for polite communication.)* Дуже важливо знати і використовувати правильну граматику. *(It is very important to know and use the correct grammar.)* A common mistake for learners familiar with Russian is to use the Accusative case (like the Russian word «благодарить»). The phrase «дякую вас» is completely incorrect in Ukrainian; it is a direct grammatical translation from Russian. В українській мові ми завжди кажемо «дякую **вам**» *(thank you [plural/formal])* або «дякую **тобі**» *(thank you [singular/informal])*. Ми щиро дякуємо головному **лікарю** *(the doctor)*. Я дуже дякую **вчителеві** *(the teacher)* за його щоденну допомогу. Ми голосно дякуємо **друзям** *(friends)* за чудовий подарунок. Завжди пам'ятайте це просте правило. *(Always remember this simple rule.)* Ще два дуже важливі дієслова щоденного вжитку — це **дзвонити** *(to call)* та **телефонувати** *(to phone)*. Ці дієслова також показують прямий напрямок дії до конкретної людини. *(These verbs also show a direct direction of action to a specific person.)* Я дуже часто дзвоню моїй найкращій **подрузі** *(female friend)* Марії. Він майже щодня телефонує **Андрієві** *(Andriy)*. In English, you might say "I make a call to someone," using a preposition. In Ukrainian, you do not use the preposition **до** *(to)* with these verbs for people. Моя мама щовечора дзвонить старшому **синові** *(son)*. Подзвони **їй** *(her)* завтра вранці, будь ласка. Давальний відмінок сам показує напрямок вашого дзвінка. *(The Dative case itself shows the direction of your call.)* Є ще кілька дуже корисних дієслів, які працюють саме за цим правилом: **радити** *(to advise)*, **заважати** *(to bother, to disturb)*, та **відповідати** *(to answer)*. Я **раджу тобі** *(I advise you)* обов'язково подивитися цей новий фільм. Вибачте, я зараз не **заважаю вам** *(am I bothering you)*? Хороший учень завжди правильно **відповідає вчителеві** *(answers the teacher)*. Ми часто використовуємо ці дієслова для ввічливих прохань. *(We often use these verbs for polite requests.)* Будь ласка, не **заважай мені** *(do not bother me)* працювати над проектом. Завжди швидко **відповідай мамі** *(answer mom)*, коли вона щось питає. Прочитайте цей короткий текст про допомогу. *(Read this short text about helping.)* Сьогодні важливий День волонтера в нашому місті. *(Today is an important Volunteer Day in our city.)* > — **Волонтер:** Сьогодні я багато і важко працюю. *(Today I work a lot and hard.)* > — **Волонтер:** Я **допомагаю сусідці** *(I help the neighbor)* Олені прибирати великий парк. > — **Волонтер:** Потім я **дзвоню другові** *(I call the friend)* Івану. > — **Волонтер:** Він швидко приніс свіжу воду та смачну їжу. *(He quickly brought fresh water and tasty food.)* > — **Волонтер:** Я щиро **дякую йому** *(I thank him)* за цю велику допомогу! <!-- INJECT_ACTIVITY: fill-in, focus: completing sentences with correct dative noun/pronoun forms after help/thank/call, 8 items -->
+дякую моєму другові за цю цікаву книгу. Ми дякуємо вам за вашу увагу! > *We always sincerely thank the teacher for the help at the lesson. Little children joyfully thank grandma for a very delicious lunch. I endlessly thank my friend for this interesting book. We thank you for your attention!* Another common verb that works exactly this way is «дзвонити» or its more formal synonym «телефонувати» (to call). In English, you "call someone" directly. In Ukrainian, the underlying logic is that you are sending a telephone signal *to* someone. Кожного вечора я обов'язково дзвоню моїй найкращій подрузі Марії. Мій чоловік дуже часто телефонує своєму колезі Андрієві, щоб обговорити важливу роботу. Ми завжди дзвонимо нашим батькам на вихідних. > *Every evening I definitely call my best friend Mariia. My husband very often calls his colleague Andrii to discuss important work. We always call our parents on the weekends.* Notice carefully that we do not use the preposition «до» (to) when calling a person. You simply use the direct Dative relationship. Saying «дзвоню до мами» is sometimes heard in casual spoken language, but the standard literary form is strictly the Dative without any preposition: «дзвоню мамі». Let's group three more very useful verbs that govern the Dative case: «радити» (to advise), «заважати» (to bother or disturb), and «відповідати» (to answer). These verbs are extremely common when making polite commands or requests. Будь ласка, не заважай мені зараз працювати! Я дуже раджу тобі подивитися цей новий український документальний фільм. Розумний учень завжди швидко і правильно відповідає вчителеві. > *Please, do not bother me while I work now! I highly advise you to watch this new Ukrainian documentary film. A smart student always answers the teacher quickly and correctly.* Just like with helping or thanking, the action of advising, bothering, or answering is clearly directed *toward* a person or a recipient. This inherent direction makes the Dative case the only correct grammatical choice for these verbs. Батьки часто радять дітям читати хороші книги. Учителі ніколи не заважають учням думати. Let's see all these important verbs in action during a typical volunteer day scenario. Listen to how the Dative case flows naturally. > — **Волонтер:** Сьогодні ми маємо дуже багато важливої роботи в нашому волонтерському центрі. *(Today we have a lot of important work in our volunteer center.)* > — **Координатор:** Кому ти допомагаєш сьогодні зранку? *(Who are you helping this morning?)* > — **Волонтер:** Спочатку я допомагаю літній сусідці Олені нести її важкі сумки. *(First, I help elderly neighbor Olena carry her heavy bags.)* > — **Волонтер:** Потім я дзвоню моєму другові Івану, щоб спитати про наш розклад. *(Then I call my friend Ivan to ask about our schedule.)* > — **Координатор:** Чудово. А я зараз телефоную нашому новому водієві. *(Great. And I am calling our new driver right now.)* > — **Волонтер:** Наприкінці цього довгого дня я щиро дякую йому за хорошу роботу! *(At the end of this long day, I sincerely thank him for the good work!)* <!-- INJECT_ACTIVITY: fill-in-dative-verbs -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -505,7 +505,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -524,14 +591,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

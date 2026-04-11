@@ -1,6 +1,6 @@
 # Build Summary: foundations-practice (A2)
 
-Generated: 2026-04-09 01:11
+Generated: 2026-04-11 01:50
 
 ## Pipeline Phases
 
@@ -17,10 +17,10 @@ Generated: 2026-04-09 01:11
 | vocab | complete | 2026-04-07 20:41:20 |
 | enrich | complete | 2026-04-07 20:41:20 |
 | verify | complete | 2026-04-07 20:41:21 |
-| review | complete | 2026-04-07 20:44:03 |
 | stress | complete | 2026-04-07 20:44:03 |
-| publish | complete | 2026-04-07 20:44:05 |
-| activities | complete | 2026-04-08 23:11:10 |
+| activities | complete | 2026-04-10 23:46:54 |
+| publish | complete | 2026-04-10 23:50:01 |
+| audit | complete | 2026-04-10 23:50:01 |
 
 ## Reviews
 
@@ -40,14 +40,23 @@ Generated: 2026-04-09 01:11
 | activities | gemini-tools (gemini-3.1-pro-preview) | 123s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 159s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 138s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 89s | ✅ |
 | vocab | gemini (auto) | 338s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 163s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 89s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 113s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 72s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 305s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 446s | ✅ |
+
+## Friction
+
+- `friction.yaml` (134 bytes)
 
 ## Files
 
@@ -59,6 +68,7 @@ Generated: 2026-04-09 01:11
 - `correction-attempt-1.md`
 - `correction-attempt-2.md`
 - `exercise-verification.json`
+- `friction.yaml`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`

@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-12-3ee9f113.json
+phase: write-chunk-02
+prompt_chars: 50353
+response_chars: 5450
+prompt_words: 7025
+response_words: 796
+sections:
+- name: header
+  start: 0
+  length: 432
+  fraction: 0.0086
+- name: skeleton
+  start: 432
+  length: 1801
+  fraction: 0.0358
+- name: prior_summary
+  start: 2233
+  length: 3856
+  fraction: 0.0766
+- name: plan
+  start: 6089
+  length: 15446
+  fraction: 0.3068
+- name: wiki
+  start: 16674
+  length: 28690
+  fraction: 0.5698
+- name: output_spec
+  start: 50225
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 11
+directives_covered: 5
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: skeleton_para
+  text: 'P2 (150w): Full paradigm of себе: Р. себе, Д. собі, Зн. себе, Ор. собою,
+    М. на собі. Explain the use of the dative собі for personal benefit/interest ("купити
+    собі", "уявити собі") and the instrumental собою for state/satisfaction ("задоволений
+    собою").'
+  covered: false
+  coverage_note: 6/18 keywords (33%)
+- kind: skeleton_para
+  text: 'P3 (175w): Common idiomatic expressions and fixed phrases with себе. Cover
+    "почуватися/почувати себе" (health/well-being), "сам по собі" (independent/by
+    itself), "так собі" (mediocre), "від себе" (from one''s own name), and "не по
+    собі" (uncomfortable/eerie).'
+  covered: false
+  coverage_note: 6/24 keywords (25%)
+- kind: inject_activity
+  text: reading-interrogative-relative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-interrogative-relative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-interrogative-relative
+  covered: false
+  coverage_note: marker missing

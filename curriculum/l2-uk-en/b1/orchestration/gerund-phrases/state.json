@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "gerund-phrases",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-10T00:50:08.347303+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-10T00:50:08.360619+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-10T00:50:49.980261+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-10T00:51:24.064069+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-10T01:01:27.285822+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T01:01:27.285986+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-10T01:04:44.042559+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T01:04:44.095393+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-10T01:04:44.108790+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-10T01:05:15.733875+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-10T01:05:15.734664+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-10T01:05:16.130891+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-10T01:07:43.659360+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-10T01:07:44.034956+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-10T01:07:46.680078+00:00"
+    }
+  }
+}

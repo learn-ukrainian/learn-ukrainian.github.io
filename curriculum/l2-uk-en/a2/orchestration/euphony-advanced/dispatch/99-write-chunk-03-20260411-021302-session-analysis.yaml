@@ -1,0 +1,60 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-12-0a293e59.json
+phase: write-chunk-03
+prompt_chars: 43368
+response_chars: 2371
+prompt_words: 6201
+response_words: 419
+sections:
+- name: header
+  start: 0
+  length: 444
+  fraction: 0.0102
+- name: skeleton
+  start: 444
+  length: 1510
+  fraction: 0.0348
+- name: prior_summary
+  start: 1954
+  length: 3218
+  fraction: 0.0742
+- name: plan
+  start: 5172
+  length: 11748
+  fraction: 0.2709
+- name: wiki
+  start: 10673
+  length: 26320
+  fraction: 0.6069
+- name: output_spec
+  start: 43240
+  length: 128
+  fraction: 0.003
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: The writer must present it as a key to making one's speech sound naturally
+    Ukrainian.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '**Ukrainian from Scratch:** Learners must build their Ukrainian phonetic
+    and phonological system from zero.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '**`І`/`И` is a Separate Battleground:** While not strictly euphony, the writer
+    must be reminded that the letters `і` and `и` are a primary source of negative
+    transfer from Russian.'
+  covered: false
+  coverage_note: 3/18 keywords (17%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-z-variants
+  covered: false
+  coverage_note: marker missing

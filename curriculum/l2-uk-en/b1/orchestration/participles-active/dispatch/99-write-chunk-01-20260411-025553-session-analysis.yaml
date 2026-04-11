@@ -1,0 +1,58 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-54-6c35d407.json
+phase: write-chunk-01
+prompt_chars: 48683
+response_chars: 5096
+prompt_words: 6053
+response_words: 738
+sections:
+- name: header
+  start: 0
+  length: 427
+  fraction: 0.0088
+- name: skeleton
+  start: 427
+  length: 1383
+  fraction: 0.0284
+- name: plan
+  start: 1810
+  length: 17267
+  fraction: 0.3547
+- name: wiki
+  start: 14213
+  length: 29478
+  fraction: 0.6055
+- name: output_spec
+  start: 48555
+  length: 128
+  fraction: 0.0026
+large_sections:
+- wiki
+directives_total: 8
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: participles must be natural Ukrainian.
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: skeleton_para
+  text: 'P3 (170w): Classification into Active (активні) and Passive (пасивні) types.
+    Define Active as the subject performing the action itself (палаючий вогонь — the
+    fire itself burns). Contrast with Passive (прочитана книга — someone else read
+    the book). Focus specifically on the Active scope for this module.'
+  covered: false
+  coverage_note: 10/29 keywords (34%)
+- kind: skeleton_para
+  text: 'P4 (180w): The "Triple Check" logic: How to distinguish a participle from
+    a regular adjective and a verb. List three examples: "зелений" (adj), "зеленіючий"
+    (participle), "зеленіє" (verb). Explain that if it answers ''який?'' but contains
+    a verb root + tense suffix, it is a participle.'
+  covered: false
+  coverage_note: 10/27 keywords (37%)

@@ -32,8 +32,6 @@ The writer placed these markers in the module content. Your inline activities mu
 - `<!-- INJECT_ACTIVITY: match-up-nom-dat-match-nominative-noun-phrases-to-their-dative-equivalents -->`
 - `<!-- INJECT_ACTIVITY: fill-in-dative-phrases -->`
 - `<!-- INJECT_ACTIVITY: error-correction-agreement -->`
-- `<!-- INJECT_ACTIVITY: match-up -->`
-- `<!-- INJECT_ACTIVITY: group-sort -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -114,7 +112,6 @@ Instead of just giving a gift to a friend, we often want to give it to our best 
 > — **Студент:** Я розумію. *(I understand.)* Дякую **нашому доброму вчителеві** за допомогу. *(Thank you to our kind teacher for the help.)*
 > — **Вчитель:** Будь ласка. *(You are welcome.)* Завтра ми пишемо новий тест. *(Tomorrow we are writing a new test.)*
 
-
 ## Прикметники у давальному відмінку (Adjectives in the Dative Case)
 
 When we add an adjective to a noun, they must work as a team. This grammatical teamwork is called agreement. This means the adjective must match the noun's gender, number, and case perfectly. If the noun is in the Dative case, the adjective must also take a Dative case ending. To find the right adjective form, we ask the question **«Якому?»** *(To which? / To what kind?)* for masculine and neuter nouns, **«Якій?»** *(To which?)* for feminine nouns, and **«Яким?»** *(To which?)* for plural nouns.
@@ -124,7 +121,7 @@ When we add an adjective to a noun, they must work as a team. This grammatical t
 > — **Студент:** А **якій** вчительці ви даруєте квіти? *(And to which teacher are you giving flowers?)*
 > — **Подруга:** Ми даруємо квіти нашій першій вчительці. *(We are giving flowers to our first teacher.)*
 
-For masculine and neuter nouns that end in a hard consonant (like **новий** - *new*, **старий** - *old*, **гарний** - *beautiful/good*), the adjective takes the ending **-ому**. Notice how the Nominative ending changes to match the Dative form. This is the most common adjective ending you will see for these genders.
+For masculine and neuter adjectives that have a hard stem (like **новий** - *new*, **старий** - *old*, **гарний** - *beautiful/good*), the adjective takes the ending **-ому**. Notice how the Nominative ending changes to match the Dative form. This is the most common adjective ending you will see for these genders.
 
 *   новий друг → **новому** другу *(to a new friend)*
 *   старе місто → **старому** місту *(to an old city)*
@@ -158,7 +155,7 @@ For feminine nouns, the rules are much simpler. Both hard and soft stem adjectiv
 Цей яскравий колір дуже пасує **синій сукні**. *(This bright color really suits the blue dress.)*
 Ми завжди радіємо **тихій вулиці** біля нашого дому. *(We are always happy about the quiet street near our house.)*
 
-In the plural, the adjective system becomes even simpler. All genders (masculine, feminine, and neuter) use the exact same ending: **-им**. Whether the adjective is hard or soft in the dictionary form, the plural Dative ending is always **-им**. This unification makes plural adjectives very easy to form.
+In the plural, the adjective system becomes even simpler. All genders (masculine, feminine, and neuter) use the exact same ending pattern: **-им** for hard stems and **-ім** for soft stems.
 
 *   нові друзі → **новим** друзям *(to new friends)*
 *   сині моря → **синім** морям *(to blue seas)*
@@ -178,8 +175,7 @@ When we compare the hard and soft groups in the Dative case, we see a beautiful 
 
 <!-- INJECT_ACTIVITY: group-sort-sort-dative-adjective-forms-by-gender-masculine-feminine-plural -->
 
-
-## Присвійні та вказівні займенники у давальному відмінку
+## Присвійні та вказівні займенники у давальному відмінку (Possessive and Demonstrative Pronouns in the Dative)
 
 Now that you know how to decline adjectives, possessive pronouns will be much easier to learn. The possessive pronouns for the first and second person singular (**мій** — *my*, **твій** — *your*, and the reflexive **свій** — *one's own*) change their stem slightly in the Dative case. The masculine and neuter forms take the ending **-єму** (мо**єму**, тво**єму**, сво**єму**), while the feminine forms take **-їй** (мо**їй**, тво**їй**, сво**їй**). The plural form for all genders is **-їм** (мо**їм**, тво**їм**, сво**їм**). Notice the appearance of the letters **є** and **ї** — they make the pronunciation smooth and melodic.
 
@@ -249,7 +245,6 @@ Finally, let's look at demonstrative pronouns: **цей** *(this)* and **той*
 <!-- INJECT_ACTIVITY: quiz-pronoun-forms-choose-the-correct-dative-form-of-the-possessive-pronoun-vs-vs -->
 <!-- INJECT_ACTIVITY: match-up-nom-dat-match-nominative-noun-phrases-to-their-dative-equivalents -->
 
-
 ## Повні іменникові групи у давальному відмінку (Full Dative Noun Phrases)
 
 Now that we know how to change both adjectives and pronouns, it is time to put everything together. In Ukrainian, a full noun phrase often consists of a possessive pronoun, an adjective, and a noun. When this entire phrase acts as the indirect object — the receiver of an action — every single word in the chain must change into the Dative case. This concept is called agreement. For example, if you want to say "to my older brother", you cannot just change the noun. You must change the pronoun **мій** *(my)* to **моєму**, the adjective **старший** *(older)* to **старшому**, and the noun **брат** *(brother)* to **братові**. The result is the beautiful, harmonious phrase: **моєму старшому братові** *(to my older brother)*.
@@ -295,7 +290,6 @@ A very common trap for learners is to change the noun and the pronoun, but forge
 <!-- INJECT_ACTIVITY: fill-in-dative-phrases -->
 <!-- INJECT_ACTIVITY: error-correction-agreement -->
 
-
 ## Порівняння відмінків (Comparing Cases So Far)
 
 It is very common to confuse the Genitive and Dative cases, especially for masculine and neuter words. The Genitive ending is **-ого**, while the Dative ending is **-ому**. The letter "м" in **-ому** is your unique marker for the Dative case. When you hear or write "м", you are usually directing an action to someone.
@@ -333,17 +327,13 @@ Here is a quick reference for common verbs that require the Dative case for your
 **допомагати / допомогти** *(to help)* → допомагаю **старому сусідові** *(helping the old neighbor)*
 **дякувати / подякувати** *(to thank)* → дякую **вашому синові** *(thanking your son)*
 
-<!-- INJECT_ACTIVITY: match-up -->
-<!-- INJECT_ACTIVITY: group-sort -->
-
-
 ## Підсумок (Summary)
 
 Let's review the key rules for adjectives and possessive pronouns in the Dative case. When you direct an action to someone, every word in the noun phrase must agree. 
 
 For masculine and neuter words, your main ending is **-ому**. 
 For feminine words, the ending is always **-ій**. 
-For plural words, use the ending **-им**.
+For plural words, use the ending **-им** (or **-ім** for soft stems).
 
 «Читаємо українською»
 Я даю зошит **новому студенту**. *(I give a notebook to the new student.)*

@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all outline points and vocabulary but misses the required reference
+    to "State Standard 2024, §3".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical error: "поже́жна допомо́га" in the "Екстрені ситуації"
+    section instead of the correct "поже́жна слу́жба". All other grammar, forms, and
+    vocabulary are accurate.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow starting with situational dialogues, extracting the
+    patterns, and applying them. Emphasizes memorizing chunks under pressure.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (швидка, поліція, лікарня, аварія, загубити, викликати) and
+    recommended (пожежа, порятунок, паспорт, etc.) vocabulary used contextually.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 4 markers are correctly mapped to the 4 plan hints and injected exactly
+    after the corresponding sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is direct and appropriately serious for emergencies ("When you
+    need immediate, life-saving action, you rely entirely on the power of the imperative
+    mood").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan perfectly. Word count is 1704, well over
+    the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly explains the 112, 101, 102, 103 numbers and notes not to confuse
+    them with the old Soviet lines.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are realistic, high-stress, and use natural communicative strategies
+    for emergencies.
+findings: []

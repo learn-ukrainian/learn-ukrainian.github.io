@@ -1,18 +1,19 @@
 {
   "attempt": 1,
-  "passed": true,
-  "errors": [],
-  "warnings": [
+  "passed": false,
+  "errors": [
     {
       "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: призначення (purpose, destination), відпочинок (rest, relaxation), бібліотека (library)"
-    },
+      "severity": "ERROR",
+      "message": "Missing 8/10 required vocab: призначення (purpose, destination), відпочинок (rest, relaxation), допомога (help, assistance), будинок (building, house), бібліотека (library)"
+    }
+  ],
+  "warnings": [
     {
       "check": "EXERCISES",
       "severity": "WARNING",
       "message": "Plan expects 4 exercise(s) but content has 3"
     }
   ],
-  "timestamp": "2026-04-07T22:04:29.327959+00:00"
+  "timestamp": "2026-04-11T00:03:53.427832+00:00"
 }

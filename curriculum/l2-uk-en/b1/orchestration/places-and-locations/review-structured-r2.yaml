@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections from the plan are covered in detail. All required and recommended
+    vocabulary is woven contextually into the prose without relying on bare lists.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Found two Russianisms/calques (`місцезнаходження`, `окраїн`) and one incorrect
+    grammatical claim regarding `у лісу` being a frequently spoken form today ("ми
+    досить часто кажемо у лісу").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of terrain, water features, and cases. The explanation
+    of "у/в" vs "на" for open/closed spaces is very pedagogical and helpful. The `у
+    лісу` example was confusing, but the core TTT
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (рівнина, низовина, височина, передмістя,
+    околиця, пам'ятка, etc.) are used naturally in the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 markers are placed correctly and correspond perfectly to the planned
+    activities.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and informative. Phrases like "Це дуже
+    тонка та справді красива відмінкова гра" perfectly embody the teacher persona.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The markdown is clean, H2 headings exactly match the plan, and the word
+    count (5295 words) comfortably exceeds the 4000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent historical context on why "на Україні" is a colonial Russianism
+    and must be avoided. Real Ukrainian geography (Podolian Upland, Khortytsia, Synevyr)
+    is used continuously for examples.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are natural and demonstrate the locative and genitive cases
+    perfectly in realistic tourist and origin-comparison settings.
+findings: []

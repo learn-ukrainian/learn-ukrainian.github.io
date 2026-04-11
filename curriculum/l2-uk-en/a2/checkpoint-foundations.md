@@ -1,133 +1,149 @@
 ## Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)
 
-A **контрольна точка** (checkpoint) is an essential pedagogical tool for consolidating knowledge and confirming linguistic reflexes. According to the standard curriculum guidelines, such as those found in the classic *Заболотний Grade 5-6* textbook, a dedicated **повторення вивченого** (review of what has been learned) is necessary before advancing to complex sentence structures. This systematic **перевірка** (check, test) anchors the core concepts of verb aspect and the Genitive case into your active memory.
+You have reached an important milestone in your learning journey. This **контрольна точка** (checkpoint) is designed to consolidate your foundational skills before we move forward into new territory. We will focus on reviewing the core grammar concepts you have recently learned. Instead of pure memorization, we want you to focus on identifying reliable patterns in the language. Recognizing a familiar prefix or a specific ending is much more useful than trying to remember every single exception. You already know enough vocabulary to express many ideas, and now we will ensure your grammar foundations are solid. We will check your understanding of verb aspects and the Genitive case. 
 
-> **Олена:** Привіт, Марку! Ти готовий до перевірки? *(Hi, Marko! Are you ready for the test?)*
-> **Марко:** Привіт! Не дуже. Ця **контрольна точка** здається складною. *(Hi! Not really. This checkpoint seems difficult.)*
-> **Олена:** Давай повторимо разом. Скажи, скільки у тебе братів? *(Let's review together. Tell me, how many brothers do you have?)*
-> **Марко:** У мене... двох братів... ні, два брати! Ох, я завжди плутаю. *(I have... two brothers... no, two brothers! Oh, I always confuse them.)*
-> **Олена:** Дивись, після числа два ми використовуємо називний відмінок: два брати. А після п'яти — родовий множини: п'ять братів. *(Look, after the number two we use the nominative: two brothers. And after five — genitive plural: five brothers.)*
-> **Марко:** А як щодо дієслів? Ти вчора читала **текст** чи прочитала його? *(And what about verbs? Did you read the text yesterday or read it completely?)*
-> **Олена:** Я **читала** його довго, але нарешті **прочитала**. *(I was reading it for a long time, but finally I read it completely.)*
-> **Марко:** Зрозумів. Процес і результат. Дякую! *(Understood. Process and result. Thanks!)*
+«Читаємо українською»
+Сьогодні у нас важлива **перевірка** знань.
+Ми будемо повторювати граматику і робити вправи.
+Це допоможе вам краще говорити і писати.
+Ви вже знаєте багато слів.
+Тепер ми будуємо правильні **речення**.
 
-The foundation of recognizing verb aspect lies in distinguishing the duration of an action from its completion. Imperfective verbs describe a process, habit, or general fact, answering the question «що робити?» (what to be doing). Perfective verbs describe a finished result, a single occurrence, or a limit reached, answering the question «що зробити?» (what to get done). 
+> **Марко:** Привіт, Олено! Ти вже робила домашнє **завдання**? *(Hi, Olena! Have you already done the homework?)*
+> **Олена:** Привіт! Так, я робила його вчора. *(Hi! Yes, I was doing it yesterday.)*
+> **Марко:** Це дуже складно! Як правильно сказати: два брати чи двох братів? *(It's very difficult! How is it correct to say: "два брати" or "двох братів"?)*
+> **Олена:** Треба казати "два брати", бо це маленьке число. *(You need to say "два брати" because it is a small number.)*
+> **Марко:** А якщо їх п'ять? Тоді п'ять братів? *(And if there are five of them? Then "п'ять братів"?)*
+> **Олена:** Так! Родовий відмінок множини — це ніби бос для великих чисел! *(Yes! The Genitive plural is like a boss for big numbers!)*
+> **Марко:** Ох, я завжди плутаю ці закінчення. *(Oh, I always confuse these endings.)*
+> **Олена:** Дивись: п'ять студентів, шість вікон, десять книжок. Це легко! *(Look: five students, six windows, ten books. It's easy!)*
 
-In Exercise 1, a short text is provided. The learner must highlight all perfective verbs in one color and all imperfective verbs in another. This visual sorting helps map out the flow of the narrative, separating background actions from advancing plot points. 
+Let's review the verb aspect. You have learned that Ukrainian verbs usually come in pairs. The imperfective aspect describes a continuous process or a repeated action. The perfective aspect describes a completed result or a one-time milestone. You can often spot the perfective verb because it has a specific prefix added to the root. For example, adding "на-" changes "писати" to "написати", and adding "про-" changes "читати" to "прочитати". Sometimes, the difference is inside the word itself, like a suffix change from "купувати" to "купити". 
 
-**Читаємо українською** (Reading in Ukrainian)
-* Кожного дня я **робив** свої **вправи**. (Every day I was doing my exercises.)
-* Учора я швидко **зробив** нове **завдання**. (Yesterday I quickly completed the new task.)
-* Студенти довго **писали** складне есе. (The students were writing the complex essay for a long time.)
-* Нарешті він **написав** ідеальне **речення**. (Finally he wrote a perfect sentence.)
-* Ми часто **зустрічали** друзів у парку. (We often met friends in the park.)
-* Сьогодні я **зустрів** брата біля школи. (Today I met my brother near the school.)
+«Читаємо українською»
+Я довго писав цей **текст**.
+Я вже написав цей **текст**.
+Ми часто купували яблука.
+Сьогодні ми купили хліб і молоко.
+Вона читала цікаву книгу.
+Вона швидко прочитала цю книгу.
 
-For Exercise 2, you will see a list of sentences with a noun in parentheses. The learner must rewrite the sentence, putting the noun in the correct Genitive form. For example, changing «У мене немає (брат)» to «У мене немає брата». The Genitive case is fundamentally triggered by the concept of absence, mathematically represented by the word **немає** (there is no).
+Now let us review the Genitive case when it is used to express absence. Whenever you want to say that something is missing or does not exist, you must use the word "немає" followed by the Genitive case. For masculine and neuter nouns, the ending is usually "-а" or "-я". For feminine nouns, the ending is usually "-и" or "-і". This is one of the most frequent and reliable patterns in the Ukrainian language. 
 
-**Форми родового відмінка** (Genitive case forms)
-* У мене немає **часу** на розмови. (I have no time for conversations.)
-* Сьогодні в магазині не було свіжого **хліба**. (There was no fresh bread in the store today.)
-* Без **тебе** тут дуже сумно. (It's very sad here without you.)
-* Я чекаю свого старого **друга**. (I am waiting for my old friend.)
-* Ми йдемо до великого **парку**. (We are going to the large park.)
+«Читаємо українською»
+У мене немає квитка на поїзд.
+Тут немає чистої води.
+Сьогодні немає яскравого сонця.
+У нас немає вільного часу.
+У магазині немає свіжого молока.
 
-Exercise 3 asks you to match the imperfective verbs with their perfective partners. Creating mental links between verb pairs is crucial for choosing the right aspect later. Many pairs are formed simply by adding a prefix, while others change a suffix or adopt a completely different root.
+For your first exercise, a short text is provided. You must highlight all perfective verbs in one color and all imperfective verbs in another. In the second exercise, you will see a list of sentences with a noun in parentheses. You must rewrite the sentence, putting the noun in the correct Genitive form. Finally, for the third exercise, you will match the imperfective verbs with their perfective partners. 
 
-**Видові пари дієслів** (Verb aspect pairs)
-* робити — з**робити** (to do — to get done)
-* читати — **про**читати (to read — to finish reading)
-* писати — **на**писати (to write — to finish writing)
-* купувати — куп**ити** (to be buying — to buy)
-* говорити — сказ**ати** (to be speaking — to say)
-
-<!-- INJECT_ACTIVITY: quiz -->
+<!-- INJECT_ACTIVITY: transformation-drill-genitive -->
 
 ## Частина 2: Вправи на вибір (Part 2: Choice Exercises)
 
-Moving forward, Exercise 4 features multiple-choice sentences where the learner must choose between the perfective and imperfective form of a verb. A classic example is deciding between «Вчора я (читав / прочитав) цю книгу три години». The phrase «три години» (three hours) explicitly emphasizes the duration and continuous nature of the action. Because the focus is on the ongoing process rather than the final achievement, the imperfective form «читав» is the only **правильний** (correct) choice.
+Choosing the right verb aspect depends entirely on the logic of your sentence. If you are talking about the duration of an action, you must use the imperfective aspect. Time phrases like "дві години" or "весь день" always signal a continuous process. Similarly, if an action is a habit or happens repeatedly, words like "щодня" or "часто" trigger the imperfective form. However, if you are talking about a completed action or a one-time event that changed a situation, you need the perfective aspect.
 
-> **Мама:** Доню, ти вже зробила всі свої **вправи**? *(Daughter, have you already done all your exercises?)*
-> **Донька:** Ще ні. Мені треба закінчити одне **завдання**. *(Not yet. I need to finish one task.)*
-> **Мама:** Що саме ти повинна **зробити** сьогодні? *(What exactly must you get done today?)*
-> **Донька:** Я маю **написати** довгу **відповідь**. *(I have to write a long answer.)*
-> **Мама:** Добре, я не буду тобі заважати. Немає **часу** на розмови. *(Good, I will not bother you. There is no time for conversations.)*
-> **Донька:** Дякую! Я знайду найкращий **варіант** дуже швидко. *(Thanks! I will find the best option very quickly.)*
+«Читаємо українською»
+Вчора я читав книгу дві години.
+Вчора я прочитав один новий розділ.
+Я часто купував каву вранці.
+Сьогодні я купив чай.
+Ми довго робили це **завдання**.
+Ми нарешті зробили цю вправу!
 
-Context clues dictate the aspect. Words like «завжди» (always), «часто» (often), and «довго» (for a long time) trigger the imperfective. Words like «раптом» (suddenly), «нарешті» (finally), and «за хвилину» (in a minute) demand the perfective.
+Basic conjunctions help you connect your ideas and explain your choices. Words like "і", "а", "але", "бо", and "що" act as glue for your sentences. The word "бо" is especially useful because it explains the reason for a specific aspect choice or a specific action. You can use it to justify why something did or did not happen. 
 
-**Вибір дієслова** (Choosing the verb)
-* Я **робив** це складне **завдання** весь вечір. (I was doing this complex task all evening.)
-* Я **зробив** це **завдання** за п'ять хвилин. (I got this task done in five minutes.)
-* Щовечора вона **дивилася** цікавий серіал. (Every evening she watched an interesting series.)
-* Вона **подивилася** фільм і пішла спати. (She watched the film completely and went to sleep.)
-* Ми **купували** продукти на ринку. (We were buying groceries at the market.)
-* Я **купив** свіжі яблука для пирога. (I bought fresh apples for the pie.)
+«Читаємо українською»
+Я не купив хліб, бо магазин був зачинений.
+Він пішов додому, бо дуже втомився.
+Я люблю яблука, а мій брат любить груші.
+Ми хотіли гуляти, але почався дощ.
+Я знаю, що це **правильний** **варіант**.
 
-Exercise 5 involves fill-in-the-blanks with the correct quantity word or numeral, ensuring noun agreement. You will complete sentences like «У класі ___ (5) студентів» by applying the numerical rules. Historians of the Ukrainian language note that numbers like **п'ять** (five) and **десять** (ten) were originally nouns in Old East Slavic (давньоруська мова). Because they functioned as nouns, they required the word following them to take the Genitive plural case, literally translating to a phrase like "a five of tables." This historical logic is perfectly preserved in modern Ukrainian.
+Next, let us refresh the logic behind expressing quantity. When you use quantity words like "багато", "мало", "трохи", or ask the question "скільки", the noun that follows must be in the Genitive case. If the noun is countable, you use the Genitive plural. If the noun is an uncountable substance or abstract concept, you use the Genitive singular. 
 
-When counting, the number «один» (one) acts like an adjective, agreeing fully with the noun. The numbers «два, три, чотири» (two, three, four) pair with the Nominative plural form of the noun. Numbers from «п'ять» (five) upward strictly govern the Genitive plural. 
-
-**Кількість і відмінок** (Quantity and case)
-* Один великий **стіл** стоїть у кімнаті. (One large table stands in the room.)
-* Два нові **столи** стоять у кімнаті. (Two new tables stand in the room.)
-* П'ять старих **столів** стоять у кімнаті. (Five old tables stand in the room.)
-* Одна цікава **книга** лежить на полиці. (One interesting book lies on the shelf.)
-* Три нові **книги** лежать на полиці. (Three new books lie on the shelf.)
-* Шість розумних **студентів** сидять у класі. (Six smart students sit in the classroom.)
+«Читаємо українською»
+Скільки коштує цей словник?
+У мене є багато хороших друзів.
+Мені потрібно трохи білого цукру.
+На столі лежить мало свіжих яблук.
+У місті є багато великих парків.
 
 :::tip
-**Правильний варіант** (Correct option)
-When reviewing your work, you must look for the **правильний** (correct) answer, not "вірний". The adjective "вірний" means "loyal" or "faithful" (like a loyal dog). A correct answer on a test is always a **правильна відповідь**. Recognizing this distinction elevates your speech and avoids common calques.
+Always rely on the question **скільки?** to trigger the Genitive case. Whether you are asking "скільки коштує?" or stating "у мене багато часу", the grammar pattern remains exactly the same!
 :::
 
-<!-- INJECT_ACTIVITY: fill-in -->
+Finally, we must talk about the culture of speech. A well-educated speaker avoids direct translations from Russian, which are called calques. You must choose the natural Ukrainian phrase. For example, the phrase "to take part" is "брати участь", never "приймати участь". When you take an exam, you "складаєш іспит", not "здаєш іспит". And when an answer is logically correct, it is a "правильна відповідь", not a "вірна відповідь" (which means a loyal answer). You should always **обрати** (choose) or **вибрати** the authentic Ukrainian expression.
+
+«Читаємо українською»
+Я хочу брати участь у цьому проєкті.
+Завтра студенти складають важливий іспит.
+Твоя **відповідь** абсолютно правильна.
+Це мій дуже вірний собака.
+Я завжди перевіряю свої помилки.
+
+In the next multiple-choice sentences, you must choose between the perfective and imperfective form of a verb. Following that, you will see fill-in-the-blanks with the correct quantity word or numeral, ensuring noun agreement. We will test your ability to make the correct grammar choices in context. 
+
+<!-- INJECT_ACTIVITY: quiz-mixed-choice -->
+<!-- INJECT_ACTIVITY: error-correction-foundations -->
 
 ## Частина 3: Практичне застосування (Part 3: Production Exercises)
 
-In Exercise 6, you will answer open-ended questions that require the Genitive case or a specific aspect. You will see questions like «Скільки у вас братів і сестер?», «Що ви зробили вчора?», and «Коли у вас день народження?». Formulating original responses forces the brain to retrieve the correct grammatical endings without a prompt, testing true mastery over the language patterns.
+Now we will focus on your ability to produce these structures independently. The Genitive case is also used to express possession, answering the question "whose is this?". When you describe possession, you must change the endings of both the adjective and the noun. Masculine and neuter adjectives take the ending "-ого", while feminine adjectives take the ending "-ої". 
 
-When answering «Скільки у вас братів і сестер?», you must navigate the rules of possession and quantity simultaneously. If you lack siblings, you employ the absolute negation trigger **немає**, which immediately demands the Genitive case. If you have siblings, the number you use dictates whether you follow with the Nominative or Genitive plural.
+«Читаємо українською»
+Це номер мого нового телефону.
+Тут лежить зошит моєї молодшої сестри.
+Це велика машина нашого нового директора.
+Я не знаю адреси вашої мами.
+Це фото мого старшого брата.
 
-**Приклади відповідей** (Example answers)
-* У мене немає **братів** і **сестер**. (I have no brothers and sisters.)
-* У мене є один **брат** і дві **сестри**. (I have one brother and two sisters.)
-* У мене є три **брати** і чотири **сестри**. (I have three brothers and four sisters.)
-* Моя бабуся має п'ять **братів**. (My grandmother has five brothers.)
-* Я не маю вільного **часу** сьогодні. (I do not have free time today.)
+The Genitive case is also essential for dates and milestones. When you state a specific calendar date, the day remains in the Nominative case, but the month must be in the Genitive case. This answers the implied question: "the fifth day of which month?". 
 
-When answering «Що ви зробили вчора?», you must consciously choose your verb aspect based on your intent. If you want to communicate that an action was successfully completed, you must deploy the perfective form. If you merely want to state that an action occupied your time, the imperfective is required.
+«Читаємо українською»
+Сьогодні дванадцяте квітня.
+Мій день народження п'ятого жовтня.
+Свято буде першого січня.
+Завтра восьме березня.
+Ми зустрінемося десятого травня.
 
-**Минулий час** (Past tense)
-* Вчора я **написав** лист і **прочитав** довгу статтю. (Yesterday I wrote a letter and read a long article.)
-* Вчора я весь день **працював** і **відпочивав**. (Yesterday I worked all day and rested.)
-* Ми **купили** новий телефон для нашої мами. (We bought a new phone for our mom.)
-* Студенти уважно **слухали** новий **текст**. (The students were listening carefully to the new text.)
+Let us synthesize these rules by talking about our plans. When you plan your weekend, you will naturally alternate between your continuous activities and your specific goals. For continuous activities, you use the imperfective future tense: "я буду робити". For specific goals you want to achieve, you use "я хочу" followed by the perfective infinitive: "я хочу зробити". 
 
-Finally, Exercise 7 provides a short writing prompt of 5-7 sentences. The prompt is «Напишіть про свої плани на вихідні. Що ви будете робити? Що ви хочете зробити?». This encourages you to synthesize your knowledge into a cohesive paragraph. Discussing plans inherently involves the future tense, requiring another layer of aspectual choice. The phrase «Що ви будете робити?» invites process-oriented imperfective verbs constructed with the auxiliary verb **бути**. The phrase «Що ви хочете зробити?» targets concrete goals, requiring perfective infinitives.
+«Читаємо українською»
+Завтра я буду весь день відпочивати.
+Але вранці я хочу **написати** довгий лист.
+У суботу ми будемо гуляти в парку.
+У неділю я хочу прочитати нову книгу.
+Я буду спати до обіду.
+Потім я хочу купити свіжі фрукти.
 
-> **Вчитель:** Доброго ранку! Хто хоче розповісти про свої плани на вихідні? *(Good morning! Who wants to tell about their plans for the weekend?)*
-> **Анна:** Я можу розповісти. У суботу я **буду допомагати** батькам. *(I can tell. On Saturday I will be helping my parents.)*
-> **Вчитель:** Дуже добре. А що ти **хочеш зробити** ввечері? *(Very good. And what do you want to get done in the evening?)*
-> **Анна:** Я **хочу приготувати** смачну вечерю для всієї родини. *(I want to prepare a delicious dinner for the whole family.)*
-> **Вчитель:** Чудовий план. Скільки страв ти приготуєш? *(A wonderful plan. How many dishes will you prepare?)*
-> **Анна:** Я думаю, що я приготую три **страви** і спечу один пиріг. *(I think that I will prepare three dishes and bake one pie.)*
-
-To succeed in this final writing prompt, observe how native speakers combine these elements into a single narrative flow. You can use this example as a structural template.
-
-**Приклад тексту про плани** (Example text about plans)
-На ці вихідні я маю багато планів. У суботу вранці я **буду прибирати** свою кімнату. Це забере багато **часу**. Потім я **хочу зустрітися** з друзями в центрі міста. Ми підемо до нового кафе і **будемо пити** гарячу каву. У неділю я **буду відпочивати** вдома. Я планую **прочитати** цікаву статтю і **написати** невелике есе. Сподіваюся, мої вихідні будуть чудовими!
-
-:::caution
-**Уникаємо русизмів** (Avoiding Russianisms)
-As you write your sentences, remember that Ukrainian has its own unique idioms. The construction **брати участь** (to take part) is genuinely Ukrainian. You must never use the direct translation «приймати участь», which is a common calque. Additionally, when discussing school tasks, we say **складати іспит** (to take an exam), not «здавати іспит». Using authentic phrasing demonstrates true language proficiency.
+:::note
+Notice the pattern! "Буду" + imperfective infinitive shows your ongoing process. "Хочу" + perfective infinitive marks your concrete goal for the day.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in-2 -->
-<!-- INJECT_ACTIVITY: error-correction -->
+To succeed at this level, you need to develop a checkpoint mindset. You must start trusting your "Ukrainian ear" to recognize correct suffixes and endings. When you use a number that is five or higher, the noun that follows it should sound "heavy". Genitive plural endings like "-ів" or words that drop their ending entirely (zero-ending) give the sentence that necessary weight. If you hear "п'ять брат", it should automatically sound incomplete to your ear. 
+
+«Читаємо українською»
+Тут працює п'ять розумних людей.
+На столі лежить шість зошитів.
+Я бачу сім високих дерев.
+У мене є десять нових повідомлень.
+Вона купила дев'ять квитків.
+
+To practice this, you will first answer open-ended questions that require the Genitive case or a specific aspect. After that, you have a short writing prompt. You must write about your plans for the weekend. What will you be doing? What do you want to get done? 
+
+<!-- INJECT_ACTIVITY: short-responses-synthesis -->
+<!-- INJECT_ACTIVITY: writing-prompt-weekend -->
 
 ## Підсумок — Summary
 
-This checkpoint solidifies the essential grammatical pillars required for confident communication in Ukrainian. We reviewed the critical distinction between imperfective and perfective verb aspects, learning to accurately **обрати** (choose) between describing a continuous process and a completed result. We reinforced the mechanics of the Genitive case, confirming its role in expressing absence with **немає**, denoting possession, and modifying nouns following numbers like **п'ять** and above.
+ This module tested your ability to distinguish between ongoing processes and completed results using the verb aspect. You practiced recognizing the perfective prefixes and imperfective suffixes. We also reinforced your understanding of the Genitive case in three crucial situations: expressing absence with "немає", counting objects with numbers five and higher, and stating calendar dates. Additionally, you learned how to connect your thoughts naturally using conjunctions like "але" and "бо". 
 
-By completing these recognition exercises, multiple-choice tasks, and open-ended writing prompts, you have tested your ability to apply rules dynamically. You constructed sentences about your personal plans, manipulated verb pairs, and corrected common numerical agreement errors. This rigorous review guarantees that your foundational knowledge is secure, providing a stable platform for mastering more complex vocabulary and syntax in the upcoming modules.
+Ask yourself these questions to confirm your readiness:
+1. Я знаю різницю між "читав" і "прочитав"?
+2. Я можу сказати, що в мене чогось немає?
+3. Я вмію правильно називати дату свого народження?
+
+If you can confidently answer yes to these questions, you have built a strong foundation. You are now fully prepared to tackle the more advanced grammar and richer vocabulary of the next level.

@@ -1,6 +1,6 @@
 # Build Summary: motion-verbs (A2)
 
-Generated: 2026-04-08 19:56
+Generated: 2026-04-11 00:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-08 19:56
 | vocab | complete | 2026-04-08 15:13:10 |
 | enrich | complete | 2026-04-08 15:13:10 |
 | verify | complete | 2026-04-08 15:13:10 |
-| review | complete | 2026-04-08 17:56:25 |
 | stress | complete | 2026-04-08 17:56:26 |
-| publish | complete | 2026-04-08 17:56:34 |
+| publish | complete | 2026-04-10 22:40:18 |
+| audit | complete | 2026-04-10 22:40:18 |
 
 ## Reviews
 
@@ -47,11 +47,6 @@ Generated: 2026-04-08 19:56
 ## Files
 
 - `.build.lock`
-- `chunk-01.md`
-- `chunk-02.md`
-- `chunk-03.md`
-- `chunk-04.md`
-- `chunk-05.md`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

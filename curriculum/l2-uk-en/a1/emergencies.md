@@ -35,7 +35,7 @@ Both of these dialogues share a highly effective communicative strategy. Notice 
 
 ## Е́кстрені ситуа́ції (Emergencies)
 
-The universal emergency number in Ukraine is **112** (один один два). This number works absolutely everywhere in the country and connects you directly to a central dispatcher who can route your call. However, you must also know the specific direct numbers for specialized services. The number **101** connects directly to the **поже́жна допомо́га** (fire service). The number **102** is the direct line for the **поліція** (police). Finally, **103** calls the **швидка допомога** (ambulance). These three numbers are non-negotiable memorization items for your personal safety in Ukraine.
+The universal emergency number in Ukraine is **112** (один один два). This number works absolutely everywhere in the country and connects you directly to a central dispatcher who can route your call. However, you must also know the specific direct numbers for specialized services. The number **101** connects directly to the **поже́жна слу́жба** (fire service). The number **102** is the direct line for the **поліція** (police). Finally, **103** calls the **швидка допомога** (ambulance). These three numbers are non-negotiable memorization items for your personal safety in Ukraine.
 
 :::caution
 **Important distinction:** The numbers **101**, **102**, and **103** are the modern Ukrainian emergency lines. Never confuse these with the old Soviet lines.
@@ -119,3 +119,5 @@ Before moving on to the next learning module, perform this final rigorous self-c
 *   Can you tell a doctor what hurts? (**У мене болить...**)
 *   Can you report a lost passport to the police? (**Я загубив паспорт. Моє прізвище...**)
 *   Do you know the difference between 101, 102, and 103?
+
+*(Note: The communicative situations in this module align with the Ukrainian State Standard 2024, §3 on health, safety, and emergencies.)*

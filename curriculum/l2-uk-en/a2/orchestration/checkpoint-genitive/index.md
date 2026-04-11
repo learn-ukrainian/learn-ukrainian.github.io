@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-genitive (A2)
 
-Generated: 2026-04-08 00:08
+Generated: 2026-04-11 02:27
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-08 00:08
 | pre-verify | complete | 2026-04-07 21:57:33 |
 | write | complete | 2026-04-07 21:58:20 |
 | exercises | complete | 2026-04-07 21:58:20 |
-| activities | complete | 2026-04-07 22:01:19 |
+| activities | complete | 2026-04-11 00:26:00 |
 | verify-exercises | complete | 2026-04-07 22:01:19 |
 | annotate | complete | 2026-04-07 22:01:19 |
 | vocab | complete | 2026-04-07 22:02:01 |
 | enrich | complete | 2026-04-07 22:02:01 |
 | verify | complete | 2026-04-07 22:02:01 |
-| review | complete | 2026-04-07 22:08:16 |
 | stress | complete | 2026-04-07 22:08:16 |
-| publish | complete | 2026-04-07 22:08:18 |
+| publish | complete | 2026-04-11 00:27:19 |
+| audit | complete | 2026-04-11 00:27:19 |
 
 ## Reviews
 
@@ -36,13 +36,17 @@ Generated: 2026-04-08 00:08
 | pre-verify | gemini-tools (auto) | 249s | ✅ |
 | skeleton | gemini (auto) | 199s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 47s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 179s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
 | vocab | gemini (auto) | 36s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 225s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 151s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

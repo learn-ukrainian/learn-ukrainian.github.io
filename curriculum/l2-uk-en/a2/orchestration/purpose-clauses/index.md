@@ -1,6 +1,6 @@
 # Build Summary: purpose-clauses (A2)
 
-Generated: 2026-04-09 00:05
+Generated: 2026-04-11 00:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 00:05
 | vocab | complete | 2026-04-08 22:03:01 |
 | enrich | complete | 2026-04-08 22:03:01 |
 | verify | complete | 2026-04-08 22:03:01 |
-| review | complete | 2026-04-08 22:05:44 |
 | stress | complete | 2026-04-08 22:05:44 |
-| publish | complete | 2026-04-08 22:05:47 |
+| publish | complete | 2026-04-10 22:40:29 |
+| audit | complete | 2026-04-10 22:40:29 |
 
 ## Reviews
 
@@ -44,10 +44,7 @@ Generated: 2026-04-09 00:05
 
 ## Files
 
-- `chunk-01.md`
-- `chunk-02.md`
-- `chunk-03.md`
-- `chunk-04.md`
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

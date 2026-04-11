@@ -7,7 +7,12 @@
       "check": "VOCABULARY",
       "severity": "WARNING",
       "message": "Missing 1/8 required vocab: робити / зробити (to do)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 2"
     }
   ],
-  "timestamp": "2026-04-07T18:48:33.438246+00:00"
+  "timestamp": "2026-04-10T23:23:03.620719+00:00"
 }

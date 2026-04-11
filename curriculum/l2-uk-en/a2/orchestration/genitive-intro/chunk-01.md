@@ -1,48 +1,43 @@
 ## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There)
 
-Welcome to a new grammatical concept. So far, you have learned how to talk about things that exist and things that you have. But how do you talk about the things that are missing? In Ukrainian, when something is not there, we use a special form of the noun. This form is called the **родовий відмінок** (Genitive case). It is one of the most frequently used cases in the Ukrainian language. The Genitive case answers the questions **Кого?** (Whom?) and **Чого?** (What?). Historically, this case was used to show origin, like where a person is from, or to show possession, like who owns a specific item. While those functions are still very important today, the first and most practical way you will use the Genitive case is to express absence.
+Welcome to the Genitive case, known in Ukrainian as Родовий відмінок. This is one of the most frequently used cases, answering the questions «Кого?» (Whom?) and «Чого?» (What?). While the Genitive case has many complex functions—such as expressing origin, showing possession, and working with numbers—we are going to start with its most practical use: expressing absence. When something is missing or simply doesn't exist, Ukrainian grammar requires a shift away from the dictionary form.
 
-Let's look at the core construction for possession. You already know how to say «У мене є...» (I have...). When you use this positive phrase, the object you own remains in the **називний відмінок** (Nominative case), which is the basic dictionary form. For example, «У мене є брат» (I have a brother) or «У мене є сестра» (I have a sister). However, when you want to say that you do not have something, you must use the negative word **немає** ((there) is not / (I) don't have). This is where the rule applies: the word **немає** always forces the following noun to change into the Genitive case. So, the sentence becomes «У мене немає брата» (I don't have a brother) and «У мене немає сестри» (I don't have a sister).
+У цій темі ми детально вивчимо родовий відмінок. Він має багато функцій, але сьогодні ми говоримо тільки про відсутність. Коли чогось або когось немає, ми завжди змінюємо закінчення слова. Це суворе граматичне правило.
 
-Let's see this in action. Imagine a situation where someone is moving into a new apartment. A neighbor comes to visit and sees an empty kitchen.
+> *In this topic, we will study the Genitive case in detail. It has many functions, but today we are only talking about absence. When something or someone is not there, we always change the ending of the word. This is a strict grammatical rule.*
 
-> — **Сусідка:** Добрий день! Ви нова мешканка? *(Good day! Are you the new tenant?)*
-> — **Нова мешканка:** Привіт! Так, це моя квартира. Але тут ще нічого немає. *(Hi! Yes, this is my apartment. But there is nothing here yet.)*
-> — **Сусідка:** Ого. Тут немає холодильника! *(Wow. There is no fridge here!)*
-> — **Нова мешканка:** Так, немає холодильника. І немає плити. *(Yes, there is no fridge. And there is no stove.)*
-> — **Сусідка:** А де ваші речі? Тут немає дзеркала, немає стола... *(And where are your things? There is no mirror here, no table...)*
-> — **Нова мешканка:** У мене є багато коробок. Але меблів ще немає. *(I have a lot of boxes. But there is no furniture yet.)*
-> — **Сусідка:** Розумію. Бажаю удачі! *(I understand. I wish you luck!)*
+Think about how you normally express possession. To say "I have," you use the construction «У мене є...» followed by the Nominative case (Називний відмінок). However, the moment you flip that to a negative statement—"I don't have"—the grammar changes completely. The negative construction «У мене немає...» forces the following noun into the Genitive case. Unlike English, where adding "don't" does not change the noun, in Ukrainian, the absence directly alters the word itself.
 
-If we look closely at this dialogue, we can see the Genitive case in action. The dictionary form for a fridge is **холодильник** (fridge, masculine). But because the neighbor says it is missing, she uses the word **немає**, and the noun changes to **холодильника**. The same thing happens with the feminine noun **плита** (stove), which changes to **плити**. The neuter noun **дзеркало** (mirror) changes to **дзеркала**. You can think of the word **немає** as a powerful grammatical magnet. Whenever it appears in a sentence, it pulls the object that is missing out of its basic dictionary form and forces it to take a new Genitive ending. Notice that the new tenant says she has **багато коробок** (a lot of boxes). The word **багато** (a lot, many, much) also requires the Genitive case.
+У мене є старша сестра. Але у мого друга немає сестри. У нього є тільки брат. Мій друг каже, що це добре. А я думаю, що без сестри сумно.
 
-To build a strong habit, it is helpful to practice contrasting positive and negative statements. Look at how the nouns change when we switch from existence to absence.
+> *I have an older sister. But my friend doesn't have a sister. He only has a brother. My friend says that this is good. But I think that without a sister it is sad.*
 
-* **Тут є стіл.** *(There is a table here.)*
-* **Тут немає стола.** *(There is no table here.)*
-* **У мене є проблема.** *(I have a problem.)*
-* **У мене немає проблеми.** *(I don't have a problem.)*
-* **У нас є вікно.** *(We have a window.)*
-* **У нас немає вікна.** *(We don't have a window.)*
-* **В офісі є директор.** *(There is a director in the office.)*
-* **В офісі немає директора.** *(There is no director in the office.)*
-* **У тебе є вода?** *(Do you have water?)*
-* **Ні, у мене немає води.** *(No, I don't have water.)*
+Let's see this in action. Imagine a new tenant moving into an empty apartment. Her neighbor drops by to say hello, and they take a look at the bare kitchen. Notice how the everyday objects change their forms when they are missing.
 
-In everyday casual speech, Ukrainians often shorten the word **немає** to simply **нема** (there is no). This short form means exactly the same thing and follows the exact same grammatical rule. It still acts as a magnet for the Genitive case. A very common example you will hear every day is «Часу нема» (There is no time), where **час** (time) becomes **часу**.
+> — **Сусідка:** Добрий день! Я ваша нова сусідка. *(Good day! I am your new neighbor.)*
+> — **Нова мешканка:** Привіт! Заходьте, будь ласка. *(Hi! Come in, please.)*
+> — **Сусідка:** Ого, тут ще зовсім порожньо. *(Wow, it's still completely empty here.)*
+> — **Нова мешканка:** Так, це моя нова кухня. Тут є багато коробок, але ще нічого не працює. *(Yes, this is my new kitchen. There are many boxes here, but nothing works yet.)*
+> — **Сусідка:** Я бачу. Тут немає холодильника! *(I see. There is no fridge here!)*
+> — **Нова мешканка:** Так, і немає плити. Я не можу готувати. *(Yes, and there is no stove. I cannot cook.)*
+> — **Сусідка:** А де ваші меблі? Навіть немає дзеркала! *(And where is your furniture? There isn't even a mirror!)*
+> — **Нова мешканка:** Усе буде завтра. А сьогодні ми тільки розпаковуємо речі. *(Everything will be tomorrow. And today we are just unpacking things.)*
 
-### Читаємо українською (Reading Practice)
+Let's analyze what happened in that conversation. The word «немає» acts like a powerful grammar magnet, pulling nouns out of their default Nominative state and into the Genitive case. The masculine noun «холодильник» (fridge) transforms into «холодильника». The feminine noun «плита» (stove) changes to become «плити». Even the neuter noun «дзеркало» (mirror) shifts its final vowel to become «дзеркала». You cannot simply say «немає холодильник»—that sounds entirely broken to a native speaker. The concept of absence itself demands the Genitive form.
 
-**Моя нова кімната дуже велика.** *(My new room is very big.)*
-**Але зараз вона порожня.** *(But right now it is empty.)*
-**Тут є тільки одне ліжко.** *(There is only one bed here.)*
-**У мене немає шафи.** *(I don't have a wardrobe.)*
-**У мене немає телевізора.** *(I don't have a television.)*
-**На вікні немає штори.** *(There is no curtain on the window.)*
-**Я хочу працювати, але в кімнаті немає стола.** *(I want to work, but there is no table in the room.)*
-**У мене є тільки багато планів.** *(I only have a lot of plans.)*
-**Завтра я куплю меблі.** *(Tomorrow I will buy furniture.)*
+To master this concept, practice the direct contrast between presence and absence. When an item is present, it sits safely in the Nominative case. When it is gone, it falls into the Genitive case. The sentence «Тут є стіл» (There is a table here) uses the base form. But the opposite statement, «Тут немає стола» (There is no table here), requires the case change. 
 
-<!-- INJECT_ACTIVITY: quiz, Possession vs. Absence Drill (`Є` vs. `Немає`), 8 items -->
+У кімнаті є велике вікно. Але в коридорі немає вікна. На столі є гаряча кава. Але в чашці немає цукру. Я люблю каву, але зараз у мене немає часу.
 
-To summarize this section, remember the golden rule of absence in Ukrainian. Whenever something is missing, whether it is a person, a physical object in a room, or an abstract concept like time, you must use the word **немає** (or **нема**). And whenever you use that word, the missing noun must take the Genitive case. In the next section, we will learn exactly how to form these endings for all noun genders.
+> *In the room there is a large window. But in the corridor there is no window. On the table there is hot coffee. But in the cup there is no sugar. I love coffee, but right now I don't have time.*
+
+In casual, everyday Ukrainian speech, people frequently shorten the word «немає» to «нема».
+
+:::info
+**Скорочена форма (Shortened form)**
+The short form **нема** is used exactly like **немає** and carries the identical meaning. It still strictly requires the Genitive case. For example, you will often hear «Часу нема» (There is no time) instead of «Часу немає». Both are completely correct, but the shorter version is very popular in relaxed conversation.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-possession-vs-absence -->
+
+The core takeaway for this section is absolute. Whenever you express that something or someone is missing, the Genitive case is mandatory. Whether you are talking about an object like a stove, a person like a sister, or a concept like time, the word «немає» always triggers this fundamental change in the noun's ending.

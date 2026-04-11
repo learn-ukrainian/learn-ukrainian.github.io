@@ -1,6 +1,6 @@
 # Build Summary: genitive-dates-numbers (A2)
 
-Generated: 2026-04-07 21:56
+Generated: 2026-04-11 01:45
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-07 21:56
 | pre-verify | complete | 2026-04-07 19:41:46 |
 | write | complete | 2026-04-07 19:47:26 |
 | exercises | complete | 2026-04-07 19:47:26 |
-| activities | complete | 2026-04-07 19:49:48 |
+| activities | complete | 2026-04-10 23:41:10 |
 | verify-exercises | complete | 2026-04-07 19:49:48 |
 | annotate | complete | 2026-04-07 19:49:48 |
 | vocab | complete | 2026-04-07 19:51:09 |
 | enrich | complete | 2026-04-07 19:51:09 |
 | verify | complete | 2026-04-07 19:51:09 |
-| review | complete | 2026-04-07 19:56:28 |
 | stress | complete | 2026-04-07 19:56:28 |
-| publish | complete | 2026-04-07 19:56:30 |
+| publish | complete | 2026-04-10 23:45:21 |
+| audit | complete | 2026-04-10 23:45:21 |
 
 ## Reviews
 
@@ -35,15 +35,24 @@ Generated: 2026-04-07 21:56
 | pre-verify | gemini-tools (auto) | 264s | ✅ |
 | skeleton | gemini (auto) | 106s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 141s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 84s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
 | vocab | gemini (auto) | 75s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 319s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 128s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 131s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 64s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 42s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 25s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`

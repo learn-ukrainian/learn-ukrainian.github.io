@@ -2,6 +2,12 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [],
-  "timestamp": "2026-04-07T22:45:07.409011+00:00"
+  "warnings": [
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 4"
+    }
+  ],
+  "timestamp": "2026-04-11T00:36:29.918115+00:00"
 }

@@ -1,0 +1,59 @@
+{
+  "module": "sviy-and-sebe",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:49:55.192849Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:40:52.747827Z",
+    "meta": null,
+    "activities": "2026-04-11T00:40:53.385953Z",
+    "vocabulary": "2026-04-08T16:29:26.082675Z",
+    "research": null,
+    "plan": "2026-04-04T22:05:00.050777Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2335/2000 (raw: 2386) | engagement: 0/3 | immersion: 95.1% HIGH (target 65-90% (A2.3))"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "7/0 | density: 2 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "32/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-booked twenty-five rooms.) * «Там працюють тридцять три людини.» (Thirty-three people work there.) * «Вони мають сорок вісім машин.» (They have forty-eight cars.) ### Фокус на іменниках жіночого роду (Focus on Feminine Nouns) Feminine nouns require some special attention because their Nominative plural form (which is used with the numbers 2, 3, and 4) can look completely identical to their Genitive singular form. For example, the word «сестра» (sister) becomes «сестри» in both of these cases. However, their underlying grammatical function in the sentence is different. When you say «дві сестри», you are using the Nominative plural specifically for counting. Sometimes, the stress shifts to distinguish the two forms, but the spelling remains exactly the same. The key is to remember the consistent pattern: «дві» plus the Nominative plural ending «-и» or «-і». * «Одна сестра живе тут, а дві сестри живуть там.» (One sister lives here, and two sisters live there.) * «Я маю одну книгу, а він має три книги.» (I have one book, and he has three books.) * «Одна машина червона, а чотири машини чорні.» (One car is red, and four cars are black.) * «На столі лежить одна ручка і дві лінійки.» (One pen and two rulers lie on the table.) * «У мене є дві проблеми.» (I have two problems.) ### Діалог: На рецепції готелю (Dialogue: At the Hotel Reception) Let's see how these rules work in a practical situation. Pay close attention to how the receptionist and the guest use different forms of the words «номер» (room) and «гість» (guest) depending on the numbers they use. > — **Адміністратор:** Добрий день! Чим я можу вам допомогти? *(Good day! How can I help you?)* > — **Гість:** Добрий день! Мені потрібно три номери. *(Good day! I need three rooms.)* > — **Адміністратор:** Добре. На скільки людей? *(Good. For how many people?)* > — **Гість:** На п'ять гостей. *(For five guests.)* > — **Адміністратор:** У нас є два великих номери і один малий номер. *(We have two large rooms and one small room.)* > — **Гість:** Чудово. Скільки це коштує? *(Great. How much does this cost?)* > — **Адміністратор:** Це коштує дві тисячі гривень за добу. *(This costs two thousand hryvnias per day.)* > — **Гість:** Дякую, я беру ці три номери. *(Thank you, I will take these three rooms.)* ### Читаємо українською (Reading Practice) «У нашому офісі є один великий кабінет. Там працюють три менеджери. Вони мають три столи і шість стільців. На столі лежить один комп'ютер. У шафі стоять десять папок. Ми купили двадцять один новий маркер. Також ми маємо два принтери. Це дуже зручно для роботи.» *(In our office there is one large office. Three managers work there. They have three tables and six chairs. One computer lies on the table. Ten folders stand in the cabinet. We bought twenty-one new markers. Also we have two printers. This is very convenient for work.)* <!-- INJECT_ACTIVITY: fill-in, Counting Objects (1, 2-4, 5+ Rule) --> <!-- INJECT_ACTIVITY: match-up, Q&A about quantities and dates -->
+the noun at all. If you say twenty-two, the rule for two applies, meaning you use the Nominative plural. If you say twenty-five, the rule for five applies, meaning you use the Genitive plural. As you count upwards, the grammatical case alternates depending entirely on the last digit. Ми бронюємо двадцять один номер у готелі. Наша група займає двадцять чотири номери. Туристи замовили двадцять п'ять номерів. Вона прочитала двадцять дві сторінки. Студент написав тридцять п'ять слів. У цьому будинку сорок чотири квартири. > *We are booking twenty-one rooms in the hotel. Our group occupies twenty-four rooms. The tourists ordered twenty-five rooms. She read twenty-two pages. The student wrote thirty-five words. There are forty-four apartments in this house.* :::info **Grammar box** The word «гривня» follows these exact same counting rules: одна гривня, дві гривні, п'ять гривень. When you hear prices, pay attention to how the word changes based on the last digit. ::: Feminine nouns present a unique challenge because their Nominative plural form often looks identical to their Genitive singular form. When you see a phrase with a number between two and four, the noun is grammatically in the Nominative plural. While native speakers might shift the stress on the vowel to distinguish the forms, the spelling remains the same. You just need to remember the rule category. Тут стоять дві машини. Я бачу три сестри. Ми купуємо чотири книги. На парковці є дві вільні машини. У мене є три старші сестри. Вона купила чотири нові книги. > *Two cars stand here. I see three sisters. We are buying four books. There are two free cars in the parking lot. I have three older sisters. She bought four new books.* Here is a conversation at a hotel reception that demonstrates these shifting rules in action. > — **Гість:** Добрий день! Мені потрібно три номери. *(Good day! I need three rooms.)* > — **Адміністратор:** Добрий день! На скільки людей? *(Good day! For how many people?)* > — **Гість:** На п'ять гостей. *(For five guests.)* > — **Адміністратор:** Добре. У нас є два великих номери і один малий. *(Good. We have two large rooms and one small.)* > — **Гість:** Чудово. Скільки це коштує? *(Great. How much does it cost?)* > — **Адміністратор:** Це коштує дві тисячі гривень за добу. *(It costs two thousand hryvnias per day.)* > — **Гість:** Я беру ці три номери. *(I'll take these three rooms.)* ### Читаємо українською (Reading Practice) Вчора я був у магазині і купив багато речей для дому. Я взяв один великий хліб і дві пляшки свіжого молока. Потім я пішов у відділ фруктів. Я купив три кілограми червоних яблук і п'ять жовтих бананів. У магазині було дуже багато людей. Біля каси стояли чотири жінки і два чоловіки. Касир сказав, що мої покупки коштують сто двадцять одну гривню. Я дав йому двісті гривень. Він дав мені сімдесят дев'ять гривень здачі. Я сказав «дякую» і пішов додому. Я дуже люблю купувати продукти і рахувати гроші українською мовою. <!-- INJECT_ACTIVITY: fill-in-counting-rule --> <!-- INJECT_ACTIVITY: match-up-quantity-qa -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -562,7 +562,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -590,14 +657,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -2,42 +2,9 @@ version: '1.0'
 module: my-family
 level: a1
 inline:
-- id: fill-in-dialogue
-  type: fill-in
-  instruction: Complete the dialogue with the correct words.
-  items:
-  - sentence: — Привіт! Це ____ брат?
-    answer: твій
-    options:
-    - твій
-    - твоя
-    - твоє
-    - твої
-  - sentence: — Так, це мій брат. Ось мій ____.
-    answer: тато
-    options:
-    - мама
-    - тато
-    - сестра
-    - бабуся
-  - sentence: — А це ____ сестра.
-    answer: моя
-    options:
-    - мій
-    - моя
-    - моє
-    - мої
-  - sentence: — Так, ____ звати Катя.
-    answer: її
-    options:
-    - її
-    - його
-    - мій
-    - твоя
-  title: Complete the dialogue with the correct words.
 - id: match-family
   type: match-up
-  instruction: Match English family words to Ukrainian.
+  instruction: Match the English family words to the Ukrainian words.
   pairs:
   - left: parents
     right: батьки
@@ -55,57 +22,57 @@ inline:
     right: сестра
   - left: mother and father
     right: мама і тато
-  title: Match English family words to Ukrainian.
+  title: Match the English family words to the Ukrainian words.
 - id: quiz-possession
   type: quiz
-  instruction: Choose the correct answer based on 'У тебе є...?'.
+  instruction: Answer the questions about possession.
   items:
   - question: У тебе є брат?
     options:
     - Так, у мене є брат.
-    - Це мій брат.
-    - Ось мій брат.
-    - Так, це мій брат.
+    - Так, у мене є сестра.
+    - Так, мій брат.
+    - Ні, у тебе є брат.
     correct: 0
   - question: У тебе є сестра?
     options:
-    - Так, це моя сестра.
-    - Ні, у мене тільки один брат.
-    - Її звати Оля.
-    - Ось її мама.
-    correct: 1
-  - question: У тебе є бабуся?
-    options:
-    - Це моя бабуся.
-    - Його бабуся тут.
-    - Так, у мене є бабуся і дідусь.
-    - Її звати Тетяна.
-    correct: 2
-  - question: У тебе є два брати?
-    options:
-    - Ні, у мене один брат.
-    - Так, це мої брати.
-    - Це мій тато.
-    - Як його звати?
+    - Так, у мене є сестра.
+    - Так, у мене є два брати.
+    - Це моя сестра.
+    - У тебе є сестра.
     correct: 0
   - question: У тебе є дідусь?
     options:
-    - Це дідусь Євген.
-    - Ні.
-    - Ось мій дідусь.
-    - Як її звати?
-    correct: 1
-  - question: У тебе є мама і тато?
+    - Так, у мене є дідусь.
+    - Так, у мене є бабуся.
+    - Ні, це мій дідусь.
+    - Так, його звати Марк.
+    correct: 0
+  - question: У тебе є бабуся?
     options:
-    - Це моя сім'я.
-    - Ось мій тато.
-    - Так, у мене є батьки.
-    - Це мій брат і сестра.
-    correct: 2
-  title: Choose the correct answer based on 'У тебе є...?'.
+    - Ні.
+    - Так, у тебе є бабуся.
+    - Це моя бабуся.
+    - Ні, мій бабуся.
+    correct: 0
+  - question: У тебе є син?
+    options:
+    - Так, у мене є один син.
+    - Так, у мене є одна син.
+    - Ні, це син.
+    - Так, у тебе є син.
+    correct: 0
+  - question: У тебе є дочка?
+    options:
+    - Так, у мене є одна дочка.
+    - Так, у мене є один дочка.
+    - Так, у мене є два дочка.
+    - Ні, мій дочка.
+    correct: 0
+  title: Answer the questions about possession.
 - id: fill-in-possessives
   type: fill-in
-  instruction: Choose correct possessive pronoun.
+  instruction: Choose the correct possessive pronoun.
   items:
   - sentence: Це ____ мама.
     answer: моя
@@ -128,129 +95,184 @@ inline:
     - моя
     - моє
     - мої
-  - sentence: Це ____ сім'я.
-    answer: твоя
-    options:
-    - твій
-    - твоя
-    - твоє
-    - твої
-  - sentence: Тут ____ брат.
+  - sentence: Це ____ брат Денис.
     answer: мій
     options:
     - мій
     - моя
     - моє
     - мої
-  - sentence: А це ____ дідусь і бабуся?
-    answer: твої
+  - sentence: А це ____ сестра?
+    answer: твоя
     options:
     - твій
     - твоя
     - твоє
     - твої
-  - sentence: Де ____ сестра?
-    answer: моя
+  - sentence: Ось ____ дідусь.
+    answer: мій
     options:
     - мій
     - моя
     - моє
     - мої
-  - sentence: Це ____ чоловік.
-    answer: твій
+  - sentence: Де ____ дочка?
+    answer: твоя
     options:
     - твій
     - твоя
     - твоє
     - твої
-  title: Choose correct possessive pronoun.
+  - sentence: Це ____ місто.
+    answer: моє
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  title: Choose the correct possessive pronoun.
+- id: fill-in-dialogue
+  type: fill-in
+  instruction: Complete the dialogue with the correct words.
+  items:
+  - sentence: — Привіт! Це ____ брат?
+    answer: твій
+    options:
+    - твій
+    - твоя
+    - твої
+    - твоє
+  - sentence: — Так, це ____ брат.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - мої
+    - моє
+  - sentence: — А це хто? Це твоя ____?
+    answer: сестра
+    options:
+    - сестра
+    - брат
+    - тато
+    - дідусь
+  - sentence: — Ні, це моя мама. Ось мій ____.
+    answer: тато
+    options:
+    - тато
+    - мама
+    - бабуся
+    - сестра
+  title: Complete the dialogue with the correct words.
 workbook:
 - type: group-sort
-  instruction: Sort the family members by the possessive pronoun they use.
+  instruction: Sort the family members by their grammatical gender.
   groups:
-  - label: мій (masculine)
+  - label: Masculine (мій)
     items:
-    - тато
     - брат
+    - тато
     - дідусь
     - син
     - чоловік
     - дядько
-  - label: моя (feminine)
+  - label: Feminine (моя)
     items:
-    - мама
     - сестра
+    - мама
     - бабуся
     - дочка
     - дружина
     - тітка
-  title: Sort the family members by the possessive pronoun they use.
+  title: Sort the family members by their grammatical gender.
 - type: true-false
-  instruction: Is this correct based on the typical use of pronouns?
+  instruction: Read the statements and decide if they are true or false.
   items:
-  - statement: You can say 'мій мама'.
+  - statement: The phrase 'бабуся і дідусь' means 'mother and father'.
     correct: false
-    explanation: Мама is feminine, so you must use 'моя мама'.
-  - statement: The plural of 'мій' is 'мої'.
+    explanation: '''Бабуся і дідусь'' means ''grandmother and grandfather''. ''Mother
+      and father'' is ''мама і тато''.'
+  - statement: You use 'моя' with 'сестра' because 'сестра' is a feminine noun.
     correct: true
-    explanation: Use 'мої' for plural nouns, like 'мої батьки'.
-  - statement: To say 'I have a brother', say 'Я маю брат'.
+    explanation: '''Моя'' is the feminine form of ''my'', matching feminine nouns
+      like ''сестра''.'
+  - statement: To ask someone 'Do you have a brother?' you say 'У мене є брат?'
     correct: false
-    explanation: You must use the phrase 'У мене є брат'.
-  - statement: '''Її'' means ''her'' and never changes shape.'
+    explanation: '''У мене є'' means ''I have''. To ask ''Do you have'', you must
+      use ''У тебе є''.'
+  - statement: The word 'батьки' (parents) is grammatically plural in Ukrainian.
     correct: true
-    explanation: '''Його'' (his) and ''її'' (her) do not change for the gender of
-      the noun.'
-  - statement: If asking a friend, you use 'У тебе є'.
-    correct: true
-    explanation: '''У тебе є'' is the informal way to ask ''do you have''.'
-  - statement: '''Батьки'' means only ''fathers''.'
+    explanation: '''Батьки'' is plural, so it must be used with plural pronouns like
+      ''мої''.'
+  - statement: The pronoun 'його' means 'her' and 'її' means 'his'.
     correct: false
-    explanation: '''Батьки'' means ''parents'' (mother and father).'
-  title: Is this correct based on the typical use of pronouns?
-- type: quiz
-  instruction: Choose the correct answer based on the dialogue in the lesson.
+    explanation: 'It is the opposite: ''його'' means ''his'' and ''її'' means ''her''.'
+  - statement: If you have one brother, you say 'один брат'.
+    correct: true
+    explanation: '''Один'' matches the masculine noun ''брат''.'
+  title: Read the statements and decide if they are true or false.
+- type: match-up
+  instruction: Match the Ukrainian sentences to their English translations.
+  pairs:
+  - left: У мене є два брати.
+    right: I have two brothers.
+  - left: У тебе є сестра?
+    right: Do you have a sister?
+  - left: Це моя сім'я.
+    right: This is my family.
+  - left: Як його звати?
+    right: What is his name?
+  - left: Її звати Тетяна.
+    right: Her name is Tetiana.
+  - left: У мене тільки один брат.
+    right: I have only one brother.
+  title: Match the Ukrainian sentences to their English translations.
+- type: anagram
+  instruction: Unscramble the letters to form family words.
   items:
-  - question: How do you ask 'Do you have brothers or sisters?'
-    options:
-    - У тебе є брати чи сестри?
-    - Де твої брати чи сестри?
-    - Ось брати і сестри?
-    - Це твої брати?
-    correct: 0
-  - question: How does Mark answer?
-    options:
-    - Так, у мене є два брати і одна сестра.
-    - Ні, у мене один брат.
-    - Ось мій брат.
-    - Так, у мене одна сестра.
-    correct: 0
-  - question: What does 'Як його звати?' mean?
-    options:
-    - What is his name?
-    - Where is his brother?
-    - Who is he?
-    - Is he your brother?
-    correct: 0
-  - question: Which phrase means 'I have only one brother'?
-    options:
-    - У мене тільки один брат.
-    - Це мій один брат.
-    - Ось один брат.
-    - У тебе один брат.
-    correct: 0
-  - question: How do you say 'This is my mom'?
-    options:
-    - Це моя мама.
-    - Це мій мама.
-    - Ось мама.
-    - У мене є мама.
-    correct: 0
-  - question: 'If someone asks ''А це твоя бабуся?'', you can answer:'
-    options:
-    - Так, її звати Тетяна.
-    - Так, його звати Тетяна.
-    - Ні, мій тато.
-    - Ось моя мама.
-    correct: 0
-  title: Choose the correct answer based on the dialogue in the lesson.
+  - letters:
+    - д
+    - я
+    - д
+    - ь
+    - к
+    - о
+    answer: дядько
+  - letters:
+    - т
+    - і
+    - т
+    - к
+    - а
+    answer: тітка
+  - letters:
+    - б
+    - р
+    - а
+    - т
+    answer: брат
+  - letters:
+    - с
+    - е
+    - с
+    - т
+    - р
+    - а
+    answer: сестра
+  - letters:
+    - б
+    - а
+    - б
+    - у
+    - с
+    - я
+    answer: бабуся
+  - letters:
+    - д
+    - і
+    - д
+    - у
+    - с
+    - ь
+    answer: дідусь
+  title: Unscramble the letters to form family words.

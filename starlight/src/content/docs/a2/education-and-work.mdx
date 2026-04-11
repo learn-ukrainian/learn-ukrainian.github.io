@@ -12,7 +12,6 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
@@ -245,8 +244,6 @@ This candidate successfully answered all questions using complex sentences. Ві
 <Quiz client:only="react" questions={[{"question": "Олено, яку спеціальність _____ обрала?", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "ми", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "Пане директоре, коли _____ зможете підписати диплом?", "options": [{"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вона", "correct": false}, {"text": "ми", "correct": false}]}, {"question": "Мамо, ким _____ хотіла бути в дитинстві?", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "він", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "Шановний керівнику, чи могли б _____ дати мені пораду?", "options": [{"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "він", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "Друже, ти багато працюєш, _____ потрібен відпочинок.", "options": [{"text": "тобі", "correct": true}, {"text": "Вам", "correct": false}, {"text": "йому", "correct": false}, {"text": "їм", "correct": false}]}, {"question": "Пані вчителько, _____ дуже цікаво пояснюєте матеріал.", "options": [{"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вони", "correct": false}, {"text": "ми", "correct": false}]}]} instruction={"Оберіть правильну форму звертання"} />
 
 <Unjumble client:only="react" items={[{"words": "в / Я / знаходиться / центрі. / офісі, / працюю / який", "answer": "Я працюю в офісі, який знаходиться в центрі."}, {"words": "то / іспит, / магістратури. / складу / до / Якщо / я / вступлю", "answer": "Якщо я складу іспит, то вступлю до магістратури."}, {"words": "бути / щоб / економіку, / вивчає / успішною. / Вона", "answer": "Вона вивчає економіку, щоб бути успішною."}, {"words": "мені / Предмет, / подобався / найбільше / — / який / математика.", "answer": "Предмет, який мені подобався найбільше — математика."}, {"words": "дружній. / колектив / невелика, / зарплата / Хоча / наш / дуже", "answer": "Хоча зарплата невелика, наш колектив дуже дружній."}, {"words": "шукав / змінив / досвід. / роботу, / новий / тому / що / Я", "answer": "Я змінив роботу, тому що шукав новий досвід."}]} instruction={"Складіть правильне речення зі слів"} />
-
-<Order client:only="react" items={["— Привіт! Ми ще не знайомі. Ким ви працюєте?", "— Я працюю менеджером на фірмі. А ви?", "— А я інженер. Ви давно там працюєте?", "— Так, уже два роки, хоча графік складний.", "— Але це дає гарний досвід, чи не так?", "— Звісно! Я працюю там, щоб вчитися новому."]} correct_order={[0, 1, 2, 3, 4, 5]} instruction={"Розставте речення в правильному порядку"} />
 
 </TabItem>
 <TabItem label="Ресурси">

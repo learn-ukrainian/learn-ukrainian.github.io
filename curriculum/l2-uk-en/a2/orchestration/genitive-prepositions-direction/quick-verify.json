@@ -6,8 +6,13 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 2/10 required vocab: бабуся (grandmother), список (list)"
+      "message": "Missing 3/10 required vocab: музей (museum), бабуся (grandmother), список (list)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 3"
     }
   ],
-  "timestamp": "2026-04-07T20:08:27.159364+00:00"
+  "timestamp": "2026-04-11T00:09:37.469246+00:00"
 }

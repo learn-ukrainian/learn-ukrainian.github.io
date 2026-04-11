@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-48-d938408e.json
+phase: write-chunk-05
+prompt_chars: 42112
+response_chars: 2900
+prompt_words: 5905
+response_words: 490
+sections:
+- name: header
+  start: 0
+  length: 422
+  fraction: 0.01
+- name: skeleton
+  start: 422
+  length: 768
+  fraction: 0.0182
+- name: prior_summary
+  start: 1190
+  length: 3436
+  fraction: 0.0816
+- name: plan
+  start: 4626
+  length: 11585
+  fraction: 0.2751
+- name: wiki
+  start: 9964
+  length: 25773
+  fraction: 0.612
+- name: output_spec
+  start: 41984
+  length: 128
+  fraction: 0.003
+large_sections:
+- wiki
+directives_total: 7
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Provide a small chart of common A2 verbs and their required case for descriptors.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: If the noun changes to receive something, the adjective and pronoun attached
+    to it must catch the same wave.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-dative-phrases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-agreement
+  covered: false
+  coverage_note: marker missing

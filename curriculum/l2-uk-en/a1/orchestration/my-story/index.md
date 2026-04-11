@@ -1,6 +1,6 @@
 # Build Summary: my-story (A1)
 
-Generated: 2026-04-09 07:08
+Generated: 2026-04-11 01:02
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 07:08
 | verify | complete | 2026-04-09 05:06:50 |
 | review | complete | 2026-04-09 05:07:59 |
 | stress | complete | 2026-04-09 05:08:01 |
-| publish | complete | 2026-04-09 05:08:03 |
+| publish | complete | 2026-04-10 23:02:03 |
+| audit | complete | 2026-04-10 23:02:03 |
 
 ## Reviews
 
@@ -42,6 +43,7 @@ Generated: 2026-04-09 07:08
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

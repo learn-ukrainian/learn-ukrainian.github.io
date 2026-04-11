@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-All Ukrainian month names are masculine. Most of them take the standard Genitive ending «-я» or «-а». A very important spelling rule to remember is that many months have a mobile vowel «-е-» that disappears when you add the Genitive ending. For example, «січень» (January) becomes «січня» (of January). Here is the complete list of months and their Genitive forms used for dates: * «січень» (January) — «січня» (Mobile «-е-» drops out) * «лютий» (February) — «лютого» (This month is an adjective, so it takes an adjectival ending) * «березень» (March) — «березня» (Mobile «-е-» drops out) * «квітень» (April) — «квітня» (Mobile «-е-» drops out) * «травень» (May) — «травня» (Mobile «-е-» drops out) * «червень» (June) — «червня» (Mobile «-е-» drops out) * «липень» (July) — «липня» (Mobile «-е-» drops out) * «серпень» (August) — «серпня» (Mobile «-е-» drops out) * «вересень» (September) — «вересня» (Mobile «-е-» drops out) * «жовтень» (October) — «жовтня» (Mobile «-е-» drops out) * «листопад» (November) — «листопада» (Takes the «-а» ending) * «грудень» (December) — «грудня» (Mobile «-е-» drops out) Now, let's talk about time. To ask "What time is it?", use the phrase: «Котра година?». To ask "At what time?" an event happens, use: «О котрій годині?». In Ukrainian, we use ordinal numerals (first, second, third) to name the hour. Because the word «година» (hour) is feminine, the numeral must also be feminine. * «Зараз друга година.» (It is two o'clock now. — *Literally: It is the second hour.*) * «Зараз п'ята година.» (It is five o'clock now.) To say "half past," we use the construction «пів на» (half to) followed by the *next* hour in the accusative case. * «пів на другу» (half past one — *Literally: half to the second*) * «пів на шосту» (half past five) To answer «О котрій годині?» (At what time?), use the preposition «о» (or «об» before a vowel) and the locative case. * «Зустріч о дев'ятій.» (The meeting is at nine.) * «Кіно об одинадцятій.» (The movie is at eleven.) Let's see how these phrases work in a real-life situation. In this dialogue, a client is calling a beauty salon to book an appointment. Notice the contrast between stating today's date and booking for a specific time. > — **Клієнтка:** Добрий день! Підкажіть, будь ласка, яке сьогодні число? *(Good day! Could you tell me, please, what is the date today?)* > — **Адміністраторка:** Добрий день! Сьогодні п'яте травня. *(Good day! Today is the fifth of May.)* > — **Клієнтка:** Дякую. Я хочу записатися на манікюр на шосте травня. *(Thank you. I want to book an appointment for a manicure for the sixth of May.)* > — **Адміністраторка:** Добре, о котрій годині вам зручно? *(Good, at what time is it convenient for you?)* > — **Клієнтка:** Об одинадцятій годині, якщо можна. *(At eleven o'clock, if possible.)* > — **Адміністраторка:** Так, одинадцята година вільна. Чекаємо на вас! *(Yes, eleven o'clock is free. We are waiting for you!)* <!-- INJECT_ACTIVITY: quiz, What's the Date? (Drill) -->
+time?", use «О котрій годині?», placing the numeral in the Locative case. To say "half past," we use the preposition «на» followed by the *next* hour in the Accusative case. «Пів на другу» means "half toward the second hour" (1:30). Вибачте, котра зараз година? Зараз п'ята година. О котрій годині починається фільм? Фільм починається о дев'ятій годині. Коли у нас зустріч? Зустріч о пів на другу. Урок закінчується об одинадцятій. Ми йдемо додому о пів на шосту. > *Excuse me, what time is it now? It is five o'clock now. At what time does the movie start? The movie starts at nine o'clock. When is our meeting? The meeting is at half past one. The lesson ends at eleven. We are going home at half past five.* Here is a short conversation where a client is booking an appointment at a salon. Notice how the client and the administrator use both Nominative and Genitive forms for the dates. > — **Клієнтка:** Добрий день! Яке сьогодні число? *(Good day! What is the date today?)* > — **Адміністратор:** Добрий день! Сьогодні п'яте травня. *(Good day! Today is the fifth of May.)* > — **Клієнтка:** Я хочу записатися на стрижку. Коли у вас є вільний час? *(I want to book an appointment for a haircut. When do you have free time?)* > — **Адміністратор:** Ми маємо час завтра, шостого травня. *(We have time tomorrow, the sixth of May.)* > — **Клієнтка:** Чудово. Я хочу записатися на шосте травня. *(Great. I want to book for the sixth of May.)* > — **Адміністратор:** Добре, о котрій годині вам зручно? *(Good, at what time is convenient for you?)* > — **Клієнтка:** Об одинадцятій годині. А скільки коштує стрижка? *(At eleven o'clock. And how much does a haircut cost?)* > — **Адміністратор:** Триста гривень. Домовилися. Чекаємо на вас об одинадцятій. *(Three hundred hryvnias. Agreed. We are waiting for you at eleven.)* Here is another situation. Two friends are meeting at a train station. > — **Максим:** Привіт! Котра зараз година? *(Hi! What time is it now?)* > — **Анна:** Привіт! Зараз пів на десяту. *(Hi! It is half past nine now.)* > — **Максим:** О котрій годині прибуває поїзд з Одеси? *(At what time does the train from Odesa arrive?)* > — **Анна:** Поїзд прибуває о десятій годині. Ми маємо тридцять хвилин. *(The train arrives at ten o'clock. We have thirty minutes.)* > — **Максим:** Добре. Хочеш випити кави? *(Good. Do you want to drink coffee?)* > — **Анна:** Так, із задоволенням. *(Yes, with pleasure.)* ### Читаємо українською (Reading Practice) Сьогодні десяте березня. Зараз восьма година ранку. Я п'ю каву і планую свій день. Об одинадцятій годині у мене важлива зустріч у центрі міста. Після обіду, о пів на третю, я йду до лікаря. Завтра буде одинадцяте березня, і мій старший брат приїжджає до Києва. Ми зустрічаємо його о п'ятій годині вечора на центральному вокзалі. Я дуже чекаю цього дня, тому що ми рідко бачимося. Він працює в іншому місті з першого жовтня. <!-- INJECT_ACTIVITY: quiz-dates-drill -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -564,7 +564,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -592,14 +659,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

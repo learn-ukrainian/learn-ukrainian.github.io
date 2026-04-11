@@ -1,61 +1,40 @@
-## У чи в? Складні випадки (U or V? Complex Cases)
+## У чи в? Складні випадки
 
-Українська мова — дуже мелодійна. *(The Ukrainian language is very melodious.)* Це **милозвучність** *(euphony)*. We actively avoid a **збіг приголосних** *(consonant cluster)* and a **збіг голосних** *(vowel collision)*. Ukrainian speech adapts to difficult sounds.
+Українська мова має одну дуже важливу рису — це милозвучність. Це не просто гарний стиль, а суворе фонетичне правило. Українці завжди намагаються уникати збігу приголосних або голосних звуків. Наша мова тече, як вода, і легко обходить важкі звукові камені.
 
-:::tip Милозвучність (Euphony)
-Ми говоримо так, щоб було легко і красиво. *(We speak so it is easy and beautiful.)*
+> *The Ukrainian language has one very important feature — euphony (melodiousness). This is not just a beautiful style, but a strict phonetic rule. Ukrainians always try to avoid a collision of consonant or vowel sounds. Our language flows like water and easily bypasses heavy sound stones.*
+
+Use **у** between consonants, and **в** between vowels. They are the same preposition, adapting to the phonetic environment. At the beginning of a sentence or after a comma, the context resets.
+
+**Читаємо українською**
+
+Мій брат живе у великому місті, а вона зараз мешкає в Одесі. У лісі сьогодні дуже волого. В Україні зима буває холодна. Ми гуляли в парку, а потім пішли у кіно. Наші друзі працюють у центрі.
+
+> *My brother lives in a big city, and she currently resides in Odesa. It is very humid in the forest today. Winter in Ukraine can be cold. We walked in the park, and then went to the cinema. Our friends work in the center.*
+
+:::note
+**Quick tip** — When reading aloud, take a breath at the comma. That breath is your "reset" button for euphony rules!
 :::
 
-Basic rule: **у** *(in/at)* and **в** *(in/at)* are the same preposition. Use **у** between consonants, and **в** between vowels.
+The "Forbidden Clusters" rule makes **у** mandatory before words starting with **в**, **ф**, **хв**, **тв**, **св**, or **льв**. This alternation also applies to the initial letters of nouns like **учитель** and **вчитель**.
 
-«Читаємо українською» (Reading in Ukrainian):
-> — **Олена:** Де зараз Максим? Він у школі? *(Where is Maksym now? Is he at school?)*
-> — **Тарас:** Ні, він був у парку. *(No, he was in the park.)*
-> — **Олена:** А Анна? Вона була в Одесі? *(And Anna? Was she in Odesa?)*
-> — **Тарас:** Так, вона жила в Італії. *(Yes, she lived in Italy.)*
-> — **Олена:** А її брат працює в Одесі? *(Her brother works in Odesa?)*
-> — **Тарас:** Ні, він працював у Києві. *(No, he worked in Kyiv.)*
+**Читаємо українською**
 
-Sentence starts and commas reset the phonetic context. Look only at the first sound of the next word.
+Мій знайомий раніше жив у Львові, а потім працював у фірмі. Він має великий успіх у творчості. Мій учитель дуже цікаво розповідає історію. Це наша нова вчителька, вона зараз працює у школі.
 
-«Читаємо українською»:
-* У лісі багато грибів. *(Many mushrooms in the forest.)*
-* В Одесі дуже тепло. *(Very warm in Odesa.)*
-* Було холодно, у парку не було людей. *(Cold, no people in the park.)*
-* Вона читала, в аудиторії було тихо. *(She read, the auditorium was quiet.)*
+> *My acquaintance used to live in Lviv, and later worked in a firm. He has great success in creativity. My teacher explains history very interestingly. This is our new teacher, she currently works at school.*
 
-The preposition **у** is mandatory before words starting with **в**, **ф**, **хв**, **тв**, **св**, or **льв**. This avoids a stuttering sound.
+Do not lock onto one form, such as saying «Я вчуся в школі». Break up heavy clusters with **у**. Listen to the natural flow when the rules are applied in conversation.
 
-«Читаємо українською»:
-> — **Ігор:** Твій брат завжди був у Львові? *(Was your brother always in Lviv?)*
-> — **Марія:** Так, він працює у великій фірмі. *(Yes, he works at a big firm.)*
-> — **Ігор:** А Максим був у твоєму дворі. *(But Maksym was in your yard.)*
-> — **Марія:** Це не він. Мій брат має успіх у творчості. *(Not him. My brother has success in creativity.)*
-> — **Ігор:** Він малює картини чи грає у фільмах? *(Draws pictures or plays in films?)*
-> — **Марія:** Він музикант, він був у філармонії. *(He's a musician, he was in the philharmonic.)*
+> — **Марко:** Привіт! Ти зараз живеш у Львові? *(Hi! Do you live in Lviv now?)*
+> — **Ганна:** Так, я мешкаю у Львові, а працюю в аптеці.
+> — **Марко:** Твій син вчиться у школі чи в університеті?
+> — **Ганна:** Він уже вчиться в університеті.
+> — **Марко:** Він вивчає економіку чи медицину?
+> — **Ганна:** Він вивчає історію в університеті.
+> — **Марко:** А донька теж вчиться в Україні?
+> — **Ганна:** Ні, вона зараз у Франції. Вона живе у Парижі. *(No, she is in France right now. She lives in Paris.)*
 
-Euphony also changes the first letter of nouns, verbs, and adverbs starting with **у-** or **в-**. 
+Тепер ви знаєте основні правила. Завжди звертайте увагу на сусідні слова. Ваша українська мова буде звучати дуже природно і красиво. Давайте перевіримо ваші знання на практиці.
 
-:::note Чергування (Alternation)
-* мій **у**читель *(my teacher)* → наша **в**чителька *(our teacher)*
-* він **у**війшов *(he entered)* → вона **в**війшла *(she entered)*
-* пив **у**ранці *(drank in the morning)* → читала **в**ранці *(read in the morning)*
-:::
-
-«Читаємо українською»:
-* Він увійшов до кімнати. *(He entered the room.)*
-* Вона ввійшла до кабінету. *(She entered the office.)*
-* Це мій новий учитель. *(My new teacher.)*
-* Це наша нова вчителька. *(Our new teacher.)*
-
-English speakers often treat **у** and **в** as separate words. Do not say «Я вчуся в школі» — the «в шк» cluster is heavy. Say «Я вчуся у школі».
-
-«Читаємо українською»:
-> — **Оксана:** Ти працюєш у школі чи в університеті? *(School or university?)*
-> — **Степан:** Я працюю в університеті. А ти? *(University. And you?)*
-> — **Оксана:** А я вчуся у школі. Я ще студентка. *(I study at school. I'm a student.)*
-> — **Степан:** Ти була у Франції минулого року? *(France last year?)*
-> — **Оксана:** Ні, я була в Іспанії. *(No, Spain.)*
-> — **Степан:** Це чудово! Іспанія — гарна країна. *(That's great! Spain is a beautiful country.)*
-
-<!-- INJECT_ACTIVITY: quiz-euphony-variants, Focus on choosing between у and в in varied phonetic environments (starts, middle, after commas), 8 items -->
+<!-- INJECT_ACTIVITY: quiz-euphony-variants -->

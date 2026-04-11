@@ -111,7 +111,7 @@ Look at these examples:
 * «Сьогодні п'яте травня.» (Today is the fifth of May.)
 * «Завтра шосте листопада.» (Tomorrow is the sixth of November.)
 
-To master dates, you need to know the twelve months and their Genitive forms. All Ukrainian month names are masculine. Most of them take the standard Genitive ending «-я» or «-а». A very important spelling rule to remember is that many months have a mobile vowel «-е-» that disappears when you add the Genitive ending. For example, «січень» (January) becomes «січня» (of January).
+To master dates, you need to know the twelve months (місяці) and their Genitive forms. All Ukrainian month names are masculine. Most of them take the standard Genitive ending «-я» or «-а». A very important spelling rule to remember is that many months have a mobile vowel «-е-» that disappears when you add the Genitive ending. For example, «січень» (January) becomes «січня» (of January).
 
 Here is the complete list of months and their Genitive forms used for dates:
 * «січень» (January) — «січня» (Mobile «-е-» drops out)
@@ -152,7 +152,6 @@ Let's see how these phrases work in a real-life situation. In this dialogue, a c
 
 <!-- INJECT_ACTIVITY: quiz-what-s-the-date-drill -->
 
-
 ## Рахуємо предмети: правило «1, 2-4, 5+» (Counting Items: The "1, 2-4, 5+" Rule)
 
 When you want to count objects in Ukrainian, the number you use dictates the grammatical form of the noun that follows it. Unlike English, where you simply use the singular form for "one" and the plural form for everything else, Ukrainian counting is divided into three distinct grammatical tiers. The numeral is the absolute boss in these phrases; it tells the noun whether it should be singular or plural, and exactly which case it must take. We call this the "1, 2-4, 5+" rule. To understand this hierarchy clearly, we will use the masculine word «стіл» (table) as our core example. Depending on how many tables you actually have, the word will change its form to perfectly match the specific tier of the number.
@@ -164,7 +163,7 @@ The first tier is the simplest and applies to the number 1, as well as any compo
 * «У кімнаті стоїть один стіл.» (One table stands in the room.)
 * «На столі лежить одна книга.» (One book lies on the table.)
 * «Тут є тільки одне вікно.» (There is only one window here.)
-* «Це мій двадцять один рік.» (This is my twenty-one year. / *Meaning: I am 21 years old.*)
+* «Мені двадцять один рік.» (I am twenty-one years old.)
 * «У цьому будинку сто один номер.» (There is one hundred and one room in this building.)
 
 ### Рівень 2: Правило двох, трьох і чотирьох (Tier 2: The "2, 3, 4" Rule)
@@ -222,12 +221,11 @@ Let's see how these rules work in a practical situation. Pay close attention to 
 
 ### Читаємо українською (Reading Practice)
 
-«У нашому офісі є один великий кабінет. Там працюють три менеджери. Вони мають три столи і шість стільців. На столі лежить один комп'ютер. У шафі стоять десять папок. Ми купили двадцять один новий маркер. Також ми маємо два принтери. Це дуже зручно для роботи.»
+«У нашому офісі є один великий кабінет. Там працюють три менеджери. Вони мають три столи і шість стільців. На столі лежить один комп'ютер. У шафі стоять десять тек. Ми купили двадцять один новий маркер. Також ми маємо два принтери. Це дуже зручно для роботи.»
 *(In our office there is one large office. Three managers work there. They have three tables and six chairs. One computer lies on the table. Ten folders stand in the cabinet. We bought twenty-one new markers. Also we have two printers. This is very convenient for work.)*
 
 <!-- INJECT_ACTIVITY: fill-in-counting-objects-1-2-4-5-rule -->
 <!-- INJECT_ACTIVITY: match-up-q-a-about-quantities-and-dates -->
-
 
 ## Заперечення з прямим додатком (Negation with a Direct Object)
 
@@ -285,7 +283,6 @@ Let's see how these negative forms are used in a typical conversation at a groce
 *(My friend Maksym is very sad today. He says: "I have no mood. I have no energy to work." I ask him: "Do you not want coffee?". He answers: "No, I do not drink coffee in the morning. And I do not have time for rest. I have a lot of work, but I do not see a result." I want to help him. I say: "Maksym, you have no problems. You just need to sleep. When a person has no sleep, they do not see positivity." Maksym listens to me, but does not say a word. He only sighs. I understand that right now he does not need my advice.)*
 
 <!-- INJECT_ACTIVITY: match-up-accusative-to-genitive-negation -->
-
 
 ## Підсумок — Summary
 

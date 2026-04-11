@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'Text incorrectly cites Авраменко Grade 8 as "підручнику для дев''ятого
+    класу". The end of the module misses the specific plan point: "Preview: порядкові
+    числівники і відмінки." Exercise marker counts/t'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Three calques/Russianisms present: "здати все" (скласти все), "приймає
+    рішення" (ухвалює рішення), and "поліцейському" (поліційному). Otherwise, the
+    grammar and case usages are highly accurate and nat'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent flow from context to rule. The distinction between inner motivation
+    (з) and external reaction (від) is explained perfectly with clear physical vs
+    psychological examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items are naturally integrated
+    into the prose and dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: The writer invented custom IDs (`essay-response-5`, `quiz-cause-purpose-complex`),
+    duplicated markers, and added 8 markers instead of the required 6.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging and professional ("золоте правило деколонізованої
+    української граматики"), with a natural, academic yet accessible teacher voice.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is solid at 4927 words, safely above the 4000 target. Headings
+    are proper and markdown is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural cultural integration ("Одеський університет", "проєкт громади").
+    No false claims.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogue is realistic and contextual, effectively demonstrating the cause/purpose
+    structures, though it contains one calque ("здати все").
+findings: []

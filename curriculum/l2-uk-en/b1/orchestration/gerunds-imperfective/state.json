@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "gerunds-imperfective",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T23:52:01.523691+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T23:52:01.540615+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T23:52:44.319082+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T23:53:30.818166+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-10T00:02:49.884958+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T00:02:49.885433+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-10T00:12:20.783039+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-10T00:12:21.018512+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-10T00:12:21.043110+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-10T00:12:52.482141+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-10T00:12:52.482329+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-10T00:12:52.908810+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-10T00:17:34.848585+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-10T00:17:35.258864+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-10T00:17:38.335264+00:00"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Build Summary: weather (A1)
 
-Generated: 2026-04-09 07:00
+Generated: 2026-04-11 00:57
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 07:00
 | verify | complete | 2026-04-09 04:58:56 |
 | review | complete | 2026-04-09 05:00:30 |
 | stress | complete | 2026-04-09 05:00:32 |
-| publish | complete | 2026-04-09 05:00:33 |
+| publish | complete | 2026-04-10 22:57:44 |
+| audit | complete | 2026-04-10 22:57:44 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 07:00
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

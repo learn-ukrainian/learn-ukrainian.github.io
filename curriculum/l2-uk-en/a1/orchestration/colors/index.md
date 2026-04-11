@@ -1,6 +1,6 @@
 # Build Summary: colors (A1)
 
-Generated: 2026-04-09 02:43
+Generated: 2026-04-11 00:53
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 02:43
 | verify | complete | 2026-04-09 00:41:49 |
 | review | complete | 2026-04-09 00:43:52 |
 | stress | complete | 2026-04-09 00:43:54 |
-| publish | complete | 2026-04-09 00:43:57 |
+| publish | complete | 2026-04-10 22:53:36 |
+| audit | complete | 2026-04-10 22:53:36 |
 
 ## Reviews
 
@@ -42,6 +43,7 @@ Generated: 2026-04-09 02:43
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

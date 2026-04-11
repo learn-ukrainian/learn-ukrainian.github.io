@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-23-bace6037.json
+phase: review
+prompt_chars: 63652
+response_chars: 6435
+prompt_words: 8734
+response_words: 914
+sections:
+- name: preamble
+  start: 0
+  length: 462
+  fraction: 0.0073
+- name: plan
+  start: 462
+  length: 59924
+  fraction: 0.9414
+- name: output_spec
+  start: 60386
+  length: 3266
+  fraction: 0.0513
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 7/22 keywords (32%)
+- kind: inject_activity
+  text: fill-in-focus-on-correct-case-endings-for-genitive-dative-and-instrumental-semantic-roles
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-prepositions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-numerals-pronouns
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading-housing-analysis
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -1,45 +1,29 @@
-## Місцевий відмінок: від місця до сенсу
+## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case)
 
-The locative case is not just for physical places. It also maps abstract spaces, time periods, and communication channels.
+You have come a long way with the Locative case. In the beginning, you used it only to locate physical objects, like a book on a table or a person in a city. Now, you can use it to describe abstract periods of your life, professional spheres, and even the modern tools you use to communicate. It is no longer just about geography; it is about context.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Спочатку ми вивчали конкретні місця: у парку, на вулиці, в Україні. *(First we studied concrete places: in the park, on the street, in Ukraine.)*
-- Тепер ми знаємо час: у січні, у минулому місяці, на цьому тижні. *(Now we know time: in January, last month, this week.)*
-- Ми також говоримо про абстрактні сфери життя: у новій роботі, в освіті, у політиці. *(We also talk about abstract spheres of life: in a new job, in education, in politics.)*
-- Ми часто слухаємо новини по радіо і говоримо по телефону. *(We often listen to the news on the radio and talk by phone.)*
+Ми починали з простих речень про фізичне місце. Тепер ми знаємо, що місцевий відмінок працює у дуже різних ситуаціях. Ми говоримо про наш досвід у дитинстві та про кар'єру в науці чи в політиці. Ми також розповідаємо, як ми спілкуємося по телефону або по інтернету. Цей відмінок допомагає нам пояснити контекст нашого життя.
 
-The "Locative Matrix" summarizes these four functions. 
+> *We started with simple sentences about physical location. Now we know that the Locative case works in very different situations. We talk about our experience in childhood and about a career in science or in politics. We also tell how we communicate by phone or by the internet. This case helps us explain the context of our life.*
+
+To help you remember these different roles, here is a consolidation matrix. It shows the four main functions of the Locative case, the prepositions they require, and practical examples for each category.
 
 | Функція (Function) | Прийменник (Preposition) | Приклад (Example) |
 | :--- | :--- | :--- |
-| **Місце** *(Place)* | **в/у**, **на** | **в офісі** *(in the office)*, **на столі** *(on the table)* |
-| **Час** *(Time)* | **в/у**, **на** | **у січні** *(in January)*, **на цьому тижні** *(this week)* |
-| **Сфера** *(Abstract)* | **в/у**, **на** | **у житті** *(in life)*, **на роботі** *(at work)* |
-| **Засіб** *(Means)* | **по** | **по радіо** *(on the radio)*, **по телефону** *(by phone)* |
+| Місце (Physical Location) | в/у, на | у місті, на столі |
+| Час (Time and Periods) | в/у, на | у січні, на цьому тижні, у дитинстві |
+| Сфера (Abstract Domains) | в/у, на | у житті, в освіті, на роботі |
+| Засіб (Means of Communication) | по | по телефону, по радіо, по скайпу |
 
-> — **Марія:** Ігоре, що нового у твоєму житті? *(Ihor, what is new in your life?)*
-> — **Ігор:** У минулому місяці я змінив роботу. *(Last month I changed jobs.)*
-> — **Марія:** Були проблеми на роботі? *(Were there problems at work?)*
-> — **Ігор:** Ні, просто тепер працюю в освіті. А ти? *(No, just now I work in education. And you?)*
-> — **Марія:** Я навчаюся на новому курсі. Учора була цікава зустріч. *(I am studying in a new course. Yesterday there was an interesting meeting.)*
-> — **Ігор:** Ти говорила про це з мамою? *(Did you talk about this with mom?)*
-> — **Марія:** Так, ми довго розмовляли по телефону. *(Yes, we talked by phone for a long time.)*
+Let us do a quick final check before you finish this module. Remember that the Locative case is unique because it always requires a preposition. You cannot use it alone. The core prepositions are «у», «в», «на», «по», and «при».
 
-Remember: the locative always needs a preposition (**у/в**, **на**, **по**, **при**). Use **на** for weeks (**на цьому тижні**). Watch for consonant shifts: **політика** *(politics)* becomes **у політиці**. Try combining functions in one sentence!
+:::info
+**Grammar check**
+Do you remember the difference between weeks and months? We use the preposition «у» for months, like in the phrase «у минулому місяці». However, we must use «на» for weeks, giving us «на цьому тижні». Also, pay attention to feminine abstract nouns ending in «-а». The word «політика» changes to «у політиці», just like «наука» becomes «у науці».
+:::
 
-**Читаємо українською (Reading in Ukrainian):**
-- Місцевий відмінок завжди має прийменник. *(The locative case always has a preposition.)*
-- На цьому тижні у мене немає проблем у роботі. *(This week I have no problems at work.)*
-- Мій старший брат зараз працює у політиці. *(My older brother works in politics now.)*
-- У минулому місяці я був на цікавій зустрічі. *(Last month I was at an interesting meeting.)*
-- У дитинстві ми часто читали про подорожі. *(In childhood we often read about journeys.)*
+Your final challenge is to build complex sentences that combine two or three of these functions at the same time. This shows true mastery of the case in everyday conversations.
 
-> — **Студент:** На цьому тижні у мене три заняття. *(This week I have three classes.)*
-> — **Викладач:** Що ви зараз вивчаєте? *(What are you studying right now?)*
-> — **Студент:** У вільний час я читаю про Україну. *(In my free time I read about Ukraine.)*
-> — **Викладач:** Де ви це читаєте? *(Where do you read this?)*
-> — **Студент:** У підручнику з історії. *(In a history textbook.)*
-> — **Викладач:** Це дуже цікаво. В дитинстві я теж багато читав. *(This is very interesting. In childhood I also read a lot.)*
+У минулому місяці я працював на новій роботі і часто говорив по телефону. На цьому тижні ми слухали новини по радіо у машині. У дитинстві мій брат мріяв про кар'єру в музиці.
 
-<!-- INJECT_ACTIVITY: quiz, Identify the function of locative in each sentence (physical location, abstract domain, temporal, or means) -->
-<!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct locative form of the noun (у минулому ___, на цьому ___, по ___) -->
+> *Last month I worked at a new job and often talked on the phone. This week we listened to the news on the radio in the car. In childhood, my brother dreamed of a career in music.*

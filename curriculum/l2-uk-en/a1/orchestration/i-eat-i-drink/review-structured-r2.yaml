@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module perfectly follows the `content_outline`. All dialogue points,
+    grammar concepts (accusative inanimate, conjugations), and `vocabulary_hints`
+    are included. The Summary matches the plan's exac
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The text inaccurately claims: "This apostrophe indicates a brief pause
+    before the soft vowel." Ukrainian does not have "soft vowels", and the apostrophe
+    indicates separate pronunciation (hard consonan'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent progression from dialogues to specific verb paradigms, and then
+    to the accusative rule. The mental trigger question *Що?* is explained effectively,
+    and the "Soup Rule" is a fantastic pedagog
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan (*їсти*, *пити*, *каву*,
+    *рибу*, *кашу*, *сметану*, etc.) are introduced naturally and with sufficient
+    context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The four activity markers are placed logically to test immediate recall
+    and application of the taught concepts, adhering to the plan's hint types and
+    focuses.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm and engaging without being corporate. Phrases like "In
+    Ukraine, food is not just fuel; it is the center of social life" set a welcoming
+    and culturally grounded tone.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All required sections are present with correct headings. The word count
+    is 1592 (well above the 1200 target). The markdown formatting is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate cultural details are provided, such as the strict "Soup Rule"
+    and the explicit warning against using Russianisms like "кофе" and "творог".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues represent realistic situations (lunch break, asking what someone
+    eats for breakfast) and use the target grammar naturally within the strict A1
+    constraints.
+findings: []

@@ -21,7 +21,7 @@ Grand total: ~2300 words
 <previous_context>
 [...previous sections truncated...]
 
-nouns will take the ending **-і** or **-ї** in the Genitive case. Змінюємо закінчення (Changing endings): «станція» (station) → «біля станції» «площа» → «біля площі» «лікарня» (hospital) → «навпроти лікарні» «Читаємо українською»: — Я зараз стою **біля станції** метро (I am standing near the subway station right now). — Головний музей міста розташований **біля площі** (The main museum of the city is located near the square). — Ми припаркували автомобіль **навпроти лікарні** (We parked the car opposite the hospital). — Ця довга вулиця закінчується **біля академії** (This long street ends near the academy). Let's build a mental map to see how these prepositions work together to describe a neighborhood. When you ask for directions, locals will often use landmarks and spatial relationships rather than exact street addresses. «Читаємо українською»: — Мій район дуже зручний для життя (My neighborhood is very convenient for living). — Велика **аптека** (pharmacy) знаходиться **біля ринку** (A large pharmacy is located near the market). — Якщо ви хочете випити кави, є гарне кафе **навпроти бібліотеки** (If you want to drink coffee, there is a nice cafe opposite the library). — Також тут є автобусна **зупинка** (stop) прямо **біля станції** метро (Also here is a bus stop right near the subway station). — Я часто гуляю **навпроти театру** (I often walk opposite the theater). — Мій дім стоїть **біля парку**, де весело співають птахи (My house stands near the park where birds sing merrily). Let's rejoin Ігор (Igor) and Марта (Marta). They have finally arrived at their campsite in the mountains. Now they need to decide exactly where to pitch their tent. Notice how they use our new prepositions to discuss the best location. > — **Ігор:** Нарешті ми приїхали. Де ми поставимо наш намет? *(Finally we arrived. Where will we put our tent?)* > — **Марта:** Я думаю, що найкраще місце — **біля річки**. *(I think that the best place is near the river.)* > — **Ігор:** Ні, **біля річки** може бути холодно вночі. *(No, near the river it can be cold at night.)* > — **Марта:** Тоді, можливо, там, **навпроти дерева**? *(Then maybe there, opposite the tree?)* > — **Ігор:** Там дуже гарно. І ми зможемо сидіти **коло вогню** ввечері. *(It is very nice there. And we will be able to sit by the fire in the evening.)* > — **Марта:** Чудова ідея. Я покладу наші речі **біля намету**. *(Great idea. I will put our things near the tent.)* > — **Ігор:** А я піду шукати сухі дрова для вогню. *(And I will go look for dry firewood for the fire.)* These location words are part of a larger system of spatial prepositions that use the Genitive case. Later, you will learn prepositions like **до** (to), **з** (from), and **від** (from, away from). The key difference is that **біля**, **навпроти**, and **коло** describe a static position—where something simply exists in space. Prepositions like **до**, on the other hand, will describe active direction or movement toward a destination. <!-- INJECT_ACTIVITY: fill-in-location --> <!-- INJECT_ACTIVITY: true-false-grammar -->
+their Genitive ending is **-і** or **-ї**, which can sound very similar to the Locative case. Always remember the context of the sentence: if the noun immediately follows **біля** or **навпроти**, it is definitively in the Genitive case. Нова пекарня завжди знаходиться біля зупинки. Велика парковка є тільки біля станції. Ми домовилися зустрітися біля площі. Ця аптека розташована навпроти лікарні. > *The new bakery is always located near the stop. A large parking lot is only near the station. We agreed to meet near the square. This pharmacy is located opposite the hospital.* Now let's put these prepositions to work by describing a specific neighborhood. Being able to explain where places are relative to each other is a critical survival skill. When you combine the Nominative case for the subject you are looking for with the Genitive case for the spatial reference point, you can create a clear mental map for anyone asking for directions. Вибачте, ви не знаєте, де тут аптека? Аптека знаходиться біля міського ринку. А де я можу випити кави? Кафе є навпроти бібліотеки. Зупинка розташована біля станції метро. > *Excuse me, do you not know where the pharmacy is here? The pharmacy is located near the city market. And where can I drink coffee? A cafe is opposite the library. The stop is located near the subway station.* Let's return to Igor and Marta. They have finally arrived at the campsite and now face the most important task of the evening: deciding exactly where to set up their tent. Watch how they actively use **біля**, **навпроти**, and **коло** with various Genitive nouns to describe the surrounding nature and plan their camp layout. > — **Ігор:** Я думаю, ми повинні поставити намет біля річки. *(I think we should put the tent near the river.)* > — **Марта:** Ні, там буде дуже холодно. Краще поставити його навпроти дерева. *(No, it will be very cold there. It is better to put it opposite the tree.)* > — **Ігор:** Добре. А де ми зробимо вогонь? *(Good. And where will we make the fire?)* > — **Марта:** Ми можемо сидіти коло вогню прямо тут. *(We can sit by the fire right here.)* > — **Ігор:** Чудово. Наш табір біля лісу — це ідеальне місце. *(Wonderful. Our camp near the forest is an ideal place.)* The prepositions **біля**, **навпроти**, and **коло** are just the beginning of a larger system of spatial prepositions that require the Genitive case. Later in your studies, you will learn how to express active movement towards a destination using the preposition **до**, or movement away from a starting point using **з** and **від**. For now, remember that the prepositions we learned today are static: they describe a fixed location in space rather than the direction of travel. :::info **Grammar box** Prepositions like **біля** and **навпроти** answer the question **де?** (where?). They describe a static location next to a reference point, requiring that noun to be in the Genitive case. ::: <!-- INJECT_ACTIVITY: fill-in-location --> <!-- INJECT_ACTIVITY: true-false-grammar -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -472,7 +472,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -499,14 +566,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,0 +1,227 @@
+{
+  "total_items": 205,
+  "grounded_items": 171,
+  "ungrounded": [
+    {
+      "word": "переважає",
+      "exercise_type": "quiz",
+      "context": "Який рельєф переважає на території України?",
+      "role": "context"
+    },
+    {
+      "word": "чим",
+      "exercise_type": "quiz",
+      "context": "Чим славиться Поліська низовина?",
+      "role": "context"
+    },
+    {
+      "word": "розташовані",
+      "exercise_type": "quiz",
+      "context": "Які гори розташовані на півдні України?",
+      "role": "context"
+    },
+    {
+      "word": "найбільша",
+      "exercise_type": "quiz",
+      "context": "Яка найбільша річка ділить Україну на дві частини?",
+      "role": "context"
+    },
+    {
+      "word": "літньому",
+      "exercise_type": "fill-in",
+      "context": "Ми часто гуляємо в літньому ____.",
+      "role": "context"
+    },
+    {
+      "word": "півострові",
+      "exercise_type": "fill-in",
+      "context": "півострові",
+      "role": "answer"
+    },
+    {
+      "word": "відпочиває",
+      "exercise_type": "fill-in",
+      "context": "Вона відпочиває на Кримському ____.",
+      "role": "context"
+    },
+    {
+      "word": "кримському",
+      "exercise_type": "fill-in",
+      "context": "Вона відпочиває на Кримському ____.",
+      "role": "context"
+    },
+    {
+      "word": "розташований",
+      "exercise_type": "fill-in",
+      "context": "Київ розташований на ____ річки Дніпро.",
+      "role": "context"
+    },
+    {
+      "word": "люблять",
+      "exercise_type": "fill-in",
+      "context": "Туристи люблять гуляти на ____.",
+      "role": "context"
+    },
+    {
+      "word": "передмісті",
+      "exercise_type": "fill-in",
+      "context": "передмісті",
+      "role": "answer"
+    },
+    {
+      "word": "столиці",
+      "exercise_type": "fill-in",
+      "context": "Вони живуть у ____ біля столиці.",
+      "role": "context"
+    },
+    {
+      "word": "бабуся",
+      "exercise_type": "error-correction",
+      "context": "Моя бабуся живе на Україні.",
+      "role": "context"
+    },
+    {
+      "word": "живе",
+      "exercise_type": "error-correction",
+      "context": "Моя бабуся живе на Україні.",
+      "role": "context"
+    },
+    {
+      "word": "зустрінемося",
+      "exercise_type": "error-correction",
+      "context": "Ми зустрінемося у площі Філармонії.",
+      "role": "context"
+    },
+    {
+      "word": "влітку",
+      "exercise_type": "error-correction",
+      "context": "Влітку ми відпочивали у острові Хортиця.",
+      "role": "context"
+    },
+    {
+      "word": "відпочивали",
+      "exercise_type": "error-correction",
+      "context": "Влітку ми відпочивали у острові Хортиця.",
+      "role": "context"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "error-correction",
+      "context": "Діти граються на берегі моря.",
+      "role": "context"
+    },
+    {
+      "word": "граються",
+      "exercise_type": "error-correction",
+      "context": "Діти граються на берегі моря.",
+      "role": "context"
+    },
+    {
+      "word": "берегі",
+      "exercise_type": "error-correction",
+      "context": "Діти граються на берегі моря.",
+      "role": "context"
+    },
+    {
+      "word": "повернувся",
+      "exercise_type": "unjumble",
+      "context": "повернувся",
+      "role": "answer"
+    },
+    {
+      "word": "відпочиваю",
+      "exercise_type": "unjumble",
+      "context": "відпочиваю",
+      "role": "answer"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильну форму слова «Острог» у місцевому відмінку ",
+      "role": "context"
+    },
+    {
+      "word": "вулиця",
+      "exercise_type": "quiz",
+      "context": "Який прийменник традиційно використовуємо зі словом «вулиця»",
+      "role": "context"
+    },
+    {
+      "word": "підвищена",
+      "exercise_type": "match-up",
+      "context": "підвищена ділянка рівнини (200-500 метрів)",
+      "role": "context"
+    },
+    {
+      "word": "різноманітний",
+      "exercise_type": "fill-in",
+      "context": "Україна має дуже різноманітний ____.",
+      "role": "context"
+    },
+    {
+      "word": "людей",
+      "exercise_type": "fill-in",
+      "context": "У Києві багато людей люблять гуляти вздовж води, там є краси",
+      "role": "context"
+    },
+    {
+      "word": "населені",
+      "exercise_type": "group-sort",
+      "context": "у / в (всередині, населені пункти)",
+      "role": "context"
+    },
+    {
+      "word": "пункти",
+      "exercise_type": "group-sort",
+      "context": "у / в (всередині, населені пункти)",
+      "role": "context"
+    },
+    {
+      "word": "острови",
+      "exercise_type": "group-sort",
+      "context": "на (відкриті простори, острови, вулиці)",
+      "role": "context"
+    },
+    {
+      "word": "оточений",
+      "exercise_type": "true-false",
+      "context": "Півострів оточений водою з усіх боків.",
+      "role": "context"
+    },
+    {
+      "word": "гуляють",
+      "exercise_type": "unjumble",
+      "context": "гуляють",
+      "role": "answer"
+    },
+    {
+      "word": "будемо",
+      "exercise_type": "unjumble",
+      "context": "будемо",
+      "role": "answer"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "unjumble",
+      "context": "жити",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 22,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "берег",
+      "краєвид",
+      "містечко",
+      "місцевість",
+      "пам'ятка",
+      "передмістя",
+      "провулок",
+      "район",
+      "розташування",
+      "рівнина"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,6 +1,6 @@
 # Build Summary: yesterday (A1)
 
-Generated: 2026-04-09 06:16
+Generated: 2026-04-11 01:01
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 06:16
 | verify | complete | 2026-04-09 04:13:48 |
 | review | complete | 2026-04-09 04:16:26 |
 | stress | complete | 2026-04-09 04:16:29 |
-| publish | complete | 2026-04-09 04:16:31 |
+| publish | complete | 2026-04-10 23:01:35 |
+| audit | complete | 2026-04-10 23:01:35 |
 
 ## Reviews
 
@@ -42,6 +43,7 @@ Generated: 2026-04-09 06:16
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pacing-plan.txt`

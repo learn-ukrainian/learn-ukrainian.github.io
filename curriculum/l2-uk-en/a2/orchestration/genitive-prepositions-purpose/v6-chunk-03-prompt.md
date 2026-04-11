@@ -28,7 +28,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-soft-stem nouns (ending in **-я** or a soft consonant) take **-і**. Neuter nouns typically change their final **-о** to **-а**, and their final **-е** to **-я**. Змінюємо закінчення (Changing endings): «вода» (water) → «без води» «сіль» (salt) → «без солі» «вікно» (window) → «без вікна» «море» (sea) → «без моря» «Читаємо українською»: — Жодна людина не живе довго **без води** (No person lives long without water). — Ця смачна страва приготовлена **без солі** (This tasty dish is prepared without salt). — У цьому старому будинку є кімната **без вікна** (In this old building there is a room without a window). — Я дуже сумую, коли живу **без моря** (I am very sad when I live without the sea). — Вона пішла на роботу **без куртки** (She went to work without a jacket). In natural conversation, **без** is frequently used in complete sentences to emphasize dependence or absolute necessity. A very common structure is pairing it with the verb phrase **не можу** (I cannot) to express that something is essential for your routine. You can also use **без** with pronouns, just like you would with regular nouns. Змінюємо закінчення (Changing endings): «кава» (coffee) → «без кави» «парасолька» (umbrella) → «без парасольки» «він» (he) → «без нього» «Читаємо українською»: — Вранці я просто **не можу без кави** (In the morning I simply cannot without coffee). — На вулиці сильний дощ, а вона прийшла **без парасольки** (There is heavy rain outside, and she arrived without an umbrella). — Ми поїхали на вечірній концерт **без нього** (We went to the evening concert without him). — Вони зовсім не можуть жити **без музики** (They absolutely cannot live without music). — Цей складний проєкт неможливий **без вас** (This complex project is impossible without you). Let's return to Ігор (Igor) and Марта (Marta). They are continuing to pack their bags for the camping trip. Igor suddenly realizes they forgot an essential item for the dark mountain nights. Pay attention to how they use **без** to discuss what they cannot go without. > — **Ігор:** Марто, ми забули щось дуже важливе. *(Marta, we forgot something very important.)* > — **Марта:** Що саме? Я думаю, що ми взяли все. *(What exactly? I think that we took everything.)* > — **Ігор:** Ми не можемо їхати **без ліхтарика**. У горах дуже темно. *(We cannot go without a flashlight. It is very dark in the mountains.)* > — **Марта:** Ой, правда. Вночі **без нього** ми нічого не побачимо. *(Oh, right. At night without it we will see nothing.)* > — **Ігор:** Так. І ще нам треба більше питної води. *(Yes. And we also need more drinking water.)* > — **Марта:** Згодна. У такий похід не можна йти **без води**. *(Agreed. You cannot go on such a hike without water.)* > — **Ігор:** Добре, що ми робимо список. Подорожувати **без плану** — це погана ідея. *(Good that we are making a list. Traveling without a plan is a bad idea.)* <!-- INJECT_ACTIVITY: quiz-prep-choice, choose between 'для' and 'без' to complete everyday sentences -->
+not like to drink tea without honey.* For feminine and neuter nouns, the rules remain completely consistent with what you already know about the Genitive case. Feminine nouns will typically end in **-и** for hard stems or **-і** for soft stems after **без**. Neuter nouns will change their final **-о** or **-е** to **-а** or **-я**. Pay close attention to how these endings sound in full phrases to build your confidence. Людина не може довго жити без чистої води. Ця страва зовсім не смачна без солі. У цьому старому будинку є кімната без вікна. Я не уявляю своє літо без теплого моря. Вона вийшла на вулицю без шапки. > *A person cannot live long without clean water. This dish is not tasty at all without salt. In this old house, there is a room without a window. I do not imagine my summer without the warm sea. She went out onto the street without a hat.* In complete sentences, the preposition **без** is very frequently paired with the phrase **не можу** (I cannot) to express a strong personal preference, a habit, or a dependence on something. You will also often see it used with personal pronouns when talking about people missing from a group. Remember that personal pronouns also change their specific form in the Genitive case after a preposition. Я просто не можу почати свій день без кави. Вона сьогодні прийшла на роботу без парасольки, а надворі йде дощ. Ми вчора поїхали на концерт без нього. Ти не можеш працювати цілий день без відпочинку. Вони організували це чудове свято без нас. > *I simply cannot start my day without coffee. She came to work today without an umbrella, and it is raining outside. We went to the concert without him yesterday. You cannot work all day without rest. They organized this wonderful holiday without us.* Let's rejoin Igor and Marta as they continue packing their bags for their weekend camping trip. They are double-checking their gear and suddenly realizing that some specific items are absolutely essential. Notice how they use **без** to emphasize what they cannot manage without while out in the forest. > — **Ігор:** Ой, я забув свій новий ліхтарик удома. *(Oh, I forgot my new flashlight at home.)* > — **Марта:** Це дуже погано! Ми нічого не зможемо робити вночі без ліхтарика. *(This is very bad! We will not be able to do anything at night without a flashlight.)* > — **Ігор:** Ти маєш рацію. Ми не можемо йти в ліс без води. *(You are right. We cannot go into the forest without water.)* > — **Марта:** Звісно. Туристи ніколи не ходять у гори без чіткого плану. *(Of course. Tourists never go into the mountains without a clear plan.)* > — **Ігор:** Добре, що ми перевіряємо наші речі зараз. *(It is good that we are checking our things now.)* > — **Марта:** Так, наша подорож без цих предметів була б дуже складною. *(Yes, our trip without these items would be very difficult.)* <!-- INJECT_ACTIVITY: quiz-prep-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -479,7 +479,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -506,14 +573,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,0 +1,59 @@
+{
+  "module": "checkpoint-communication",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T01:00:57.384604Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T01:00:56.626800Z",
+    "meta": null,
+    "activities": "2026-04-09T05:20:34.817760Z",
+    "vocabulary": "2026-04-09T05:25:42.076296Z",
+    "research": null,
+    "plan": "2026-03-30T22:17:20.651990Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1170/1000 (raw: 1210) | immersion: 15.4% LOW (target 20-40% (M47))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

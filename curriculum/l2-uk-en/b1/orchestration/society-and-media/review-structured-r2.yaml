@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Failed to include the specific social media vocabulary from the plan ("Фейсбук,
+    Інстаграм, Ютуб, ТікТок"), instead substituting "Telegram та Twitter". Placed
+    5 extra unapproved exercise markers not li
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Uses syntactic Russianisms ("Давайте прочитаємо/проаналізуємо" x5), lexical
+    calques ("прийняли закон"), wrong paronym ("глибокі питання" instead of "запитання"),
+    mixed "проєкт/проект" orthography, and
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: In "Читання новин", the text introduces "безособові форми на -но, -то
+    та різноманітні пасивні дієприкметники" but then ONLY provides examples of the
+    impersonal -но/-то forms ("прийнято", "реалізовано"
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended B1 media vocabulary ("засоби масової інформації",
+    "публіцистичний стиль", "маніпулювання", "джерело") is naturally integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Extra exercise markers hallucinated by the writer will break downstream
+    YAML generation. The actual 6 markers from the plan are logically placed relative
+    to their content but poorly distributed across
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is authoritative yet accessible. Excellent framing of critical
+    thinking ("культурна самооборона") in the context of propaganda. Deducting slightly
+    for the repetitive "Давайте..." transitions.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Excellent word count (4711 words, well above the 4000 target). All H2
+    sections match the plan exactly. Deducting strictly for the extra injected activity
+    markers that violate the expected structural t
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent localization of the media landscape. Highlights real Ukrainian
+    outlets ("Українська правда", "Суспільне") and fact-checking organizations (StopFake,
+    VoxCheck). Emphasizes linguistic decoloni
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The newsroom dialogue is functional and uses the target vocabulary well,
+    though the editor's sign-off ("Пускаємо цей інформаційний сюжет у наш вечірній
+    прямий ефір") is slightly robotic and textbook-y
+findings: []

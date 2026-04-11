@@ -1,69 +1,51 @@
-## Присвійні та вказівні займенники у давальному відмінку
+## Присвійні та вказівні займенники у давальному відмінку (~550 words)
 
-Now that you know how to decline adjectives, possessive pronouns will be much easier to learn. The possessive pronouns for the first and second person singular (**мій** — *my*, **твій** — *your*, and the reflexive **свій** — *one's own*) change their stem slightly in the Dative case. The masculine and neuter forms take the ending **-єму** (мо**єму**, тво**єму**, сво**єму**), while the feminine forms take **-їй** (мо**їй**, тво**їй**, сво**їй**). The plural form for all genders is **-їм** (мо**їм**, тво**їм**, сво**їм**). Notice the appearance of the letters **є** and **ї** — they make the pronunciation smooth and melodic.
+First and second person possessive pronouns follow a very specific pattern when they change into the Dative case. The masculine and neuter forms drop their Nominative base and adopt an extended stem ending in **-єму**, giving us the forms «моєму», «твоєму», and «своєму». The feminine forms are shorter and more direct, simply taking the ending **-їй** to become «моїй», «твоїй», and «своїй». This creates a smooth phonetic bridge when connecting the pronoun to the noun it describes.
 
-* мій батько → **моєму** батькові *(to my father)*
-* твоя сестра → **твоїй** сестрі *(to your sister)*
-* свої діти → **своїм** дітям *(to one's own children)*
+Я щодня телефоную моєму батькові, щоб дізнатися новини. Ти завжди допомагаєш твоїй сестрі з домашнім завданням. Кожен працівник має довіряти своєму керівникові. Ми часто даємо поради моїй найкращій подрузі.
 
-«Читаємо українською»
-Я зараз телефоную **моєму батькові**. *(I am calling my father now.)*
-Допоможи **твоїй сестрі** зробити домашнє завдання. *(Help your sister do her homework.)*
-Кожна людина бажає щастя **своїй родині**. *(Every person wishes happiness to their own family.)*
-Ми завжди радіємо **моїм новим ідеям**. *(We are always happy about my new ideas.)*
+> *I call my father every day to find out the news. You always help your sister with homework. Every employee must trust their manager. We often give advice to my best friend.*
 
-The plural possessives **наш** *(our)* and **ваш** *(your, formal/plural)* are very straightforward. They decline exactly like hard group adjectives. For masculine and neuter nouns, use the ending **-ому** (наш**ому**, ваш**ому**). For feminine nouns, use **-ій** (наш**ій**, ваш**ій**). And for the plural, it is simply **-им** (наш**им**, ваш**им**).
+When we look at the plural possessives meaning our and your, the system becomes much more predictable. These pronouns behave exactly like regular hard-stem adjectives. For masculine and neuter nouns, they take the standard **-ому** ending, becoming «нашому» and «вашому». For feminine nouns, they take the familiar **-ій** ending, giving us «нашій» and «вашій». This consistency makes it easy to construct larger, flowing phrases without learning new rules.
 
-* наш вчитель → **нашому** вчителю *(to our teacher)*
-* ваша перемога → **вашій** перемозі *(to your victory)*
-* наші друзі → **нашим** друзям *(to our friends)*
+Сьогодні ми щиро дякуємо нашому вчителеві за підтримку. Вони дуже раді вашій вчорашній перемозі на змаганнях. Батьки завжди готові допомогти нашому молодшому братові. Я довіряю вашому досвіду, тому прислухаюся до вашої поради.
 
-«Читаємо українською»
-Студенти щиро дякують **нашому вчителю**. *(The students sincerely thank our teacher.)*
-Ми дуже раді **вашій перемозі** на конкурсі. *(We are very glad about your victory in the competition.)*
-Директор дає премію **нашим найкращим працівникам**. *(The director gives a bonus to our best workers.)*
-Я довіряю **вашому досвіду**. *(I trust your experience.)*
+> *Today we sincerely thank our teacher for the support. They are very happy about your yesterday's victory in the competition. Parents are always ready to help our younger brother. I trust your experience, so I listen to your advice.*
 
-The Ukrainian word for "their" is **їхній**. This is a fully declinable pronoun that behaves exactly like a soft group adjective. In the Dative case, it takes the ending **-ьому** for masculine/neuter (їхнь**ому**), **-ій** for feminine (їхн**ій**), and **-ім** for plural (їхн**ім**). You might sometimes hear people use the short, invariable form «їх» (the Genitive form of «вони») as a possessive, but in standard, natural Ukrainian, you should always decline **їхній**. This is a beautiful feature of our language!
+The pronoun «їхній» (their) is the only possessive that behaves like a soft-stem adjective. This means it takes the **-ьому** ending for masculine and neuter nouns, becoming «їхньому», while the feminine form takes the standard **-ій**, resulting in «їхній». You might also hear people use the short, invariable form «їх» instead, which is borrowed from the Genitive case. However, the fully declinable form is the standard in modern Ukrainian. Saying «їхньому сусідові» instead of just «їх сусідові» makes your speech sound much more natural and grammatically complete.
 
-* їхній сусід → **їхньому** сусідові *(to their neighbor)*
-* їхня донька → **їхній** доньці *(to their daughter)*
-* їхні проблеми → **їхнім** проблемам *(to their problems)*
+:::tip
+**The modern choice**
+While the short form «їх» is understood everywhere, the full declinable form «їхній» is the preferred, stylistically neutral standard in contemporary Ukrainian.
+:::
 
-«Читаємо українською»
-Люди часто заздрять **їхньому багатому сусідові**. *(People often envy their rich neighbor.)*
-Батьки купили нову іграшку **їхній маленькій доньці**. *(The parents bought a new toy for their little daughter.)*
-Ми не можемо зарадити **їхнім проблемам**. *(We cannot help their problems.)*
-Ця музика дуже подобається **їхнім дітям**. *(Their children really like this music.)*
+Діти подарували гарний малюнок їхній мамі на свято. Сусіди часто скаржаться їхньому старшому синові на шум. Ми завжди готові прийти на допомогу їхній родині. Собака радісно біжить назустріч їхньому автомобілю.
 
-Here is a very important rule: the possessive pronouns **його** *(his / its)* and **її** *(her)* **never change their form**. They are invariable, regardless of the case, gender, or number of the noun they describe. This is a common trap for English speakers! Do not try to add Dative endings to them. Just leave them as they are and decline the noun.
+> *The children gave a beautiful drawing to their mom for the holiday. The neighbors often complain to their older son about the noise. We are always ready to come to the aid of their family. The dog runs joyfully towards their car.*
 
-* його друг → **його** другу *(to his friend)*
-* її сестра → **її** сестрі *(to her sister)*
+There is an important exception to these matching rules when dealing with third-person singular possessives. The pronouns «його» (his) and «її» (her) are completely invariable, meaning they never change their shape regardless of the case, gender, or number of the noun they modify. This is a common trap for English speakers who try to add Dative endings to these words. You must never say «йогому» or «їїй»; the pronoun remains frozen, and only the noun takes the Dative ending.
 
-«Читаємо українською»
-Я повністю вірю **його другу**. *(I completely believe his friend.)*
-Лікар дав ліки **її хворій сестрі**. *(The doctor gave medicine to her sick sister.)*
-Ця машина належить **його братові**. *(This car belongs to his brother.)*
-Ми щиро радіємо **її успіхам**. *(We are sincerely happy about her successes.)*
+:::note
+**The frozen pronouns**
+Remember that «його» and «її» are permanently locked in their Genitive forms. If the noun changes, these pronouns stand still and watch. You say «його другові», not «йогому».
+:::
 
-Finally, let's look at demonstrative pronouns: **цей** *(this)* and **той** *(that)*. They are crucial for pointing things out. **Цей** follows a soft-like pattern, while **той** has its own unique forms. For masculine/neuter, we use **цьому** *(to this)* and **тому** *(to that)*. For feminine, we use **цій** *(to this)* and **тій** *(to that)*. The plural forms are very short: **цим** *(to these)* and **тим** *(to those)*.
+Я повністю вірю його давньому другові, бо він чесний. Вчора він з радістю допоміг її молодшій сестрі. Вона вирішила не дзвонити його керівникові. Ми подарували квитки її батькові на ювілей.
 
-* цей будинок → **цьому** будинку *(to this house)*
-* та дівчина → **тій** дівчині *(to that girl)*
-* ці студенти → **цим** студентам *(to these students)*
+> *I completely trust his old friend because he is honest. Yesterday he happily helped her younger sister. She decided not to call his manager. We gave tickets to her father for his anniversary.*
 
-«Читаємо українською»
-Дай цю цікаву книгу **тому хлопцеві**. *(Give this interesting book to that boy.)*
-**Цьому старому будинку** потрібен капітальний ремонт. *(This old house needs a major renovation.)*
-Поясни нове правило **тій новій студентці**. *(Explain the new rule to that new student.)*
-Я зовсім не вірю **цим новинам**. *(I do not believe these news at all.)*
+Demonstrative pronouns let you point out exactly who or what you are talking about. The pronoun «цей» (this) acts somewhat like a soft-stem word, becoming «цьому» for masculine and neuter nouns, and «цій» for feminine nouns. Conversely, «той» (that) acts like a hard-stem word, becoming «тому» and «тій». When you need to point to multiple recipients in the plural, the system simplifies drastically. Both genders merge into a single form, giving us «цим» (to these) and «тим» (to those).
 
-> — **Олена:** Кому ти телефонуєш? *(Who are you calling?)*
-> — **Тарас:** Я телефоную **моєму новому колезі**. *(I am calling my new colleague.)*
-> — **Олена:** А що ти хочеш пояснити **цьому чоловікові**? *(And what do you want to explain to this man?)*
-> — **Тарас:** Я маю надіслати важливі документи **його відділу**. *(I have to send important documents to his department.)*
-> — **Олена:** Зрозуміло. Передай вітання **вашій команді**! *(Understood. Send greetings to your team!)*
+Передай ці документи тому високому хлопцеві в коридорі. Цьому старому будинку терміново потрібен серйозний ремонт. Будь ласка, поясни нове правило цим студентам ще раз. Я не довіряю тим людям, які завжди брешуть.
 
-<!-- INJECT_ACTIVITY: quiz-pronoun-forms, Choose the correct dative form of the possessive pronoun (моєму vs. моїй vs. моїм) -->
-<!-- INJECT_ACTIVITY: match-up-nom-dat, Match nominative noun phrases to their dative equivalents (мій друг → моєму другові) -->
+> *Pass these documents to that tall guy in the hallway. This old building urgently needs serious repair. Please explain the new rule to these students one more time. I do not trust those people who always lie.*
+
+> — **Оксана:** Ти вже телефонував твоєму братові? *(Have you already called your brother?)*
+> — **Степан:** Так, я телефонував йому вранці. *(Yes, I called him in the morning.)*
+> — **Оксана:** А що ти сказав їхньому батькові? *(And what did you tell their father?)*
+> — **Степан:** Я пояснив цю ситуацію тому чоловікові. *(I explained this situation to that man.)*
+> — **Оксана:** Моїй сестрі потрібна допомога з цим проєктом. *(My sister needs help with this project.)*
+> — **Степан:** Я з радістю допоможу вашій родині. *(I will happily help your family.)*
+
+<!-- INJECT_ACTIVITY: quiz-pronoun-forms -->
+<!-- INJECT_ACTIVITY: match-up-nom-dat -->

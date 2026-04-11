@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-*(limited usage)*. Відомий мовознавець Олександр Авраменко у своєму підручнику для одинадцятого класу категорично застерігає учнів від їхнього надмірного використання. Чому виникла така сувора заборона? Історично так склалося, що українська мова віддає перевагу зовсім іншим, більш гнучким конструкціям для опису дії, що триває в часі. Зловживання важкими словами на «-учий» чи «-ячий» миттєво робить ваше щоденне мовлення штучним, сухим та занадто книжним. Більше того, величезна кількість таких форм є просто невдалими кальками з інших мов, зокрема з російської. Проте з цього суворого граматичного правила є один прекрасний виняток. Деякі дієприкметники з часом настільки міцно прижилися в народній мові, що повністю втратили свій початковий дієслівний характер. Вони еволюціонували і перетворилися на звичайнісінькі прикметники, які називають постійну ознаку предмета. До таких давно адаптованих слів належать «**співучий**» *(melodious, singing)* та «**палючий**» *(scorching)*. Давайте значно детальніше розглянемо ці дивовижні природні, **лексикалізовані форми** *(lexicalized forms)*, які непомітно стали звичними прикметниками у нашому словнику. Чому ми їх так легко приймаємо і використовуємо? Тому що вони описують не якусь випадкову чи тимчасову дію в даний момент, а глибоку, постійну властивість або вроджену здатність певного предмета. Наприклад, ми дуже часто кажемо «**пекучий біль**» *(burning pain)*. Біль має страшну властивість пекти завжди, це його постійна жахлива характеристика, а не просто коротка дія, що відбувається лише зараз. Так само ми спокійно використовуємо щоденну фразу «**киплячий чайник**» *(boiling kettle)*. Це не просто посуд, у якому зараз випадково кипить вода, це спеціальний побутовий прилад, створений людьми саме для кип'ятіння. Надзвичайно цікавим і показовим прикладом є всім відоме народне прислів'я: «**Під лежачий камінь вода не тече**» *(Water does not flow under a lying stone)*. У цьому стародавньому філософському контексті слово «лежачий» є абсолютно правильним і високолітературним. Воно влучно описує важкий камінь, який ніколи не рухається з місця, це його сталий, незмінний стан повної інертності. Всі ці колоритні словосполучення глибоко закріпилися в колективній свідомості. Якщо ознака є постійною — сміливо використовуйте такі органічні слова. Насамкінець, вам критично важливо завжди відчувати правильний **регістр мовлення** *(register of speech)* під час активного використання цих складних форм. Те, що офіційно дозволено у вузькій науковій чи професійній сфері, часто є абсолютно неприйнятним і кумедним у щоденному розмовному спілкуванні. Наприклад, у складній медичній термінології цілком офіційно існує анатомічне поняття «**блукаючий нерв**» *(vagus nerve)*. Для академічного довідника чи університетської лекції це цілком нормальний, стандартний науковий термін. Однак, якщо ви розмовляєте зі своїм добрим другом на вулиці чи в кафе, ви ніколи не повинні казати фразу «**кричаща дитина**» *(screaming child)*. Це звучить неймовірно штучно і боляче ріже вухо кожному носію живої української мови. Справжній українець у такій побутовій ситуації завжди скаже інакше: «**дитина, яка кричить**» *(the child who is screaming)*. Наша багата мова просто обожнює підрядні речення і використовує їх набагато частіше, ніж ці громіздкі дієприкметникові конструкції. Крім того, українська фонетика завжди історично тяжіє до максимальної милозвучності. Тому форми із коротким суфіксом «-уч-» часто звучать набагато м'якше і природніше. Порівняйте самі: ми кажемо «**родючий**» *(fertile)* замість важкого «родячий». Якщо ви раптом сумніваєтеся у розмові, просто замініть сумнівне слово на конструкцію зі словом «який» або «що». <!-- INJECT_ACTIVITY: fill-in-present-formation --> <!-- INJECT_ACTIVITY: match-up-definitions -->
+almost always say «учень, який читає». However, this restriction is not absolute. Over centuries, a specific subset of these participles has broken away from their verb origins and seamlessly integrated into the language as regular adjectives. These lexicalized forms, such as «співучий» or «палючий», no longer describe a temporary action but rather a permanent, inherent quality of the noun. Ці лексикалізовані форми є абсолютно природними для сучасної української мови, оскільки вони втратили своє значення тимчасового процесу. Вони перетворилися на звичайні прикметники, які називають постійну ознаку предмета. Наприклад, коли ми говоримо про «пекучий біль», ми не маємо на увазі біль, який виконує дію просто зараз. Ми описуємо саму природу цього болю, його інтенсивність та характер. Так само вислів «киплячий чайник» став усталеною назвою для приладу в певному стані, а не просто описом води, яка нагрівається в дану секунду. Ще яскравішим прикладом є відоме українське прислів'я: «Під лежачий камінь вода не тече». Слово «лежачий» тут не описує камінь, який раптом вирішив лягти й відпочити. Воно позначає нерухомий, пасивний об'єкт, який ніколи не змінює свого положення. Саме через цю сталість ознаки такі слова, як «квітучий сад» або «палаючий вогонь», сприймаються носіями мови як гарні, поетичні та стилістично бездоганні конструкції. Вони додають тексту емоційної виразності та образності, не порушуючи при цьому внутрішніх законів української граматики. Understanding when and where to use these present active participles requires a strong sense of linguistic register. The acceptability of a participle often depends entirely on whether you are writing a medical textbook, reciting poetry, or chatting with a friend over coffee. In specialized scientific or technical literature, certain active participles are preserved as strict, standardized terminology. For instance, a medical professional will correctly refer to the vagus nerve as the «блукаючий нерв», and a physicist might discuss a «рухаючий момент». In these highly formalized contexts, the need for a concise, single-word term overrides the general stylistic preference for descriptive clauses. However, this scientific tolerance does not translate to everyday colloquial speech. If you are describing a noisy situation in a park, saying «кричаща дитина» or «бігучий хлопчик» is completely unacceptable. These forms sound incredibly unnatural and foreign. Instead, conversational Ukrainian demands the descriptive relative clause: «дитина, яка кричить» or «хлопчик, що біжить». :::info **Граматична підказка** When in doubt, always default to a descriptive clause with «який» or «що». It is the safest, most natural, and most universally accepted way to express an ongoing action performed by a subject in modern Ukrainian. ::: Furthermore, even among the suffixes themselves, there is a subtle hierarchy of naturalness. Participles formed with «-учий» or «-ючий» have integrated much more deeply into the core vocabulary of the language when describing permanent traits, often losing their verb-like qualities entirely to become true adjectives. They sound inherently Ukrainian when used correctly. On the other hand, attempting to force new formations with these suffixes to describe temporary actions will almost always trigger stylistic alarms, as they frequently turn out to be awkward bureaucratic calques that need immediate replacement. <!-- INJECT_ACTIVITY: fill-in-present-formation --> <!-- INJECT_ACTIVITY: match-up-definitions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -568,7 +568,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -581,14 +648,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

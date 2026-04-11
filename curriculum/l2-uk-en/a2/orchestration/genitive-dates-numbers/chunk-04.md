@@ -1,12 +1,19 @@
 ## Підсумок — Summary
 
-You have learned three essential ways to use the Genitive case in daily life. Let's review the main rules. Can you answer these self-check questions?
+You have learned how the Genitive case brings precision to Ukrainian quantities, dates, and absences. Use this checklist to verify your understanding:
 
-*   **Яке сьогодні число?** *(What is today's date?)* Remember that the day is an ordinal number, but the month must be in the Genitive singular.
-    *   «Сьогодні десяте травня.» *(Today is the tenth of May.)*
-*   **How do you count to five?** The numbers 2, 3, and 4 take the Nominative plural, but numbers from 5 and above require the Genitive plural.
-    *   «Один стіл, два столи, п'ять столів.» *(One table, two tables, five tables.)*
-*   **How do you negate «Я бачу фільм»?** When you negate a verb that takes a direct object, the object often changes from the Accusative to the Genitive case to emphasize the total absence of the action or object.
-    *   «Я не бачу фільму.» *(I do not see a film.)*
+*   **Dates:** When stating the date, the month always takes the Genitive case.
+    **Яке сьогодні число? Десяте травня.** — *What is the date today? The tenth of May.*
+*   **Counting:** Remember the "1, 2-4, 5+" rule for counting objects.
+    **Один стіл, два столи, п'ять столів.** — *One table, two tables, five tables.*
+*   **Negation:** Negating a direct object shifts it into the Genitive case to emphasize complete absence.
+    **Я бачу фільм. Я не бачу фільму.** — *I see a movie. I do not see a movie.*
 
-The Genitive case is fundamental to Ukrainian grammar. It brings precision when we talk about exact quantities, specific dates, and total absences. Whether you are checking your calendar, counting items on your desk, or explaining that you do not have time, you are relying on this case. As you continue to practice, using the Genitive with words like «немає» and numbers from five upwards will become a natural habit.
+Родовий відмінок робить українську мову дуже точною. Він допомагає нам рахувати предмети, називати дати та говорити про те, чого ми не маємо.
+
+> *The Genitive case makes the Ukrainian language very precise. It helps us count objects, name dates, and talk about what we do not have.*
+
+:::note
+**Quick tip**
+Mastering the Genitive case with numbers and negation is a major milestone. These patterns will become completely natural with consistent practice.
+:::

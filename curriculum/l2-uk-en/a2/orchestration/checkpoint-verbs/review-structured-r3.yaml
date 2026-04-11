@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all requested sections and grammar rules. All required vocabulary
+    ("контрольна точка", "помилка", "наказовий спосіб", etc.) is integrated naturally.
+    Self-assessment questions are present.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent grammar explanations. Effectively explains the nuance of perfective/imperfective
+    aspect. Correctly points out and corrects common Russianisms (e.g., "на автобусі"
+    vs "автобусом", "давай піде
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Clear examples and strong PPP flow. However, the `group-sort` exercise
+    is placed before its required concept (imperative) is taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Incorporates all required words in a meaningful context.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The `group-sort` marker is misplaced (appears after Part 1, but tests
+    imperative which is in Part 2).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The teacher persona is encouraging and provides excellent, culturally
+    grounded context without excessive gamification.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'The conclusion contains a dangling/incomplete sentence: `If you can answer
+    "так" (yes) to all of them, ` which abruptly stops before the bulleted list.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent contrast with English and Russian constructions. Explains authentic
+    Ukrainian properly.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: In the second dialogue, Iryna says she is going to the Carpathians with
+    Andriy ("ми поїдемо"), but then says "Ідіть до лісу обережно" (You go to the forest
+    carefully). This is a logical contradiction;
+findings: []

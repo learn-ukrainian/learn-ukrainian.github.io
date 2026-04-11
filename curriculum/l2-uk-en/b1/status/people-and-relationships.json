@@ -1,0 +1,62 @@
+{
+  "module": "people-and-relationships",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-10T21:25:53.609712Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-09T02:30:44.439899Z",
+    "meta": null,
+    "activities": "2026-04-09T02:21:02.200322Z",
+    "vocabulary": "2026-04-09T02:28:06.679351Z",
+    "research": null,
+    "plan": "2026-04-04T21:31:33.266485Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "3589/4000 (raw: 3628) (411 short) | engagement: 0/5 | richness: 70% < 80% min (skills) | salad: Phase 7 (Early B1 (B1 M01-M30)): 2 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 10 inline **term** (gloss) markers across 10 sentence(s) \u2014 too dense; move to vocabulary section or conver"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "12/0 | density: 7 < 6"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "87/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors",
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 3,
+    "fail_count": 3,
+    "deferred_count": 0
+  }
+}

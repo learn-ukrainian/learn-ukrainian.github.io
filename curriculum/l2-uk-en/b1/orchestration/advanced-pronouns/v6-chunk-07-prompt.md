@@ -27,7 +27,7 @@ Grand total: ~4500 words
 <previous_context>
 [...previous sections truncated...]
 
-**інший** *(other)* та **будь-який** *(any)*. Коли ви говорите «**кожна** людина» *(every person)* або «**уся** країна» *(the entire country)*, ви об'єднуєте всіх людей чи всю територію в одне ціле. Якщо ж ви кажете «**інший** підхід» *(another approach)*, ви чітко відмежовуєте один варіант від решти. Ці слова працюють як універсальні маркери узагальнення. Розглянемо ще кілька прикладів. Слово **весь** охоплює об'єкт повністю: «Він читав **увесь** час» *(He was reading the whole time)*. Натомість **кожен** фокусується на індивідуальності всередині групи: «**Кожен** студент здав роботу» *(Every student handed in the work)*. Завдяки цим займенникам ми можемо будувати глибокі фрази, які ви бачили в попередньому діалозі. Перейдемо до граматики. Як відмінюються означальні займенники? Більшість із них змінюються за відмінками, родами та числами так само, як звичайні прикметники. Проте займенник **весь** має свою унікальну, дещо нерегулярну парадигму, яку варто запам'ятати. У чоловічому роді він має форми: називний — **весь** або **увесь**, родовий — **всього** *(of all)*, давальний — **всьому** *(to all)*, знахідний — **весь** або **всього** (залежно від істоти чи неістоти), орудний — **всім** *(with all)*, і місцевий — на **всьому** *(on all)*. У множині форма називного відмінка — **всі** *(all)* або **усі** *(all)*. Далі маємо: родовий — **всіх** *(of all)*, давальний — **всім**, орудний — **всіма** *(with all)*, місцевий — на **всіх** *(on all)*. Наприклад: «Я розповів це **всім** друзям» *(I told this to all my friends)*. Тут важливо згадати про українську милозвучність *(euphony)*. Коли ви використовуєте прийменник «з» *(with)* перед словом «всіма», виникає важкий для вимови збіг приголосних звуків. Щоб уникнути цього, мова застосовує спеціальний фонетичний варіант прийменника — **зі** *(with)*. Тому ми завжди говоримо «**зі** всіма» *(with everyone)*, так само як «**зі** мною» *(with me)*. Це робить нашу вимову плавною і дуже природною. Варіанти «весь» та «увесь» також підпорядковуються правилам милозвучності: між приголосними ми скажемо «брав **увесь** час», а після голосного — «взяла **весь** час». Окрема і дуже цікава тема — це різниця між займенниками **сам** та **самий**. Іноземці часто плутають ці слова, але вони мають абсолютно різні значення. Займенник **сам** означає, що людина виконує дію самостійно, без жодної сторонньої допомоги. Наприклад: «Він **сам** зробив це» *(He did it himself)*, або «Вона **сама** прийшла» *(She came alone)*. Він відмінюється так: **самого** *(of oneself)*, **самому** *(to oneself)*, **самим** *(with oneself)*. Натомість займенник **самий** ніколи не вказує на самостійність. Він використовується виключно для підсилення або ідентифікації. Найчастіше він працює в парі із вказівним займенником «той» *(that)*. Ми кажемо: «Це той **самий** чоловік» *(This is the same man)*, або «Ми зустрілися у тій **самій** кімнаті» *(We met in the same room)*. Також він позначає просторову межу: «У **самому** центрі міста» *(In the very center of the city)*. Інші означальні займенники не створюють таких проблем. Слова **кожен** та **інший** відмінюються як типові прикметники твердої групи. Ви легко утворите форми: **кожного** дня *(every day)*, **кожному** студенту *(to every student)*, **іншим** разом *(another time)*, або спілкуватися з **іншими** людьми *(to communicate with other people)*. Розуміння цих нюансів дозволить вам висловлювати свої думки максимально точно та стилістично правильно на просунутому рівні. <!-- INJECT_ACTIVITY: fill-in, practice definitive pronouns and their declension -->
+not waiting for help from others.* Most definitive pronouns decline exactly like hard-stem adjectives. However, the pronoun **весь** (all) has an irregular declension paradigm. Because it is used so frequently, these forms are essential to memorize. У чоловічому роді займенник має форми весь або увесь у називному відмінку. У родовому відмінку ми кажемо всього, у давальному — всьому, а в орудному використовуємо форму всім. У місцевому відмінку правильним варіантом буде на всьому. Жіночий рід має форми вся, всієї, всій, всю, всією, на всій, а середній рід — все, всього, всьому, все, всім, на всьому. > *In the masculine gender, the pronoun has the forms "весь" or "увесь" in the Nominative case. In the Genitive case, we say "всього", in the Dative — "всьому", and in the Instrumental we use the form "всім". In the Locative case, the correct option will be "на всьому". The feminine gender has the forms "вся", "всієї", "всій", "всю", "всією", "на всій", and the neuter gender — "все", "всього", "всьому", "все", "всім", "на всьому".* :::info **Plural forms and Euphony** In the plural, the pronoun for 'all' translates to **всі** (all). It declines as: Р.в. *всіх*, Д.в. *всім*, Зн.в. *всіх* or *всі*, Ор.в. *всіма*, М.в. *на всіх*. Notice how Ukrainian euphony dictates the use of the variants. To avoid difficult consonant clusters, Ukrainian inserts a vowel into prepositions. For example, the preposition «з» changes to «зі» before the Instrumental plural form, resulting in the phrase **зі всіма** (with everyone). This is the exact same principle that gives us «зі мною». ::: One of the most common pitfalls for learners is distinguishing between the pronouns **сам** (self) and **самий** (the very). While they look incredibly similar, they serve completely different functions. The first emphasizes independence or lack of assistance, translating to 'oneself' or 'alone'. The second emphasizes exact identity or extreme location, translating to 'the same'. Я сам можу перекласти цей текст, мені не потрібен словник. У цьому реченні займенник показує, що дія виконується самостійно. Але якщо ми хочемо вказати на конкретну людину, ми скажемо інакше. Це той самий професор, який читав нам лекцію вчора. Також ми можемо сказати, що зустріч відбулася в самому центрі міста. > *I can translate this text myself, I do not need a dictionary. In this sentence, the pronoun shows that the action is performed independently. But if we want to point to a specific person, we will say it differently. This is the same professor who gave us a lecture yesterday. We can also say that the meeting took place in the very center of the city.* The remaining core definitive pronouns, **інший** (other) and **кожен** (every), are straightforward. They decline exactly like standard adjectives. You simply match their gender, number, and case to the noun they modify. Therefore, 'to every student' becomes «кожному студенту» in the Dative case, and 'with other people' becomes «з іншими людьми» in the Instrumental case. Mastering these adjectival endings will allow you to construct precise descriptions. <!-- INJECT_ACTIVITY: fill-in, use означальні займенники with correct declension -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -586,7 +586,74 @@ _Джерела: 5-klas-ukrmova-zabolotnyi-2023_s0110, 10-klas-ukrmova-glazova-2
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -599,14 +666,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,60 +1,50 @@
 ## Сценарій 2: На ринку (Scenario 2: At the Market)
 
-A traditional Ukrainian **ринок** (market) is much more than just a place to buy food. Whether you are at the historic Bessarabskyi Market or the bustling Lukianivskyi Market in Kyiv, the atmosphere is always vibrant and loud. You can taste the products, negotiate the price, and chat with the sellers. For language learners, the market is the absolute best place to practice the Genitive case. You will use it constantly to ask for specific quantities, discuss prices, and ask what is currently available or missing. Let us step into the lively world of a Ukrainian farmers market.
+To truly experience everyday Ukrainian life, you must visit a bustling local farmers market. A lively «ринок» like the famous Bessarabskyi or the authentic Lukianivskyi in Kyiv offers much more than just fresh seasonal food. It is a vibrant social hub where people negotiate, share community news, and build lasting relationships with their favorite vendors. For a language learner, the market is the ultimate practice ground for the Genitive case. You will constantly hear people asking for specific quantities, discussing prices, and navigating what is currently available or completely sold out. Let us listen to a typical conversation at a colorful produce stall.
 
-In this scenario, a shopper is looking for fresh local products. Pay close attention to how the shopper asks for quantities and how the vendor responds.
-> — **Продавець:** Добрий день! Що будете купувати? *(Good day! What will you be buying?)*
 > — **Покупець:** Добрий день! Скільки коштує кілограм меду? *(Good day! How much does a kilogram of honey cost?)*
-> — **Продавець:** Цей свіжий мед коштує триста гривень. *(This fresh honey costs three hundred hryvnias.)*
-> — **Покупець:** Добре. А у вас є свіжий сир? *(Good. And do you have fresh cottage cheese?)*
-> — **Продавець:** Так, є дуже смачний сир. *(Yes, there is very tasty cottage cheese.)*
-> — **Покупець:** Дайте мені, будь ласка, один кілограм меду і пів кілограма сиру. *(Give me, please, one kilogram of honey and half a kilogram of cottage cheese.)*
-> — **Продавець:** Звісно. Щось іще? *(Of course. Anything else?)*
-> — **Покупець:** Ні, дякую. Це все. *(No, thank you. That is all.)*
+> — **Продавець:** Добрий день! Цей свіжий мед коштує триста гривень. *(Good day! This fresh honey costs three hundred hryvnias.)*
+> — **Покупець:** Добре. А у вас є домашній сир? *(Good. And do you have cottage cheese?)*
+> — **Продавець:** Так, звичайно. Скільки вам потрібно? *(Yes, of course. How much do you need?)*
+> — **Покупець:** Дайте мені, будь ласка, один кілограм сиру і пів кілограма масла. *(Give me, please, one kilogram of cheese and half a kilogram of butter.)*
+> — **Продавець:** Ось, тримайте. Щось ще? *(Here, take it. Anything else?)*
+> — **Покупець:** Ще дайте мені дві дині і п'ять лимонів. *(Also give me two melons and five lemons.)*
 
-When you buy items by the piece or by weight, you must combine numbers with the correct noun form. The rule is based on the numbers 1, 2-4, and 5+.
-*   **Один** (one) takes the Nominative case: **один лимон** (one lemon), **один кілограм** (one kilogram).
-*   **Два, три, чотири** (two, three, four) take a form that looks like the Nominative Plural for masculine and feminine words, and Genitive Singular for neuter. At the market, you will often hear: **два лимони** (two lemons), **три кілограми** (three kilograms).
-*   **П'ять і більше** (five and more) take the Genitive Plural. This is very common for small items or specific weights: **п'ять лимонів** (five lemons), **шість кілограмів** (six kilograms).
+When buying items by the piece or by weight, you must pay close attention to the numbers you use. Ukrainian grammar has a very specific rule for combining numbers with nouns, which we often call the "1, 2-4, 5+" rule.
 
-Let us look at a few more examples.
-*   Дайте мені **один кавун**. *(Give me one watermelon.)*
-*   Я хочу купити **три кавуни**. *(I want to buy three watermelons.)*
-*   Мені треба **п'ять кавунів**. *(I need five watermelons.)*
+Після числа «один» ми завжди використовуємо називний відмінок однини. Після чисел «два», «три» та «чотири» іменник чоловічого роду має форму називного відмінка множини. А після числа «п'ять» і більше ми завжди використовуємо родовий відмінок множини.
 
-The Genitive case is also essential when something is missing or when you cannot see an item. This is called the Genitive of Negation. If a vendor runs out of a product, they will use the word **немає** (there is no) followed by the Genitive.
-*   Вибачте, сьогодні **немає домашнього сиру**. *(Sorry, today there is no homemade cottage cheese.)*
-*   У мене **немає свіжих яблук**. *(I do not have fresh apples.)*
+> *After the number "one", we always use the nominative case singular. After the numbers "two", "three", and "four", a masculine noun takes the form of the nominative case plural. And after the number "five" and more, we always use the genitive case plural.*
 
-If you are looking for something specific but cannot spot it on the counter, you also use the Genitive case after a negated verb. Compare the positive sentence with the negative one.
-*   Я бачу червоні помідори. *(I see red tomatoes. — Accusative)*
-*   Я не бачу **червоних помідорів**. *(I do not see red tomatoes. — Genitive)*
+For example, if you want to buy lemons, you would say **один лимон** (one lemon), **три лимони** (three lemons), but **шість лимонів** (six lemons). This pattern applies to the word **кілограм** as well. You ask for **один кілограм**, but **два кілограми** or **п'ять кілограмів**.
 
-When asking for a **кілограм** (kilogram) of something, the product itself must be in the Genitive case. However, there is a difference between uncountable items and items you usually count. For uncountable products like **картопля** (potatoes) or **морква** (carrots), we use the Genitive Singular.
-*   Дайте мені кілограм **картоплі**. *(Give me a kilogram of potatoes.)*
-*   Скільки коштує кілограм **моркви**? *(How much does a kilogram of carrots cost?)*
+The market is also the perfect place to practice the Genitive of negation and absence. When a vendor runs out of a product, they will use the word **немає**, which strictly requires the Genitive case. 
 
-For items that we naturally count, like **яблуко** (apple) or **помідор** (tomato), we use the Genitive Plural after «кілограм».
-*   Я куплю кілограм **яблук**. *(I will buy a kilogram of apples.)*
-*   Дайте два кілограми **помідорів**. *(Give two kilograms of tomatoes.)*
+Вибачте, сьогодні у мене немає домашнього сиру, але є дуже смачне молоко. Я бачу жовті яблука, але я зовсім не бачу червоних помідорів на вашому столі.
 
-When speaking with vendors, Ukrainians frequently use diminutive suffixes. These small word endings make the conversation much friendlier and warmer. It is a sign of good rapport. If you use these forms, the vendor will smile and might even give you a **знижка** (discount).
-*   Замість «картопля» продавці кажуть **картопелька**. *(Instead of "potatoes", vendors say "nice little potatoes".)*
-*   Замість «морква» вони пропонують **морквочка**. *(Instead of "carrots", they offer "nice little carrots".)*
-*   Замість «ягоди» ви почуєте **ягідки**. *(Instead of "berries", you will hear "nice little berries".)*
+> *Excuse me, today I do not have cottage cheese, but there is very tasty milk. I see yellow apples, but I absolutely do not see red tomatoes on your table.*
 
-You do not have to use these words yourself, but you must be ready to understand them when the vendor offers you «свіжа картопелька» or «солодка морквочка».
+Notice how the shopper contrasts their statements. When they state what they see affirmatively, they use the simple Accusative case: **Я бачу жовті яблука.** But the moment they introduce a negative verb like **не бачу** (do not see) or express absence with **немає**, the object must immediately switch to the Genitive case.
 
-Here is a quick summary of the essential verbs and nouns you need for a successful market trip. You already know **коштувати** (to cost). When you are at the stall, the vendor might let you **вибирати / вибрати** (to choose) the best tomatoes yourself. Once you make your choice, the vendor will **важити** (to weigh) the produce. Finally, after you pay, always remember to take your **решта** (change / money back).
+You must also differentiate between uncountable goods and individual items when dealing with feminine nouns. When you buy vegetables in bulk, you usually treat them as a single mass.
 
-### Читаємо українською (Reading Practice)
-У суботу ми завжди ходимо на ринок. *(On Saturday we always go to the market.)*
-Там продають дуже смачні продукти. *(There they sell very tasty products.)*
-Сьогодні я хочу купити багато свіжих ягід. *(Today I want to buy many fresh berries.)*
-Я підходжу до продавця і питаю ціну. *(I approach the vendor and ask the price.)*
-Кілограм полуниці коштує сто гривень. *(A kilogram of strawberries costs one hundred hryvnias.)*
-Я прошу зважити мені два кілограми. *(I ask to weigh two kilograms for me.)*
-Продавець дає мені гарні ягоди і решту. *(The vendor gives me nice berries and the change.)*
-Я дуже люблю цей старий ринок. *(I really love this old market.)*
+Дайте мені, будь ласка, один кілограм картоплі і один кілограм моркви. Але я також хочу купити один кілограм солодких яблук і кілограм груш.
 
-<!-- INJECT_ACTIVITY: fill-in, Role-play: Shopping for Groceries, 8 items -->
+> *Give me, please, one kilogram of potatoes and one kilogram of carrots. But I also want to buy one kilogram of sweet apples and a kilogram of pears.*
+
+Words like **картопля** (potatoes) and **морква** (carrots) remain in the Genitive singular because they are treated as an uncountable mass. However, items you can easily count individually, like **яблука** (apples) or **груші** (pears), take the Genitive plural ending after the word **кілограм**.
+
+:::tip
+**Did you know?**
+At a Ukrainian market, you will hear a wonderful variety of diminutive suffixes. Vendors use these affectionate word forms to build rapport, show the high quality of their goods, and create a welcoming atmosphere.
+:::
+
+Продавці дуже часто пропонують покупцям свіжу картопельку, солодку морквочку або смачні ягідки. Якщо ви також використовуєте ці теплі слова, продавець може дати вам хорошу знижку.
+
+> *Vendors very often offer buyers fresh little potatoes, sweet little carrots, or tasty little berries. If you also use these warm words, the vendor might give you a good discount.*
+
+Using forms like **картопелька** instead of **картопля**, or **морквочка** instead of **морква**, demonstrates that you appreciate the local culture. It changes the interaction from a simple commercial transaction into a friendly conversation between neighbors.
+
+Before you grab your reusable bag and head to the stalls, let us review the essential market verbs. You will frequently need the imperfective verb **коштувати** (to cost) to ask about prices. When you are looking at the produce, you need time to **вибирати** (to choose, process), but eventually, you must **вибрати** (to choose, result) the best items. The vendor will then **важити** (to weigh) your purchases on the scale. Finally, after you hand over your cash, always remember to wait for your **решта** (change).
+
+<!-- INJECT_ACTIVITY: fill-in-market-genitive -->

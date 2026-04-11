@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-читати книгу до кінця, ви інтуїтивно обрали слово **прочитаю** *(I will read completely)*, а не довгу конструкцію **буду читати** *(I will be reading)*, я можу вас щиро привітати. Ви вже на глибокому підсвідомому рівні розумієте український вид дієслова! Це «відчуття правильності» є надзвичайно важливим етапом у вашому вивченні мови. Воно означає, що ви поступово перестаєте просто перекладати слова з англійської у своїй голові. Ви починаєте справді думати українськими категоріями. Зверніть увагу на те, як фізично звучать ці різні форми. Конструкція «я буду читати» складається аж із двох слів. Вона звучить довго, вона займає більше часу для вимови вголос. Саме тому вона ідеально підходить для опису **процесу** *(process)*, який також вимагає багато часу. Натомість слово «прочитаю» — це одне коротке, енергійне слово з сильним префіксом. Воно ніби ставить фінальну крапку в кінці вашої дії. Воно ідеально передає ідею швидкого, стовідсотково гарантованого **результату** *(result)*. На цьому рівні ми зробимо вашу інтуїцію цілком свідомою і дуже точною. Отже, як саме влаштована ця унікальна часова система? Українська мова має три абсолютно різні способи говорити про майбутнє. Для зручності ми можемо уявити їх як три окремі граматичні «кошики». Перший кошик — це **складений майбутній час** *(compound future tense)*. Він завжди утворюється за допомогою допоміжного слова «буду» та інфінітива основного дієслова. Це дуже популярна конструкція для щоденних розмов. Другий кошик — це **синтетичний майбутній час** *(synthetic future tense)*. Тут ми маємо лише одне слово, яке закінчується на дуже специфічний суфікс, наприклад, «читатиму», «робитимеш» або «співатимемо». Ця форма звучить трохи більш поетично і дуже по-українськи. Третій кошик — це **простий майбутній час** *(simple future tense)*. Це форми доконаного виду, які безпосередньо відповідають за ваш фінальний результат: «зроблю», «напишу», «приготую». Найцікавіше для студента те, що перші два кошики — це фактично повні близнюки. Вони обидва належать до **недоконаного виду** *(imperfective aspect)* і описують незавершені процеси. Ви можете сказати «я буду працювати» або «я працюватиму», і значення для українця буде абсолютно однаковим. А от третій кошик працює за зовсім іншими правилами. Це сувора територія **доконаного виду** *(perfective aspect)*, де панують конкретні результати і повністю завершені дії. На рівні А2 ви вже непогано навчилися технічно конструювати всі ці форми. Давайте разом зробимо дуже швидкий граматичний огляд. Щоб створити складену форму, ви просто брали дієслово «бути» в майбутньому часі та додавали початкову форму основного слова: «я буду + писати», «ми будемо + читати». Це математично найпростіша конструкція у нашій мові. Для утворення синтетичної форми ви додавали до інфінітива спеціальні особові закінчення: «писати + му», «писати + меш». А проста форма доконаного виду взагалі хитро використовує звичайні закінчення теперішнього часу: «я напиш-у», «ти напиш-еш». Ви вже знаєте цю механіку. Але тепер ви офіційно переходите на рівень B1. Ваша головна комунікативна мета тут кардинально змінюється. Відтепер ваша проблема полягає не в тому, *як* граматично правильно утворити певну форму. Справжній виклик полягає в тому, *яку* саме з трьох форм обрати в конкретній життєвій ситуації. Вибір правильного кошика — це завжди ваш особистий вибір між процесом і результатом. У цьому модулі ми навчимося свідомо керувати українським майбутнім часом, щоб ви могли точно передавати свої думки.
+or say a phrase like «буду читати», it naturally stretches out in your mind. It feels long, ongoing, continuous, and open-ended. It is the verbal equivalent of walking down a long road without seeing the end. On the other hand, a word like «прочитаю» feels sharp, decisive, and highly final. It feels exactly like crossing a finish line or checking a box on your to-do list. This psychological difference is the fundamental structural difference between how imperfective and perfective verbs operate in the future tense. Your primary goal at the B1 level is to take this subconscious feeling and actively turn it into a conscious, deliberate tool that you can confidently control. В українській граматичній системі існує три різні конструкції для вираження дій у майбутньому часі. Ми можемо поділити їх на дві великі групи залежно від того, який вид дієслова ми використовуємо. Перша група — це спеціальні форми недоконаного виду, які завжди описують тривалий процес або повторювану дію. Сюди належить складений майбутній час, який утворюється за допомогою допоміжного дієслова «бути» та інфінітива основного дієслова, наприклад, «буду активно працювати». До цієї ж групи належить і синтетичний майбутній час, який складається лише з одного слова з характерним суфіксом, наприклад, «працюватиму». Ці дві форми є граматичними близнюками; вони мають однакове значення і відрізняються одна від одної виключно стилістично. Друга група — це форма доконаного виду, яка фокусується на результаті. Це простий майбутній час, який візуально виглядає точнісінько як теперішній час, але завжди має чітке майбутнє значення, наприклад, «зроблю». Ця форма є єдиним способом показати, що дія буде успішно завершена. :::info **Grammar box** Ukrainian does not possess a direct, single-word translation for the English auxiliary word "will". Instead, the concept of the future is built directly into the verb forms themselves. This is achieved either through separate auxiliary verbs like «буду» working with an infinitive, or through specific endings like «-му» and «-ш» attached to the root. ::: Before we move forward, let's take a moment for a quick technical recap of what you have already learned in your A2 baseline studies. You already know how to physically construct these words. You know that the compound future (складений) is built by taking the conjugated future tense of the verb "to be" — «буду», «будеш», «буде», «будемо», «будете», «будуть» — and adding the imperfective infinitive to it, resulting in familiar forms like «буду читати». You also recognize the synthetic future (синтетичний), where the specific endings «-му», «-меш», «-ме», «-мемо», «-мете», «-муть» are fused directly onto the infinitive to create an elegant single word: «читатиму». Finally, you are acquainted with the simple perfective future (простий), which mischievously borrows the exact same personal endings as the present tense, but strictly applies them to perfective verbs to instantly project them into the future: «напишу», «напишеш», «напише». At this advanced stage in your learning journey, the primary challenge is no longer about remembering how to form these words. The real challenge is knowing exactly *when* and *why* to choose each specific construction to accurately reflect your true communicative intent.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -591,7 +591,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -604,14 +671,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-*(to the blue color)* * останній день → **останньому** дню *(to the last day)* * вечірній поїзд → **вечірньому** поїзду *(to the evening train)* «Читаємо українською» Студенти радіють **останньому дню** семестру. *(The students are happy about the last day of the semester.)* Ми дуже радіємо **вечірньому поїзду** додому. *(We are very happy about the evening train home.)* Художник додає темні тіні **синьому морю**. *(The artist adds dark shadows to the blue sea.)* For feminine nouns, the rules are much simpler. Both hard and soft stem adjectives take the exact same ending: **-ій**. This makes it very easy to remember! Also, remember that after the letters **г**, **к**, and **х**, adjectives do not change their stem consonant in the Dative case, even though nouns often do. * нова подруга → **новій** подрузі *(to a new friend)* * синя сукня → **синій** сукні *(to a blue dress)* * довга дорога → **довгій** дорозі *(to a long road)* * тиха вулиця → **тихій** вулиці *(to a quiet street)* «Читаємо українською» Я купив гарний подарунок **новій подрузі**. *(I bought a beautiful present for a new friend.)* Цей яскравий колір дуже пасує **синій сукні**. *(This bright color really suits the blue dress.)* Ми завжди радіємо **тихій вулиці** біля нашого дому. *(We are always happy about the quiet street near our house.)* In the plural, the adjective system becomes even simpler. All genders (masculine, feminine, and neuter) use the exact same ending: **-им**. Whether the adjective is hard or soft in the dictionary form, the plural Dative ending is always **-им**. This unification makes plural adjectives very easy to form. * нові друзі → **новим** друзям *(to new friends)* * сині моря → **синім** морям *(to blue seas)* * гарні дівчата → **гарним** дівчатам *(to beautiful girls)* «Читаємо українською» Новий вчитель пояснює граматичне правило **новим студентам**. *(The new teacher explains the grammar rule to the new students.)* Літнє сонце дарує тепло **синім морям**. *(The summer sun gives heat to the blue seas.)* Ми завжди допомагаємо **нашим гарним дівчатам**. *(We always help our beautiful girls.)* When we compare the hard and soft groups in the Dative case, we see a beautiful consistency in the Ukrainian language. While Russian differentiates masculine hard and soft endings (ому/ему), Ukrainian unifies masculine and neuter endings with the rich "o" sound: **-ому** and **-ьому**. The only difference is the soft sign, which tells us how to pronounce the consonant before it. This makes the Ukrainian system logical, consistent, and uniquely melodic. > — **Ганна:** **Якому** братові ти телефонуєш, старшому чи молодшому? *(Which brother are you calling, the older or the younger?)* > — **Марко:** Я зараз телефоную **моєму молодшому братові**. *(I am calling my younger brother now.)* > — **Ганна:** А що ти даруєш мамі на свято? *(And what are you giving to mom for the holiday?)* > — **Марко:** Я дарую квіти **моїй рідній мамі**. *(I am giving flowers to my dear mom.)* <!-- INJECT_ACTIVITY: group-sort, Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им), 8 items -->
+soft consonant sound before the "o" vowel. The fundamental logic remains identical to the hard group; we are just adding a marker to keep the pronunciation smooth. This rule applies equally to both masculine and neuter soft-stem adjectives. Цей колір дуже пасує синьому морю. Вони щиро радіють останньому дню своєї відпустки. Ми завдячуємо цьому вечірньому поїзду за швидку та безпечну подорож додому. > *This color really suits the blue sea. They sincerely rejoice at the last day of their vacation. We owe this evening train for a fast and safe journey home.* For feminine nouns, the system becomes beautifully simple. Both hard and soft stem adjectives converge and take the exact same Dative ending: **-ій**. A hard adjective like **новий** becomes **новій**, and a soft adjective like **синій** simply remains **синій**. Crucially, if the adjective's stem ends in the consonants **г**, **к**, or **х** (like **довгий** or **тихий**), no consonant alternation occurs in the adjective itself, even if the noun it describes undergoes a change. Я щодня допомагаю новій подрузі з домашнім завданням. Цей білий пояс ідеально пасує синій сукні. Ми всі завдячуємо цій тихій вулиці за спокійний сон. Я хочу подякувати цій довгій відпустці за хороший відпочинок. > *I help a new friend with homework every day. This white belt perfectly suits the blue dress. We all owe this quiet street for a peaceful sleep. I want to thank this long vacation for a good rest.* When you are talking about multiple recipients, the Dative case completely ignores gender. All adjectives in the plural take the unified ending **-им**. It does not matter if you are giving something to men, women, or neuter objects; the plural adjective is always the same. This significant simplification makes speaking in the plural much easier, as you only need to remember one single ending for every possible adjective. Я часто телефоную новим друзям на вихідних. Тренер дає інструкції цим гарним дівчатам перед важливим матчем. Ми завжди щиро радіємо новим зустрічам. Цим синім морям зараз потрібен захист від забруднення. > *I often call new friends on the weekends. The coach gives instructions to these beautiful girls before an important match. We always sincerely rejoice at new meetings. These blue seas now need protection from pollution.* One of the most elegant features of the Ukrainian Dative case is its internal consistency. In Ukrainian, the masculine and neuter endings always retain the "o" sound, regardless of whether the stem is hard (**-ому**) or soft (**-ьому**). This creates a smooth, rhythmic phonetic pattern that is uniquely Ukrainian. While Russian differentiates these endings completely by switching to an "e" sound for soft stems, Ukrainian unifies the system, making it far more logical and predictable for learners to master. :::note **Consonant harmony** Remember that while feminine nouns often undergo consonant alternation in the Dative case, the adjectives describing them never do. If the noun **подруга** changes to **подрузі**, the adjective remains unchanged. You say **новій подрузі**, keeping the letter "в" in **новій** completely intact. ::: <!-- INJECT_ACTIVITY: group-sort-adj-gender -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -510,7 +510,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -537,14 +604,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

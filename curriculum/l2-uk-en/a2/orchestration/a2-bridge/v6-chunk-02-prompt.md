@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Oksana! — this is how you can greet me.)* In this short everyday exchange, the student and the teacher naturally used four completely different forms of nouns depending entirely on their specific role in the sentence. The Nominative case, or **Називний відмінок** *(Nominative case)*, is the fundamental starting point for all words. It answers the questions **хто?** *(who?)* and **що?** *(what?)*. This is the exact dictionary form of a word that you always learn first. In a sentence, it almost always acts as the main subject—the person or thing performing the primary action. It simply names the object or person without any modifications. For example, «**урок** починається» *(the lesson begins)* or «**книга** лежить» *(the book lies)*. Here, the lesson and the book are the main actors driving the entire sentence forward. When an action is directly applied to an object, we use the Accusative case, or **Знахідний відмінок** *(Accusative case)*. It answers the specific questions **кого?** *(whom?)* and **що?** *(what?)*. This form consistently acts as the direct object of the sentence. You must remember the critical rule for feminine nouns: the ending usually changes to **-у** or **-ю**. For example, you read «**книжку**» *(a book)* and drink «**каву**» *(coffee)*. However, masculine inanimate nouns stay exactly the same as they appear in the dictionary form. You start «**урок**» *(a lesson)* and buy «**стіл**» *(a table)* without changing the ending at all. To talk about physical locations, we rely heavily on the Locative case, or **Місцевий відмінок** *(Locative case)*. It answers the simple question **де?** *(where?)*. A strict and unbreakable rule in Ukrainian grammar is that the Locative case is never used entirely alone; it is always paired with a preposition, usually **у/в** *(in/at)* or **на** *(on/at)*. When you want to clearly state where something is currently happening, you say «**у школі**» *(at school)*, «**в Ужгороді**» *(in Uzhhorod)*, or «**на заводі**» *(at the factory)*. Finally, whenever we address someone directly in a conversation, we use the Vocative case, or **Кличний відмінок** *(Vocative case)*. It does not answer any specific questions. It is used purely for calling out to people or even inanimate things. This case is a vibrant, living marker of the authentic Ukrainian language. While it has largely disappeared from modern Russian, it remains absolutely mandatory in Ukrainian everyday speech. Using the Nominative case instead of the proper Vocative when addressing someone immediately sounds unnatural. You should always say «**друже**» *(friend)*, «**Олю**» *(Olia)*, and «**вчителю**» *(teacher)*. These four cases form the absolute core of your ability to make basic statements, describe direct actions, specify locations, and interact politely with people. However, the complete Ukrainian noun system actually consists of seven cases in total. To reach true A2 level fluency, you will soon master the remaining three missing pieces of the grammar puzzle: the Genitive case to show absence or possession, the Dative case to indicate the recipient of an action, and the Instrumental case to describe the specific tool used to perform an action. <!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->
+who you are. This structure directly links a subject to its definition. ::: The Accusative case, or Знахідний відмінок, points directly to the direct object of an action. It answers the questions «кого?» (whom?) or «що?» (what?). This case shows what is receiving the action of the verb. For feminine nouns ending in -а or -я, the ending typically changes to -у or -ю. However, for inanimate masculine and neuter nouns, the form stays exactly the same as the dictionary form. Recognizing when a word acts as a direct object is crucial for clear communication. Я п'ю гарячу каву і читаю цікаву книжку. Наш викладач починає новий урок. Ми бачимо великий стіл. > *I am drinking hot coffee and reading an interesting book. Our teacher starts a new lesson. We see a large table.* The Locative case, or Місцевий відмінок, tells us exactly where an action takes place, answering the essential question «де?» (where?). A unique and strict rule of this case is that it is never used alone; it always requires a preposition. Most commonly, you will use it with the prepositions «у» or «в» (in), and «на» (on). This case is extremely common in daily conversations when discussing locations, cities, or workplaces. Зараз ми сидимо у світлій школі. Мій старший брат працює на заводі. Минулої весни ми були в Ужгороді. > *Right now we are sitting in a bright school. My older brother works at a factory. Last spring we were in Uzhhorod.* The Vocative case, or Кличний відмінок, is used exclusively for addressing people, animals, or personified objects directly. It does not answer any standard questions. This case is a vibrant, living marker of the Ukrainian language and carries deep cultural significance. Unlike Russian, where the vocative case has largely disappeared in modern speech, Ukrainian strictly requires it for natural communication. Using the Nominative dictionary form instead of the Vocative to address someone immediately marks a speaker as a foreigner or indicates the use of Surzhyk. Привіт, найкращий друже! Олю, допоможи мені, будь ласка. Пане вчителю, я маю важливе запитання. > *Hi, best friend! Olia, help me, please. Mr. Teacher, I have an important question.* :::tip **Did you know?** — Always use the Vocative case when writing emails or messages. Starting a message with «Оксана» instead of «Оксано» sounds abrupt and unnatural to a native Ukrainian speaker. ::: In total, the full Ukrainian grammatical system contains seven cases. You have already successfully practiced four of them: Nominative, Accusative, Locative, and Vocative. This is a massive achievement that allows you to handle many basic interactions. In the A2 level, we will introduce the three missing pieces to complete your grammatical map. We will learn the Genitive case to express absence and possession, the Dative case to identify the recipient of an action, and the Instrumental case to explain what tools we use. By mastering all seven cases, you will be able to express any thought with complete precision. <!-- INJECT_ACTIVITY: quiz-case-id --> [quiz, Case Identification Drill, 8 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -492,7 +492,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -513,14 +580,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

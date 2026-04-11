@@ -1,0 +1,68 @@
+{
+  "module": "genitive-intro",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T01:40:23.213168Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T01:40:20.284452Z",
+    "meta": null,
+    "activities": "2026-04-11T01:37:07.396781Z",
+    "vocabulary": "2026-04-07T21:29:29.465992Z",
+    "research": null,
+    "plan": "2026-04-04T22:04:59.904924Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "3207/2000 (raw: 3276) | pedagogy: 2 violations | immersion: 22.0% LOW (target 30-55% (A2.1))"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "7/0 | density: 1 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "57/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 +7 | premature=4 | gaps=1 | well-paced=14",
+      "delta": 7,
+      "premature": 4,
+      "gaps": 1,
+      "well_paced": 14
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

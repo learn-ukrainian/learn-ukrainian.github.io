@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-у відпустку **на тиждень** *(for a week)*, ми орендували цю світлу квартиру **на місяць** *(for a month)*. Тепер логічно перейдемо до вираження причини в українській мові. Тут існує одне золоте правило деколонізації, яке чудово допомагає уникати поширених калькованих конструкцій. Це правило стосується правильного вибору між прийменниками «через» та «завдяки». Якщо об'єктивна причина має відверто негативний або ж абсолютно нейтральний характер, ми обов'язково використовуємо прийменник **через** *(because of/due to)* разом із Знахідним відмінком. Наприклад, ми кажемо: наш рейс раптово скасували **через негоду** *(due to bad weather)*, я дуже запізнився на важливу зустріч **через затори** *(because of traffic jams)*. Ніколи не використовуйте російську граматичну кальку «із-за» для позначення причини! В українській літературній мові прийменник **із-за** *(from behind)* вказує виключно на фізичний просторовий напрямок руху: яскраве сонце несподівано вийшло **із-за хмар** *(from behind the clouds)*. З іншого боку, якщо причина є позитивною і наша дія принесла дійсно хороший результат, ми маємо використовувати прийменник **завдяки** *(thanks to)*. Цей оптимістичний прийменник завжди вимагає Давального відмінка. Ми впевнено кажемо: наш новий проект став успішним **завдяки зусиллям** *(thanks to the efforts)* усієї команди, важкий пацієнт швидко одужав **завдяки лікарям** *(thanks to the doctors)*. Завжди критично аналізуйте фінальний результат дії перед тим, як остаточно обрати прийменник причини. Окрім причини подій, ми дуже часто говоримо про мету нашої цілеспрямованої дії. Найпростіший спосіб граматично виразити пряме призначення певного предмета — це використати прийменник **для** *(for)* з Родовим відмінком: це мій новий **зошит для записів** *(notebook for notes)*, ми сьогодні купили красиві квіти **для мами** *(for mom)*. Проте є одна специфічна побутова конструкція, яку іноземні студенти часто плутають. Коли ми кудись цілеспрямовано ідемо з метою щось принести або когось забрати додому, ми зазвичай використовуємо прийменник **за** *(for/after)* з Орудним відмінком. Це дуже поширена розмовна норма: мені треба швидко **сходити за кавою** *(to go fetch coffee)*, втомлений батько пішов у садок **за дитиною** *(to pick up the child)*. Якщо ж нашою головною метою є не якийсь конкретний фізичний предмет, а виконання певної важливої дії, ми використовуємо сполучник **щоб** *(in order to)* разом з дієсловом в інфінітиві: я інтенсивно вивчаю українську мову, **щоб працювати** *(in order to work)* у великій компанії в Києві. Насамкінець давайте згадаємо про складні граматичні сполучники причини. Іноді проста синтаксична конструкція з одним іменником просто не може передати всю повноту і складність нашої думки. Тоді ми логічно перетворюємо короткі прийменники на складні сполучники, додаючи до них вказівні слова. Замість простого прийменника ми утворюємо сполучник **через те що** *(due to the fact that)* або **завдяки тому що** *(thanks to the fact that)*. Ці зручні сполучники дозволяють нам органічно приєднати ціле нове підрядне речення з власним підметом і дієсловом-присудком. Порівняйте ці два варіанти: «Ми сумно залишилися вдома через дощ» та «Ми сумно залишилися вдома, **через те що** пішов дуже сильний дощ» *(due to the fact that heavy rain started)*. Відповідно, для позитивних життєвих ситуацій ми будуємо речення інакше. Ми радісно кажемо: «Наша команда впевнено перемогла в турнірі, **завдяки тому що** всі гравці наполегливо тренувалися» *(thanks to the fact that everyone trained a lot)*. <!-- INJECT_ACTIVITY: match-up-prepositions-definitions --> <!-- INJECT_ACTIVITY: error-correction-prepositions -->
+detrimental. If the outcome is good, give thanks by using the Dative-triggering preposition for gratitude. If the outcome is bad, use the neutral or negative Accusative-triggering preposition. This simple distinction makes your Ukrainian sound much more authentic and culturally aware. :::tip **Did you know?** — Using **із-за** to mean "because of" is a direct Russianism. In authentic Ukrainian, **із-за** is strictly a spatial preposition (e.g., coming out from behind a tree). Always use **через** or **завдяки** for causality. ::: When you need to express the purpose of an object or an action, you have several distinct grammatical tools at your disposal. The preposition **для** (for) requires the Genitive case and usually indicates the intended user or the function of an object. The preposition **за** with the Instrumental case is heavily used in spoken language to mean fetching or going after something. However, the most authentic Ukrainian way to express fetching is using **по** with the Accusative case. Finally, to link an action with a specific goal, use the conjunction **щоб** followed by an infinitive verb. Я купив цей новий товстий зошит спеціально для своїх щоденних робочих записів. Вранці мій старший брат швидко сходив за свіжою гарячою кавою до кав'ярні. Згодом я теж вирішив піти по чисту воду до найближчого джерела. Ми приїхали сюди лише для того, щоб нарешті підписати цей важливий контракт. Using the correct purpose construction shows a high level of grammatical maturity. You should try to adopt the native fetching construction with the Accusative case whenever possible. It immediately signals that you are learning authentic Ukrainian rather than a mixed dialect. These small adjustments build a strong foundation for your future conversational skills. :::info **Grammar box** — While **сходити за кавою** (fetching coffee) is extremely common in modern speech, the prescriptive, traditional Ukrainian form uses **по** with the Accusative case: **піти по воду** or **піти по каву**. ::: To elevate your speech from simple noun phrases to complex sentences, you can transform these prepositions into compound conjunctions. By adding the words **те що** to a preposition like **через**, or **тому що** to **завдяки**, you create a bridge that allows you to introduce an entire explanatory clause. This grammatical structure is absolutely essential for professional or academic communication where detailed explanations are regularly required. It gives you the freedom to explain complex situations with a subject and a conjugated verb. Ми залишилися вдома ввечері через те, що раптово почалася дуже сильна злива. Наш новий проєкт став неймовірно успішним завдяки тому, що вся команда працювала дуже злагоджено. Вони змінили свої плани через те, що обставини несподівано погіршилися. Нам вдалося виграти цей престижний конкурс завдяки тому, що ми наполегливо готувалися. You can think of these compound conjunctions as upgraded versions of their simple preposition counterparts. They carry the exact same positive or negative connotations as the base words. This means you still need to apply the "Golden Rule" when choosing between them. Practice building longer sentences this way to prepare for advanced discussions. <!-- INJECT_ACTIVITY: match-up-prepositions-definitions --> <!-- INJECT_ACTIVITY: error-correction-prepositions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -527,7 +527,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -540,14 +607,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

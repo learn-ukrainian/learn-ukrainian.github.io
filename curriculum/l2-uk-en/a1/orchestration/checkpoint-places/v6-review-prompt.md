@@ -152,43 +152,43 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що ми знаємо? (What Do We Know?)
+## Що ми зна́ємо? (What Do We Know?)
 
 Navigating a new city is often your very first real test of survival in a completely new language environment. Before reaching this point in your studies, you could name a few isolated objects, describe who you are, or exchange basic daily greetings. Now, you have acquired the tools to confidently step out into the street, find what you need, and interact with the world around you. This module serves as a comprehensive checkpoint to review the essential skills you acquired throughout the "Places" section. 
 
-The leap from speaking in isolated words to building connected urban navigation phrases is a huge milestone. You are no longer just pointing and saying **центр** (center) or **метро** (subway); instead, you are constructing full ideas by saying **у центрі** (in the center) and **на метро** (by subway). This review highlights the critical differences between simply being somewhere, actively going somewhere, and returning from somewhere. 
+Moving from speaking in isolated words to building connected urban navigation phrases is an important step. You are no longer just pointing and saying **центр** (center) or **метро́** (subway); instead, you are constructing full ideas by saying **у це́нтрі** (in the center) and **на метро** (by subway). This review highlights the critical differences between simply being somewhere, actively going somewhere, and returning from somewhere. 
 
 Evaluate exactly what you know so far. Ask yourself the following questions to see if you are truly ready to navigate the busy streets of Ukraine:
 
-*   **Чи можу я вибрати між «у» та «в»?** (Can I choose between «у» and «в»?) — This tests your grasp of euphony rules for smooth pronunciation.
-*   **Чи знаю я, як сказати, де я?** (Do I know how to say where I am?) — This checks if you can use the locative case to state your location.
-*   **Чи можу я назвати місця в місті?** (Can I name places in the city?) — This ensures you recognize essential city vocabulary.
-*   **Чи можу я сказати, куди я йду?** (Can I say where I am going?) — This confirms you understand the accusative case for direction.
-*   **Чи можу я користуватися транспортом?** (Can I use transport?) — This checks your ability to say how you are traveling.
-*   **Чи можу я запитати дорогу?** (Can I ask for directions?) — This ensures you can communicate with locals and follow a route.
-*   **Чи можу я сказати, звідки я приїхав?** (Can I say where I came from?) — This confirms you can use genitive chunks for origin.
+*   **Чи мо́жу я ви́брати між «у» та «в»?** (Can I choose between «у» and «в»?) — This tests your grasp of euphony rules for smooth pronunciation.
+*   **Чи зна́ю я, як сказа́ти, де я?** (Do I know how to say where I am?) — This checks if you can use the locative case to state your location.
+*   **Чи можу я назва́ти місця́ в мі́сті?** (Can I name places in the city?) — This ensures you recognize essential city vocabulary.
+*   **Чи можу я сказати, куди́ я йду?** (Can I say where I am going?) — This confirms you understand the accusative case for direction.
+*   **Чи можу я кори́стува́тися транспортом?** (Can I use transport?) — This checks your ability to say how you are traveling.
+*   **Чи можу я запита́ти доро́гу?** (Can I ask for directions?) — This ensures you can communicate with locals and follow a route.
+*   **Чи можу я сказати, зві́дки я?** (Can I say where I am from?) — This confirms you can use genitive chunks for origin.
 
-If you can answer these questions affirmatively, you have a solid foundation for the rest of the A1 level.
+If you can answer these questions, you are ready to navigate a Ukrainian city.
 
 <!-- INJECT_ACTIVITY: quiz-question-choice -->
 
-## Читання (Reading Practice)
+## Чита́ння (Reading Practice)
 
-Reading short, contextual narratives in Ukrainian helps solidify grammar patterns naturally without feeling like you are memorizing rules. The following reading practice follows a traveler named Марк who arrives in the capital city. He begins his journey at the main train station, known as **вокзал** (train station), and needs to locate his accommodation, a **готель** (hotel), which is situated right in the heart of the city. Finally, he navigates his way to one of the most famous historical landmarks in the capital, **Золоті ворота** (Golden Gate). 
+Reading short, contextual narratives in Ukrainian helps solidify grammar patterns naturally without feeling like you are memorizing rules. The following reading practice follows a traveler named Марк who arrives in the capital city. He begins his journey at the main train station, known as **вокза́л** (train station), and needs to locate his accommodation, a **готе́ль** (hotel), which is situated right in the heart of the city. Finally, he navigates his way to one of the most famous historical landmarks in the capital, **Золоті́ воро́та** (Golden Gate). 
 
 Read the text below carefully. Pay close attention to how Mark uses prepositions like **у**, **в**, **на**, and **з** depending on whether he is describing his static location, his destination, or his origin.
 
-*   **Я зараз у Києві.** (I am currently in Kyiv.)
-*   **Я з Польщі.** (I am from Poland.)
+*   **Я за́раз у Ки́єві.** (I am currently in Kyiv.)
+*   **Я з По́льщі.** (I am from Poland.)
 *   **Мій готель у центрі.** (My hotel is in the center.)
-*   **Я йду пішки.** (I am walking on foot.)
-*   **Вокзал далеко.** (The train station is far.)
-*   **Я їду на метро.** (I am going by subway.)
-*   **Скажіть, будь ласка, де музей?** (Tell me, please, where is the museum?)
-*   **Я йду направо.** (I am walking to the right.)
-*   **Тут площа.** (Here is a square.)
-*   **Золоті ворота близько.** (Golden Gate is near.)
-*   **Я вже біля музею.** (I am already near the museum.)
+*   **Я йду пі́шки.** (I am walking on foot.)
+*   **Вокзал дале́ко.** (The train station is far.)
+*   **Я ї́ду на метро.** (I am going by subway.)
+*   **Скажі́ть, будь ла́ска, де музе́й?** (Tell me, please, where is the museum?)
+*   **Я йду напра́во.** (I am walking to the right.)
+*   **Тут пло́ща.** (Here is a square.)
+*   **Золоті ворота бли́зько.** (Golden Gate is near.)
+*   **Я вже бі́ля музе́ю.** (I am already near the museum.)
 
 Notice how Mark integrates all the fundamental A1.5 vocabulary and grammar in just a few straightforward sentences. He seamlessly uses **на метро** (by subway) for his mode of transport, **направо** (to the right) for simple directions, and **біля музею** (near the museum) to establish his exact location relative to another landmark. 
 
@@ -196,54 +196,54 @@ Notice how Mark integrates all the fundamental A1.5 vocabulary and grammar in ju
 As you read Ukrainian texts, try your best not to translate word for word in your head. Instead, visualize the scene unfolding. Picture Mark exiting the train station, looking at a map, and walking towards the center. This visualization technique helps you link the Ukrainian words directly to real-world concepts.
 :::
 
-## Граматика (Grammar Summary)
+## Грама́тика (Grammar Summary)
 
 The grammatical patterns from this phase rely on a few core principles. First, the Ukrainian language places a very high value on a smooth, flowing sound, a concept known as euphony. The rules of euphony determine whether we should use **у** or **в**, **і** or **й**, and **з**, **із**, or **зі**. The basic guiding principle is to avoid awkward clusters of consonants or vowels. 
 
 Compare the following pairs:
-*   **Він у Львові** (He is in Lviv) versus **Вона в Одесі** (She is in Odesa). We use **у** between consonants, and **в** between vowels.
-*   **Брат і сестра** (Brother and sister) versus **Тато й мама** (Dad and mom). We use **і** between consonants, and **й** between vowels.
-*   **Зі школи** (From school) versus **З роботи** (From work). We use **зі** before difficult consonant clusters, but **з** before a single consonant.
+*   **Він у Льво́ві** (He is in Lviv) versus **Вона́ в Оде́сі** (She is in Odesa). We use **у** between consonants, and **в** after a vowel.
+*   **Брат і сестра́** (Brother and sister) versus **Та́то й ма́ма** (Dad and mom). We use **і** between consonants, and **й** after a vowel.
+*   **Зі шко́ли** (From school) versus **З роботи** (From work). We use **зі** before difficult consonant clusters, but **з** before a single consonant.
 
 The most crucial grammatical concept in urban navigation is understanding the three main directional questions. The specific noun case you use depends entirely on the question you are answering:
 
 *   **Де?** (Where?) indicates a static location. It uses the Locative case. 
-    *   **В аптеці** (In the pharmacy)
-    *   **В школі** (In school)
-    *   **На роботі** (At work)
+    *   **В апте́ці** (In the pharmacy)
+    *   **В шко́лі** (In school)
+    *   **На робо́ті** (At work)
 *   **Куди?** (To where?) indicates the direction of movement. It uses the Accusative case.
-    *   **В аптеку** (To the pharmacy)
-    *   **У школу** (To school)
-    *   **На роботу** (To work)
+    *   **В апте́ку** (To the pharmacy)
+    *   **У шко́лу** (To school)
+    *   **На робо́ту** (To work)
 *   **Звідки?** (From where?) indicates an origin or starting point. It uses the Genitive case with the preposition **з** (or **із**/**зі**).
-    *   **З аптеки** (From the pharmacy)
-    *   **З України** (From Ukraine)
+    *   **З апте́ки** (From the pharmacy)
+    *   **З Украї́ни** (From Ukraine)
     *   **З роботи** (From work)
 
-Notice the distinct contrast between **на роботі** (location) and **на роботу** (direction). Furthermore, the preposition **на** is generally used for open spaces, events, and abstract concepts, while **в** / **у** is strictly used for enclosed physical structures. This directional system also applies when matching city places with correct prepositions, taking transport like **автобусом** (by bus) or **на метро** (by subway), and following adverbs for directions such as **прямо** (straight), **направо** (to the right), and **наліво** (to the left).
+Notice the distinct contrast between **на роботі** (location) and **на роботу** (direction). Furthermore, the preposition **на** is generally used for open spaces, events, and abstract concepts, while **в** / **у** is strictly used for enclosed physical structures. This directional system also applies when matching city places with correct prepositions, taking transport like **авто́бусом** (by bus) or **на метро** (by subway), and following adverbs for directions such as **пря́мо** (straight), **направо** (to the right), and **налі́во** (to the left).
 
 <!-- INJECT_ACTIVITY: group-sort-cases -->
 <!-- INJECT_ACTIVITY: quiz-euphony-check -->
 
-## Діалог (Connected Dialogue)
+## Діало́г (Connected Dialogue)
 
-Imagine a very common, real-world scenario: a tourist from Canada arrives at a busy, crowded metro station in Kyiv. They need to find a specific museum first, and then head over to the main train station, the **вокзал**. When approaching a stranger on the street for help, it is absolutely vital to emphasize the polite register. Starting your request with **Вибачте** (Excuse me) and **Скажіть, будь ласка** (Tell me, please) shows cultural respect and instantly makes people much more willing to assist you. 
+Imagine a very common, real-world scenario: a tourist from Canada arrives at a busy, crowded metro station in Kyiv. They need to find a specific museum first, and then head over to the main train station, the **вокзал**. When approaching a stranger on the street for help, it is absolutely vital to emphasize the polite register. Starting your request with **Ви́бачте** (Excuse me) and **Скажіть, будь ласка** (Tell me, please) shows cultural respect and instantly makes people much more willing to assist you. 
 
 Read the multi-turn connected dialogue below. Pay close attention to how the tourist combines phrases indicating origin, location, and direction into a single, cohesive conversation.
 
-> **Турист:** Вибачте, я з Канади. Де тут музей? *(Excuse me, I am from Canada. Where is the museum here?)*
-> **Місцевий:** Музей у центрі. Їдьте на метро до станції Хрещатик. *(The museum is in the center. Go by subway to Khreshchatyk station.)*
-> **Турист:** А як дістатися від метро? *(And how to get there from the subway?)*
-> **Місцевий:** Вийдіть і йдіть направо. Музей на площі. *(Exit and walk to the right. The museum is on the square.)*
-> **Турист:** Дякую! А потім я хочу їхати у Львів. Де вокзал? *(Thank you! And then I want to go to Lviv. Where is the train station?)*
-> **Місцевий:** Вокзал далеко. Їдьте на метро до станції Вокзальна. *(The train station is far. Go by subway to Vokzalna station.)*
+> **Тури́ст:** Вибачте, я з Кана́ди. Де тут музей? *(Excuse me, I am from Canada. Where is the museum here?)*
+> **Місце́вий:** Музей у центрі. Ї́дьте на метро до ста́нції Хреща́тик. *(The museum is in the center. Go by subway to Khreshchatyk station.)*
+> **Турист:** А як діста́тися від метро? *(And how to get there from the subway?)*
+> **Місцевий:** Ви́йдіть і йдіть направо. Музей на пло́щі. *(Exit and walk to the right. The museum is on the square.)*
+> **Турист:** Дякую! А по́тім я хо́чу ї́хати у Львів. Де вокзал? *(Thank you! And then I want to go to Lviv. Where is the train station?)*
+> **Місцевий:** Вокзал далеко. Їдьте на метро до станції Вокза́льна. *(The train station is far. Go by subway to Vokzalna station.)*
 
 This exchange perfectly demonstrates practical functional language in action. Notice the specific use of the word **дістатися** (to get to). While **йти** (to go on foot) and **їхати** (to go by vehicle) specify the exact method of transport, **дістатися** focuses purely on the goal of reaching the destination, making it the perfect word for asking directions. 
 
-You also see how prepositions shift based on the point of reference. The local uses **від метро** (from the subway), showing the starting point of the walking route, and **до вокзалу** (to the station) to show the end point. 
+You also see how prepositions shift based on the point of reference. The local uses **від метро** (from the subway), showing the starting point of the walking route, and **до станції** (to the station) to show the end point. 
 
 :::note
-To fully consolidate your urban vocabulary, try describing your own city or a city you love. Imagine video-calling a friend while walking through a coastal city like **Одеса** (Odesa). You might show them the sights: **Дерибасівська вулиця** (Derybasivska street), the famous **Потьомкінські сходи** (Potemkin Stairs), a large **порт** (port), and a sunny **пляж** (beach). Practice describing exactly where you are and where you are going using these nouns!
+To fully consolidate your urban vocabulary, try describing your own city or a city you love. Imagine video-calling a friend while walking through a coastal city like **Оде́са** (Odesa). You might show them the sights: **Дерибасівська ву́лиця** (Derybasivska street), the famous **Потьо́мкінські сходи** (Potemkin Stairs), a large **порт** (port), and a sunny **пляж** (beach). Practice describing exactly where you are and where you are going using these nouns!
 :::
 
 <!-- INJECT_ACTIVITY: fill-in-dialogue-forms -->
@@ -252,18 +252,18 @@ To fully consolidate your urban vocabulary, try describing your own city or a ci
 
 The following points summarize your A1.5 achievements. 
 
-**Я тепер можу...** (I can now...):
+**Я тепе́р можу...** (I can now...):
 *   Apply basic euphony rules. You know how to instinctively alternate between **у** and **в**, or **і** and **й**, to ensure your spoken Ukrainian maintains a natural, flowing rhythm.
-*   State your exact location. You can confidently answer the question **Де?** (Where?) using the locative case, such as saying **в готелі** (in the hotel) or **на площі** (on the square).
+*   State your exact location. You can confidently answer the question **Де?** (Where?) using the locative case, such as saying **в готе́лі** (in the hotel) or **на площі** (on the square).
 *   Indicate your direction of travel. You can accurately answer the question **Куди?** (To where?) using the accusative case, such as stating you are going **у парк** (to the park).
 *   Use city transport options. You can explain how you are traveling from point A to point B, using forms like **автобусом** (by bus) or **на метро** (by subway).
 *   Give and follow street directions. You understand vital navigation commands like **направо** (to the right), **наліво** (to the left), and **прямо** (straight).
 *   State your country of origin. You can seamlessly answer the question **Звідки?** (From where?), telling people you are **з України** (from Ukraine) or from another specific country.
 
-You can now find your way to a shop, a museum, or a restaurant, but what happens when you finally walk inside the building? In the upcoming A1.6 module, "Food and Shopping," we will transition directly from navigating the outdoor streets to interacting within these indoor establishments. You will learn the specific language required for ordering food, buying groceries, and using the Accusative case to talk about direct objects. Get ready to proudly say **Я хочу каву** (I want coffee) and master the art of the daily transaction!
+You can now find your way to a shop, a museum, or a restaurant, but what happens when you finally walk inside the building? In the upcoming A1.6 module, "Food and Shopping," we will transition directly from navigating the outdoor streets to interacting within these indoor establishments. You will learn the specific language required for ordering food, buying groceries, and using the Accusative case to talk about direct objects. Get ready to proudly say **Я хочу ка́ву** (I want coffee)!
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1626 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1613 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -439,20 +439,52 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 95 words | Not found: 9 words
+Verified: 84 words | Not found: 41 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Вокза — NOT IN VESUM
   ✗ Дерибасівська — NOT IN VESUM
-  ✗ Канади — NOT IN VESUM
-  ✗ Львові — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Кана — NOT IN VESUM
+  ✗ Льво — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
   ✗ Марк — NOT IN VESUM
-  ✗ Одеса — NOT IN VESUM
-  ✗ Одесі — NOT IN VESUM
-  ✗ Польщі — NOT IN VESUM
-  ✗ Хрещатик — NOT IN VESUM
+  ✗ Оде — NOT IN VESUM
+  ✗ Потьо — NOT IN VESUM
+  ✗ Скажі — NOT IN VESUM
+  ✗ Украї — NOT IN VESUM
+  ✗ Хреща — NOT IN VESUM
+  ✗ апте — NOT IN VESUM
+  ✗ бли — NOT IN VESUM
+  ✗ вокза — NOT IN VESUM
+  ✗ воро — NOT IN VESUM
+  ✗ дки — NOT IN VESUM
+  ✗ доро — NOT IN VESUM
+  ✗ дьте — NOT IN VESUM
+  ✗ діста — NOT IN VESUM
+  ✗ зві — NOT IN VESUM
+  ✗ зько — NOT IN VESUM
+  ✗ льна — NOT IN VESUM
+  ✗ льщі — NOT IN VESUM
+  ✗ мкінські — NOT IN VESUM
+  ✗ музе — NOT IN VESUM
+  ✗ налі — NOT IN VESUM
+  ✗ напра — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
+  ✗ нтрі — NOT IN VESUM
+  ✗ нції — NOT IN VESUM
+  ✗ пло — NOT IN VESUM
+  ✗ сказа — NOT IN VESUM
+  ✗ стува — NOT IN VESUM
+  ✗ сті — NOT IN VESUM
+  ✗ тепе — NOT IN VESUM
+  ✗ тися — NOT IN VESUM
+  ✗ шки — NOT IN VESUM
+  ✗ шко — NOT IN VESUM
+  ✗ єві — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
 
-All 95 other words are confirmed to exist in VESUM.
+All 84 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

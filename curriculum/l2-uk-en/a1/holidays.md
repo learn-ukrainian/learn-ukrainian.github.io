@@ -1,6 +1,6 @@
 ## Вступ: Що таке́ свя́то?
 
-To truly understand a culture, you must understand how its people celebrate. The rhythm of the year is marked by special days that bring people together. In Ukrainian, a holiday is a **свято** (holiday). The plural form is **свя́та́** (holidays). Ukrainians love to gather with family and friends around large tables, share traditional food, and sing songs that have been passed down for generations. 
+To truly understand a culture, you must understand how its people celebrate. The rhythm of the year is marked by special days that bring people together. In Ukrainian, a holiday is a **свято** (holiday). The plural form is **свя́та** (holidays). Ukrainians love to gather with family and friends around large tables, share traditional food, and sing songs that have been passed down for generations. 
 
 We group our celebrations into three main categories. First, we have **релігі́йні свята** (religious holidays) like Christmas and Easter, which are deeply spiritual and rich in ancient traditions. Second, we have **традиці́йні свята** (traditional holidays) which often connect to the changing seasons and nature. Finally, we have **держа́вні свята** (state holidays) which mark important historical days for the nation.
 
@@ -10,7 +10,7 @@ When a special day arrives, people want to express their joy. The verb for this 
 
 Let us look at how people talk about these special days in real life. Our first conversation takes place during the winter season. Two friends are discussing their plans for Christmas. In 2023, Ukraine made a major historical shift in its calendar. The country officially moved the date of Christmas to December 25th. This change aligns Ukraine with the majority of Europe and the rest of the Christian world. It was a conscious decision to break away from the Russian Orthodox calendar, which celebrates on January 7th. Now, Ukrainians celebrate in the month of **гру́день** (December).
 
-> **Украї́нська роди́на:** Ко́ли в тебе́ Різдво́? *(When is your Christmas?)*
+> **Украї́нська роди́на:** Ко́ли в те́бе Різдво́? *(When is your Christmas?)*
 > **Інозе́мний гість:** Два́дцять п'я́того гру́дня. А в тебе? *(On the twenty-fifth of December. And yours?)*
 > **Українська родина:** У нас теж! Рані́ше святкува́ли сьо́мого сі́чня, але́ тепе́р двадцять п'ятого. *(We also have it then! Earlier we celebrated on the seventh of January, but now on the twenty-fifth.)*
 > **Іноземний гість:** Що ви ро́бите на Різдво? *(What do you do for Christmas?)*
@@ -44,7 +44,7 @@ In 2023, Ukraine moved its official celebration of Christmas from January 7th to
 
 After dinner, the singing begins. People sing **колядки** (carols). Groups of singers called **коля́дники** (carolers) walk from house to house in their neighborhoods. They carry a large, illuminated star and sing songs to wish the hosts wealth, health, and a good harvest. Inside the home, instead of a plastic tree, you might see a **діду́х** (sheaf of wheat). This ancient symbol represents the ancestors and the agricultural harvest, and it predates the modern Christmas tree tradition.
 
-The spring cycle centers entirely on **Вели́кдень** (Easter). This is the absolute biggest religious celebration of the year in Ukraine. The exact date changes every spring according to the lunar calendar. During this time, Ukrainians create **писанки́** (decorated eggs). A **пи́санка** (decorated egg) is a raw egg covered in intricate, symbolic geometric patterns using hot beeswax and vibrant dyes. It is a highly respected, unique Ukrainian art form. 
+The spring cycle centers entirely on **Вели́кдень** (Easter). This is the absolute biggest religious celebration of the year in Ukraine. The exact date changes every spring according to the lunar calendar. During this time, Ukrainians create **пи́санки** (decorated eggs). A **пи́санка** (decorated egg) is a raw egg covered in intricate, symbolic geometric patterns using hot beeswax and vibrant dyes. It is a highly respected, unique Ukrainian art form. 
 
 :::caution Name vs. Food
 Do not confuse the holiday with the holiday food! The holiday itself is **Великдень** or **Па́сха** (Easter). However, a **па́ска** (Easter bread) is the sweet bread you eat on that day. You celebrate **Великдень**, but you eat a **паска**.
@@ -66,9 +66,9 @@ Cities completely transform on this day. People gather in the streets and centra
 
 Beyond Independence Day, there are several other important dates to know. The absolute biggest secular celebration of the entire year is **Но́вий рік** (New Year) on January 1st. On New Year's Eve, families decorate a festive **яли́нка** (tree) and exchange **подару́нки** (gifts) at midnight. 
 
-In the spring, Ukrainians celebrate a unique cultural event called **День виши́ва́нки** (Vyshyvanka Day). This occurs annually on the third Thursday of May. It is a modern, living tradition rather than an official day off work. Everyone goes to school, the university, or the office wearing a **виши́ва́нка** (embroidered shirt). This beautiful traditional garment serves as a powerful visual symbol of Ukrainian identity, unity, and cultural resistance.
+In the spring, Ukrainians celebrate a unique cultural event called **День вишива́нки** (Vyshyvanka Day). This occurs annually on the third Thursday of May. It is a modern, living tradition rather than an official day off work. Everyone goes to school, the university, or the office wearing a **вишива́нка** (embroidered shirt). This beautiful traditional garment serves as a powerful visual symbol of Ukrainian identity, unity, and cultural resistance.
 
-Two other key dates mark the foundations of the modern state. On June 28th, the country observes **День Конститу́ції** (Constitution Day), honoring the adoption of the nation's fundamental law. Later in the year, on October 1st, the people honor their military defenders on **День захи́сникі́в і захи́сни́ць** (Defenders' Day). This solemn and important day pays respect to all the men and women who protect the nation's borders.
+Two other key dates mark the foundations of the modern state. On June 28th, the country observes **День Конститу́ції** (Constitution Day), honoring the adoption of the nation's fundamental law. Later in the year, on October 1st, the people honor their military defenders on **День захисникі́в і захисни́ць** (Defenders' Day). This solemn and important day pays respect to all the men and women who protect the nation's borders.
 
 <!-- INJECT_ACTIVITY: group-sort-traditions -->
 

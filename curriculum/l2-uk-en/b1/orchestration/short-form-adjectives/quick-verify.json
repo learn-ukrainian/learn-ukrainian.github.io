@@ -1,0 +1,13 @@
+{
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/11 required vocab: народнопоетичний (folk-poetic register)"
+    }
+  ],
+  "timestamp": "2026-04-09T23:40:15.576654+00:00"
+}

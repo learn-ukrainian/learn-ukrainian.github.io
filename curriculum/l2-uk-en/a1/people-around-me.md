@@ -86,11 +86,9 @@ Some masculine nouns end in a soft consonant or the suffix **-ар**. These word
 *   **лікар** → **лікаря** (doctor)
 *   **вчи́тель** → **вчи́теля** (male teacher)
 *   **продаве́ць** → **продавця́** (male seller)
-*   **колега** → **коле́гу** (colleague)
 *   **Я чекаю лікаря.** (I wait for the doctor.)
 *   **Я знаю вчителя.** (I know the teacher.)
 *   **Я бачу продавця.** (I see the seller.)
-*   **Я знаю колегу.** (I know the colleague.)
 
 <!-- INJECT_ACTIVITY: fill-in-animate-transform -->
 

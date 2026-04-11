@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The required vocabulary word `підтвердити` is completely missing from
+    the text.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains calques and Russianisms: `від усіх існуючих хвороб` (non-standard
+    active present participle `існуючих`), `приймати всі рішення` (calque of "принимать
+    решение", correct is "ухвалювати"), and `'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow, introduces media terminology and manipulation techniques
+    effectively with clear explanations and logical connections to grammar (gerunds/participles).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All required and recommended words are included naturally, EXCEPT `підтвердити`
+    which is notably missing.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The writer included 11 INJECT_ACTIVITY markers while the plan only specified
+    6. The 6 plan hints were clustered early, and the remaining 5 markers were arbitrary
+    additions without matching plan hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Professional yet encouraging tone, appropriate for B1 level. Effectively
+    communicates the importance of media literacy without being overly gamified.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown format. The pipeline correctly measured 4699 words (comfortably
+    above the 4000-word target). All required sections from the plan are present and
+    ordered correctly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply contextualized with real Ukrainian media examples (Українська правда,
+    Суспільне, Новинарня, StopFake, VoxCheck) and accurately frames critical media
+    literacy as a necessary form of cultural sel
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: The dialogue is extremely stilted. The speaker named "Журналіст" bizarrely
+    refers to himself in the third person ("Журналіст, готуючи свій репортаж, помітив..."),
+    resulting in a highly robotic and art
+findings: []

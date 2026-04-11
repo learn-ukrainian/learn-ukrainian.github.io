@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-is **серйозний** (serious). Someone who doesn't talk much is **тихий** (quiet). A very interesting word in Ukrainian is **впертий** (stubborn/persistent). While it can mean someone who refuses to listen to others, Ukrainians often use «впертий» in a positive way to describe someone who is highly principled and refuses to give up on their goals. * Цей кіт такий ледачий, він спить цілий день. *(This cat is so lazy, he sleeps all day.)* * Мій батько дуже серйозний чоловік. *(My father is a very serious man.)* * Моя сестра тиха, але дуже розумна. *(My sister is quiet, but very smart.)* * Він впертий, тому обов'язково знайде правильне рішення. *(He is stubborn, so he will definitely find the right solution.)* * Іноді бути впертим — це добре. *(Sometimes being stubborn is a good thing.)* When we describe a person's character, we often talk about what they *usually* do. Because personality traits are constant, we use imperfective verbs for these habitual actions. For example, to prove someone is kind, you might say «Він завжди допомагає» (He always helps). However, if you want to give a specific example of their character from the past, an action that happened once and was completed, you use a perfective verb. You might say «Учора він мені допоміг» (Yesterday he helped me). This contrast is very natural in Ukrainian storytelling. * Цей хлопець добрий, він завжди допомагає людям. *(This guy is kind, he always helps people.)* * Учора він допоміг мені з валізою. *(Yesterday he helped me with my suitcase.)* * Вона відповідальна і завжди робить домашнє завдання. *(She is responsible and always does her homework.)* * Сьогодні вона теж зробила всі вправи. *(Today she also did all the exercises.)* * Мій колега працьовитий, він постійно працює. *(My colleague is hardworking, he constantly works.)* * Учора він попрацював дуже добре. *(Yesterday he worked very well.)* ### Читаємо українською (Reading Practice) Let's see how these words are used when discussing people at work. Read this dialogue between a new employee and an experienced colleague. > — **Антон:** Добрий день! Я Антон, новий дизайнер. *(Good day! I am Anton, the new designer.)* > — **Марина:** Вітаю, Антоне! Я Марина. Рада знайомству. *(Greetings, Anton! I am Maryna. Nice to meet you.)* > — **Антон:** Марино, розкажіть, будь ласка, яка наша керівниця? *(Maryna, please tell me, what kind of person is our female manager?)* > — **Марина:** Вона дуже відповідальна і справедлива, але іноді буває дуже серйозна. *(She is very responsible and fair, but sometimes she is very serious.)* > — **Антон:** Зрозуміло. А колеги? Які вони? *(Understood. And the colleagues? What are they like?)* > — **Марина:** Усі привітні і добрі. Особливо Максим, він завжди допомагає новим працівникам. *(Everyone is friendly and kind. Especially Maksym, he always helps new employees.)* > — **Антон:** Це чудово! Я трохи хвилювався. *(That's great! I was a little worried.)* > — **Марина:** Не хвилюйся, у нас дуже хороший колектив. *(Don't worry, we have a very good team.)* <!-- INJECT_ACTIVITY: match-character-traits --> <!-- INJECT_ACTIVITY: quiz-character-choice -->
+always explains difficult rules several times. My colleague Maksym is a very hardworking guy. He often works in the evening to finish an important project. And my sister is very determined, so she always achieves her goal.* Of course, not all character traits are entirely positive. Sometimes people can be **ледачий** (lazy) and avoid work, or they might be very **серйозний** (serious) and rarely joke. A person who doesn't talk much is **тихий** (quiet). An interesting word in Ukrainian is **впертий** (stubborn). While it can mean that someone refuses to listen to others, it frequently has a positive meaning. :::tip **Did you know?** — In Ukrainian, calling someone **впертий** often means they are principled, stand their ground, and don't give up easily. It is frequently used as a compliment for someone who fights for what is right. ::: Мій молодший син іноді буває ледачий, коли треба прибирати кімнату. Але в школі він дуже впертий і завжди робить домашнє завдання ідеально. Мій дідусь — тихий і серйозний чоловік, але він має золоте серце. > *My younger son is sometimes lazy when he needs to clean his room. But at school, he is very stubborn and always does his homework perfectly. My grandfather is a quiet and serious man, but he has a heart of gold.* When we talk about someone's character, we often describe their actions. We judge what kind of person someone is based on what they do. To describe habitual behavior or permanent character traits, we use imperfective verbs. For example, if someone is kind, we say «він завжди допомагає» (he always helps). However, if we want to give a specific example or proof of their character from a past event, we use perfective verbs. We say «вчора він мені допоміг» (yesterday he helped me). Мій друг Андрій — дуже чуйна людина. Він завжди допомагає своїм друзям, коли у них є проблеми. Наприклад, минулого тижня він допоміг мені відремонтувати машину. Оксана дуже відповідальна, вона завжди купує квитки заздалегідь. Учора вона купила нам квитки на поїзд. > *My friend Andriy is a very responsive person. He always helps his friends when they have problems. For example, last week he helped me repair my car. Oksana is very responsible, she always buys tickets in advance. Yesterday she bought us train tickets.* Let's look at how people discuss character and personality in a workplace setting. Imagine it is someone's first day at a new office. > — **Новий працівник:** Розкажи мені трохи про нашу команду. Яка наша керівниця? *(Tell me a little about our team. What is our manager like?)* > — **Досвідчений колега:** Вона дуже відповідальна і справедлива, але іноді буває дуже серйозна. *(She is very responsible and fair, but sometimes she is very serious.)* > — **Новий працівник:** А інші колеги? *(And the other colleagues?)* > — **Досвідчений колега:** Усі дуже привітні, особливо Максим. Він завжди підказує новим працівникам. *(Everyone is very friendly, especially Maksym. He always gives tips to new employees.)* <!-- INJECT_ACTIVITY: match-character-traits --> <!-- INJECT_ACTIVITY: quiz-character-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -517,7 +517,74 @@ This grammar topic is a hub that connects to several other key areas of Ukrainia
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -545,14 +612,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

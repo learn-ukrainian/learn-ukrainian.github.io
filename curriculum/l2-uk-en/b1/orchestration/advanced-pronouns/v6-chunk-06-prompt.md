@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-платити. А тепер перенесемося з напруженої детективної історії до спокійної академічної аудиторії. Уявіть класичний філософський семінар у Київському національному університеті імені Тараса Шевченка. Студенти дуже жваво обговорюють складні філософські питання ідентичності та колективної відповідальності. Уважно подивіться на те, як природно і точно вони використовують різні типи займенників для вираження своїх глибоких абстрактних думок: > — **Професор:** Отже, шановні студенти, сьогодні ми серйозно говоримо про моральний вибір. Як ви вважаєте, чи несе людина особисту відповідальність за дії всього суспільства? > — **Олена:** Я переконана, що **кожен** *(everyone)* має повне право на свою власну незалежну думку. Але **ніхто** *(nobody)* не може ігнорувати очевидне: ми всі є невіддільною частиною соціуму. > — **Максим:** Цілком згоден з тобою. **Дехто** *(some people)* з нас щиро вірить, що **будь-яка** *(any)* відповідь є правильною, якщо вона йде від серця. Але це наївна ілюзія. Ті, **хто** *(who)* думає інакше, просто бояться говорити відкрито перед іншими. > — **Професор:** Це надзвичайно цікава думка, Максиме. Але чи є в цій аудиторії **хто-небудь** *(anyone)*, хто дійсно готовий взяти таку велику провину на **себе** *(oneself)*? > — **Олена:** Мені здається, що зараз **ні в кого** *(nobody has)* немає такого сильного бажання. Люди зазвичай завжди захищають лише **себе** *(themselves)* і свої інтереси. Вони гордо пишаються **собою** *(with themselves)*, коли все йде добре, але миттєво уникають відповідальності під час серйозної кризи. > — **Максим:** Саме так, іноді ми годинами розмовляємо абсолютно **ні про що** *(about nothing)*, навмисно уникаючи найголовнішого питання. Нам помилково здається, що **якийсь** *(some)* абстрактний герой несподівано прийде і вирішить усі наші проблеми. Але так ніколи не буває. Давайте детально проаналізуємо ці тексти з лінгвістичного погляду. У детективному уривку ви побачили неозначений займенник **хтось** *(someone)*. Він складається з питального слова хто та суфікса -сь, який ми завжди пишемо разом. Ця форма показує, що особа існує, але вона нам невідома. Наступне слово — **нікого** *(nobody)*. Це заперечний займенник у родовому відмінку. Зверніть увагу на його наголос: оскільки він стоїть на корені слова, він означає звичайну фізичну відсутність людини. У філософському діалозі студенти активно вживають означальні займенники. Слово **кожен** *(everyone)* виступає в ролі підмета в називному відмінку і задає універсальний тон дискусії. Коли Олена каже, що люди захищають **себе** *(themselves)*, вона використовує зворотний займенник у знахідному відмінку. Цей займенник ніколи не має називного відмінка, бо він завжди повертає дію назад на того, хто її виконує. Трохи пізніше Олена каже: «пишаються **собою** *(with themselves)*». Тут ми бачимо той самий зворотний займенник, але вже в орудному відмінку, оскільки дієслово «пишатися» вимагає саме цієї граматичної форми. Найцікавіший синтаксичний феномен демонструють заперечні займенники з прийменниками. Детектив скаржиться, що йому не було **ні з ким** *(with nobody)* поговорити. Тут прийменник «з» безжально розриває слово «ніхто» на три окремі слова. Аналогічну структуру ми бачимо у словах Максима про розмови **ні про що** *(about nothing)* та у репліці Олени, яка стверджує, що **ні в кого** *(nobody has)* немає бажання брати провину. Пам’ятайте, що будь-який прийменник завжди стає між заперечною часткою «ні» та самим займенником. Ця унікальна риса робить вашу українську мову справді автентичною. <!-- INJECT_ACTIVITY: self-check, classify pronouns by type -->
+> — **Марко:** Я ні з чим не можу погодитися. Якщо все правильно, то істина втрачає сенс. Ніхто не може заперечити очевидні факти. *(I cannot agree with anything. If everything is correct, then truth loses its meaning. Nobody can deny obvious facts.)* > — **Олена:** Але дехто з нас бачить факти інакше! Те, що для тебе очевидне, для когось іншого — ілюзія. Люди часто обманюють самі себе. *(But some of us see facts differently! What is obvious to you is an illusion for someone else. People often deceive themselves.)* > — **Професор:** Це цікава думка. Хто-небудь хоче додати щось до слів Олени? Чия позиція вам ближча? *(This is an interesting thought. Does anyone want to add something to Olena's words? Whose position is closer to you?)* > — **Андрій:** Я згоден з Марком. Ми не можемо просто вигадувати будь-що. Інакше ми ніколи ні до чого не дійдемо в наших дискусіях. *(I agree with Marko. We cannot just invent anything. Otherwise, we will never arrive at anything in our discussions.)* <!-- INJECT_ACTIVITY: fill-in, negative and indefinite pronouns in conversation --> When analyzing these texts, you can see how advanced pronouns fluidly connect ideas. In the detective story, indefinite pronouns like «хтось» and «щось» build suspense by pointing to a specific but unknown entity. The detective also uses the reflexive pronoun in the phrases «запитав себе» and «уявити собі», demonstrating how the action reflects back onto the subject regardless of the grammatical person. The dialogue showcases the unique interaction between negative pronouns and prepositions. When Marko says «ні з чим не можу погодитися», he uses the Instrumental case form of «ніщо», which is «нічим». However, because the verb requires the preposition «з», it splits the negative pronoun into three separate words: «ні з чим». We see this exact same structural behavior when Andriy says «ні до чого не дійдемо», where the preposition «до» splits the Genitive form «нічого» into «ні до чого». :::info **Spelling reminder** Remember that indefinite pronouns formed with the prefixes «будь-» and «-небудь» are always hyphenated (e.g., «будь-яка», «хто-небудь»), while those with «де-» and «-сь» are written as a single, joined word (e.g., «дехто», «щось»). ::: You can also observe the strict application of the double negation rule. In Ukrainian, saying "nobody answered" requires negating both the pronoun and the verb: «ніхто не відповів». Similarly, "trusted no one" becomes «нікому не довіряв». This dual structure is mandatory for all negative pronouns across all cases. If you were to translate English logic directly and say «ніхто відповів», it would sound completely ungrammatical. The negative particle «не» is the anchor that holds the entire negative sentence together. Finally, notice how the definitive pronoun «кожен» sets the stage in the dialogue. When the professor says «Кожен має свою думку», he uses it to refer to all individuals within a group, highlighting the universal nature of the statement before the students begin to debate the specifics using indefinite and negative forms. <!-- INJECT_ACTIVITY: match-up, match the pronoun form to its grammatical function -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -580,7 +580,74 @@ _Джерела: 5-klas-ukrmova-zabolotnyi-2023_s0110, 10-klas-ukrmova-glazova-2
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -593,14 +660,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

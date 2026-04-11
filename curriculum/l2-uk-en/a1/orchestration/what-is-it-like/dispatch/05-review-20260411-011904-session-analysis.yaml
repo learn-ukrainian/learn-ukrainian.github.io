@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-17-b3341e48.json
+phase: review
+prompt_chars: 32535
+response_chars: 4070
+prompt_words: 5047
+response_words: 619
+sections:
+- name: preamble
+  start: 0
+  length: 439
+  fraction: 0.0135
+- name: plan
+  start: 439
+  length: 28446
+  fraction: 0.8743
+- name: output_spec
+  start: 28885
+  length: 3650
+  fraction: 0.1122
+large_sections:
+- plan
+directives_total: 20
+directives_covered: 14
+directives_missed:
+- kind: must
+  text: Just as you learned that the word for "my" changes based on gender, strictly
+    following the **мій**, **моя**, **моє́** pattern, the question word for descriptions
+    must also adapt to precisely match the noun it asks about.
+  covered: false
+  coverage_note: 9/24 keywords (38%)
+- kind: must
+  text: This pattern of agreement will reappear in every single grammatical case as
+    you continue learning the language, so you must learn it well right now to build
+    a strong foundation for future fluency.
+  covered: false
+  coverage_note: 6/23 keywords (26%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 8/22 keywords (36%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

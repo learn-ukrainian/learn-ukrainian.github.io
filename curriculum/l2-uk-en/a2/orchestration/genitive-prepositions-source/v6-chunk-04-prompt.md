@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-reference point is always in the Genitive case. For places and abstract concepts, masculine nouns often take the "-у" or "-ю" ending. Neuter nouns take "-а" or "-я". «центр → далеко від центру» *(far from the center)* «вокзал → недалеко від вокзалу» *(not far from the station)* «море → далеко від моря» *(far from the sea)* «школа → недалеко від школи» *(not far from the school)* Читаємо українською: — Мій старий дім знаходиться далеко **від центру** *(from the center)*. — Наш новий готель недалеко **від вокзалу** *(from the station)*. — Вони живуть дуже далеко **від моря** *(from the sea)*. — Її сучасний офіс недалеко **від метро** *(from the subway)*. — Цей зелений парк розташований недалеко **від річки** *(from the river)*. — Головний аеропорт стоїть далеко **від міста** *(from the city)*. > — **Катерина:** Ваш новий дім далеко від центру? *(Is your new house far from the center?)* > — **Віктор:** Ні, він зовсім недалеко від парку. *(No, it is quite not far from the park.)* > — **Катерина:** Це напевно дуже зручно. *(This is probably very convenient.)* > — **Віктор:** Так, але це далеко від роботи. *(Yes, but it is far from work.)* Що нас захищає? *(What protects us?)* We use "від" to talk about things that provide protection, relief, or defense against something unpleasant. When you buy medicine or use an umbrella, you are protecting yourself "from" something. That unpleasant "something" must be in the Genitive case. «головний біль → ліки від головного болю» *(medicine for a headache)* «дощ → парасолька від дощу» *(umbrella from the rain)* «сонце → захист від сонця» *(protection from the sun)* «стрес → відпочинок від стресу» *(rest from stress)* Читаємо українською: — Мені терміново потрібні ліки **від головного болю** *(for a headache)*. — Вона взяла велику парасольку **від дощу** *(from the rain)*. — Цей дорогий крем — хороший захист **від сонця** *(from the sun)*. — Ми завжди п'ємо таблетки **від застуди** *(for a cold)*. As a bonus, Ukrainian has a compound preposition "з-під" which means "from under". It combines the idea of origin ("from") and location ("under") into one word, and it also takes the Genitive case. This is used when you pull something out from beneath an object. «стіл → з-під стола» *(from under the table)* «ліжко → з-під ліжка» *(from under the bed)* Читаємо українською: — Сірий кіт швидко виліз **з-під ліжка** *(from under the bed)*. — Я обережно дістав сумку **з-під стола** *(from under the table)*. — Маленький собака дивиться **з-під ковдри** *(from under the blanket)*. > — **Олена:** У тебе є таблетки від головного болю? *(Do you have pills for a headache?)* > — **Павло:** Так, вони лежать там. *(Yes, they lie there.)* > — **Олена:** Де саме вони лежать? *(Where exactly do they lie?)* > — **Павло:** Дістань їх з-під журналу. *(Get them from under the magazine.)* > — **Олена:** Дякую, я вже знайшла їх. *(Thank you, I already found them.)* <!-- INJECT_ACTIVITY: fill-in, Focus: Complete sentences with від or з + correct Genitive noun form, 8 items -->
+acts as a starting point for measuring distance. When stating how far or near something is from a reference point, combine words like **далеко** (far) or **недалеко** (not far) with **від** and the Genitive case. Моя нова квартира знаходиться дуже далеко від центру. Це тихий район, але він розташований недалеко від вокзалу. Мої батьки живуть у маленькому селі далеко від моря. Мені подобається гуляти там далеко від міського шуму. > *My new apartment is located very far from the center. This is a quiet district, but it is located not far from the station. My parents live in a small village far from the sea. I like to walk there far from the city noise.* Notice the Genitive endings for inanimate objects here. Masculine abstract nouns or places often take **-у** (центру, вокзалу, шуму). Neuter nouns ending in **-е** change to **-я** (моря). > — **Антон:** Твій офіс знаходиться далеко від метро? *(Is your office located far from the subway?)* > — **Катерина:** Ні, він зовсім недалеко від станції. *(No, it is quite not far from the station.)* > — **Антон:** Це зручно. А мій дім далеко від роботи. *(That is convenient. And my house is far from work.)* Another fascinating use of **від** is to express protection or relief. In English, you take medicine "for" a headache or use an umbrella "against" the rain. In Ukrainian, these objects protect you "from" the problem. Восени ми часто купуємо в аптеці ліки від головного болю. У листопаді нам завжди потрібна міцна парасолька від дощу. Влітку ми шукаємо на пляжі надійний захист від сонця. Українська мова логічно показує, що ці речі рятують нас від проблеми. > *In the autumn we often buy in the pharmacy medicine for (from) a headache. In November we always need a sturdy umbrella for (from) the rain. In the summer we look on the beach for reliable protection from the sun. The Ukrainian language logically shows that these things save us from a problem.* :::tip **Did you know?** When translating "medicine for a cold", always use **від** (from). Saying "ліки для застуди" would literally mean medicine designed to *give* you a cold! It is **ліки від застуди**. ::: As a bonus, the compound preposition **з-під** (from under) shows movement out from below something. It requires the Genitive case, just like its base parts: «дістати з-під стола» (to get from under the table). ### Читаємо українською Ця тепла куртка добре захищає від вітру. Мій дідусь п'є спеціальні ліки від тиску. Маленький кіт раптом вистрибнув з-під ліжка. Він злякався і сховався далеко від людей. Тепер він сидить там і чекає на молоко від господаря. > *This warm jacket protects well from the wind. My grandpa takes special medicine for (from) blood pressure. A small cat suddenly jumped out from under the bed. He got scared and hid far from people. Now he sits there and waits for milk from the owner.* <!-- INJECT_ACTIVITY: fill-in, Focus: Complete sentences with від or з + correct Genitive noun form, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -473,7 +473,74 @@ These examples are drawn from the provided sources and demonstrate natural usage
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -500,14 +567,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

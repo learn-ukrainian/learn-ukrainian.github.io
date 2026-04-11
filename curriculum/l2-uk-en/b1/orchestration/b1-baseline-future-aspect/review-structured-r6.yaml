@@ -1,0 +1,54 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text successfully covers almost all plan points, but missed the specific
+    common error example about past narrative ("Вчора я *писав листа i *написав його")
+    outlined in Section 5.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Outstanding grammatical precision. Consonant alternations (сидіти -> посиджу)
+    and reflexive particle placement rules ("буду повертатися" vs incorrect "будуся
+    повертати") are explained flawlessly.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The use of the "Infinitive Question" test
+    and the "stage play" analogy for narrative aspect makes complex grammatical concepts
+    highly accessible to English speakers.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (видова пара, проста/складна/складена форма, одновидовий,
+    дієвідмінювання) is seamlessly integrated into the prose with clear context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 exercise markers from the plan's `activity_hints` are present and
+    strategically distributed immediately following their respective concept introductions.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional, encouraging, and authoritative. Explanations
+    like "It is a brilliant mathematical logic" maintain high engagement without using
+    gamified filler or empty fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count is 5134 (exceeding the 4000 minimum). All H2 headings match
+    the plan exactly. The markdown formatting is clean and properly structured.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply authentic. Uses a Kharkiv university setting and references the
+    stylistic preferences of Ukrainian poet Volodymyr Sosiura to provide real-world
+    cultural context for the synthetic future form.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The university planning committee dialogue uses natural, multi-turn exchanges
+    to clearly demonstrate the functional and semantic differences between ongoing
+    processes and perfective results.
+findings: []

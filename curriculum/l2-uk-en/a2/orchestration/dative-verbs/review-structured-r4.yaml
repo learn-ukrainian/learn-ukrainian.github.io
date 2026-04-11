@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'The module strictly follows the plan, hitting all four outline sections,
+    including the dialogue situations and all required and recommended vocabulary
+    items. The 3001 word count comfortably meets the '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical factual error (`In Ukrainian, you do not use the
+    preposition до (to) with these verbs for people`, whereas `дзвонити до` is widely
+    used). Contains an outdated spelling (`проектом` '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The contrast with English sentence structure
+    (especially for the reversed logic of `подобатися` and age constructions) is explained
+    clearly with unambiguous examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (`допомагати`, `дякувати`, `дзвонити`, `радити`, `заважати`,
+    `подобатися`, `відповідати`, `рік`, `роки`, `років`) and recommended words (`довіряти`,
+    `вибачати`, `посміхатися`, `спів
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four exercises are injected precisely after their respective concepts
+    are taught, and their focus aligns perfectly with the module's instructional progression.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is encouraging and straightforward. The explanations are direct,
+    avoiding empty filler ("Ці дієслова вимагають особливої уваги").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Perfect structure. Markdown is clean, headings match the content blocks,
+    and the word count exceeds the minimum.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately addresses and corrects common Russian-interference mistakes
+    such as "дякую вас" vs "дякую вам".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogues fulfill the requirements but lean slightly transactional and
+    instructional ("Олено, я зараз допомагаю бабусі... А ти що робиш?"). They serve
+    their grammatical purpose well for A2.
+findings: []

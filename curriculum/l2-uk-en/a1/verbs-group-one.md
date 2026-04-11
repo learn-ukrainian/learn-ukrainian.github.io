@@ -1,6 +1,6 @@
 ## Діало́ги (Dialogues)
 
-Up to this point, you have learned how to name objects, describe their qualities, and express basic states of being. However, in Ukrainian, we do not just exist in the world; we actively participate in it. We do things. Setting the scene in a shared kitchen, we can see how daily life unfolds through verbs like **чита́ти** (to read) and **готува́ти** (to cook). By paying close attention to the endings of these action words, you will discover how Ukrainian clearly indicates exactly who is performing the action without needing complex sentence structures.
+Up to this point, you have learned how to name objects, describe their qualities, and express basic states of being. Now, we will learn how to describe actions. Setting the scene in a shared kitchen, we can see how daily life unfolds through verbs like **чита́ти** (to read) and **готува́ти** (to cook). By paying close attention to the endings of these action words, you will discover how Ukrainian clearly indicates exactly who is performing the action without needing complex sentence structures.
 
 > **Сашко́:** Приві́т! Що ти ро́биш? *(Hi! What are you doing?)*
 > **Ю́ля:** Я готу́ю вече́рю. А ти? *(I am cooking dinner. And you?)*
@@ -16,8 +16,6 @@ Take a moment to analyze the verb endings in that kitchen conversation. Notice h
 > **Максим:** Я не працюю, я навча́юся. *(I do not work, I am studying.)*
 > **Анна:** Ти зна́єш украї́нську? *(Do you know Ukrainian?)*
 > **Максим:** Так, я вивча́ю! *(Yes, I am learning!)*
-
-<!-- INJECT_ACTIVITY: match-up-person-verb -->
 
 ## Пе́рша дієвідмі́на (Group I Verbs)
 
@@ -40,11 +38,12 @@ Let us dive deep into six essential Group I verbs that will form the absolute fo
 
 When pronouncing these verbs, give special phonetic focus to the characteristic vowel. The Ukrainian letter **є** in endings like **-єш** and **-є** sounds distinctly like "ye" when it follows another vowel. For example, in the word **знаєш** (you know), you must clearly pronounce the "ye" sound to ensure authentic pronunciation. Do not reduce it to a flat "e" sound. Emphasizing the clear, bright Ukrainian pronunciation of these specific endings is crucial for being understood correctly by native speakers and avoiding a foreign accent.
 
+<!-- INJECT_ACTIVITY: match-up-person-verb -->
 <!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->
 
 ## Я, ти, він/вона (Persons)
 
-While it is important to understand the full paradigm of all six persons, we will prioritize the "Big Three" for your active usage. The forms for **я** (I), **ти** (you), and **він / вона** (he / she) will easily cover ninety percent of your beginner Ukrainian conversations. You talk about your own actions, you ask your conversation partner about theirs, and you describe what someone else is doing. The pattern is incredibly consistent: use the **-ю** ending for the self, the **-єш** ending for the partner, and the **-є** ending for the third person. Mastering these three endings allows you to express most daily actions.
+While it is important to understand the full paradigm of all six persons, we will prioritize the "Big Three" for your active usage. The forms for **я** (I), **ти** (you), and **він / вона** (he / she) will easily cover ninety percent of your beginner Ukrainian conversations. You talk about your own actions, you ask your conversation partner about theirs, and you describe what someone else is doing. The pattern is consistent: use the **-ю** ending for the self, the **-єш** ending for the partner, and the **-є** ending for the third person. Mastering these three endings allows you to express most daily actions.
 
 Now you can seamlessly combine these newly conjugated verbs with vocabulary you already know from previous modules. 
 

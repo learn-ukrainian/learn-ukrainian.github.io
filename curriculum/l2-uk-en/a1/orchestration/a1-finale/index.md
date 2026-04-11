@@ -1,6 +1,6 @@
 # Build Summary: a1-finale (A1)
 
-Generated: 2026-04-09 08:28
+Generated: 2026-04-11 02:05
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 08:28
 | vocab | complete | 2026-04-09 06:25:16 |
 | enrich | complete | 2026-04-09 06:25:16 |
 | verify | complete | 2026-04-09 06:25:16 |
-| review | complete | 2026-04-09 06:28:40 |
 | stress | complete | 2026-04-09 06:28:43 |
-| publish | complete | 2026-04-09 06:28:44 |
+| review | complete | 2026-04-11 00:05:25 |
+| publish | complete | 2026-04-11 00:05:29 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | a1-finale-review-r1.md |
+| 2 | a1-finale-review-r2.md |
 
 ## Dispatch Log
 
@@ -39,13 +40,16 @@ Generated: 2026-04-09 08:28
 | activities | gemini-tools (gemini-3.1-pro-preview) | 159s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 206s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 204s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 195s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

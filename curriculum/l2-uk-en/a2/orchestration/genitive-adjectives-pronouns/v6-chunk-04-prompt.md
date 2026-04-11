@@ -21,7 +21,7 @@ Grand total: ~2150 words
 <previous_context>
 [...previous sections truncated...]
 
-Genitive ending. They must all agree in gender, number, and case with the core noun. Let us build a phrase step by step. We start with the Nominative noun: **сестра** *(sister)*. We add a descriptive adjective: **старша сестра** *(older sister)*. Then we add a possessive pronoun: **моя старша сестра** *(my older sister)*. If we want to buy a gift for her, we use the preposition **для** *(for)*, which always requires the Genitive case. Every single word changes: **для моєї старшої сестри** *(for my older sister)*. «Читаємо українською» Це зошит мого нового друга. *(This is the notebook of my new friend.)* Я йду до нашої старої школи. *(I am going to our old school.)* Він читає лист від свого молодого брата. *(He is reading a letter from his young brother.)* Ми не знаємо тієї високої дівчини. *(We do not know that tall girl.)* Handling multiple modifiers requires a bit of focus at first, but the pattern is perfectly consistent. Whether you use a demonstrative and an adjective together, or a possessive and an adjective, all modifiers lock into the Genitive case to match the noun. For example, to say «from this new teacher», you combine the preposition **від** *(from)*, the demonstrative **цього**, the adjective **нового** *(new)*, and the noun **вчителя** *(teacher)*. The complete phrase is **«від цього нового вчителя»**. If you are waiting «after that important document», you say **«після того важливого документа»**. Always check the gender of the core noun first. Once you know the gender, simply apply the corresponding Genitive endings to everything that describes it. :::note Формуємо фрази (Building phrases) цей великий ринок → біля **цього великого ринку** *(near this big market)* та цікава книга → без **тієї цікавої книги** *(without that interesting book)* наш синій олівець → замість **нашого синього олівця** *(instead of our blue pencil)* ::: Let us see all these elements working together in a short narrative. Pay attention to how the endings change to show absence and location, and how adjectives and pronouns match the nouns they describe. «Читаємо українською» Сьогодні я збираю речі до школи. *(Today I am packing things for school.)* В моєму рюкзаку немає цього синього олівця, але є багато моїх нових підручників. *(In my backpack there is no this blue pencil, but there are many of my new textbooks.)* Я не можу знайти своєї старої карти України. *(I cannot find my old map of Ukraine.)* Вона зазвичай лежить біля того великого словника. *(It usually lies near that big dictionary.)* Без цієї важливої карти я не зможу працювати на уроці. *(Without this important map I will not be able to work at the lesson.)* Я питаю мого молодшого брата. *(I ask my younger brother.)* Він каже, що карта лежить навпроти нашого великого вікна. *(He says that the map lies opposite our big window.)* Я дякую брату. *(I thank my brother.)* Я беру карту і йду до моєї нової вчительки. *(I take the map and go to my new teacher.)* <!-- INJECT_ACTIVITY: match-up-nom-gen --> <!-- INJECT_ACTIVITY: fill-in-complex-phrases --> <!-- INJECT_ACTIVITY: error-correction-agreement -->
+book. We live opposite that new school. This young girl has a good idea. I know nothing about the problems of that company.* Now we can build complete, highly descriptive noun phrases. The logic of word order in Ukrainian is very similar to English. We typically place the demonstrative pronoun first, followed by the possessive pronoun or descriptive adjective, and finally the noun. Think of it as a logical sequence: you point to the object, describe its qualities, and then name it. Let us look at how a simple noun grows into a full phrase. Це моя старша сестра. Я купив квиток для моєї старшої сестри. Це цей новий підручник. Ми починаємо урок з цього нового підручника. > *This is my older sister. I bought a ticket for my older sister. This is this new textbook. We are starting the lesson from this new textbook.* :::tip **Word order flexibility** — While Demonstrative + Adjective + Noun is the standard and most natural order, Ukrainian allows you to move words around for emphasis. However, keeping them in this logical sequence is the safest choice for everyday communication. ::: The golden rule of Ukrainian noun phrases is total agreement. If your core noun is in the Genitive case because of a preposition or a negative construction, every single word attached to it must also take its Genitive form. It acts like a grammatical chain reaction. Whether you have one adjective or three pronouns stacked together, they all lock into the same case, gender, and number. Я отримав лист від цього нового вчителя. Ми довго чекали після того важливого дзвінка. У мене немає цієї червоної парасольки. Вона прийшла на зустріч без того молодого хлопця. > *I received a letter from this new teacher. We waited a long time after that important call. I do not have this red umbrella. She came to the meeting without that young guy.* Let us consolidate everything you have learned by looking at a practical situation. Imagine a student searching for things inside a bag. Read the following text and pay close attention to how the pronouns and adjectives adapt to the Genitive case, usually triggered by the word «немає» or specific prepositions. Я відкриваю сумку, і тут повний безлад. У моєму рюкзаку немає цього синього олівця, але є багато моїх нових підручників. Я не можу знайти своєї старої карти міста. Звичайно, я прийшов на урок без мого улюбленого зошита. Зате тут лежать ключі від тієї великої квартири. Я повинен віддати їх після цього довгого уроку. > *I open the bag, and there is complete chaos here. In my backpack there is no this blue pencil, but there are many of my new textbooks. I cannot find my old map of the city. Of course, I came to the lesson without my favorite notebook. On the other hand, the keys from that large apartment are lying here. I must give them back after this long lesson.* <!-- INJECT_ACTIVITY: match-up-nom-gen --> <!-- INJECT_ACTIVITY: fill-in-complex-phrases --> <!-- INJECT_ACTIVITY: error-correction-agreement -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -562,7 +562,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -589,14 +656,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

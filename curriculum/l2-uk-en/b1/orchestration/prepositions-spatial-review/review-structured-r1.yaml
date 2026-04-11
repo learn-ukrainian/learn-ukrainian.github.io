@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers almost all points, but missed the reference to Lytvynova
+    ("Українські граматики традиційно поділяють...") and omitted "на відміну від"
+    and "згідно з" from the composite preposition e
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent grammar overall, but contains two critical lexical issues:
+    the calque "місцезнаходження" and the less authentic "безкінечний".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Masterful execution of the PPP flow. The bridge from A2 prepositions is
+    clear, and the analogy from Zabolotnyi is effectively woven into the theory.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally with context and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The placement and intent of the activities are excellent, but formatting
+    artifacts were left on two injection tags.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, authoritative, and encouraging. The transition from the office to
+    the city square is a great narrative device.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Word count is excellent (4622 words), but there is a stray meta-commentary
+    artifact in a heading: "## Між, над, під, за, перед (~770 words total)".'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Beautifully contextualized using Ukrainian settings (Lviv/Kyiv, a Ukrainian
+    apartment, and the steppe).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The office moving dialogue is highly natural, pragmatic, and accurately
+    models the target grammar.
+findings: []

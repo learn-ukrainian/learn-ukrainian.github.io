@@ -1,6 +1,6 @@
 # Build Summary: nature-and-traditions (A2)
 
-Generated: 2026-04-09 00:45
+Generated: 2026-04-11 00:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 00:45
 | vocab | complete | 2026-04-08 19:35:58 |
 | enrich | complete | 2026-04-08 19:35:58 |
 | verify | complete | 2026-04-08 19:35:58 |
-| review | complete | 2026-04-08 19:49:39 |
 | stress | complete | 2026-04-08 22:45:43 |
-| publish | complete | 2026-04-08 22:45:52 |
+| publish | complete | 2026-04-10 22:41:09 |
+| audit | complete | 2026-04-10 22:41:09 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-09 00:45
 |-------|------|
 | 1 | nature-and-traditions-review-r1.md |
 | 2 | nature-and-traditions-review-r2.md |
+| 3 | nature-and-traditions-review-r3.md |
 
 ## Dispatch Log
 
@@ -39,6 +40,7 @@ Generated: 2026-04-09 00:45
 | vocab | gemini (gemini-3-flash-preview) | 77s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 424s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 396s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 166s | ✅ |
 | pre-verify-retry | gemini-tools (gemini-3-flash-preview) | 472s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
@@ -49,15 +51,11 @@ Generated: 2026-04-09 00:45
 ## Files
 
 - `.build.lock`
-- `chunk-01.md`
-- `chunk-02.md`
-- `chunk-03.md`
-- `chunk-04.md`
-- `chunk-05.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

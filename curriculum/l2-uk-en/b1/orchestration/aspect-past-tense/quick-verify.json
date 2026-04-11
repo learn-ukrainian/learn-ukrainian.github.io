@@ -6,8 +6,8 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/20 required vocab: {'word': 'зателефонувати', 'pos': 'verb:pf', 'translation': 'to call (perfective — one completed call)'}"
+      "message": "Missing 4/20 required vocab: {'word': 'видова пара', 'pos': 'noun phrase', 'translation': 'aspectual pair (e.g., писати/написати)'}, {'word': 'щоразу', 'pos': 'adv', 'translation': 'every time (imperfective marker)'}, {'word': 'іноді', 'pos': 'adv', 'translation': 'sometimes (imperfective marker)'}, {'word': 'зателефонувати', 'pos': 'verb:pf', 'translation': 'to call (perfective — one completed call)'}"
     }
   ],
-  "timestamp": "2026-04-09T00:48:26.296594+00:00"
+  "timestamp": "2026-04-11T00:18:34.604539+00:00"
 }

@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-to my family.)* Вона не хоче їсти без своєї тарілки. *(She does not want to eat without her plate.)* Кіт спить біля твоєї нової сумки. *(The cat is sleeping near your new bag.)* When we speak about things that belong to multiple people, we use plural possessive pronouns. The pronouns **наш** *(our)* and **ваш** *(your)* decline exactly like hard-group adjectives. For masculine and neuter nouns, we use the forms **нашого** and **вашого**. For feminine nouns, we use the forms **нашої** and **вашої**. For example, the phrase **«наша лікарня»** *(our hospital)* becomes **«до нашої лікарні»** *(to our hospital)*. The phrase **«ваше місто»** *(your city)* becomes **«з вашого міста»** *(from your city)*. > — **Марія:** Звідки ви їдете, дівчата? *(Where are you traveling from, girls?)* > — **Оксана:** Ми їдемо з нашого міста до Києва. *(We are traveling from our city to Kyiv.)* > — **Марія:** А де ви будете жити? *(And where will you live?)* > — **Оксана:** Ми будемо жити біля вашої школи. *(We will live near your school.)* > — **Марія:** Це дуже близько до нашого дому! *(That is very close to our house!)* There is a very important rule regarding the pronoun for their possession. In standard Ukrainian, the possessive pronoun is **їхній** *(their)*. Because it is an adjective-like pronoun, it declines fully. It follows the soft-group adjective pattern. For masculine and neuter nouns, we use the form **їхнього**. For feminine nouns, we use the form **їхньої**. You might sometimes hear people use the short personal pronoun to mean possession, but this is a direct borrowing from Russian grammar. Always use the proper, declinable forms to speak natural and correct Ukrainian. «Читаємо українською» Я не знаю їхнього старшого брата. *(I do not know their older brother.)* Ми йдемо до їхньої вчительки. *(We are going to their teacher.)* У їхнього сина є новий велосипед. *(Their son has a new bicycle.)* Це ключі від їхньої квартири. *(These are the keys from their apartment.)* Вони живуть недалеко від їхнього парку. *(They live not far from their park.)* Finally, let us look at the third-person singular possessive pronouns. These are the forms **його** *(his/its)* and **її** *(her)*. Unlike the other possessive pronouns we have studied, these forms are absolutely unchangeable. They remain exactly the same no matter what case, gender, or number the following noun has. Whether the noun is in the Nominative case or the Genitive case, the pronoun does not change. For example, the phrase **«його стіл»** *(his table)* becomes **«біля його столу»** *(near his table)*. The phrase **«її сестра»** *(her sister)* becomes **«від її сестри»** *(from her sister)*. «Читаємо українською» У мене немає її важливого документа. *(I do not have her important document.)* Я чекаю біля його будинку. *(I am waiting near his building.)* Це подарунок від її бабусі. *(This is a gift from her grandmother.)* Ми не бачимо його підручника на столі. *(We do not see his textbook on the table.)* Він не може працювати без її комп'ютера. *(He cannot work without her computer.)* <!-- INJECT_ACTIVITY: quiz-possessive-choice -->
+very characteristic of the language. These forms are essential when talking about female family members or professionals, such as a **вчителька** (female teacher), in the Genitive case. Я отримав повідомлення від моєї старшої сестри. Цей красивий подарунок ми купили для твоєї нової вчительки. Вона вийшла з магазину без своєї теплої куртки. Ключі лежать біля моєї великої сумки. > *I received a message from my older sister. We bought this beautiful gift for your new teacher. She left the store without her warm jacket. The keys are lying near my large bag.* The pronouns «наш» (our) and «ваш» (your, formal/plural) are even easier to decline because they behave exactly like a hard-group **прикметник** (adjective). You simply treat them as if they were regular descriptive words. For masculine and neuter nouns, add **-ого** to get **нашого** and **вашого**. For feminine nouns, add **-ої** to get **нашої** and **вашої**. These forms are incredibly common in everyday situations, especially when giving directions. Сьогодні ми їдемо до нашої нової лікарні. Вони вчора повернулися з вашого великого міста. Діти грають у футбол біля нашої школи. Я не можу працювати без вашої допомоги. > *Today we are going to our new hospital. They returned from your large city yesterday. The children are playing football near our school. I cannot work without your help.* When discussing possession for the third person plural ("their"), Ukrainian offers a fully declinable possessive adjective: **їхній** (their). Because it is a soft-group word, it declines exactly like «синій» (blue). In the Genitive, it becomes **їхнього** for masculine/neuter and **їхньої** for feminine nouns. :::tip **Decolonize your Ukrainian** — Using the unchangeable personal pronoun «їх» to indicate possession (e.g., saying «біля їх дому» instead of «біля їхнього дому») is a direct Russianism. Always use the proper, declinable forms **їхнього** and **їхньої** for true Ukrainian phrasing. ::: Вони завжди паркують машину біля їхнього нового офісу. Я ще не бачив їхньої маленької доньки. Ми довго гуляли навколо їхнього гарного озера. Ми приготували цей сюрприз для їхньої мами. > *They always park the car near their new office. I have not yet seen their little daughter. We walked around their beautiful lake for a long time. We prepared this surprise for their mom.* Finally, we have the third-person singular possessives: **його** (his/its) and **її** (her). These words are unique because they are completely frozen. They never change their form, regardless of the case, gender, or number of the noun they modify. This means you do not need to worry about matching endings for these two words; they remain exactly the same whether they are in the Nominative or the Genitive case. Кіт спокійно спить біля його робочого столу. Я вчора говорив з мамою її молодшої сестри. Ми стояли навпроти його великого будинку. Вона прийшла на вечірку без її нового хлопця. > *The cat is sleeping peacefully near his desk. I spoke with the mom of her younger sister yesterday. We stood opposite his large house. She came to the party without her new boyfriend.* <!-- INJECT_ACTIVITY: quiz-possessive-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -567,7 +567,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -594,14 +661,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

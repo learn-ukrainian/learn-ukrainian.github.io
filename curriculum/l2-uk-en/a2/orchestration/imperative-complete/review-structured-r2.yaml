@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module comprehensively covers all four outlined sections, including
+    required and recommended vocabulary (хай, нехай, будь, ходімо, здійснитися).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Excellent Ukrainian overall, with great explanations of aspect. Deducted
+    1 point for the minor calques "кликати людину" instead of "звертатися до людини",
+    "показуємо повагу", and the use of "суб''єкт" '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding. The grammar rules are explained clearly with contextualized
+    English translations, followed by relatable Ukrainian examples (especially the
+    contrast between imperfective/perfective in comm
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are successfully integrated into the
+    prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers accurately reflect the planned activities and are positioned precisely
+    to test the newly acquired knowledge.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and highly culturally informative. The
+    summary section effectively reinforces learning with three practical check-questions.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown formatting. Word count (2800) securely exceeds the 2000
+    target. Sections flow logically.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Beautifully explains the deep cultural tradition behind Ukrainian blessings
+    and toasts ("Будьмо!", "будьте здорові").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The cooking class dialogue is natural, varied, and perfectly models the
+    target grammar in a realistic context.
+findings: []

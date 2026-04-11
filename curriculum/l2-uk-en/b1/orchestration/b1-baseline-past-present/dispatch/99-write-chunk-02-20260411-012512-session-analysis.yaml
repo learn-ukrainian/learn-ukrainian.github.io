@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-24-ee4e75af.json
+phase: write-chunk-02
+prompt_chars: 51327
+response_chars: 6999
+prompt_words: 6909
+response_words: 1129
+sections:
+- name: header
+  start: 0
+  length: 438
+  fraction: 0.0085
+- name: skeleton
+  start: 438
+  length: 1469
+  fraction: 0.0286
+- name: prior_summary
+  start: 1907
+  length: 3411
+  fraction: 0.0665
+- name: plan
+  start: 5318
+  length: 17625
+  fraction: 0.3434
+- name: wiki
+  start: 18075
+  length: 28256
+  fraction: 0.5505
+- name: output_spec
+  start: 51199
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: group-sort, Distribute verbs between I and II conjugation classes
+  covered: false
+  coverage_note: marker missing

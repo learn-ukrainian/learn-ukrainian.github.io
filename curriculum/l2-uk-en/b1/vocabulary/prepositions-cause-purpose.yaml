@@ -1,0 +1,211 @@
+vocabulary:
+- word: причи́на
+  translation: cause, reason
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мета́
+  translation: purpose, goal
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чому́
+  translation: why (asking for cause)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наві́що
+  translation: what for (asking for purpose)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: че́рез
+  translation: because of (negative/neutral cause); through
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: завдяки́
+  translation: thanks to (positive cause)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: для
+  translation: for (purpose or benefit)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: зара́ди
+  translation: for the sake of (high/noble purpose)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: щоб
+  translation: in order to
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: бо
+  translation: because (informal)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: тому́ що
+  translation: because (neutral)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: у зв'язку з
+  translation: in connection with, due to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з метою
+  translation: with the aim of
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з цікавості
+  translation: out of curiosity
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: від сорому
+  translation: from shame
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вна́слідок
+  translation: as a result of
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: у результаті
+  translation: as a result of
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: через те що
+  translation: due to the fact that
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: завдяки тому що
+  translation: thanks to the fact that
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: для того щоб
+  translation: in order to (emphatic)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: заради того щоб
+  translation: for the sake of (compound)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зі страху
+  translation: out of fear
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: піти за хлібом
+  translation: to go for bread (to fetch)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: піти по гриби
+  translation: to go for mushrooms (to gather)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тремтіти від холоду
+  translation: to tremble from the cold
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: плакати від болю
+  translation: to cry from pain
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: почервоніти від сорому
+  translation: to blush from shame
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: діяти з поваги
+  translation: to act out of respect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мовчати зі страху
+  translation: to keep silent out of fear
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відсу́тність
+  translation: absence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хворо́ба
+  translation: illness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стипе́ндія
+  translation: scholarship
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зато́ри
+  translation: traffic jams
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: наполе́гливість
+  translation: perseverance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true

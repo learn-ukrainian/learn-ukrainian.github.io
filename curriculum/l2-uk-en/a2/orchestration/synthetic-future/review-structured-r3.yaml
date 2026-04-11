@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text replaced `здасть іспит` with `складе свій іспит` in the first
+    dialogue. While `скласти іспит` is standard formal Ukrainian, the plan explicitly
+    required `здати→здам` in its motivation section
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques found. Good, clear explanations of
+    grammar and aspect.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of the difference between simple and compound future.
+    The explicit warning about the "я буду написати" mistake is brilliant and extremely
+    helpful for learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan are included naturally
+    in context.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The module includes all required exercise markers, but three of them are
+    clustered sequentially at the very end without any intervening content, disrupting
+    the pacing.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging and uses clear, practical examples. The
+    instructional bilingual structure works well here.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 2995 words (well above the 2000 minimum). All required headers
+    are present.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic examples and dialogue situations (New Year resolutions, making
+    weekend plans).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are natural, appropriately contextualized, and provide clear
+    examples of aspect usage.
+findings: []

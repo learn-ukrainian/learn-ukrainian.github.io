@@ -1,100 +1,38 @@
 ## Що було потім? Після + родовий (What Happened Next? Після + Genitive)
 
-Life is a series of events happening one after another. When we want to talk about what follows an event, we use the preposition **після** *(after)*. This is an essential building block for telling stories or describing your day. Just like the prepositions we learned for origin and protection, **після** always demands the Genitive case. It acts as the key to creating logical time sequences in your narratives. Whenever you use a noun to mark a point in time, **після** tells us what happens next.
+To describe the sequence of events, we often need to say that something happens "after" a specific time or action. In Ukrainian, the preposition for "after" is **після**. You will use this word constantly when explaining your daily routine, making plans, or telling a story about what happened next. Just like the prepositions of origin and material we learned earlier, **після** has a strict grammatical rule. It always requires the following noun to be in the Genitive case. This means you must change the ending of the word that comes immediately after it. Since we are usually talking about events or periods of time, you will frequently use abstract masculine nouns or feminine nouns.
 
-«урок → після уроку» *(after the lesson)*
-«обід → після обіду» *(after lunch)*
-«робота → після роботи» *(after work)*
-«канікули → після канікул» *(after the holidays)*
+Зазвичай дорослі відпочивають після важкої роботи. Студенти швидко йдуть додому після складного уроку. Маленькі діти люблять гратися на вулиці після смачного обіду. Школярі завжди дуже щасливі після довгих літніх канікул. Усі люди мають свої плани після закінчення дня.
 
-Читаємо українською:
-— Вони завжди п'ють каву **після уроку** *(after the lesson)*.
-— Ми зустрінемося в парку **після обіду** *(after lunch)*.
-— Він часто ходить в спортзал **після роботи** *(after work)*.
-— Студенти повертаються додому **після канікул** *(after the holidays)*.
-— Що ви зазвичай робите **після сніданку** *(after breakfast)*?
+> *Usually adults rest after hard work. The students quickly go home after a difficult lesson. Small children like to play outside after a tasty lunch. Schoolchildren are always very happy after long summer vacations. All people have their own plans after the end of the day.*
 
-> — **Анна:** Що ти робиш сьогодні **після уроку**? *(What are you doing today after the lesson?)*
-> — **Марко:** Я йду в центральну бібліотеку. *(I am going to the central library.)*
-> — **Анна:** А що ти будеш робити **після бібліотеки**? *(And what will you do after the library?)*
-> — **Марко:** **Після навчання** я планую зустрітися з друзями. *(After studying I plan to meet with friends.)*
-> — **Анна:** Можна я піду з вами **після роботи**? *(May I go with you after work?)*
-> — **Марко:** Звісно, ми завжди раді тобі. *(Of course, we are always glad to have you.)*
-> — **Анна:** Тоді я зателефоную вам **після зміни**. *(Then I will call you after the shift.)*
+Let's review the Genitive case endings, focusing specifically on words related to time and events. Masculine abstract nouns, like meals or general events, usually take the **-у** ending, as in **після сніданку** (after breakfast). However, if a masculine noun is soft, it takes **-я**. The most common example is the word for day, making it **після дня**. Feminine nouns ending in **-я** or **-ія** change to **-і** or **-ії**. Neuter nouns ending in **-о** change to **-а**. Let's look at how these rules apply in practice.
 
-Let's quickly review the Genitive endings, specifically focusing on the nouns we often use to measure time and events. Hard masculine nouns taking "-у" are very common in this context, but you must also pay attention to soft nouns and words ending in sibilants. Feminine words ending in "-ія" smoothly change to "-ії". Neuter words ending in "-о" change to "-а", and soft masculine words take "-я". Paying attention to these subtle changes will make your Ukrainian sound precise and educated. Remember that **після** is always followed by the Genitive case.
+Студенти часто п'ють каву після довгої лекції. Ми завжди прибираємо вдома після великого свята. Він дуже втомився після цього важкого дня. Вони планують зустрітися після важливого екзамену. Після зустрічі ми підемо гуляти в парк.
 
-«лекція → після лекції» *(after the lecture)*
-«свято → після свята» *(after the holiday)*
-«день → після дня» *(after the day)*
-«зустріч → після зустрічі» *(after the meeting)*
+> *Students often drink coffee after a long lecture. We always clean at home after a big holiday. He is very tired after this hard day. They plan to meet after an important exam. After the meeting, we will go for a walk in the park.*
 
-Читаємо українською:
-— Вона завжди дуже втомлена **після лекції** *(after the lecture)*.
-— Нам треба прибрати в кімнаті **після свята** *(after the holiday)*.
-— Він любить гуляти містом **після важкого дня** *(after a hard day)*.
-— Директор напише звіт **після зустрічі** *(after the meeting)*.
-— Мій брат завжди повертається пізно **після зміни** *(after the shift)*.
-— Ми любимо спати довго **після подорожі** *(after the trip)*.
-
-> — **Надія:** Коли ми поїдемо в центр міста? *(When will we go to the city center?)*
-> — **Тарас:** Ми поїдемо туди **після свята**. *(We will go there after the holiday.)*
-> — **Надія:** А магазин працює **після вихідних**? *(And does the store work after the weekend?)*
-> — **Тарас:** Так, він відкриється у понеділок. *(Yes, it will open on Monday.)*
-> — **Надія:** Тоді ми купимо все **після зустрічі**. *(Then we will buy everything after the meeting.)*
-
-The preposition **після** is incredibly useful for describing your daily routine. It helps you connect your individual actions into a smooth narrative rather than reciting a list of disconnected sentences. By using this structure, your conversational Ukrainian will sound much more natural and cohesive. Look at how a simple sequence of events builds a complete and detailed picture of a normal day. Notice how the Genitive case seamlessly links the action to the time it occurs.
-
-:::note
-Notice that **після** often starts the sentence when describing a routine. This naturally shifts the focus to the timeline of your actions.
+:::info
+**Grammar box**
+Remember that masculine abstract nouns and events usually take the **-у** ending in the Genitive case. This is why we say **після обіду** (after lunch) and **після екзамену** (after the exam).
 :::
 
-«сніданок → після сніданку» *(after breakfast)*
-«вечеря → після вечері» *(after dinner)*
-«фільм → після фільму» *(after the film)*
+Now that you know how to form the words, you can describe your entire daily routine. Stringing events together with **після** makes your speech sound much more natural and connected. Instead of just listing isolated actions, you can show how one activity logically follows another. This is an excellent way to practice the Genitive case in a real-world context. Let's trace a typical busy day from morning to night.
 
-Читаємо українською:
-— **Після сніданку** я швидко йду на роботу. *(After breakfast I quickly go to work.)*
-— **Після роботи** вона завжди готує смачну вечерю. *(After work she always cooks a delicious dinner.)*
-— **Після вечері** ми зазвичай дивимося новий фільм. *(After dinner we usually watch a new film.)*
-— **Після фільму** я відразу лягаю спати. *(After the film I immediately go to sleep.)*
-— Вони читають новини **після пробудження** *(after waking up)*.
+Після сніданку я відразу йду на роботу. Після роботи я зазвичай повертаюся додому і готую смачну вечерю. Після вечері я трохи читаю або дивлюся цікавий фільм. Після фільму я нарешті лягаю спати. Це мій звичайний розклад.
 
-> — **Марія:** Як проходить твій звичайний день? *(How does your usual day go?)*
-> — **Олег:** **Після ранкового сніданку** я відразу починаю працювати. *(After morning breakfast I immediately start working.)*
-> — **Марія:** Ти працюєш вдома чи в офісі? *(Do you work at home or in the office?)*
-> — **Олег:** Вдома, а **після роботи** я йду на пробіжку. *(At home, and after work I go for a jog.)*
-> — **Марія:** Що ти робиш **після довгої пробіжки**? *(What do you do after a long jog?)*
-> — **Олег:** **Після прохолодного душу** я готую легку вечерю. *(After a cool shower I cook a light dinner.)*
-> — **Марія:** А **після вечері** ти відпочиваєш? *(And after dinner do you rest?)*
-> — **Олег:** Так, **після смачної вечері** я зазвичай читаю. *(Yes, after a delicious dinner I usually read.)*
+> *After breakfast I immediately go to work. After work I usually return home and cook a tasty dinner. After dinner I read a little or watch an interesting film. After the film I finally go to sleep. This is my usual schedule.*
 
-To truly solidify your understanding, it is highly helpful to contrast **після** *(after)* with its exact opposite: **до** *(before)*. Both of these time prepositions strictly require the Genitive case. You can effectively think of them as a grammatical "case-pair". Whenever you learn a new event noun, practice it with both **до** and **після** to double your descriptive power immediately. This structural symmetry makes remembering the grammar rule much easier for learners. Seeing them side-by-side reinforces the pattern in your memory.
+> — **Максим:** Що ти робиш після роботи? *(What do you do after work?)*
+> — **Олена:** Після роботи я йду в спортзал. А ти? *(After work I go to the gym. And you?)*
+> — **Максим:** Я йду додому. Після вечері я дивлюся серіал. *(I go home. After dinner I watch a TV series.)*
+> — **Олена:** А я після спортзалу тільки читаю. *(And I after the gym only read.)*
 
-:::tip
-Use the pair **до** and **після** together to describe a complete timeline. Since both take the Genitive case, you only need to remember one ending for the noun!
-:::
+To truly master time expressions, it is helpful to learn prepositions in pairs. The natural opposite of **після** is **до**, which means "before" or "until." The wonderful news is that both of these prepositions require exactly the same grammar rule. They both must be followed by the Genitive case. Because they share this requirement, you can treat them as a "case-pair" in your mind. If you know how to say "after work," you automatically know how to say "before work" just by swapping the first word. Practicing these opposites together will double your vocabulary and solidify the case endings in your memory. Let's observe how these pairs function in everyday situations.
 
-«до обіду» *(before lunch)* / «після обіду» *(after lunch)*
-«до війни» *(before the war)* / «після війни» *(after the war)*
-«до лекції» *(before the lecture)* / «після лекції» *(after the lecture)*
-«до сніданку» *(before breakfast)* / «після сніданку» *(after breakfast)*
+Студенти читають текст до лекції, а потім обговорюють його після лекції. Я п'ю каву до сніданку, а мій брат п'є чай після сніданку. Наше місто було дуже красивим до війни, і ми відбудуємо його після війни. Важливо вимити руки до обіду, а посуд ми миємо після обіду. Вона завжди нервує до екзамену, але радіє після екзамену.
 
-Читаємо українською:
-— Я маю зробити це завдання **до обіду** *(before lunch)*.
-— Ми обговоримо всі деталі **після обіду** *(after lunch)*.
-— Їхнє життя було зовсім іншим **до війни** *(before the war)*.
-— Ми обов'язково відбудуємо місто **після війни** *(after the war)*.
-— Студенти повинні прочитати текст **до лекції** *(before the lecture)*.
-— Викладач відповість на запитання **після лекції** *(after the lecture)*.
-
-> — **Віктор:** Ти п'єш каву **до сніданку** чи **після сніданку**? *(Do you drink coffee before breakfast or after breakfast?)*
-> — **Катерина:** Я завжди п'ю каву тільки **після сніданку**. *(I always drink coffee only after breakfast.)*
-> — **Віктор:** А я люблю випити чашку ще **до роботи**. *(And I like to drink a cup even before work.)*
-> — **Катерина:** Я розумію, але я не можу пити каву **до їжі**. *(I understand, but I cannot drink coffee before food.)*
-> — **Віктор:** Це логічно. А що ти робиш **після вечері**? *(This is logical. And what do you do after dinner?)*
-> — **Катерина:** **До сну** я просто читаю цікаву книгу. *(Before sleep I just read an interesting book.)*
-> — **Віктор:** А я **після фільму** відразу йду спати. *(And I immediately go to sleep after a film.)*
+> *The students read the text before the lecture, and then discuss it after the lecture. I drink coffee before breakfast, and my brother drinks tea after breakfast. Our city was very beautiful before the war, and we will rebuild it after the war. It is important to wash hands before lunch, and we wash the dishes after lunch. She is always nervous before the exam, but is happy after the exam.*
 
 <!-- INJECT_ACTIVITY: match-up-preposition-meanings -->
 <!-- INJECT_ACTIVITY: group-sort-preposition-usage -->

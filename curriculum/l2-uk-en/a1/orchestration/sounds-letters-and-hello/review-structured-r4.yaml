@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The text covers every point in the plan, including specific textbook quotes
+    ("Звуки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо", "Голосні почу́єш
+    в пісні́..."). All required vocabulary is pre
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian phrases are grammatically correct and idiomatically sound.
+    No Russianisms, Surzhyk, or calques were found. Phonetic rules and sound counts
+    (33 letters, 38 sounds) are accurately explaine
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The progression is logical and clear. Analogies like "the sound is the
+    physical note... while the letter is simply the sheet music" are excellent for
+    beginners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (звук, літера, голосний, приголосний, привіт,
+    як справи, добре, чудово, мама, молоко) is used naturally in the text. Recommended
+    words like "нормально" and "око" are also inclu
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 injected activity markers match the plan's specifications and are
+    placed appropriately after the concepts they test have been taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is welcoming and authoritative. Phrasing like "Think of it like
+    music" and "This distinction is the absolute foundation" establishes strong teacher
+    presence without falling into corporate fil
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 1716 (well above the 1200 target). All H2 headings from
+    the plan are present and ordered correctly. No stray tags or formatting artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately notes that "Ґ" is uniquely Ukrainian and mentions its history
+    of suppression during the Soviet era.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The brief dialogue in Section 4 is natural, culturally appropriate, and
+    effectively demonstrates gendered greetings and basic conversational flow.
+findings: []

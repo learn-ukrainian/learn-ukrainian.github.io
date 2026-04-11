@@ -1,17 +1,11 @@
-## Підсумок (Summary)
+## Підсумки (Summary)
 
-Let's review what we have learned about verb aspect. Ask yourself these self-check questions to make sure the core concepts are clear:
+Before we move on to the next module, let's quickly review the core concepts of Ukrainian verb aspect. This hidden dimension of verbs is crucial for speaking naturally, so take a moment to ask yourself these four questions to check your understanding.
 
-1. **Яке питання ми ставимо до недоконаного виду?** *(What question do we ask for the imperfective aspect?)*
-We ask: **Що робити?** *(What to do?)*. This aspect focuses on the action itself.
+Давайте перевіримо ваші знання. Яке питання ми ставимо до недоконаного виду? Правильно, ми питаємо «що робити?». Який вид ми використовуємо для регулярних дій, коли бачимо слова «щодня» або «часто»? Це також недоконаний вид. А чи мають дієслова доконаного виду теперішній час? Ні, їхня форма теперішнього часу насправді має значення майбутнього. І нарешті, який вид позначає результат? Це завжди доконаний вид.
 
-2. **Який вид ми використовуємо для регулярних дій?** *(Which aspect do we use for regular actions?)*
-We use the imperfective aspect (**недоконаний вид**). Words like **щодня** *(every day)* and **часто** *(often)* are strong signals for this.
+> *Let's check your knowledge. What question do we ask for the imperfective aspect? That's right, we ask "what to do?". Which aspect do we use for regular actions when we see the words "every day" or "often"? This is also the imperfective aspect. And do perfective verbs have a present tense? No, their present tense form actually has a future meaning. And finally, which aspect indicates a result? That is always the perfective aspect.*
 
-3. **Чи мають дієслова доконаного виду теперішній час?** *(Do perfective verbs have a present tense?)*
-**Ні.** *(No.)* Because a perfective verb describes a completed result, it cannot happen right now in the present moment. If you use a perfective verb in what looks like a present tense form, it actually carries a future meaning.
-
-4. **Який вид позначає результат?** *(Which aspect indicates a result?)*
-The perfective aspect (**доконаний вид**). This is the aspect you use when you cross the finish line.
-
-To recap the most important rule: the imperfective aspect is for a process or repetition, while the perfective aspect is for a result or a single, completed action. Keep this in mind, and you will navigate Ukrainian verbs with confidence.
+:::note
+**Quick tip** — Remember the golden rule: Imperfective aspect (НВ) is for process and repetition, while perfective aspect (ДВ) is for a completed result or a one-time action.
+:::

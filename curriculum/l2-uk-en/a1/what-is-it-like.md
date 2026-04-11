@@ -54,7 +54,7 @@ Consider how often you make judgments about the things around you. Every time yo
 When you are out shopping or discussing the financial value of everyday items, you need a completely different set of descriptors. The word for an item that costs a significant amount of money is **дороги́й** (expensive). The opposite descriptor, used for an item that is highly affordable, is **деше́вий** (cheap). Imagine you are window shopping in the city center and looking closely at a storefront display filled with various goods.
 
 > **Софія:** Яка га́рна су́мка! *(What a beautiful bag!)*
-> **Тарас:** Так, але́ вона́ доро́га. *(Yes, but it is expensive.)*
+> **Тарас:** Так, але́ вона́ дорога́. *(Yes, but it is expensive.)*
 > **Софія:** А телефон? Який він? *(And the phone? What is it like?)*
 > **Тарас:** Він великий і дешевий. *(It is big and cheap.)*
 
@@ -62,7 +62,7 @@ When you are out shopping or discussing the financial value of everyday items, y
 Notice the small connecting words used to build longer sentences. We use **і** (and) when two qualities exist in parallel harmony. We use **а** (and/but) to show a contrast between two different things.
 :::
 
-When building rich descriptions with the everyday objects you learned in the previous module, these tiny structural words are absolutely essential for fluency. By combining your known vocabulary, you can proudly say **У мене́ є великий стіл** (I have a big table). When explicitly linking parallel ideas, use **і**: **Вікно велике і чисте** (The window is big and clean). When highlighting a clear contrast, use **а**: **Стіле́ць старий, а ліжко — нове** (The chair is old, and/but the bed is new). Finally, you can use **але** (but) for slightly unexpected or surprising combinations: **Моя кімната маленька, але гарна** (My room is small, but nice).
+When building rich descriptions with the everyday objects you learned in the previous module, these tiny structural words are absolutely essential for fluency. By combining your known vocabulary, you can proudly say **У ме́не є великий стіл** (I have a big table). When explicitly linking parallel ideas, use **і**: **Вікно велике і чисте** (The window is big and clean). When highlighting a clear contrast, use **а**: **Стіле́ць старий, а ліжко — нове** (The chair is old, and/but the bed is new). Finally, you can use **але** (but) for slightly unexpected or surprising combinations: **Моя кімната маленька, але гарна** (My room is small, but nice).
 
 <!-- INJECT_ACTIVITY: match-up-opposites -->
 

@@ -1,0 +1,96 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-18-923bcb3e.json
+phase: review
+prompt_chars: 63024
+response_chars: 7069
+prompt_words: 9479
+response_words: 1023
+sections:
+- name: preamble
+  start: 0
+  length: 459
+  fraction: 0.0073
+- name: plan
+  start: 459
+  length: 59167
+  fraction: 0.9388
+- name: output_spec
+  start: 59626
+  length: 3398
+  fraction: 0.0539
+large_sections:
+- plan
+directives_total: 33
+directives_covered: 17
+directives_missed:
+- kind: must
+  text: 'But if you are asking a woman, you must ask: "Де ти була?".'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: When narrating past events or describing actions in Ukrainian, you must make
+    a fundamental choice that simply does not exist in English in the same way.
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: must
+  text: You must simply memorize that the imperfective «брати» (to take) pairs with
+    the perfective «взяти», and «говорити» (to speak or to say) pairs with «сказати».
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: Each action must finish completely before the next one can begin.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: If you want to describe parallel processes, both verbs must remain imperfective.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: 'You must consciously choose your conversational focus: either the continuous
+    process or the final result.'
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: In the present tense, you must pay close attention to the difference between
+    the second person (you) and the third person (he/she/it/they).
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: To truly integrate these verbs into your active vocabulary, you must practice
+    using them to describe your states and emotions.
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 8/22 keywords (36%)
+- kind: inject_activity
+  text: fill-in-tense-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-aspect-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-aspect-pairs
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-aspect
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: open-writing-yesterday
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

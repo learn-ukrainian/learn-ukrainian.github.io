@@ -31,7 +31,6 @@ The writer placed these markers in the module content. Your inline activities mu
 - `<!-- INJECT_ACTIVITY: quiz-aspect-choice -->`
 - `<!-- INJECT_ACTIVITY: group-sort-grammar-categories -->`
 - `<!-- INJECT_ACTIVITY: error-correction -->`
-- `<!-- INJECT_ACTIVITY: error-correction-final-review -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -111,26 +110,24 @@ The vocative case is a living, essential feature of the Ukrainian language. Це
 Після числівників 2, 3 та 4 ми використовуємо називний відмінок множини. Наприклад, «три **зошити**». This translates to "three notebooks".
 Після числівників від 5 і більше ми використовуємо родовий відмінок множини. Наприклад, «п'ять **зошитів**». This means "five notebooks". Також «десять **книг**». This translates to "ten books".
 
-
 ## Дієслово: вид, час, спосіб
-> — **Олена:** Максиме, ти готовий до тесту на рівень B1? Are you ready for the B1 level test?
-> — **Максим:** Майже готовий. I am almost ready. Але я хочу повторити **дієслово**. The word "дієслово" means "verb".
-> — **Олена:** Добре. Good. Давай згадаємо **вид**. The word "вид" means "aspect". Що таке **доконаний** і **недоконаний** вид? These mean "perfective" and "imperfective".
-> — **Максим:** Недоконаний вид — це тривалий процес. Imperfective aspect is a continuous process. Доконаний вид — це результат. Perfective aspect is a result.
-> — **Олена:** Правильно. Correct. Кожне дієслово зазвичай має пару. Every verb usually has a pair. Це видова **пара**. The word "пара" means "pair".
-> — **Максим:** А як щодо дієслів руху? What about verbs of motion? Префікси змінюють їхнє значення. Prefixes change their meaning.
-> — **Олена:** Так, префікси дуже важливі. Yes, prefixes are very important. П'ємо каву і продовжуємо нашу розмову. Let's drink coffee and continue.
+> — **Олена:** Максиме, ти готовий до тесту на рівень B1? *(Are you ready for the B1 level test?)*
+> — **Максим:** Майже готовий. *(I am almost ready.)* Але я хочу повторити **дієслово**. *(But I want to review the verb.)*
+> — **Олена:** Добре. *(Good.)* Давай згадаємо **вид**. *(Let's remember the aspect.)* Що таке **доконаний** і **недоконаний** вид? *(What are perfective and imperfective aspects?)*
+> — **Максим:** Недоконаний вид — це тривалий процес. *(Imperfective aspect is a continuous process.)* Доконаний вид — це результат. *(Perfective aspect is a result.)*
+> — **Олена:** Правильно. *(Correct.)* Кожне дієслово зазвичай має пару. *(Every verb usually has a pair.)* Це видова **пара**. *(This is an aspectual pair.)*
+> — **Максим:** А як щодо дієслів руху? *(What about verbs of motion?)* Префікси змінюють їхнє значення. *(Prefixes change their meaning.)*
+> — **Олена:** Так, префікси дуже важливі. *(Yes, prefixes are very important.)* П'ємо каву і продовжуємо нашу розмову. *(Let's drink coffee and continue.)*
 
 В українській мові категорія виду дуже важлива. The category of aspect is very important. Недоконаний вид означає тривалий процес або регулярну дію. It means a continuous process or regular action. Використовуйте його, коли дія постійно повторюється. Use it when the action repeats. Наприклад, ми кажемо «я щодня **купував** хліб». This means "I bought bread every day". Доконаний вид означає конкретний результат або завершену дію. It means a specific result or a completed action. Наприклад, ми кажемо «я **купив** хліб». This means "I bought bread". Дієслова часто утворюють видові пари. Verbs often form aspectual pairs. Зазвичай ми додаємо префікс. Usually we add a prefix. Наприклад, «робити» і «зробити». These mean "to do" and "to make". Іноді ми змінюємо суфікс. Sometimes we change the suffix. Наприклад, «купувати» і «купити». These mean "to buy". А іноді слова в парі зовсім різні. Sometimes words in a pair are completely different. Наприклад, «говорити» і «сказати». These mean "to speak" and "to say". Ви повинні запам'ятати обидва слова. You must memorize both words.
 
-Ми маємо три способи сказати про майбутнє. We have three ways to talk about the future. Перший спосіб — це доконаний вид. The first way is the perfective aspect. Дієслово змінюється як у теперішньому часі, але означає майбутнє. The verb changes like in the present tense, but means the future. Наприклад, ми кажемо «я **прочитаю** книгу». This means "I will read the book completely". Це означає, що я точно закінчу цю дію. This means I will finish the action. Другий спосіб — це складений майбутній час. The second way is the compound future tense. Ми використовуємо допоміжне слово «буду» та інфінітив. We use the auxiliary word "буду" and the infinitive. Наприклад, ми кажемо «я **буду читати**». This means "I will be reading". Це означає процес у майбутньому. This means a process in the future. Третій спосіб — це ще одна форма. The third way is another form. Ми додаємо закінчення прямо до інфінитива. We add an ending directly to the infinitive. Наприклад, ми кажемо «я **читатиму**». This translates to "I will be reading". Другий і третій способи абсолютно однакові за значенням. The second and third ways are identical in meaning. 
+Ми маємо три способи сказати про майбутнє. We have three ways to talk about the future. Перший спосіб — це доконаний вид. The first way is the perfective aspect. Дієслово змінюється як у теперішньому часі, але означає майбутнє. The verb changes like in the present tense, but means the future. Наприклад, ми кажемо «я **прочитаю** книгу». This means "I will read the book completely". Це означає, що я точно закінчу цю дію. This means I will finish the action. Другий спосіб — це складений майбутній час. The second way is the compound future tense. Ми використовуємо допоміжне слово «буду» та інфінітив. We use the auxiliary word "буду" and the infinitive. Наприклад, ми кажемо «я **буду читати**». This means "I will be reading". Це означає процес у майбутньому. This means a process in the future. Третій спосіб — це ще одна форма. The third way is another form. Ми додаємо закінчення прямо до інфінітива. We add an ending directly to the infinitive. Наприклад, ми кажемо «я **читатиму**». This translates to "I will be reading". Другий і третій способи абсолютно однакові за значенням. The second and third ways are identical in meaning. 
 
 Ми також використовуємо умовний і наказовий спосіб. We also use the conditional and imperative moods. Умовний спосіб допомагає нам говорити про мрії або бажання. The conditional mood helps us talk about dreams or wishes. Ми використовуємо слово «якби» та частку «б» або «би». We use the word "якби" and the particle "б" or "би". Наприклад, ми кажемо «**якби** я мав час, я **б** поїхав у гори». This means "if I had time, I would go to the mountains". Наказовий спосіб потрібен для прохань або наказів. The imperative mood is needed for requests or commands. Його форма завжди залежить від ситуації спілкування. Its form depends on the communication situation. Ввічлива форма або форма для багатьох людей має закінчення «-те». The polite or plural form has the ending "-те". Наприклад, ми кажемо «**читайте** цей текст». This translates to "read this text". Дружня форма для однієї людини зазвичай коротша. The friendly form for one person is shorter. Наприклад, ми кажемо «**прочитай** цю статтю». This means "read this article completely".
 
 Давайте коротко згадаємо дієслова руху. Let's briefly remember verbs of motion. Вони традиційно бувають двох типів. They are traditionally of two types. Дієслова «іти» та «їхати» означають рух в один бік. The verbs "іти" and "їхати" mean movement in one direction. Дієслова «ходити» та «їздити» означають регулярний рух туди і назад. The verbs "ходити" and "їздити" mean regular movement back and forth. Різні префікси додають цим дієсловам новий просторовий зміст. Different prefixes add new spatial meaning to these verbs. Префікс «при-» завжди означає прибуття до мети. The prefix "при-" means arrival at a destination. Наприклад, ми кажемо «він **прийшов**». This translates to "he arrived". Префікс «ви-» означає рух назовні з приміщення. The prefix "ви-" means movement outward from a room. Наприклад, ми кажемо «вона **виїхала**». This translates to "she drove out". Префікс «по-» означає початок руху або відправлення. The prefix "по-" means the start of movement or departure. Наприклад, ми кажемо «поїзд **поїхав**». This means "the train departed".
 
 <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
-
 
 ## Прикметники, порівняння, займенники
 
@@ -140,12 +137,11 @@ The vocative case is a living, essential feature of the Ukrainian language. Це
 
 Займенники замінюють іменники в реченні. Pronouns replace nouns in a sentence. Особові займенники також змінюються за відмінками. Personal pronouns also change by cases. Ми кажемо «**я**», але «**мене**» у родовому відмінку. We say "**I**", but "**me**" in the genitive case. Після прийменників ми додаємо букву «н» до займенників третьої особи. After prepositions, we add the letter "n" to third-person pronouns. Ми кажемо «з **ним**», а не «з їм». We say "with **him**", not "with him" (without 'n'). Дуже важливо правильно використовувати зворотний займенник «**свій**». It is very important to correctly use the reflexive pronoun "**one's own**". Він показує, що предмет належить підмету. It shows that the object belongs to the subject. Якщо ви скажете «він читає **його** книгу», це чужа книга. If you say "he reads **his** book", it is someone else's book. Правильно казати «він читає **свою** книгу». It is correct to say "he reads **his own** book".
 
-Іноді ми не знаємо точно особу чи предмет. Sometimes we do not know the person or object exactly. Тоді ми використовуємо неозначені займенники. Then we use indefinite pronouns. Це слова «**хтось**» або «**щось**». These are the words "**someone**" or "**something**". Якщо предмета немає, ми беремо заперечні займенники. If the object is absent, we take negative pronouns. Це слова «**ніхто**» і «**ніщо**». These are the words "**no one**" and "**nothing**". В українській мові ми обов'язково використовуємо подвійне заперечення. In the Ukrainian language, we obligatorily use a double negative. Ми завжди додаємо частку «**не**» перед дієсловом. We always add the particle "**not**" before the verb. Наприклад, ми кажемо «**ніхто не знає**». For example, we say "**no one knows**".
+Іноді ми не знаємо точно особу чи предмет. Sometimes we do not know the person or object exactly. Тоді ми використовуємо неозначені займенники. Then we use indefinite pronouns. Це слова «**хтось**» або «**щось**». These are the words "**someone**" or "**something**". Якщо предмета немає, ми використовуємо заперечні займенники. If the object is absent, we take negative pronouns. Це слова «**ніхто**» і «**ніщо**». These are the words "**no one**" and "**nothing**". В українській мові ми обов'язково використовуємо подвійне заперечення. In the Ukrainian language, we obligatorily use a double negative. Ми завжди додаємо частку «**не**» перед дієсловом. We always add the particle "**not**" before the verb. Наприклад, ми кажемо «**ніхто не знає**». For example, we say "**no one knows**".
 
 В українській мові ми зазвичай використовуємо повні форми прикметників. In the Ukrainian language, we usually use full forms of adjectives. Іноді в літературі чи спеціальних виразах бувають короткі форми. Sometimes in literature or special expressions there are short forms. Наприклад, ми кажемо «**повен**» замість «повний». For example, we say "**full**" instead of "full" (long form). Також завжди звертайте увагу на правильний наголос. Also, always pay attention to the correct stress. Правильно ставте наголос у формах «**велика**» та «**великі**». Correctly place the stress in the forms "**big**" (feminine) and "**big**" (plural). Це робить вашу мову природною. This makes your language natural.
 
 <!-- INJECT_ACTIVITY: group-sort-grammar-categories -->
-
 
 ## Складне речення: з'єднуємо думки
 
@@ -167,7 +163,6 @@ The vocative case is a living, essential feature of the Ukrainian language. Це
 
 <!-- INJECT_ACTIVITY: error-correction -->
 
-
 ## Самооцінка і перехід до B1
 
 Час зробити паузу і подивитися на свої результати. Time to take a pause and look at your results. Давайте проведемо невелику самооцінку. Let's do a small self-assessment. Оцініть свою **впевненість** (confidence) від одного до п'яти за такими пунктами. Rate your confidence from one to five on these points.
@@ -178,11 +173,9 @@ The vocative case is a living, essential feature of the Ukrainian language. Це
 4. Правильне використання займенника «свій». Correct use of the pronoun "one's own".
 5. Розуміння українських граматичних термінів. Understanding of Ukrainian grammatical terms.
 
-Якщо ваша оцінка висока — це чудовий результат. If your score is high — this is an excellent result. Якщо ні, варто зробити **повторення** (review). If not, it is worth doing a review.
+Якщо ваша оцінка висока — це чудовий результат. If your score is high — this is an excellent result. Якщо ні, варто зробити **повторення** (review) конкретних модулів А2: наприклад, модуль 51 для відмінків або модуль 63 для складнопідрядних речень. If not, it is worth doing a review.
 
 Перехід від рівня А2 до В1 — це великий крок. The transition from level A2 to B1 is a big step. Що зміниться? What changes? Головне — це занурення в мову. The main thing is immersion in the language. На рівні В1 інструкції до вправ будуть лише українською. At level B1, instructions for exercises will be only in Ukrainian. Також ми почнемо вивчати нову термінологію. Also, we will start learning new terminology. Ви дізнаєтеся, що таке **дієвідміна** (conjugation). You will learn what a conjugation is. Ми детально розглянемо кожну **відміну** (declension) іменників. We will examine in detail each declension of nouns. Ви також зрозумієте українське **чергування** (alternation) звуків. You will also understand the Ukrainian alternation of sounds. Це зробить вашу мову ще природнішою. This will make your speech even more natural.
-
-<!-- INJECT_ACTIVITY: error-correction-final-review -->
 
 **Підсумок** (Summary).
 Ви завершили велику подорож рівнем А2. You have completed a great journey through level A2. Тепер ви можете говорити про минуле, теперішнє і майбутнє. Now you can talk about the past, present, and future. Ви знаєте, як показати процес або результат дії. You know how to show the process or result of an action. Ви вмієте орієнтуватися в системі семи відмінків. You know how to navigate the seven-case system. Ваші речення стали довшими. Your sentences have become longer. Ви можете будувати логічні аргументи через сполучники. You can build logical arguments through conjunctions.

@@ -25,7 +25,7 @@ Grand total: ~2300 words
 <previous_context>
 [...previous sections truncated...]
 
-**речі** (things) -> **багато речей** *(many things)* * **ночі** (nights) -> **кілька ночей** *(several nights)* * **гості** (guests) -> **багато гостей** *(many guests)* <!-- INJECT_ACTIVITY: match-up-genitive-plural-quantity --> To ask "How many?" or "How much?", use the question word **Скільки**. Naturally, the noun following **Скільки** must also be in the Genitive case. When you ask about countable objects, use the Genitive plural. * **Скільки у тебе книжок?** *(How many books do you have?)* * **Скільки коштує квиток? У мене мало грошей.** *(How much does a ticket cost? I have little money.)* * **Скільки студентів тут живе?** *(How many students live here?)* Let's see these quantity phrases in a short conversation. > — **Марко:** Привіт! Скільки у тебе вільного часу сьогодні? *(Hi! How much free time do you have today?)* > — **Олена:** Привіт! У мене зовсім немає часу. Є багато справ. *(Hi! I have absolutely no time. There are many matters.)* > — **Марко:** Шкода. А завтра? У мене є кілька квитків у кіно. *(A pity. And tomorrow? I have a few tickets to the cinema.)* > — **Олена:** Завтра я вільна. Скільки друзів іде з нами? *(Tomorrow I am free. How many friends are going with us?)* > — **Марко:** Тільки ми. У інших багато роботи. *(Only us. The others have a lot of work.)* <!-- INJECT_ACTIVITY: match-up-translate-genitive --> <!-- INJECT_ACTIVITY: unjumble-genitive-phrases --> When learning the Genitive case, English speakers often make the mistake of using the Nominative case after **немає** or quantity words, saying «У мене немає машина» instead of the correct «У мене немає машини». Remember that the Ukrainian **немає** is a unique grammatical marker of non-existence, not just a direct translation of the English word "no". It acts as a magnet that demands the Genitive case for the object that is missing. Furthermore, do not try to guess Ukrainian endings based on patterns from other languages. The masculine Genitive singular endings **-а** and **-у** have their own specific rules in Ukrainian. For example, abstract nouns often take **-у** (like **часу** for time or **настрою** for mood), while concrete objects usually take **-а** (like **стола** for table). Embrace the Ukrainian logic independently to build a strong foundation and sound truly natural. ### Читаємо українською (Reading Practice) **У нашому місті є багато проблем.** *(In our city there are many problems.)* **Тут мало дерев і зовсім немає великих парків.** *(There are few trees here and absolutely no large parks.)* **На вулицях завжди багато машин і багато людей.** *(There are always many cars and many people on the streets.)* **Але у нас є кілька хороших музеїв і театрів.** *(But we have a few good museums and theaters.)* **Скільки грошей треба на квиток?** *(How much money is needed for a ticket?)* **Квиток коштує мало, але у студентів часто немає грошей.** *(The ticket costs little, but students often have no money.)* **У мене є кілька друзів у цьому місті.** *(I have a few friends in this city.)* **Ми маємо мало часу, але багато нових ідей.** *(We have little time, but many new ideas.)*
+there are many large windows. There are a few ripe apples lying on the table.* There is a smaller, but critically important, group of nouns that take the ending **-ей** in the Genitive plural. This unique group spans across different genders and includes many ancient, foundational words. The most important survival word in this category is **гроші** (money), which becomes **грошей**. Other extremely common examples include **очі** (eyes) becoming **очей**, and **ночі** (nights) becoming **ночей**. Він працює багато днів і ночей. У дитини багато нових ідей. У мене зараз зовсім немає грошей. У цьому місті багато гостей. > *He works many days and nights. The child has a lot of new ideas. I have absolutely no money right now. There are many guests in this city.* <!-- INJECT_ACTIVITY: match-up-genitive-plural-quantity --> To use these quantity phrases in everyday conversation, you will often combine them with the question word **скільки** (how many). Just like the other quantity words, this question demands the Genitive plural. You can use it to ask about quantities of countable objects such as books or apples. If you are asking about an uncountable substance like water or time, you simply use the Genitive singular instead. ### Читаємо українською (Reading Practice) > — **Студент:** Скільки у тебе книжок? *(How many books do you have?)* > — **Подруга:** У мене багато книжок, але мало вільного часу. *(I have a lot of books, but little free time.)* > — **Студент:** А скільки студентів у твоїй групі? *(And how many students are in your group?)* > — **Подруга:** У нас кілька нових студентів, але сьогодні їх немає. *(We have a few new students, but they are not here today.)* > — **Студент:** Скільки яблук нам потрібно купити? *(How many apples do we need to buy?)* > — **Подруга:** Купи п'ять великих яблук і кілька бананів. *(Buy five large apples and a few bananas.)* <!-- INJECT_ACTIVITY: match-up-translate-genitive --> <!-- INJECT_ACTIVITY: unjumble-genitive-phrases --> When learning to express absence or quantity, English speakers frequently make a specific set of errors that immediately mark them as language learners. The most common mistake is failing to change the ending, which leaves the noun in its basic dictionary form. Remember that the Ukrainian word for "there is no" is a unique grammatical marker of non-existence that actively forces a case change. ❌ **У мене немає машина.** — *Incorrect.* ✅ **У мене немає машини.** — *Correct.* It is not simply a direct translation of the English word for "no" or "not". Furthermore, when you learn the masculine singular endings, do not try to guess them based on the rules of other Slavic languages. Ukrainian has its own distinct logic for categorizing abstract concepts, materials, and specific objects, which reflects its unique historical development. :::info **Why numbers matter** We just learned that quantity words require the Genitive plural. You will soon learn that numbers from five onwards also behave exactly like these quantity words. Learning these plural endings now fully prepares you for counting objects in the real world! :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -543,7 +543,74 @@ Here are sentences demonstrating the use of the genitive case with `немає`.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -571,14 +638,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

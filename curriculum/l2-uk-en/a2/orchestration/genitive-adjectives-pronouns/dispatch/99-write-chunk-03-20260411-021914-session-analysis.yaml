@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-18-e42d29c2.json
+phase: write-chunk-03
+prompt_chars: 46350
+response_chars: 4341
+prompt_words: 6570
+response_words: 727
+sections:
+- name: header
+  start: 0
+  length: 492
+  fraction: 0.0106
+- name: skeleton
+  start: 492
+  length: 1734
+  fraction: 0.0374
+- name: prior_summary
+  start: 2226
+  length: 3427
+  fraction: 0.0739
+- name: plan
+  start: 5653
+  length: 11387
+  fraction: 0.2457
+- name: wiki
+  start: 10796
+  length: 29182
+  fraction: 0.6296
+- name: output_spec
+  start: 46222
+  length: 128
+  fraction: 0.0028
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P2 (110w): Feminine Demonstratives: ''Цієї'' and ''тієї''. Note on the variant
+    ''тої'' as a natural, more conversational alternative often found in literature
+    and speech. Examples: ''без цієї книги'', ''навпроти тієї школи''.'
+  covered: false
+  coverage_note: 9/23 keywords (39%)
+- kind: inject_activity
+  text: quiz-possessive-choice
+  covered: false
+  coverage_note: marker missing

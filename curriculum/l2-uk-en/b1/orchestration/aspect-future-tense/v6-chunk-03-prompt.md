@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-форми автоматично переносять свою дію у далеке чи близьке майбутнє. Давайте дуже уважно розглянемо цю парадигму на прикладі популярного дієслова «зробити». Я зроблю, ти зробиш, він, вона або воно обов'язково зробить. У формі множини це виглядає так: ми зробимо, ви зробите, вони точно зроблять. Тепер зверніть свою увагу на процес відмінювання дієслова «написати». Я напишу, ти напишеш, він напише, ми напишемо, ви напишете, вони напишуть. Ключовий і найважливіший концепт цієї третьої конструкції — це ідея абсолютної завершеності та стовідсотково гарантованого результату. Це завжди одне дуже сильне, максимально енергійне слово, яке стоїть у реченні самостійно. Коли ви впевнено кажете: «Я завтра напишу цей важливий лист», ви фактично даєте людині свою чітку обіцянку. Ви твердо гарантуєте, що цей лист буде повністю і успішно завершений. Тут просто немає жодного місця для розмитого процесу чи якихось тривалих, але безрезультатних зусиль. Ця проста форма завжди фокусується виключно на фінальній точці. Вона вказує на ту єдину секунду, коли ваша важка робота буде остаточно зроблена. Вона ідеально і бездоганно підходить для того, щоб давати серйозні обіцянки. Її треба використовувати, щоб ставити перед собою чіткі життєві цілі. Також вона потрібна, щоб впевнено говорити про конкретні, завершені досягнення у вашому власному майбутньому. Тепер, коли ми дуже добре розуміємо внутрішню логіку всіх трьох граматичних конструкцій, нам потрібно серйозно поговорити про одну проблему. Це найнебезпечніша пастка для всіх іноземних студентів. Це так званий «заборонений» граматичний гібрид, якого ніколи не існує в природі. Англомовні студенти дуже часто роблять одну типову і серйозну логічну помилку. Вони намагаються штучно поєднати допоміжне дієслово «буду» з інфінітивом саме доконаного виду. Вони генерують у своєму мовленні такі абсолютно неприродні форми, як: «я буду написати» або «ми завтра будемо зробити». Чому це є такою жахливою і неприпустимою помилкою в сучасній українській мові? Ця велика проблема полягає зовсім не в якихось нудних довільних правилах, які вам треба просто механічно завчити напам'ять. Проблема завжди ховається у дуже глибокому і фундаментальному логічному протиріччі. Допоміжне слово «буду» за своєю істинною природою завжди означає довготривалість, повільну розтягнутість у часі, постійний рух і незавершений процес. Натомість такі сильні інфінітиви, як «написати» або «прочитати», завжди означають лише єдину, коротку і неподільну точку завершення. Вони символізують фінальний результат і логічний кінець будь-якої дії. Спробувати поєднати їх в одному короткому реченні — це все одно що спробувати змішати олію та чисту воду у склянці. Ви фізично не можете довго перебувати в постійному, розтягнутому процесі абсолютно миттєвого завершення. Це просто порушує всі базові закони реальної фізики і логічної граматики. Наша українська граматична система дуже суворо і ретельно захищає логіку кожної вашої дії. Саме з цієї важливої причини слово «буду» може спокійно існувати лише в повній гармонії з інфінітивами недоконаного виду. Адже вони теж означають тривалий процес: «я буду довго писати», «вона буде уважно читати». А сильний доконаний вид з великою гордістю завжди виступає самостійно і незалежно: «я швидко напишу», «вона повністю прочитає». Глибоке розуміння цієї простої логіки назавжди звільнить вас від жахливої необхідності механічно зазубрювати всі складні правила утворення нашого майбутнього часу. <!-- INJECT_ACTIVITY: fill-in, Form the future tense of given verbs based on the required aspect -->
+стовідсоткову гарантію, що дія буде успішно доведена до кінця. :::tip **Did you know?** Because perfective verbs have no present tense, their "present" endings are entirely free to be used for the future. This is a brilliant example of grammatical recycling, allowing the language to express future results without inventing a whole new set of suffixes. ::: When you deploy this simple form, you are no longer talking about what you will be doing; you are definitively stating what will be done. If you say «я напишу», you are making a firm commitment that the text will be entirely finished, completed, and ready for review. It is the language of promises, concrete plans, definitive outcomes, and measurable achievements. You use it when the completion of the action is the absolute most important piece of information you want to convey to your listener. It cuts through the ambiguity of the process and delivers a guarantee. This is why you will hear it constantly in professional environments, project planning, and any situation where accountability is expected. Now that you clearly see the strict logical boundary separating the imperfective process forms from the perfective result form, you can fully understand one of the most critical rules of Ukrainian grammar. You must never attempt to combine the auxiliary verb «бути» with a perfective infinitive. A phrase like «буду написати» or «буду зробити» is not just a minor grammatical slip; it is a profound logical contradiction that entirely breaks the structural integrity of the Ukrainian verb system. Допоміжне дієслово «бути» в майбутньому часі завжди вимагає тривалості та процесу. Воно створює широкий простір, у якому дія може поступово розгортатися. Натомість дієслово доконаного виду, як-от «написати», означає неподільну миттєву точку завершення. Ви фізично не можете розтягнути цю миттєву точку в тривалий процес. Це як намагатися змішати воду та олію в одній склянці. Українська граматика надійно захищає цю внутрішню логіку: якщо ви використовуєте слово «буду», наступне дієслово обов'язково має бути процесом. If you want to express the future accurately, you must first pause and ask yourself what you truly mean to say. If you want to highlight the duration, the continuous effort, or the activity itself, use «буду писати» or «писатиму». If your goal is to promise that the work will be finished and the result will undeniably exist, drop the auxiliary entirely and simply declare «напишу». Recognizing this strict logical boundary is a major milestone in your language journey. It is the exact moment you stop simply translating English words in your head and start genuinely thinking within the rich framework of Ukrainian aspectual categories. You are no longer just manipulating grammar rules; you are aligning with the mindset of a native speaker. :::info **Grammar box** The auxiliary verb «бути» pairs **only** with imperfective infinitives. Perfective verbs generate their future meaning internally through their structure and their present-tense endings. They never need, and completely reject, any auxiliary support. Never attempt to say «буду прочитати»; you must choose between the process and the result. ::: <!-- INJECT_ACTIVITY: fill-in-future-forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -592,7 +592,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -605,14 +672,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

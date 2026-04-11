@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-16-835ee11b.json
+phase: write-chunk-06
+prompt_chars: 48946
+response_chars: 4182
+prompt_words: 6886
+response_words: 643
+sections:
+- name: header
+  start: 0
+  length: 429
+  fraction: 0.0088
+- name: skeleton
+  start: 429
+  length: 820
+  fraction: 0.0168
+- name: prior_summary
+  start: 1249
+  length: 3433
+  fraction: 0.0701
+- name: plan
+  start: 4682
+  length: 15446
+  fraction: 0.3156
+- name: wiki
+  start: 15267
+  length: 28690
+  fraction: 0.5862
+- name: output_spec
+  start: 48818
+  length: 128
+  fraction: 0.0026
+large_sections:
+- wiki
+directives_total: 7
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: This dual structure is mandatory for all negative pronouns across all cases.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: match-up, match the pronoun form to its grammatical function
+  covered: false
+  coverage_note: marker missing

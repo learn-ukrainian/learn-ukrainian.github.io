@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All points from the `content_outline` are fully integrated. The quotes
+    from textbooks (Заболотний, Большакова) are used seamlessly.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: The text is accurate, but contains a typographical error with a double
+    stress mark on "**алфа́ві́т**".
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Fantastic explanation of the difference between sound and letter (sheet
+    music vs. played note analogy). Emphasizing the physical obstruction aspect for
+    consonants is excellent for adult learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Required words are all present and contextualized. However, 4 recommended
+    words (тато, дім, ніс, сон) were omitted from the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 markers match the plan's `activity_hints` exactly and are injected
+    immediately following the relevant instruction block.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. Informative, engaging analogies, and zero generic
+    corporate filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 1716 words (exceeding 1200 target). All required H2 headings
+    are present and accurate.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Mention of the Soviet suppression of the letter Ґ is an excellent cultural
+    detail that adds real depth.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The sample greeting dialogue is natural, brief, and models gender agreement
+    correctly.
+findings: []

@@ -164,42 +164,6 @@ inline:
     right: створити образ у голові
   - left: сам по собі
     right: самостійно, один
-- id: error-correction-sviy-sebe
-  type: error-correction
-  instruction: Знайдіть і виправте помилку у використанні «свій» та «себе»
-  items:
-  - sentence: Він дуже любить його машину.
-    error: його
-    correction: свою
-    error_type: word
-    explanation: Треба використовувати «свою», коли власник — це підмет (він).
-  - sentence: Я часто бачу мене у великому дзеркалі.
-    error: мене
-    correction: себе
-    error_type: word
-    explanation: Коли дія повертається до підмета, ми завжди використовуємо «себе».
-  - sentence: Студенти взяли рюкзаки з ними.
-    error: ними
-    correction: собою
-    error_type: word
-    explanation: Замість «з ними» (with them) треба казати «із собою» (with themselves).
-  - sentence: Вона купила їй нову парасольку.
-    error: їй
-    correction: собі
-    error_type: word
-    explanation: Якщо дія направлена на підмет (вона), треба використовувати давальний
-      відмінок «собі».
-  - sentence: Сьогодні я почуваю себе.
-    error: себе
-    correction: себе добре
-    error_type: phrase
-    explanation: Після дієслова «почувати себе» обов'язково треба додати прислівник
-      (добре/погано).
-  - sentence: Вона добре себе поводить у школі.
-    error: себе поводить
-    correction: поводиться
-    error_type: word
-    explanation: Набагато природніше використовувати дієслово з суфіксом «-ся» (поводитися).
 workbook:
 - id: fill-in-possession-u-mene
   type: fill-in

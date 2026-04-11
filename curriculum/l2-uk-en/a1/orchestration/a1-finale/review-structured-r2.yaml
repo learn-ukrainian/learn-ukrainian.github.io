@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers every required point from the plan beautifully, seamlessly blending
+    the wake-up routine, metro directions, souvenir shopping, and evening reflection.
+    Word count is healthy (1389 words).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical grammatical mislabeling: `прочита́ю` is cited as
+    the "synthetic future" when it is actually the simple perfective future (the synthetic
+    future is `читатиму`). Additionally, `ко́шту'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow. Grammar is presented via natural scenarios (survival
+    phrases, ordering food, buying tickets) before explaining the mechanics. Shifts
+    in tense are highlighted smoothly ("This shift '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (готовий, вітаю, початок, сувенір,
+    квиток, зустріти/зустрічати, круасан, карта, лінія, фільм, познайомитися, подорожувати,
+    Лавра, готель) are naturally woven into th
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The four `INJECT_ACTIVITY` markers match the `activity_hints` in the plan
+    and are placed right after their respective thematic sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The tone is generally encouraging and warm, but the phrase "you will unlock
+    the true engine of the language" violates the negative tone prompt against using
+    gamified corporate language ("You have unlo
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from the plan are present. No missing tags. The 1389-word
+    count is excellent for A1 finale.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highly authentic. Uses Hryvnias, standard Kyiv landmarks (Khreshchatyk,
+    TSUM, Lavra), and classic Ukrainian dishes (борщ і вареники).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Excellent short, natural exchanges that fit the A1 level perfectly while
+    still sounding authentic (e.g., direct passerby instructions: "Їдьте на метро,
+    станція Хрещатик").'
+findings: []

@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Required textbooks (Караман, Авраменко, Глазова) and State Standard references
+    from the plan are not cited in the text. Word count is 3697, below the 4000-word
+    target.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Critical error: uses "написаний автором лист" as an example of a correct
+    passive participle, which is a Russian calque (instrumental agent with participle)
+    and contradicts the module''s own later rules'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of the "three whales" of passive voice, but the contradictory
+    example of "написаний автором" undermines the otherwise strong pedagogical flow.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (здійснюватися, довкілля, доцільно,
+    моніторинг, etc.) are integrated smoothly and naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All required exercise types are covered by markers and placed appropriately
+    after the relevant theory sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Good use of metaphors ("детектив заходить до кімнати", "три кити") and
+    professional tone, avoiding gamified cliches.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Word count (3697) is below the 4000-word target. All H2 headings from
+    the plan are present and well-structured.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Effectively highlights the decolonial aspect of preferring active voice
+    over the Soviet bureaucratic passive. Uses authentic Ukrainian folklore examples.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogue between Oleg and Mariia is functional and demonstrates the
+    transition from informal to formal, but is quite brief.
+findings: []

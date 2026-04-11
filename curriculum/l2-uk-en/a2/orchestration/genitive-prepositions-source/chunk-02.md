@@ -1,127 +1,85 @@
 ## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive)
 
-«Звідки ти?» *(Where are you from?)*
-Це дуже часте запитання. *(This is a very frequent question.)*
-Сьогодні ми вивчаємо новий прийменник. *(Today we are learning a new preposition.)*
-Цей прийменник завжди вимагає після себе родовий відмінок. *(This preposition always requires the Genitive case after it.)*
+Use the question word **звідки** (from where) and the preposition **з** (from) + Genitive case to express geographic origin.
 
-The core meaning of this preposition is the starting point of an action or the geographic origin of a person. When you state your origin, you take the name of the place and apply the rules for the Genitive case. It answers the fundamental question of where someone or something comes from. For feminine nouns, the ending typically changes to the feminine Genitive ending. For masculine cities, countries, and objects, the ending changes to the masculine Genitive ending. This pattern is consistent and very important for basic conversations.
+Коли ми говоримо про походження, ми завжди використовуємо родовий відмінок. Це дуже важливе базове правило для всіх нових студентів. Жіночий рід зазвичай має закінчення «-и» або «-і» після прийменника. Чоловічий рід для назв міст майже завжди має закінчення «-а» або «-я».
 
-«Україна → з України» *(from Ukraine)*
-«Київ → з Києва» *(from Kyiv)*
-«Харків → з Харкова» *(from Kharkiv)*
-«Лондон → з Лондона» *(from London)*
+> *When we talk about origin, we always use the Genitive case. This is a very important basic rule for all new students. Feminine gender usually has the ending "-и" or "-і" after the preposition. Masculine gender for names of cities almost always has the ending "-а" or "-я".*
 
-Читаємо українською:
-— Я **з України** *(from Ukraine)*.
-— Він приїхав **з Києва** *(from Kyiv)*.
-— Ми **з Лондона** *(from London)*.
-— Вони летять **з Харкова** *(from Kharkiv)*.
-— Мій друг повернувся **з роботи** *(from work)*.
-— Моя сестра **з Польщі** *(from Poland)*.
-— Студенти вийшли **з аудиторії** *(from the auditorium)*.
+> — **Максим:** Привіт! Звідки ви приїхали сьогодні? *(Hi! Where did you arrive from today?)*
+> — **Анна:** Ми приїхали з України. А ти звідки? *(We arrived from Ukraine. And where are you from?)*
+> — **Максим:** Я з Лондона. А мій колега з Києва. *(I am from London. And my colleague is from Kyiv.)*
+> — **Анна:** Дуже приємно! А це наші студенти з Харкова. Вони вивчають мови. *(Very nice! And these are our students from Kharkiv. They study languages.)*
 
-> — **Марко:** Звідки ти? *(Where are you from?)*
-> — **Сара:** Я з Лондона. А ти? *(I am from London. And you?)*
-> — **Марко:** Я з Києва. *(I am from Kyiv.)*
-> — **Сара:** Це цікаво. Мій друг теж з Києва. *(That is interesting. My friend is also from Kyiv.)*
-> — **Марко:** Світ дуже тісний! *(The world is very small!)*
+### Читаємо українською
 
-Українська мова дуже милозвучна. *(The Ukrainian language is very euphonic.)*
-Ми любимо, коли слова легко вимовляти. *(We like when words are easy to pronounce.)*
-Тому цей прийменник має три різні форми. *(Therefore, this preposition has three different forms.)*
-Ми вибираємо форму для комфорту. *(We choose the form for comfort.)*
+Ця нова студентка приїхала з Америки. Вона добре знає хлопця з Києва. Її родина зараз живе далеко, вони з Лондона. Вчора ми зустріли туристів з Харкова. Усі ці люди дуже люблять подорожувати.
 
-The rule of euphony is a signature phonetic trait of the language. You must choose the form of the preposition that makes the sentence flow best. This prevents awkward consonant combinations and makes speech feel natural and effortless. You do not need to memorize this as a strict exception, but rather feel the rhythm of the words as you speak. 
+> *This new student arrived from America. She knows the guy from Kyiv well. Her family lives far away now, they are from London. Yesterday we met tourists from Kharkiv. All these people really love to travel.*
 
-1. Use the basic form «з» before vowels and most single consonants. 
-2. Use the extended form «із» between two consonants or before sibilant sounds like «с», «з», «ш», «ж», «ч».
-3. Use the soft form «зі» before a heavy cluster of consonants, especially those starting with «с», «з», «ш», «л», «м».
+The preposition **з** has three phonetic variants (**з**, **із**, **зі**) to avoid harsh consonant clusters. This is called **милозвучність** (euphony).
 
-«Одеса → з Одеси» *(from Odesa)*
-«село → із села» *(from the village)*
-«золото → із золота» *(from gold)*
-«Львів → зі Львова» *(from Lviv)*
-«школа → зі школи» *(from school)*
+Ми використовуємо коротке «з» перед голосними або одним приголосним звуком. Форма «із» стоїть між двома приголосними. Вона також стоїть перед свистячими і шиплячими звуками. Це звуки [з], [с], [ц], [ж], [ч], [ш]. Варіант «зі» потрібен перед складною групою приголосних. Це важливо, якщо група починається на [з], [с], [ш], [щ], [в], [ф], [л], [м]. Це робить українську мову дуже мелодійною. Милозвучність — це основа мови.
 
-Читаємо українською:
-— Я їду **з Одеси**. *(I am going from Odesa.)*
-— Він іде **з університету**. *(He is walking from the university.)*
-— Це браслет **із золота**. *(This is a bracelet made of gold.)*
-— Жінка **із села** привезла молоко. *(The woman from the village brought milk.)*
-— Мій брат приїхав **із Житомира**. *(My brother arrived from Zhytomyr.)*
-— Я приїхав **зі Львова**. *(I arrived from Lviv.)*
-— Діти повертаються **зі школи**. *(The children are returning from school.)*
-— Я взяв книгу **зі стола**. *(I took the book from the table.)*
-— Він родом **зі Швеції**. *(He is originally from Sweden.)*
+> *We use the short "з" before vowels or a single consonant sound. The form "із" stands between two consonants. It also stands before sibilant and hushing sounds. These are the sounds [з], [с], [ц], [ж], [ч], [ш]. The variant "зі" is needed before a complex group of consonants. This is important if the group begins with [з], [с], [ш], [щ], [в], [ф], [л], [м]. This makes the Ukrainian language very melodic. Euphony is the foundation of the language.*
 
-> — **Анна:** Ти зі Львова? *(Are you from Lviv?)*
-> — **Тарас:** Ні, я з Одеси. *(No, I am from Odesa.)*
-> — **Анна:** А я із Сум. *(And I am from Sumy.)*
-> — **Тарас:** У нас сьогодні зустріч людей із різних міст. *(We have a meeting of people from different cities today.)*
+:::info
+**Grammar box**
+Always look at the *sound* that immediately follows the preposition. If the word starts with a difficult cluster like **Льв-** (Lviv) or **шк-** (school), use **зі** to give your tongue a stepping stone: **зі Львова**, **зі школи**.
+:::
 
-З чого це зроблено? *(What is this made of?)*
-Цей прийменник також показує матеріал. *(This preposition also shows the material.)*
-Ми описуємо речі навколо нас. *(We describe things around us.)*
+> — **Марія:** Де зараз твій брат? *(Where is your brother now?)*
+> — **Іван:** Він їде з Одеси. А сестра повертається з університету. *(He is driving from Odesa. And sister is returning from the university.)*
+> — **Марія:** А звідки цей старий лист? *(And where is this old letter from?)*
+> — **Іван:** Це лист із села. А ця каблучка із золота — подарунок. *(This is a letter from the village. And this ring made of gold is a gift.)*
+> — **Марія:** Мої діти зараз ідуть зі школи. Вони приїхали зі Швеції. *(My children are walking from school now. They arrived from Sweden.)*
 
-You can use this preposition combined with the Genitive case to describe the material an object is made from. It can also describe what a container holds, or the main ingredient of a dish. Notice how neuter and masculine nouns take the typical Genitive endings, while plural nouns often take a zero ending. This construction is incredibly useful for shopping, ordering food, or simply describing your environment.
+### Читаємо українською
 
-«дерево → з дерева» *(from wood)*
-«скло → зі скла» *(from glass)*
-«овочі → з овочів» *(from vegetables)*
-«яблука → з яблук» *(from apples)*
+Вранці вона швидко йде з університету додому. Наш сусід отримав великий лист із села. Жінка носить красивий браслет із золота. Діти радісно біжать зі школи на стадіон. Туристи зі Швеції дуже люблять гуляти містом.
 
-Читаємо українською:
-— Це старий стіл **з дерева** *(from wood)*.
-— На столі стоїть склянка **зі скла** *(from glass)*.
-— Вона купила сукню **з шовку** *(from silk)*.
-— Я люблю пити свіжий сік **з яблук** *(from apples)*.
-— Мама приготувала салат **з помідорів** *(from tomatoes)*.
-— Ми їмо смачний суп **з овочів** *(from vegetables)*.
+> *In the morning she walks quickly from the university home. Our neighbor received a large letter from the village. The woman wears a beautiful bracelet made of gold. The children joyfully run from school to the stadium. Tourists from Sweden really love to walk around the city.*
 
-> — **Олег:** Ця склянка зі скла? *(Is this glass made of glass?)*
-> — **Марія:** Ні, вона з пластику. *(No, it is from plastic.)*
-> — **Олег:** А цей стіл з дерева? *(And is this table from wood?)*
-> — **Марія:** Так, це дуже дороге дерево. *(Yes, it is very expensive wood.)*
-> — **Олег:** У тебе гарний смак. *(You have good taste.)*
+Beyond origin, **з** + Genitive describes what an object is made of.
 
-> — **Катерина:** Який смачний торт! З чого він? *(What a tasty cake! What is it from?)*
-> — **Олена:** Це торт із шоколаду. *(This is a cake from chocolate.)*
-> — **Катерина:** Я думала, що він із фруктів. *(I thought that it was from fruits.)*
+Українці постійно описують різні матеріали та їжу за допомогою цього прийменника. Якщо ми хочемо точно сказати, з чого зроблений предмет, ми використовуємо родовий відмінок. Це звучить природно і є важливою частиною комунікації. Ми також описуємо головний інгредієнт смачної страви.
 
-Коли це почалося? *(When did this start?)*
-Ми використовуємо цей прийменник для часу. *(We use this preposition for time.)*
-Він показує початок дії. *(It shows the start of an action.)*
+> *Ukrainians constantly describe various materials and food using this preposition. If we want to say exactly what an object is made of, we use the Genitive case. This sounds natural and is an important part of communication. We also describe the main ingredient of a tasty dish.*
 
-Just as this preposition shows the starting point in space, it also shows the starting point in time. When you want to say that something has been happening since a certain time or day, you use this preposition with the Genitive case. It marks the exact moment an action began and often implies it continues into the present. Later in this module, we will contrast this with the word for "after", which describes what happens following a completely finished event.
+> — **Оксана:** Який гарний стіл! З чого він? *(What a beautiful table! What is it made of?)*
+> — **Тарас:** Цей великий стіл з дерева. Я зробив його сам учора. *(This large table is made of wood. I made it myself yesterday.)*
+> — **Оксана:** Дуже добре. А що ти п'єш? Це сік? *(Very good. And what are you drinking? Is this juice?)*
+> — **Тарас:** Так, це свіжий сік з яблук. Будеш пити? *(Yes, this is fresh juice made of apples. Will you drink?)*
+> — **Оксана:** Ні, дякую. Я буду їсти пиріжки з калини. *(No, thank you. I will eat buns made of viburnum.)*
 
-«ранок → з ранку» *(since morning)*
-«понеділок → з понеділка» *(since Monday)*
-«дитинство → з дитинства» *(since childhood)*
-«канікули → з канікул» *(since vacation)*
+### Читаємо українською
 
-Читаємо українською:
-— Я працюю тут **з ранку** *(since morning)*.
-— Цей магазин відкритий **з понеділка** *(since Monday)*.
-— Ми знаємо одне одного **з дитинства** *(since childhood)*.
-— Вони повернулися **з канікул** *(from vacation)*.
-— Він читає цю книгу **з вечора** *(since evening)*.
-— Студенти чекають **з обіду** *(since lunch)*.
+У моїй кімнаті стоїть новий стіл з дерева. Моя сестра купила прозору склянку зі скла. Мама одягнула красиву сукню з шовку на свято. Я люблю пити холодний сік з яблук влітку. Сьогодні на обід у нас смачні пиріжки з калини.
 
-> — **Ірина:** Ти давно тут чекаєш? *(Have you been waiting here long?)*
-> — **Павло:** Так, я тут з ранку. *(Yes, I have been here since morning.)*
-> — **Ірина:** Ого! А я працюю з понеділка без вихідних. *(Wow! And I am working since Monday without days off.)*
-> — **Павло:** Тобі треба відпочити. *(You need to rest.)*
+> *In my room stands a new table made of wood. My sister bought a transparent glass made of glass. Mom put on a beautiful dress made of silk for the holiday. I like to drink cold juice made of apples in the summer. Today for lunch we have tasty buns made of viburnum.*
 
-> — **Максим:** Коли ми починаємо новий проект? *(When do we start the new project?)*
-> — **Директор:** Ми працюємо з вівторка. *(We are working since Tuesday.)*
-> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready since morning.)*
+Use **з** + Genitive to indicate the starting point of an action in time ("since" or "from"). We will contrast this later with the preposition **після** (after).
 
-Говоріть правильно. *(Speak correctly.)*
-Важливо знати історію слів. *(It is important to know the history of words.)*
+Цей прийменник чудово показує час, коли саме почалася ваша дія. Це може бути певна частина дня, конкретний день тижня або довгий період життя. Українці постійно використовують такі зручні фрази. Вони допомагають нам бути точними у розмові.
 
-:::tip Деколонізація (Decolonization)
-The only correct way to express origin from Ukraine is «з України». This derives directly from the correct locative form «в Україні» *(in Ukraine)*. You may sometimes hear obsolete forms that treat Ukraine as a region rather than a sovereign independent state; those are incorrect and stem from colonial influence. Furthermore, the rich system of euphony with three distinct preposition forms is a beautiful, defining phonetic feature of the language that clearly distinguishes it from neighboring Slavic systems. Embrace these phonetic variants because they make your speech sound naturally and authentically Ukrainian.
+> *This preposition perfectly shows the time when your action exactly began. This can be a certain part of the day, a specific day of the week, or a long period of life. Ukrainians constantly use such convenient phrases. They help us to be precise in conversation.*
+
+> — **Ірина:** Ти виглядаєш дуже втомленим. Що сталося? *(You look very tired. What happened?)*
+> — **Олег:** Я інтенсивно працюю з ранку. Дуже багато складної роботи. *(I have been working intensively since morning. A lot of difficult work.)*
+> — **Ірина:** Тобі треба добре відпочити. Ми вільні з понеділка. *(You need to rest well. We are free since Monday.)*
+> — **Олег:** Це чиста правда. Я не спав нормально з канікул. *(That is the pure truth. I haven't slept normally since the holidays.)*
+
+### Читаємо українською
+
+Я дуже багато працюю з ранку до вечора. Ми чекаємо на ці новини з понеділка. Мій дідусь знає цю пісню з дитинства. Студенти мають чудовий настрій з канікул. Час летить дуже швидко.
+
+The only correct way to say "from Ukraine" is **з України**.
+
+Українська мова має власну незалежну граматичну систему. Наша милозвучність та логіка використання прийменників сильно відрізняють українську мову від інших. Завжди свідомо використовуйте правильні форми. Це показує вашу щиру повагу до нашої культури.
+
+:::tip
+**Did you know?**
+Forms that use "на" and "з" for Ukraine treat the state as a region and are incorrect calques from Russian. Embracing **з України** and **зі Львова** is the best way to sound like an authentic, respectful speaker.
 :::
 
 <!-- INJECT_ACTIVITY: quiz-euphony-variants -->

@@ -1,6 +1,6 @@
 # Build Summary: advanced-pronouns (B1)
 
-Generated: 2026-04-09 23:27
+Generated: 2026-04-11 02:19
 
 ## Pipeline Phases
 
@@ -12,21 +12,25 @@ Generated: 2026-04-09 23:27
 | pre-verify | complete | 2026-04-09 21:09:09 |
 | write | complete | 2026-04-09 21:15:58 |
 | exercises | complete | 2026-04-09 21:15:58 |
-| activities | complete | 2026-04-09 21:23:54 |
+| activities | complete | 2026-04-11 00:10:37 |
 | verify-exercises | complete | 2026-04-09 21:23:55 |
 | annotate | complete | 2026-04-09 21:23:55 |
 | vocab | complete | 2026-04-09 21:24:33 |
 | enrich | complete | 2026-04-09 21:24:33 |
 | verify | complete | 2026-04-09 21:24:34 |
-| review | complete | 2026-04-09 21:27:04 |
 | stress | complete | 2026-04-09 21:27:04 |
-| publish | complete | 2026-04-09 21:27:07 |
+| repair | complete | 2026-04-11 00:02:28 |
+| review | complete | 2026-04-11 00:08:01 |
+| publish | complete | 2026-04-11 00:19:10 |
+| audit | complete | 2026-04-11 00:19:10 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | advanced-pronouns-review-r1.md |
+| 2 | advanced-pronouns-review-r2.md |
+| 3 | advanced-pronouns-review-r3.md |
 
 ## Dispatch Log
 
@@ -37,18 +41,30 @@ Generated: 2026-04-09 23:27
 | activities | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 341s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 98s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 98s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 30s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 150s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 139s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 194s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 56s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 43s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 53s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 53s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 49s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 58s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 56s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
 | write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
 | write-chunk-07 | gemini-tools (gemini-3.1-pro-preview) | 62s | ✅ |
+| write-chunk-07 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
@@ -60,6 +76,8 @@ Generated: 2026-04-09 23:27
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -1,0 +1,70 @@
+{
+  "module": "b1-baseline-future-aspect",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T01:47:17.896350Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T01:45:53.408209Z",
+    "meta": null,
+    "activities": "2026-04-11T01:37:53.748775Z",
+    "vocabulary": "2026-04-09T01:58:49.444558Z",
+    "research": null,
+    "plan": "2026-04-04T21:31:33.259996Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "6598/4000 (raw: 6721) | immersion: 27.5% LOW (target 75-100% (B1.0 Bridge)) | richness: 71% < 85% min (checkpoint) - REWRITE needed"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "6/0 | density: 1 < 6"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "40/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -23 | premature=5 | gaps=0 | well-paced=1",
+      "delta": -23,
+      "premature": 5,
+      "gaps": 0,
+      "well_paced": 1
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

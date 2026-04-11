@@ -1,38 +1,37 @@
 ## Місцевий з абстрактними іменниками (Locative with Abstract Nouns)
 
-На рівні А1 ми вивчали місцевий відмінок як фізичне місце. *(In A1, we studied the locative case as a physical place.)* For example, «у кімнаті» *(in the room)*, «у місті» *(in the city)*, or «на столі» *(on the table)*. Now, we are expanding this concept. The locative case is not just for physical spaces on a map. We also use it for abstract domains, fields of activity, and general life contexts.
+In your previous lessons, you learned to use the Locative case to talk about physical places and locations. You used it to answer the question "where" for buildings, cities, and rooms, such as being at the university, in the kitchen, or in the center of the city. Now, we are expanding this grammatical concept to include abstract places, fields of activity, and broad life contexts. The mechanism remains exactly the same, but the meaning shifts from a literal location to a conceptual space.
 
-Let's compare two ideas to see the difference clearly. If you say «Я працюю в університеті» *(I work at the university)*, you mean the physical building. It is a concrete place. But if you say «Я працюю в освіті» *(I work in education)*, you mean the abstract field. You could be working from home, but your professional domain is education. This is a very natural and common way to talk about professions and society.
+Раніше ми багато говорили про конкретні місця, де ми знаходимося фізично. Наприклад, ми казали, що студенти зараз в університеті, а їхня нова викладачка працює у великій аудиторії. Тепер ми будемо використовувати місцевий відмінок для абсолютно нових абстрактних сфер. Людина може працювати не тільки в університеті, але й загалом в освіті.
 
-Давайте прочитаємо діалог. *(Let's read the dialogue.)* Марія та Ігор зустрілися на вулиці після довгої перерви. Вони говорять про новини. *(Maria and Ihor met on the street after a long break. They are talking about news.)*
+> *Earlier we talked a lot about concrete places where we are located physically. For example, we said that the students are currently at the university, and their new teacher works in a large lecture hall. Now we will use the locative case for absolutely new abstract spheres. A person can work not only at the university, but in education in general.*
 
-> — **Марія:** Привіт, Ігоре! Рада тебе бачити. Що нового у твоєму житті? *(Hi, Ihor! Glad to see you. What is new in your life?)*
-> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. *(Hi, Maria! Last month I changed jobs.)*
-> — **Марія:** Це чудово! Де ти тепер працюєш? *(That is great! Where do you work now?)*
-> — **Ігор:** Тепер працюю в освіті. А ти? *(Now I work in education. And you?)*
-> — **Марія:** Я на новому курсі в університеті. Вчора розмовляла по телефону з мамою. Вона дуже хвилюється за моє навчання. *(I am on a new course at the university. Yesterday I talked on the phone with mom. She is very worried about my studies.)*
+> — **Марія:** Привіт, Ігорю! Як твої справи? Що нового у твоєму житті? *(Hi, Ihor! How are you? What is new in your life?)*
+> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. Тепер працюю в освіті. А ти? *(Hi, Maria! Last month I changed jobs. Now I work in education. And you?)*
+> — **Марія:** Я навчаюся на новому курсі. Вчора ввечері розмовляла по телефону з мамою — вона дуже хвилюється за мене. *(I am studying on a new course. Yesterday evening I talked on the phone with my mom — she is very worried about me.)*
+> — **Ігор:** Розумію. У політиці зараз багато проблем, в економіці також, тому всі постійно хвилюються. *(I understand. There are many problems in politics right now, in economics too, so everyone is constantly worried.)*
 
-When we talk about a professional sphere or a broad domain of life, we use the specific pattern **у/в + abstract noun in the locative case**. These are not physical places where you can stand or sit, but conceptual spaces where you spend your time, build a career, or focus your energy. Here are some high-frequency combinations for different professional and cultural fields: **у політиці** *(in politics)*, **в економіці** *(in economics)*, **у науці** *(in science)*, and **у мистецтві** *(in art)*. You can also talk about your broad personal experience using **у житті** *(in life)* or **у думках** *(in thoughts)*.
+When we talk about a profession, a broad field of activity, or an academic discipline, we almost always use the prepositions **у** or **в** together with the Locative case. This grammatical pattern creates the meaning of being "in the domain" or "in the field" of something. These are not physical places you can walk into through a door, but rather professional or abstract spheres where people spend their time and energy.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Мій старший брат зараз працює у політиці. *(My older brother now works in politics.)*
-- Вона зробила велике відкриття у науці. *(She made a great discovery in science.)*
-- У сучасному мистецтві немає строгих правил. *(There are no strict rules in modern art.)*
-- У моєму житті було багато цікавих людей. *(In my life there were many interesting people.)*
+Мій старший брат уже десять років успішно працює в економіці. Його дружина ніколи не цікавилася фінансами, бо вона завжди була у мистецтві. Наша мама часто каже, що у сучасній науці працювати дуже важко, але надзвичайно цікаво. Мій новий знайомий хоче зробити велику кар'єру у політиці.
 
-Let's review the grammatical precision for these abstract nouns. Many of these professional fields are feminine nouns ending in the suffix **-ка**. Remember the fundamental consonant mutation rule for the locative case: **к → ц**. When a feminine noun ends in **-ка**, the locative form changes to **-ці**. Thus, «політика» becomes «у політиці», «наука» becomes «у науці», and «економіка» becomes «в економіці». On the other hand, neuter abstract nouns ending in **-я**, such as **життя** *(life)* and **навчання** *(studies/learning)*, are much simpler to decline. They just take the standard **-і** ending. So, the nominative «життя» becomes «у житті», and «навчання» becomes «у навчанні».
+> *My older brother has been successfully working in economics for ten years already. His wife was never interested in finance, because she was always in art. Our mom often says that working in modern science is very difficult, but extremely interesting. My new acquaintance wants to make a big career in politics.*
 
-**Читаємо українською (Reading in Ukrainian):**
-- Музика → Мій друг нічого не розуміє у музиці. *(Music → My friend understands nothing in music.)*
-- Культура → Вони багато читають про нове у культурі. *(Culture → They read a lot about what is new in culture.)*
-- Навчання → У навчанні завжди є невеликі проблеми. *(Studies → There are always small problems in studies.)*
+These abstract nouns follow the exact same ending rules as the concrete nouns you already know in the Locative case. You simply need to apply the familiar patterns to new vocabulary. Remember that feminine nouns ending in **-ка** will still have the mandatory consonant mutation where the letter **к** changes to **ц**. Neuter nouns ending in **-я** consistently keep the **-і** ending.
 
-There is one major exception regarding the preposition. When we say "at work" in Ukrainian, we always use the preposition **на**. The phrase is **на роботі**, never «у роботі». Why? Because work is viewed as an activity or an event you attend, rather than an enclosed container or a broad abstract domain. Contrast this with specific physical locations or broad concepts: **в офісі** *(at the office)* means you are physically inside the building, and **у бізнесі** *(in business)* means you operate in that specific professional field.
+Слово «політика» змінюється абсолютно так само, як і слово «аптека». Тому ми завжди кажемо «у політиці», а також «в економіці» та «у науці». Слова середнього роду «життя» та «навчання» мають стандартне закінчення «-і», тому ми отримуємо такі фрази, як «у житті» та «у навчанні».
 
-**Читаємо українською (Reading in Ukrainian):**
-- Зараз мій тато на роботі, він буде ввечері. *(Right now my dad is at work, he will be here in the evening.)*
-- Сьогодні я був у великому новому офісі. *(Today I was in a large new office.)*
-- Моя сестра дуже хоче працювати у бізнесі. *(My sister really wants to work in business.)*
-- Ми не можемо говорити, тому що ми на роботі. *(We cannot talk, because we are at work.)*
+> *The word "politics" changes absolutely the same way as the word "pharmacy". That is why we always say "in politics", and also "in economics" and "in science". Neuter words "life" and "studies" have the standard "-i" ending, so we get phrases like "in life" and "in studies".*
 
-<!-- INJECT_ACTIVITY: quiz, Identify the function of locative (physical, abstract, temporal, means), 8 items -->
+While most abstract domains use **у** or **в**, the word for work is a very important and frequent exception to this pattern. We never say that we are physically "in" work. Instead, we conceptualize work as an ongoing event or an active process rather than an enclosed container or a broad field.
+
+:::info
+**Grammar box**
+Always use the preposition **на** with the word **робота**. You must say **на роботі** (at work), never «у роботі». However, you can still use **в/у** for the physical location of your job, like **в офісі** (at the office) or the general field, like **у бізнесі** (in business).
+:::
+
+Моя сестра цілий день була на роботі і дуже втомилася. Вони випадково познайомилися на новій роботі минулого року. Мій офіс знаходиться в центрі міста, але саме зараз я не на роботі.
+
+> *My sister was at work all day and got very tired. They accidentally met at a new job last year. My office is located in the center of the city, but right now I am not at work.*
+
+<!-- INJECT_ACTIVITY: quiz-locative-function -->

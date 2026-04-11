@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-broad domain of life, we use the specific pattern **у/в + abstract noun in the locative case**. These are not physical places where you can stand or sit, but conceptual spaces where you spend your time, build a career, or focus your energy. Here are some high-frequency combinations for different professional and cultural fields: **у політиці** *(in politics)*, **в економіці** *(in economics)*, **у науці** *(in science)*, and **у мистецтві** *(in art)*. You can also talk about your broad personal experience using **у житті** *(in life)* or **у думках** *(in thoughts)*. **Читаємо українською (Reading in Ukrainian):** - Мій старший брат зараз працює у політиці. *(My older brother now works in politics.)* - Вона зробила велике відкриття у науці. *(She made a great discovery in science.)* - У сучасному мистецтві немає строгих правил. *(There are no strict rules in modern art.)* - У моєму житті було багато цікавих людей. *(In my life there were many interesting people.)* Let's review the grammatical precision for these abstract nouns. Many of these professional fields are feminine nouns ending in the suffix **-ка**. Remember the fundamental consonant mutation rule for the locative case: **к → ц**. When a feminine noun ends in **-ка**, the locative form changes to **-ці**. Thus, «політика» becomes «у політиці», «наука» becomes «у науці», and «економіка» becomes «в економіці». On the other hand, neuter abstract nouns ending in **-я**, such as **життя** *(life)* and **навчання** *(studies/learning)*, are much simpler to decline. They just take the standard **-і** ending. So, the nominative «життя» becomes «у житті», and «навчання» becomes «у навчанні». **Читаємо українською (Reading in Ukrainian):** - Музика → Мій друг нічого не розуміє у музиці. *(Music → My friend understands nothing in music.)* - Культура → Вони багато читають про нове у культурі. *(Culture → They read a lot about what is new in culture.)* - Навчання → У навчанні завжди є невеликі проблеми. *(Studies → There are always small problems in studies.)* There is one major exception regarding the preposition. When we say "at work" in Ukrainian, we always use the preposition **на**. The phrase is **на роботі**, never «у роботі». Why? Because work is viewed as an activity or an event you attend, rather than an enclosed container or a broad abstract domain. Contrast this with specific physical locations or broad concepts: **в офісі** *(at the office)* means you are physically inside the building, and **у бізнесі** *(in business)* means you operate in that specific professional field. **Читаємо українською (Reading in Ukrainian):** - Зараз мій тато на роботі, він буде ввечері. *(Right now my dad is at work, he will be here in the evening.)* - Сьогодні я був у великому новому офісі. *(Today I was in a large new office.)* - Моя сестра дуже хоче працювати у бізнесі. *(My sister really wants to work in business.)* - Ми не можемо говорити, тому що ми на роботі. *(We cannot talk, because we are at work.)* <!-- INJECT_ACTIVITY: quiz, Identify the function of locative (physical, abstract, temporal, means), 8 items -->
+When we talk about a profession, a broad field of activity, or an academic discipline, we almost always use the prepositions **у** or **в** together with the Locative case. This grammatical pattern creates the meaning of being "in the domain" or "in the field" of something. These are not physical places you can walk into through a door, but rather professional or abstract spheres where people spend their time and energy. Мій старший брат уже десять років успішно працює в економіці. Його дружина ніколи не цікавилася фінансами, бо вона завжди була у мистецтві. Наша мама часто каже, що у сучасній науці працювати дуже важко, але надзвичайно цікаво. Мій новий знайомий хоче зробити велику кар'єру у політиці. > *My older brother has been successfully working in economics for ten years already. His wife was never interested in finance, because she was always in art. Our mom often says that working in modern science is very difficult, but extremely interesting. My new acquaintance wants to make a big career in politics.* These abstract nouns follow the exact same ending rules as the concrete nouns you already know in the Locative case. You simply need to apply the familiar patterns to new vocabulary. Remember that feminine nouns ending in **-ка** will still have the mandatory consonant mutation where the letter **к** changes to **ц**. Neuter nouns ending in **-я** consistently keep the **-і** ending. Слово «політика» змінюється абсолютно так само, як і слово «аптека». Тому ми завжди кажемо «у політиці», а також «в економіці» та «у науці». Слова середнього роду «життя» та «навчання» мають стандартне закінчення «-і», тому ми отримуємо такі фрази, як «у житті» та «у навчанні». > *The word "politics" changes absolutely the same way as the word "pharmacy". That is why we always say "in politics", and also "in economics" and "in science". Neuter words "life" and "studies" have the standard "-i" ending, so we get phrases like "in life" and "in studies".* While most abstract domains use **у** or **в**, the word for work is a very important and frequent exception to this pattern. We never say that we are physically "in" work. Instead, we conceptualize work as an ongoing event or an active process rather than an enclosed container or a broad field. :::info **Grammar box** Always use the preposition **на** with the word **робота**. You must say **на роботі** (at work), never «у роботі». However, you can still use **в/у** for the physical location of your job, like **в офісі** (at the office) or the general field, like **у бізнесі** (in business). ::: Моя сестра цілий день була на роботі і дуже втомилася. Вони випадково познайомилися на новій роботі минулого року. Мій офіс знаходиться в центрі міста, але саме зараз я не на роботі. > *My sister was at work all day and got very tired. They accidentally met at a new job last year. My office is located in the center of the city, but right now I am not at work.* <!-- INJECT_ACTIVITY: quiz-locative-function -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -522,7 +522,74 @@ The vocative case is a powerful and immediate grammatical differentiator between
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -549,14 +616,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

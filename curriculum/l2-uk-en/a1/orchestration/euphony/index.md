@@ -1,6 +1,6 @@
 # Build Summary: euphony (A1)
 
-Generated: 2026-04-09 12:16
+Generated: 2026-04-11 01:31
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 12:16
 | vocab | complete | 2026-04-09 09:59:56 |
 | enrich | complete | 2026-04-09 09:59:56 |
 | verify | complete | 2026-04-09 09:59:57 |
-| review | complete | 2026-04-09 10:16:18 |
 | stress | complete | 2026-04-09 10:16:26 |
-| publish | complete | 2026-04-09 10:16:29 |
+| review | complete | 2026-04-10 23:31:01 |
+| publish | complete | 2026-04-10 23:31:05 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-09 12:16
 |-------|------|
 | 1 | euphony-review-r1.md |
 | 2 | euphony-review-r2.md |
+| 3 | euphony-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,17 +41,20 @@ Generated: 2026-04-09 12:16
 | vocab | gemini (gemini-3-flash-preview) | 302s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 614s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 366s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 115s | ✅ |
 | pre-verify-retry | gemini-tools (gemini-3-flash-preview) | 404s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

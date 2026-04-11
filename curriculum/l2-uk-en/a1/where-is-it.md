@@ -48,12 +48,12 @@ Masculine nouns are slightly more complex because they split into two groups. Ma
 * офіс → в офісі (in the office)
 * теа́тр → у теа́трі (in the theater)
 * стіл → на столі (on the table)
+* магази́н → у/в магази́ні (in the shop)
 
 However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
 * парк → у парку (in the park)
 * банк → у ба́нку (at the bank)
 * сад → у саду́ (in the orchard)
-* магази́н → у/в магази́ні (in the shop)
 
 <!-- INJECT_ACTIVITY: match-nom-loc -->
 

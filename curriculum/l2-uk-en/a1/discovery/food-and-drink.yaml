@@ -1,0 +1,46 @@
+discovered_at: '2026-04-10T22:21:35.397704+00:00'
+error: null
+query_keywords:
+- Food and Drink
+- Діалоги (Dialogues)
+- Їжа (Food)
+- Напої (Drinks)
+- Підсумок — Summary
+- Use кава з молоком, чай з цукром as memorized chunks (NOT instrumental grammar)
+- Recognize iconic Ukrainian dishes (борщ, вареники, сало)
+- їжа
+- напій
+- хліб
+- кава
+- чай
+- вода
+- молоко
+- сік
+- м'ясо
+- риба
+- суп
+- сніданок
+- обід
+- вечеря
+- борщ
+- вареник
+- каша
+- сир
+- масло
+- яйце
+- картопля
+- цукор
+- сіль
+- сметана
+- компот
+- курка
+- салат
+- піца
+- помідор
+- огірок
+- яблуко
+- банан
+- лимон
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

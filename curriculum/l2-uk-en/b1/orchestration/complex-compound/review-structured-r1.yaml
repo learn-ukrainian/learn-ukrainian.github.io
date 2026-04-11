@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all grammar points and semantic links defined in the plan. The
+    dialogue deviates slightly from the plan by having Sofia use the third person
+    ("а Андрій мріє") instead of the planned second pers
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains Russian calques like "пряме протиріччя" and "прийняттям рішення",
+    as well as the active participle "інтригуючу". Also starts a sentence with "В"
+    instead of "У" before a consonant ("В сучасній
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Uses great analogies (e.g., comparing parts of a compound
+    sentence to independent adults walking hand-in-hand, versus the strict hierarchy
+    of complex sentences).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Seamlessly integrates all required and recommended vocabulary points into
+    the natural flow of the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 6 injected markers are perfectly mapped to the text flow, avoiding
+    clustering at the end.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Enthusiastic, clear, and professional. The teacher's voice is encouraging
+    ("А тепер погляньмо на практичний приклад...") without resorting to empty gamified
+    filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4872 (well above the 4000 target). Clean formatting, proper
+    headers.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Effectively quotes Ukrainian authors (Zabolotnyi rules, Franko, Kostenko)
+    and specifically addresses common Ukrainian linguistic pitfalls at the end (avoiding
+    "но" and clarifying "та").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The dialogue is generally good, but contains two unnatural flaws: Sofia
+    refers to Andriy in the third person while speaking to him ("Я хочу піти в кіно,
+    а Андрій мріє про театр"), and Andriy uses an E'
+findings: []

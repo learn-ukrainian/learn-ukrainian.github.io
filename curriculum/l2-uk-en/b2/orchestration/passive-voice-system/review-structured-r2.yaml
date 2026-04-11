@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All sections and vocabulary from the plan are covered. However, the section
+    word counts are systematically below the plan''s targets (S1: 720/1000, S2: 850/1200,
+    S3: 800/1000).'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian. Correct use of 2019 Pravopys (§ 35 for `масмедіа`).
+    Precise grammatical terminology.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. The module explains the "why" (optics and focus) rather
+    than just the "how". Strong distinction between result (-но/-то) and state (participle).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 7 required and 4 recommended words used naturally in context (e.g.,
+    `моніторинг`, `довкілля`, `впроваджуватися`).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Variety of activity types (error correction, classification, transformation).
+    Markers correctly follow the teaching blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Encouraging teacher persona. Cultural depth via folk songs (Ihor's Campaign,
+    "Ой у полі жито..."). Strong decolonial perspective on active voice.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean Markdown, H2 headings match the plan. Word count (3697) is slightly
+    below the 4000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach. Authentically Ukrainian examples (folk songs, modern
+    political discourse).
+- dimension: 9
+  name: Dialogue & conversation
+  score: 10
+  evidence: Natural multi-turn dialogue (Oleg and Maria) demonstrating the transition
+    from spoken to official style.
+findings: []

@@ -1,6 +1,6 @@
 # Build Summary: hey-friend (A1)
 
-Generated: 2026-04-09 03:39
+Generated: 2026-04-11 01:51
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 03:39
 | vocab | complete | 2026-04-09 01:37:46 |
 | enrich | complete | 2026-04-09 01:37:46 |
 | verify | complete | 2026-04-09 01:37:47 |
-| review | complete | 2026-04-09 01:39:23 |
 | stress | complete | 2026-04-09 01:39:26 |
-| publish | complete | 2026-04-09 01:39:28 |
+| review | complete | 2026-04-10 23:51:18 |
+| publish | complete | 2026-04-10 23:51:22 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | hey-friend-review-r1.md |
+| 2 | hey-friend-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,13 +39,16 @@ Generated: 2026-04-09 03:39
 | activities | gemini-tools (gemini-3.1-pro-preview) | 104s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 86s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 97s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 250s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

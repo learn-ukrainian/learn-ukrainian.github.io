@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-story ends. You have crossed the finish line. The perfective aspect does not care how long the action took or how difficult it was; its sole purpose is to confirm that the action reached its limit and produced a clear, final result. Because the perfective aspect is fundamentally tied to the concept of completion, it has a fascinating grammatical quirk: perfective verbs do not have a present tense. Think about it logically. If an action is happening right now, in the present moment, it is still ongoing. It cannot be completely finished. Therefore, when you take a perfective verb and put it into a form that looks like the present tense, it actually jumps into the future. For example, the perfective verb **зробити** (to do) in the first-person singular is **зроблю** (I will do). But «Я зроблю» does not mean "I am doing." It means "I will do" or "I will get it done." This is a major concept for you to master at the A2 level. By simply choosing the perfective aspect, you can talk about the future without needing any extra auxiliary verbs. It is a powerful tool for making promises and stating clear intentions. For this introductory module, however, we will focus primarily on using the perfective aspect in the past tense. This is where the contrast with the imperfective aspect is most obvious. When you use a perfective verb in the past, you are reporting a concrete achievement. For example: «Я купив квиток» *(I bought a ticket)*. The transaction is complete; you have the ticket in your hand. Or «Вона прийшла додому» *(She arrived home)*. The journey is over; she is inside the house. Consider «Ми зробили завдання» *(We finished the task)*. The work is done. The perfective past tense provides that satisfying "click" of a completed action. Just as the imperfective aspect has its favorite adverbs, the perfective aspect has specific signal words that highlight a result. Look out for words like **нарешті** (finally), **вже** (already), and **раптом** (suddenly). These words naturally point to an outcome or a sudden change of state. However, be careful with the word **вчора** (yesterday). It is completely neutral and depends entirely on the speaker's focus. You can say «Вчора я читав» *(Yesterday I was reading)* if you want to emphasize the process, or «Вчора я прочитав» *(Yesterday I finished reading)* if you want to emphasize the result. To truly understand the difference between the two aspects, let's look at a classic contrast: the concept of failure. Imagine you were looking for your keys. You can say: «Я шукав, але не знайшов» *(I looked for, but didn't find)*. The verb **шукав** (was looking for) is imperfective because the search was a process that took up your time. The verb **знайшов** (found) is perfective because finding is the ultimate result you were aiming for. By using the perfective aspect with a negative word, you are stating that the goal was never reached. The boundary was not crossed. <!-- INJECT_ACTIVITY: match-up-context-aspect -->
+when you take a perfective verb and put it into a form that looks like the present tense? It automatically jumps into the future! :::info **Grammar box** — Perfective verbs never describe the present. If you see a perfective verb with present-tense endings, it means the action *will be* completed in the future. For example, «я роблю» (imperfective) means "I am doing," but «я зроблю» (perfective) means "I will do" or "I will get it done." ::: Завтра я напишу тобі довгий лист. Я куплю смачний торт на твій день народження. Ми зробимо це завдання разом. Усі ці дії дадуть результат у майбутньому. > *Tomorrow I will write you a long letter. I will buy a delicious cake for your birthday. We will do this task together. All these actions will give a result in the future.* For this specific module, we are going to focus heavily on using the perfective aspect in the past tense. This is where the contrast between a process and a result is the clearest. When you use a perfective verb in the past, you are emphasizing the "click" of completion. You are stating that the goal was successfully achieved. It answers the question "What did you accomplish?" rather than "What were you doing?" Вчора я купив новий телефон. Моя сестра нарешті прийшла додому. Ми швидко зробили домашнє завдання і пішли гуляти. > *Yesterday I bought a new phone. My sister finally arrived home. We quickly finished the homework and went for a walk.* Just as the imperfective aspect has its own set of frequency adverbs, the perfective aspect pairs naturally with words that highlight a sudden change, an achievement, or an arrival at a goal. Look out for signal words like «нарешті» (finally), «вже» (already), and «раптом» (suddenly). However, be careful with the word «вчора» (yesterday). It is completely neutral and can take either aspect depending entirely on what you want to emphasize. Вчора я довго читав цікаву статтю. Це був процес. Але вчора ввечері я вже прочитав цю статтю. Це мій результат. > *Yesterday I was reading an interesting article for a long time. This was a process. But yesterday evening I already finished reading this article. This is my result.* One of the best ways to understand the perfective aspect is to look at situations where an action fails to reach its goal. In Ukrainian, we often contrast a failed process with the lack of a result using both aspects in the same sentence. The attempt itself was a process, so it uses an imperfective verb. But the expected outcome—which didn't happen—is a boundary that wasn't crossed, so we use a negated perfective verb. Христина довго шукала свій фотоапарат, але не знайшла його. Вона робила це цілий ранок. Пошук був довгим процесом, але результату немає. > *Khrystyna was looking for her camera for a long time, but did not find it. She was doing this all morning. The search was a long process, but there is no result.* <!-- INJECT_ACTIVITY: match-up-context-aspect -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -341,7 +341,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 3: A2 bridge (A2 M01-M03)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–6 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 100%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 100% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
@@ -362,14 +429,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

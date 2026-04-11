@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-short, invariable form «їх» (the Genitive form of «вони») as a possessive, but in standard, natural Ukrainian, you should always decline **їхній**. This is a beautiful feature of our language! * їхній сусід → **їхньому** сусідові *(to their neighbor)* * їхня донька → **їхній** доньці *(to their daughter)* * їхні проблеми → **їхнім** проблемам *(to their problems)* «Читаємо українською» Люди часто заздрять **їхньому багатому сусідові**. *(People often envy their rich neighbor.)* Батьки купили нову іграшку **їхній маленькій доньці**. *(The parents bought a new toy for their little daughter.)* Ми не можемо зарадити **їхнім проблемам**. *(We cannot help their problems.)* Ця музика дуже подобається **їхнім дітям**. *(Their children really like this music.)* Here is a very important rule: the possessive pronouns **його** *(his / its)* and **її** *(her)* **never change their form**. They are invariable, regardless of the case, gender, or number of the noun they describe. This is a common trap for English speakers! Do not try to add Dative endings to them. Just leave them as they are and decline the noun. * його друг → **його** другу *(to his friend)* * її сестра → **її** сестрі *(to her sister)* «Читаємо українською» Я повністю вірю **його другу**. *(I completely believe his friend.)* Лікар дав ліки **її хворій сестрі**. *(The doctor gave medicine to her sick sister.)* Ця машина належить **його братові**. *(This car belongs to his brother.)* Ми щиро радіємо **її успіхам**. *(We are sincerely happy about her successes.)* Finally, let's look at demonstrative pronouns: **цей** *(this)* and **той** *(that)*. They are crucial for pointing things out. **Цей** follows a soft-like pattern, while **той** has its own unique forms. For masculine/neuter, we use **цьому** *(to this)* and **тому** *(to that)*. For feminine, we use **цій** *(to this)* and **тій** *(to that)*. The plural forms are very short: **цим** *(to these)* and **тим** *(to those)*. * цей будинок → **цьому** будинку *(to this house)* * та дівчина → **тій** дівчині *(to that girl)* * ці студенти → **цим** студентам *(to these students)* «Читаємо українською» Дай цю цікаву книгу **тому хлопцеві**. *(Give this interesting book to that boy.)* **Цьому старому будинку** потрібен капітальний ремонт. *(This old house needs a major renovation.)* Поясни нове правило **тій новій студентці**. *(Explain the new rule to that new student.)* Я зовсім не вірю **цим новинам**. *(I do not believe these news at all.)* > — **Олена:** Кому ти телефонуєш? *(Who are you calling?)* > — **Тарас:** Я телефоную **моєму новому колезі**. *(I am calling my new colleague.)* > — **Олена:** А що ти хочеш пояснити **цьому чоловікові**? *(And what do you want to explain to this man?)* > — **Тарас:** Я маю надіслати важливі документи **його відділу**. *(I have to send important documents to his department.)* > — **Олена:** Зрозуміло. Передай вітання **вашій команді**! *(Understood. Send greetings to your team!)* <!-- INJECT_ACTIVITY: quiz-pronoun-forms, Choose the correct dative form of the possessive pronoun (моєму vs. моїй vs. моїм) --> <!-- INJECT_ACTIVITY: match-up-nom-dat, Match nominative noun phrases to their dative equivalents (мій друг → моєму другові) -->
+::: Діти подарували гарний малюнок їхній мамі на свято. Сусіди часто скаржаться їхньому старшому синові на шум. Ми завжди готові прийти на допомогу їхній родині. Собака радісно біжить назустріч їхньому автомобілю. > *The children gave a beautiful drawing to their mom for the holiday. The neighbors often complain to their older son about the noise. We are always ready to come to the aid of their family. The dog runs joyfully towards their car.* There is an important exception to these matching rules when dealing with third-person singular possessives. The pronouns «його» (his) and «її» (her) are completely invariable, meaning they never change their shape regardless of the case, gender, or number of the noun they modify. This is a common trap for English speakers who try to add Dative endings to these words. You must never say «йогому» or «їїй»; the pronoun remains frozen, and only the noun takes the Dative ending. :::note **The frozen pronouns** Remember that «його» and «її» are permanently locked in their Genitive forms. If the noun changes, these pronouns stand still and watch. You say «його другові», not «йогому». ::: Я повністю вірю його давньому другові, бо він чесний. Вчора він з радістю допоміг її молодшій сестрі. Вона вирішила не дзвонити його керівникові. Ми подарували квитки її батькові на ювілей. > *I completely trust his old friend because he is honest. Yesterday he happily helped her younger sister. She decided not to call his manager. We gave tickets to her father for his anniversary.* Demonstrative pronouns let you point out exactly who or what you are talking about. The pronoun «цей» (this) acts somewhat like a soft-stem word, becoming «цьому» for masculine and neuter nouns, and «цій» for feminine nouns. Conversely, «той» (that) acts like a hard-stem word, becoming «тому» and «тій». When you need to point to multiple recipients in the plural, the system simplifies drastically. Both genders merge into a single form, giving us «цим» (to these) and «тим» (to those). Передай ці документи тому високому хлопцеві в коридорі. Цьому старому будинку терміново потрібен серйозний ремонт. Будь ласка, поясни нове правило цим студентам ще раз. Я не довіряю тим людям, які завжди брешуть. > *Pass these documents to that tall guy in the hallway. This old building urgently needs serious repair. Please explain the new rule to these students one more time. I do not trust those people who always lie.* > — **Оксана:** Ти вже телефонував твоєму братові? *(Have you already called your brother?)* > — **Степан:** Так, я телефонував йому вранці. *(Yes, I called him in the morning.)* > — **Оксана:** А що ти сказав їхньому батькові? *(And what did you tell their father?)* > — **Степан:** Я пояснив цю ситуацію тому чоловікові. *(I explained this situation to that man.)* > — **Оксана:** Моїй сестрі потрібна допомога з цим проєктом. *(My sister needs help with this project.)* > — **Степан:** Я з радістю допоможу вашій родині. *(I will happily help your family.)* <!-- INJECT_ACTIVITY: quiz-pronoun-forms --> <!-- INJECT_ACTIVITY: match-up-nom-dat -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -510,7 +510,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -537,14 +604,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

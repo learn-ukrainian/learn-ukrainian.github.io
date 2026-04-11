@@ -29,7 +29,7 @@ Grand total: ~2150 words
 <previous_context>
 [...previous sections truncated...]
 
-have no apples and bananas.)* <!-- INJECT_ACTIVITY: match-up-conjunctions --> [match-up, Match sentence beginnings with ends that require a specific conjunction form (i/y/ta), 8 items] ## Все разом: мелодійні речення > — **Тарас:** Оленко, поїдемо **у Львів із друзями** на вихідні? *(Olenka, shall we go to Lviv with friends for the weekend?)* > — **Оленка:** **У Львів**? *(To Lviv?)* **Із задоволенням**! *(With pleasure!)* Але я поїду туди **з Оленою й Андрієм**. *(But I will go there with Olena and Andrii.)* Вони вже купили квитки. *(They have already bought tickets.)* > — **Тарас:** Чудова ідея. *(Great idea.)* А коли ви повернетеся **зі Львова**? *(And when will you return from Lviv?)* > — **Оленка:** Ми повернемося **в понеділок** уранці. *(We will return on Monday morning.)* А ти поїдеш **зі мною**? *(And will you go with me?)* > — **Тарас:** Ні, я залишуся **в Києві**. *(No, I will stay in Kyiv.)* Буду читати книжку **й відпочивати**. *(I will read a book and rest.)* > — **Оленка:** Добре, зустрінемося **в університеті й усе** обговоримо. *(Good, we will meet at the university and discuss everything.)* > — **Тарас:** Так, мій брат **і я** чекатимемо на тебе. *(Yes, my brother and I will wait for you.)* Have you ever noticed how smoothly Ukrainian flows? This is not an accident. Read the dialogue above aloud. Now, try saying «в Львові» or «з мною». You will immediately feel your tongue stop or trip over the **збіг** *(cluster)* of consonants. Ukrainian is often described as a language designed to be sung, not just spoken. If you have to pause awkwardly or push forcefully through a phrase, you have likely violated a rule of **милозвучність** *(euphony)*. Your ears and your mouth are your best teachers here. When a sentence is phonetically correct, it glides without effort. «Читаємо українською»: * Ця українська пісня дуже **мелодійна й гарна**. *(This Ukrainian song is very melodious and beautiful.)* * Ми любимо співати **в Україні**. *(We love to sing in Ukraine.)* * Він завжди говорить **із задоволенням**. *(He always speaks with pleasure.)* Think of these rules as the "phonetic ecology" of Ukrainian. The language actively self-regulates to maintain its rhythm and its reputation as one of the most melodic in the world. It actively avoids harsh collisions of consonants and awkward vowel gaps at word boundaries. Mastering these small alternations—choosing between **у** and **в**, **з**, **із**, and **зі**, or **і** and **й**—is the real secret to fluency. It is the key to sounding like a natural, living speaker, rather than a robot reading from a dictionary. «Читаємо українською»: * Моя сестра живе **у Львові, і я** часто їжджу туди. *(My sister lives in Lviv, and I often travel there.)* * Вони вийшли **зі школи й пішли в парк**. *(They left the school and went to the park.)* * Це складне **правило**, але воно дуже важливе. *(This is a complex rule, but it is very important.)* <!-- INJECT_ACTIVITY: error-correction, Find and fix errors like *в вікно, *з школи, *і усі, *й її, *в Львові, 8 items -->
+spontaneous conversation. Notice how the prepositions and conjunctions shift instantly depending on the words around them to keep the sentence flowing. > — **Тарас:** Оленко, поїдемо **у** Львів **із** друзями на вихідні? *(Olenka, shall we go to Lviv with friends for the weekend?)* > — **Оленка:** Поїхати **зі** Львова? **Із** задоволенням! Але я поїду **з** Оленою **й** Андрієм. *(To go from Lviv? With pleasure! But I will go with Olena and Andriy.)* > — **Тарас:** Добре, зустрінемося **в** університеті **й** усе обговоримо. *(Good, we will meet at the university and discuss everything.)* > — **Оленка:** Домовилися. Я вже була **у** відпустці, але хочу відпочити ще. *(Agreed. I was already on vacation, but I want to rest more.)* > — **Тарас:** Тоді я куплю квитки, **і** ми поїдемо разом. *(Then I will buy tickets, and we will go together.)* Українська мова створена для того, щоб її співали, а не просто говорили. Найкращий спосіб перевірити милозвучність — це прочитати речення вголос. Якщо вам важко вимовити слова, або ви повинні зупинитися перед групою приголосних, ви напевно зробили фонетичну помилку. Тому ми завжди шукаємо найлегший шлях для звуку і змінюємо букви. > *The Ukrainian language is created to be sung, not just spoken. The best way to check euphony is to read the sentence aloud. If it is hard for you to pronounce the words, or you have to stop before a group of consonants, you probably made a phonetic mistake. Therefore, we always look for the easiest path for the sound and change letters.* This is what we call the "Singing Test." When you speak Ukrainian, the sounds should glide seamlessly into one another. If you feel like you are tripping over a heavy cluster of consonants, you have likely violated a euphony rule. Trust your ears and let your breath guide your choice of words. Think of these rules as the "phonetic ecology" of the language. Ukrainian constantly self-regulates to avoid harsh collisions of sounds, maintaining its reputation as one of the most melodious languages in the world. Милозвучність — це головний секрет української мови. Якщо ви хочете звучати як носій мови, ви повинні запам'ятати ці маленькі чергування. Вони роблять вашу вимову живою, природною та дуже красивою. З часом ви будете робити це автоматично. > *Euphony is the main secret of the Ukrainian language. If you want to sound like a native speaker, you must remember these small alternations. They make your pronunciation alive, natural, and very beautiful. With time, you will do this automatically.* Mastering these small shifts in prepositions and conjunctions is the key to sounding like a natural speaker, rather than a robot reading from a dictionary. :::tip **Trust your ears** — Euphony isn't just about memorizing tables; it's about feeling the rhythm. When in doubt, read the phrase out loud. The option that requires the least physical effort to pronounce is almost always the correct one. ::: <!-- INJECT_ACTIVITY: error-correction, Find and fix errors like *в вікно, *з школи, *і усі, *й її, *в Львові, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -485,7 +485,74 @@ Combine words into a full sentence, forcing the use of the correct euphonic form
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -512,14 +579,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

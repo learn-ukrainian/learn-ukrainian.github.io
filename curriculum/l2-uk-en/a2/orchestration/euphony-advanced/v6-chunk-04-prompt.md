@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-glide, a semi-vowel. It needs a full vowel right before it to "anchor" it smoothly. We use **й** between vowels, and after a vowel before a consonant. «Читаємо українською»: * **Ольга й Андрій** ідуть у кіно. *(Olha and Andrii are going to the cinema.)* * Надворі **тепло й затишно**. *(It is warm and cozy outside.)* The letter **і** is a full vowel. We use it to break up hard consonant clusters. We use **і** between consonants, and after a consonant before a vowel. «Читаємо українською»: * Її **син і мати** живуть тут. *(Her son and mother live here.)* * Її **брат іде** додому. *(Her brother is going home.)* When we build complex sentences, punctuation marks change the rules. A comma acts as a phonetic "fence" or boundary. Even if the word before the comma ends in a vowel, the pause breaks the glide. After a comma, we start a new phonetic context. Because of this pause, the full vowel **і** is usually preferred to introduce the new clause. «Читаємо українською»: > — **Тарас:** Де всі студенти? *(Where are all the students?)* > — **Олена:** **Вона співала, і всі слухали.** *(She sang, and everyone listened.)* > — **Тарас:** А потім? *(And then?)* > — **Олена:** **Ми закінчили, і концерт завершився.** *(We finished, and the concert ended.)* Notice we say «...співала, і всі...», not «й всі». The comma always resets the rhythm. There is one absolute rule for phonetic hygiene: the "forbidden collision." The glide **й** is never used before words starting with the sounds **й**, **я**, **ю**, **є**, **ї**. These letters already contain a hidden "y" sound. Adding **й** before them would create an ugly "double-y" stutter. We always use **і** before these letters, regardless of the previous word. «Читаємо українською»: * Це **Олена і її** брат. *(This is Olena and her brother.)* * Це **Одеса і Ялта**. *(This is Odesa and Yalta.)* * Тут є **кава і яблука**. *(There is coffee and apples here.)* Sometimes you might feel unsure about the phonetic rules, or you want to avoid a repetitive "i-i-i" sound in a sentence. Ukrainian has a safe, stylish alternative: the conjunction **та** *(and)*. Unlike **і/й**, **та** does not alternate. It is a stable word that works perfectly in any phonetic environment. «Читаємо українською»: > — **Ігор:** Хто там стоїть? *(Who is standing there?)* > — **Марія:** Там стоять **мама та тато**. *(Mom and dad are standing there.)* > — **Ігор:** Що вони купили? *(What did they buy?)* > — **Марія:** Вони купили **хліб та молоко**. *(They bought bread and milk.)* Let's practice this with compound objects in the Genitive case. This case often groups words together, so euphony is very noticeable. Pay attention to the endings and the conjunctions between them. «Читаємо українською»: * У нас **немає сиру й молока**. *(We have no cheese and milk.)* * У нас **немає яблук і бананів**. *(We have no apples and bananas.)* <!-- INJECT_ACTIVITY: match-up-conjunctions --> [match-up, Match sentence beginnings with ends that require a specific conjunction form (i/y/ta), 8 items]
+Pay attention to how the prepositions combine with the endings of the genitive case. Learn these phrases as a single phonetic block.* **Читаємо українською** Цей хлопець походить з родини лікарів. Він пішов із сім'ї багато років тому. Моя донька прийшла зі школи втомлена. Вона взяла книгу зі столу. > *This boy comes from a family of doctors. He left the family many years ago. My daughter came from school tired. She took the book from the table.* <!-- INJECT_ACTIVITY: fill-in-z-variants --> ## І чи й? У складних реченнях In Ukrainian, the choice between the conjunctions «і» and «й» depends entirely on the surrounding sounds. The letter «й» is a semi-vowel. It needs to attach itself to a full vowel that comes right before it, acting like a phonetic bridge. We use «й» between two vowels. The letter «і» is a full vowel, which we use to break up clusters of consonants. Ольга й Андрій пішли в кіно. У кімнаті були тільки син і мати. Вони купили яблука й огірки. > *Olha and Andriy went to the cinema. Only the son and mother were in the room. They bought apples and cucumbers.* When building complex sentences, punctuation changes these rules. A comma acts as a phonetic fence. Even if the word before the comma ends in a vowel, the pause breaks the fluid glide that «й» requires. Because of this natural breath, we always use the full vowel «і» after a comma. Вона гарно співала, і всі слухали. Ми купили квитки, і наша подорож почалася. > *She sang beautifully, and everyone listened. We bought tickets, and our journey began.* :::info **Grammar box** — Never use «й» immediately after a comma or a dash. The pause destroys the vowel environment. Always use «і» to start a new thought after punctuation. ::: There is one strict rule of phonetic hygiene where «й» is completely forbidden. You can never use «й» before words starting with the letters «й», «я», «ю», «є», or «ї». These letters already contain a hidden "y" sound. Placing «й» in front of them creates an ugly collision. In these cases, «і» is mandatory. Завтра прийдуть Олена і її брат. Мій маршрут — це Одеса і Ялта. > *Tomorrow Olena and her brother will come. My route is Odesa and Yalta.* If you are unsure whether to use «і» or «й», you have a completely safe alternative: the conjunction «та». It means exactly the same thing, but it never alternates. Using «та» helps avoid repetitive sounds and makes your Ukrainian sound stylish. На столі лежали хліб та масло. Мама та тато чекали на нас удома. > *Bread and butter lay on the table. Mom and dad were waiting for us at home.* Let's practice these conjunctions with compound objects in the Genitive case. Notice how the boundaries dictate the choice. У нас немає ні соку, і ні кави. Я не купив хліба й молока. > *We have neither juice, nor coffee. I didn't buy bread and milk.* <!-- INJECT_ACTIVITY: match-up-conjunctions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -478,7 +478,74 @@ Combine words into a full sentence, forcing the use of the correct euphonic form
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -505,14 +572,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

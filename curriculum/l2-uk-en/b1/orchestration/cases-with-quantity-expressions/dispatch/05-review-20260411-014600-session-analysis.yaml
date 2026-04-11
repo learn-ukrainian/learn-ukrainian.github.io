@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-43-c12c473b.json
+phase: review
+prompt_chars: 55508
+response_chars: 3728
+prompt_words: 7641
+response_words: 524
+sections:
+- name: preamble
+  start: 0
+  length: 459
+  fraction: 0.0083
+- name: plan
+  start: 459
+  length: 52207
+  fraction: 0.9405
+- name: output_spec
+  start: 52666
+  length: 2842
+  fraction: 0.0512
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 6/22 keywords (27%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact
+    find/replace pairs.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: '- The `find` string MUST be an EXACT copy-paste from the module content.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**The `<fixes>` block is REQUIRED for REVISE verdicts.'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

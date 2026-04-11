@@ -1,0 +1,6 @@
+- source: auto-generated
+  date: '2026-04-11'
+  error_types:
+  - TOXIC
+  status: active
+  note: V6 build failed after 1 attempts

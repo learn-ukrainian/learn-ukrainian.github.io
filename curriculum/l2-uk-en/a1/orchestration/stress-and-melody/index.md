@@ -1,6 +1,6 @@
 # Build Summary: stress-and-melody (A1)
 
-Generated: 2026-04-09 00:45
+Generated: 2026-04-11 00:50
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 00:45
 | verify | complete | 2026-04-08 22:43:56 |
 | review | complete | 2026-04-08 22:45:27 |
 | stress | complete | 2026-04-08 22:45:28 |
-| publish | complete | 2026-04-08 22:45:30 |
+| publish | complete | 2026-04-10 22:50:37 |
+| audit | complete | 2026-04-10 22:50:37 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 00:45
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

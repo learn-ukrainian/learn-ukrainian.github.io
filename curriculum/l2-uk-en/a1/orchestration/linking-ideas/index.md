@@ -1,6 +1,6 @@
 # Build Summary: linking-ideas (A1)
 
-Generated: 2026-04-09 04:18
+Generated: 2026-04-11 01:56
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 04:18
 | vocab | complete | 2026-04-09 02:16:31 |
 | enrich | complete | 2026-04-09 02:16:31 |
 | verify | complete | 2026-04-09 02:16:31 |
-| review | complete | 2026-04-09 02:17:57 |
 | stress | complete | 2026-04-09 02:17:59 |
-| publish | complete | 2026-04-09 02:18:01 |
+| review | complete | 2026-04-10 23:55:58 |
+| publish | complete | 2026-04-10 23:56:02 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | linking-ideas-review-r1.md |
+| 2 | linking-ideas-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,14 +39,17 @@ Generated: 2026-04-09 04:18
 | activities | gemini-tools (gemini-3.1-pro-preview) | 77s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 307s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 135s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

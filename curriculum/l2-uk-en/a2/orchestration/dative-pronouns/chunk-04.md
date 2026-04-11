@@ -1,44 +1,22 @@
 ## Давальний чи знахідний? (Dative or Accusative?)
 
-Learning to choose between the Dative and Accusative cases is a common challenge. In English, we simply use "you" or "her" for both direct objects and recipients. In Ukrainian, the choice depends entirely on the verb's logic of interaction. Let us look at some minimal pairs where the only difference is the pronoun case.
+One of the biggest challenges for learners is choosing between the Dative and Accusative pronoun forms in everyday conversation. Because these pronoun forms can look similar, you need to rely strictly on the logic of the verb. You cannot simply guess based on how the English translation sounds.
 
-> Читаємо українською:
-> Я бачу тебе щодня. *(I see you every day.)*
-> Я кажу тобі правду. *(I tell you the truth.)*
-> Він добре знає її. *(He knows her well.)*
-> Він часто дзвонить їй. *(He often calls her.)*
-> Ми слухаємо вас уважно. *(We listen to you carefully.)*
-> Ми даємо вам роботу. *(We give you work.)*
+Часто ми маємо два дуже схожі речення, де змінюється тільки один відмінок. Наприклад, ми говоримо: «Я бачу тебе», але «Я кажу тобі». У першому випадку людина є прямим об'єктом дії. У другому випадку людина просто отримує нову інформацію. Так само ми говоримо: «Він добре знає її», але «Він часто дзвонить їй».
 
-In the first sentence of each pair, the action directly affects the person. You see them, you know them, you listen to them. This requires the Accusative case (**тебе**, **її**, **вас**). In the second sentence, the person is the recipient of the action. You tell something *to* them, call *to* them, give something *to* them. This requires the Dative case (**тобі**, **їй**, **вам**).
+> *Often we have two very similar sentences where only one case changes. For example, we say: "I see you" (Accusative), but "I tell you" (Dative). In the first case, the person is the direct object of the action. In the second case, the person simply receives new information. Similarly we say: "He knows her well" (Accusative), but "He often calls her" (Dative).*
 
-How can you quickly decide which case to use? Use this simple strategy: if the action is directed *at* the person or given *to* them, use the Dative case. If the action uses, sees, or directly targets the person as an object, use the Accusative case.
+The choice depends entirely on the verb's specific interaction with the object. If you can logically ask "to whom?" about the action, you need the Dative case. If you naturally ask "whom?" or "what?", you need the Accusative case.
 
-:::tip Важливе правило (Important rule)
-**Кому?** *(To whom?)* → Давальний відмінок: **мені, тобі, йому, їй, нам, вам, їм**.
-**Кого?** *(Whom?)* → Знахідний відмінок: **мене, тебе, його, її, нас, вас, їх**.
+A reliable strategy for learners is to visualize the direction of the action. If the action is a transfer directed *at* the person, like passing a physical message, sending a short email, or giving a nice gift, you must use the Dative case. If the action entirely "consumes," "sees," or "holds" the person as a direct target, you use the Accusative case.
+
+:::info
+**Watch out for English logic!**
+Some verbs in Ukrainian do not match their English equivalents. The most common "false friend" is the verb «допомагати» (to help). In English, you "help someone" as a direct object. In Ukrainian, you "give help TO someone" as an indirect object. You must always use the Dative case: «Я допомагаю тобі», never «Я допомагаю тебе».
 :::
 
-However, you must be careful with False Friends. These are verbs that work differently in English and Ukrainian. A classic example is the verb **допомагати** *(to help)*. In English, you help someone directly. In Ukrainian, you literally give help *to* someone, so this verb always requires the Dative case. 
+Завжди звертайте увагу на дієслова, які вимагають давального відмінка. Ми часто кажемо: «Я допомагаю йому робити домашнє завдання», або «Вона заважає мені спокійно працювати». Але ми використовуємо знахідний відмінок для інших дій: «Я розумію його дуже добре», або «Він щиро любить її». Важливо пам'ятати цю граматичну різницю.
 
-Other common false friends include **дякувати** *(to thank)* and **заважати** *(to bother / to disturb)*. You must say «дякую тобі» *(I thank to you)*, not «дякую тебе» ❌. You also say «ти заважаєш мені» *(you are bothering to me)*.
+> *Always pay attention to verbs that require the dative case. We often say: "I help him do homework," or "She hinders me from working calmly." But we use the accusative case for other actions: "I understand him very well," or "He sincerely loves her." It is important to remember this grammatical difference.*
 
-> Читаємо українською:
-> Я завжди допомагаю моїй сестрі. *(I always help my sister.)*
-> Вона допомагає мені робити домашнє завдання. *(She helps me do my homework.)*
-> Чи можу я допомогти вам сьогодні? *(Can I help you today?)*
-> Брат постійно заважає мені. *(My brother constantly bothers me.)*
-> Ми хочемо подякувати їм за подарунок. *(We want to thank them for the gift.)*
-
-Let us see how native speakers switch between these cases naturally in a conversation.
-
-> — **Олег:** Привіт! Я бачу тебе біля метро. *(Hi! I see you near the subway.)*
-> — **Ірина:** Привіт! А я саме телефоную тобі. *(Hi! And I am calling you right now.)*
-> — **Олег:** Я хочу щиро подякувати тобі за допомогу. *(I want to sincerely thank you for the help.)*
-> — **Ірина:** Будь ласка. Я завжди рада допомогти тобі. *(You are welcome. I am always glad to help you.)*
-> — **Олег:** Ти добре знаєш мого брата? Він хвалив тебе. *(Do you know my brother well? He praised you.)*
-> — **Ірина:** Так, я чудово знаю його. Він теж допомагає мені. *(Yes, I know him perfectly. He also helps me.)*
-> — **Олег:** Тоді я дарую вам обом квитки в театр. *(Then I give you both tickets to the theater.)*
-> — **Ірина:** О, ми дуже любимо тебе за це! *(Oh, we love you very much for this!)*
-
-<!-- INJECT_ACTIVITY: quiz-case-choice --> [quiz, Choose between Dative and Accusative pronoun forms (e.g., тобі vs тебе) based on the verb in the sentence, 8 items]
+<!-- INJECT_ACTIVITY: quiz-case-choice -->

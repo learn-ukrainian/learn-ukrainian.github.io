@@ -1,13 +1,13 @@
 {
-  "attempt": 2,
-  "passed": true,
-  "errors": [],
-  "warnings": [
+  "attempt": 1,
+  "passed": false,
+  "errors": [
     {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 6 exercise(s) but content has 5"
+      "check": "VOCABULARY",
+      "severity": "ERROR",
+      "message": "Missing 2/4 required vocab: комплексний (comprehensive), діагностика (diagnostics)"
     }
   ],
-  "timestamp": "2026-04-09T21:37:29.787702+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T00:38:29.769172+00:00"
 }

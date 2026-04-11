@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-> — **Господар:** Добрий день! Загалом нас тут п'ятеро *(five)*: я, моя дружина, двоє дітей *(two children)* та моя старенька мати. Усі разом мешкаємо. > — **Переписувач:** Зрозуміло, дякую. А скільки тут є житлових приміщень? *(How many living spaces are here?)* > — **Господар:** Будинок просторий. У нас є кілька кімнат *(several rooms)*, велика вітальня та одна літня кухня. > — **Переписувач:** Дуже добре. Для нашої анкети також важливо знати про господарство. Ви маєте багато землі *(a lot of land)* навколо двору? > — **Господар:** Так, маємо велику ділянку. Ми витрачаємо чимало зусиль *(quite a lot of effort)* щовесни, щоб обробити весь город. > — **Переписувач:** А чи тримаєте ви свійських тварин у селі? > — **Господар:** Раніше мали багато, але зараз тримаємо мало худоби *(little livestock)*: залишилися тільки дві корови *(two cows)*, троє поросят *(three piglets)* та десяток курей. > — **Переписувач:** Чудово. Запишу, що ви маєте достатньо ресурсів *(enough resources)*. Дякую за ваші детальні та щирі відповіді! ## 1. Узгодження кількісних числівників з іменниками Почнемо з найпростішого правила. Числівник **«один»** *(one)*, а також його форми «одна» та «одне», завжди повністю **узгоджуються** *(agree)* з іменником у роді, числі та відмінку. Вони працюють як звичайні прикметники. Наприклад: «один стіл» (чоловічий рід), «одна книжка» (жіночий рід), «одне вікно» (середній рід). Це правило також діє для **складених чисел** *(compound numbers)*, які закінчуються на одиницю. Тому ми кажемо «двадцять один стіл» або «сто одна книжка», використовуючи **називний відмінок однини** *(nominative singular)*. Наступна група — це числівники **«два»** *(two)*, **«три»** *(three)* та **«чотири»** *(four)*. Після них іменник обов'язково стоїть у формі **називного відмінка множини** *(nominative plural)*. Наприклад: «два студенти», «три сценарії», «чотири подруги». Важливо пам'ятати, що для жіночого роду ми використовуємо спеціальну форму «дві». Тому правильно казати «дві книжки» або «дві дівчини», але ніколи не «два книжки». Тут варто зробити важливе зауваження. Якщо ви вивчали російську мову, ви можете помилково сказати «два студента», використовуючи **родовий відмінок однини** *(genitive singular)*. В українській мові це є грубою помилкою. Конструкція «два студенти» зберегла давньоруську форму **двоїни** *(dual number)*, яка згодом злилася з формою множини. Тому українська граматика вимагає саме називного відмінка множини для цієї групи числівників. Звісно, у цьому правилі є кілька цікавих **винятків** *(exceptions)*. Перший стосується іменників із суфіксом -ин-, який зникає у множині (наприклад, киянин, селянин, громадянин). Після числівників два, три і чотири такі слова ставляться у формі родового відмінка однини: «два киянина», «три селянина», «чотири громадянина». Другий виняток — це іменники **четвертої відміни** *(fourth declension)*, які означають імена або малят тварин. Ми кажемо «два поросяти» або «три імені». Третя велика група охоплює числівники від «п'яти» до «двадцяти», число «тридцять» та всі круглі десятки. Після цих чисел іменник завжди стоїть у формі **родового відмінка множини** *(genitive plural)*. Це правило працює без винятків: «п'ять озер», «десять метрів», «сорок будинків», «сто книжок». Нарешті, як працюють великі складені числівники, наприклад, двадцять п'ять або сорок два? Правило дуже логічне: форму іменника визначає лише **останнє слово** *(last word)* у числі. Порівняйте: «сорок один студент» (однина), «сорок два студенти» (називний множини) та «сорок п'ять студентів» (родовий множини). <!-- INJECT_ACTIVITY: reading-numeral-agreement -->
+and time.)* > — **Переписувач:** Чи тримаєте ви худобу? *(Do you keep livestock?)* > — **Господар:** Мало худоби залишилося. Тільки одна корова, двоє коней та десять курей. *(Little livestock is left. Only one cow, two horses, and ten chickens.)* :::note **Grammar spotlight** — Notice how the noun endings shift dramatically in the dialogue: **двоє дітей** (genitive plural) versus **одна корова** (nominative singular) or **два гектари** (nominative plural). ::: ## 1. Узгодження кількісних числівників з іменниками (~850 слів) Let's begin with the simplest numeral, **один** (one). It behaves exactly like an adjective and fully agrees with the noun it modifies in gender, number, and case. This fundamental rule always applies, even in large compound numbers ending with one. **Один стіл.** — *One table (masculine).* **Одна книжка.** — *One book (feminine).* **Одне вікно.** — *One window (neuter).* Числівники «два», «три» та «чотири» мають власне важливе правило. Після них іменник завжди стоїть у формі називного відмінка множини. Наприклад, ми кажемо «два студенти», «три сценарії» або «чотири будинки». Особливу увагу варто звертати на жіночий рід: ми обов'язково використовуємо форму «дві», а не «два». Тому правильно казати «дві книжки», «дві подруги» чи «дві пісні». > *The numerals "два" (two), "три" (three), and "чотири" (four) have their own important rule. After them, the noun always takes the form of the nominative plural. For example, we say "два студенти", "три сценарії", or "чотири будинки". Special attention should be paid to the feminine gender: we must use the form "дві", not "два". Therefore, it is correct to say "дві книжки", "дві подруги", or "дві пісні".* :::info **Grammar box** — A unique historical legacy. This rule often causes difficulties, especially if you compare Ukrainian grammar with Russian, which requires the genitive singular after these specific numbers. The Ukrainian construction preserved the form of the Old East Slavic dual number, which over time merged with the nominative plural. Saying that you see two students using the genitive singular is a gross mistake and a calque. **Два студенти.** — *Two students.* ::: Звісно, кожне правило має свої винятки. Якщо іменник чоловічого роду має суфікс «-ин-», який зникає у множині, то після чисел два, три і чотири він ставиться у родовий відмінок однини. Ми говоримо «два киянина», «три селянина» або «чотири громадянина». Також це стосується іменників четвертої відміни. Правильно казати «два поросяти» або «три імені». With numerals from five to twenty, as well as with round tens like thirty or one hundred, the situation is completely different. These numbers strictly require the genitive plural form from the noun. This case is very important to remember for correct communication. **П'ять озер.** — *Five lakes.* **Десять метрів.** — *Ten meters.* **Сорок будинків.** — *Forty houses.* У складених числівниках форму іменника визначає лише останнє слово. Якщо число закінчується на одиницю, іменник стоїть в однині. Якщо на два, три чи чотири — у називному відмінку множини. А якщо число закінчується на п'ять і більше, ми використовуємо родовий відмінок множини. Тому ми говоримо «сорок один студент», «сорок два студенти» та «сорок п'ять студентів». <!-- INJECT_ACTIVITY: reading-numeral-agreement -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -545,7 +545,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -558,14 +625,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

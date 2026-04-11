@@ -1,12 +1,12 @@
 ## Підсумок — Summary
 
-You have taken your first major steps into the A2 level! Before you move on, let us do a quick self-check to see how comfortable you are with these new concepts. Ask yourself the following questions:
+This module introduced the foundation of the A2 level. Before moving forward, take a moment to test your new skills.
 
-* Can you name three things you planned to do using the word **буду** *(I will)*? For example: «Я буду готувати вечерю» *(I will prepare dinner)*.
-* How do you ask for five kilograms of apples at the market? Remember the rule for numbers five and above: «Дайте мені, будь ласка, п'ять кілограмів яблук» *(Give me, please, five kilograms of apples)*.
-* What is the exact difference between the sentences «Я писав листа» *(I was writing a letter)* and «Я написав листа» *(I have written a letter)*?
+Спробуйте відповісти на кілька запитань. Чи можете ви назвати три речі, які ви запланували, використовуючи слово «буду»? Як ви попросите п'ять кілограмів яблук на ринку? Яка різниця між реченнями «Я писав» і «Я написав»? Пам'ятайте головне: вид дієслова показує різницю між процесом і результатом. Водночас родовий відмінок допомагає говорити про кількість та слово «немає».
 
-To recap our main themes: the Genitive case is your primary tool for expressing quantity, asking for prices, and stating the absence of something using the word **немає** *(there is no)*. Verb aspect changes how you tell a story. The Imperfective aspect (Недоконаний вид) is all about the ongoing process, while the Perfective aspect (Доконаний вид) focuses entirely on the completed result.
+> *Try to answer a few questions. Can you name three things you planned using the word "буду"? How do you ask for five kilograms of apples at the market? What is the difference between the sentences "Я писав" and "Я написав"? Remember the main point: the aspect of a verb shows the difference between a process and a result. At the same time, the Genitive case helps to talk about quantity and the word "немає".*
 
-### Читаємо українською (Reading Practice)
-Давайте повторимо все разом. *(Let us repeat everything together.)* Завтра я буду купувати продукти. *(Tomorrow I will be buying groceries.)* Мені треба п'ять кілограмів картоплі. *(I need five kilograms of potatoes.)* У мене вдома немає хліба. *(I have no bread at home.)* Вчора я довго читав цікаву книгу. *(Yesterday I read an interesting book for a long time.)* Сьогодні я нарешті прочитав її! *(Today I finally finished reading it!)* Чудова робота! *(Great job!)*
+:::note
+**Quick tip**
+Mastering verb aspects takes practice. Do not try to memorize every pair immediately; focus on the verbs you use most often in your daily life.
+:::

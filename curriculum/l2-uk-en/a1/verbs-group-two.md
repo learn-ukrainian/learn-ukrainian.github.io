@@ -39,7 +39,7 @@ Here are some short sentences to show them in action:
 *   **Я говорю українською.** (I speak Ukrainian.)
 *   **Ти бачиш цей буди́нок?** (Do you see this building?)
 *   **Він робить ка́ву.** (He is making coffee.)
-*   **Вона вчить мо́ву.** (She teaches the language.)
+*   **Вона вчить мо́ву.** (She studies the language.)
 *   **Ми хо́димо у парк.** (We walk to the park.)
 *   **Ви про́сите воду́.** (You ask for water.)
 *   **Я люблю́ украї́нську мову.** (I love the Ukrainian language.)

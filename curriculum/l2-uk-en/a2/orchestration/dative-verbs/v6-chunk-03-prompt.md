@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-to the person.)* Тому людина завжди має форму давального відмінка. *(That is why the person always takes the form of the dative case.)* Форма дієслова залежить тільки від предмета. *(The form of the verb depends only on the object.)* Вона не залежить від людини, якій подобається цей предмет. *(It does not depend on the person who likes this object.)* Якщо предмет один, ми використовуємо форму однини **подобається**. Мені подобається цей гарячий **чай** *(tea)*. Тобі подобається нова **квартира** *(apartment)*. Якщо предметів багато, ми беремо форму множини **подобаються**. Мені подобаються ці красиві **квіти** *(flowers)*. Йому подобаються старі **фільми** *(movies)*. The English translation remains "I like" or "you like", but the Ukrainian verb ending physically changes to match the plural subjects «квіти» or «фільми». Це дуже важливе правило. *(This is a very important rule.)* Ми дуже часто використовуємо різні особові займенники з цим дієсловом. *(We very often use various personal pronouns with this verb.)* Ви вже знаєте форму «мені подобається» *(I like)*. Якщо ви запитуєте друга, ви кажете «**тобі** подобається» *(you like [singular/informal])* або «тобі подобаються». Для третьої особи ми кажемо «**йому** подобається» *(he likes)* та «**їй** подобається» *(she likes)*. У множині ми маємо форму «**нам** подобається» *(we like)*. Якщо ви говорите з учителем або групою людей, використовуйте форму «**вам** подобається» *(you like [plural/formal])*. Для інших людей є форма «**їм** подобається» *(they like)*. Їм подобається гуляти в парку. *(They like to walk in the park.)* Нам подобаються ці смачні яблука. *(We like these tasty apples.)* У минулому часі правило працює так само. *(In the past tense, the rule works the same way.)* Дієслово змінює свою форму і показує рід предмета, який стоїть у називному відмінку. *(The verb changes its form and shows the gender of the object, which is in the nominative case.)* Якщо предмет чоловічого роду, ми кажемо «мені **подобався**». Мені подобався цей довгий фільм. *(I liked this long movie.)* Для жіночого роду потрібна форма «мені **подобалася**». Тобі подобалася ця чорна **кава** *(coffee)*. Якщо підмет середнього роду, використовуйте закінчення «-о»: «мені **подобалося**». Йому подобалося солодке **морозиво** *(ice cream)*. У множині форма завжди однакова: «мені **подобалися**». Нам подобалися ті цікаві книги. *(We liked those interesting books.)* The verb strictly mirrors the gender of the thing being liked, never the experiencer. Якщо ви хочете зробити заперечення, просто поставте частку **не** *(not)* перед дієсловом. *(If you want to make a negation, just put the particle "не" before the verb.)* Мені не подобається ця гучна музика. *(I do not like this loud music.)* Їй не подобався той старий ресторан. *(She did not like that old restaurant.)* Запитувати про смаки також дуже просто. *(Asking about tastes is also very simple.)* Тобі не подобається ця нова пісня? *(Do you not like this new song?)* Що вам подобається в Україні? *(What do you like in Ukraine?)* Мені дуже подобається вивчати українську мову. *(I really like studying the Ukrainian language.)* А що подобається тобі? *(And what do you like?)* <!-- INJECT_ACTIVITY: match-up, focus: matching Ukrainian 'подобатися' sentences to English 'I like' equivalents to cement the subject/object shift, 8 items -->
+that you like a book, you are literally saying "The book is pleasing to me." This structure is called the Experiencer Dative, and it is the most natural, authentic way to express personal preferences in the Ukrainian language. Моїй сестрі дуже подобається цей новий ресторан у центрі міста. Мені також подобається їхня смачна піца. Але моєму братові більше подобаються традиційні українські страви. Нам усім подобаються свіжі десерти, які вони готують щодня. Важливо розуміти, що закінчення дієслова завжди залежить від предмета. > *My sister really likes this new restaurant in the city center. I also like their delicious pizza. But my brother likes traditional Ukrainian dishes more. We all like the fresh desserts that they prepare every day. It is important to understand that the verb ending always depends on the object.* Because the thing you like is the actual subject of the sentence, the verb **подобатися** only has two forms in the present tense: **подобається** for singular subjects and **подобаються** for plural subjects. The verb never changes based on who is experiencing the feeling. Whether it is you, your friends, or your parents who like the restaurant, the verb remains exactly the same. To personalize the experience and state who is feeling the pleasure, you simply change the pronoun to its Dative form. :::info **The Dative Experiencer Pronouns** To state who is experiencing the pleasure, you must use the corresponding Dative pronoun: - **мені** means "to me" (I like) - **тобі** means "to you" (you like) - **йому** means "to him" (he likes) - **їй** means "to her" (she likes) - **нам** means "to us" (we like) - **вам** means "to you all" (you all like) - **їм** means "to them" (they like) ::: У дитинстві мені дуже подобалася ця стара казка. Моєму другові подобався цікавий фільм про космос. Нашій мамі подобалося шоколадне морозиво. У минулому часі дієслово узгоджується з предметом, а не з людиною. Тому ми використовуємо різні закінчення для кожного роду. Нам завжди подобалися довгі літні канікули. > *In childhood, I really liked this old fairy tale. My friend liked an interesting film about space. Our mom liked chocolate ice cream. In the past tense, the verb agrees with the object, and not with the person. Therefore, we use different endings for each gender. We always liked long summer vacations.* Тобі не подобається ця нова пісня? Мені дуже подобається читати українські тексти, але мені не подобається робити граматичні вправи. Якщо дія є предметом, ми використовуємо дієслово в однині та додаємо інфінітив. Тобі подобається вивчати нову мову щодня? Що вам найбільше подобається в Україні? Багатьом іноземцям дуже подобається наша сучасна культура. > *Do you not like this new song? I really like reading Ukrainian texts, but I do not like doing grammar exercises. If an action is the object, we use the verb in the singular and add an infinitive. Do you like studying a new language every day? What do you like most of all in Ukraine? Many foreigners really like our modern culture.* <!-- INJECT_ACTIVITY: match-up-like-syntax -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -504,7 +504,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -523,14 +590,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -1,46 +1,32 @@
 ## І чи й? У складних реченнях
 
-Українська мова має два варіанти сполучника «and». *(The Ukrainian language has two variants of the conjunction "and".)* The conjunctions **і** and **й** mean exactly the same thing. We choose between them based on the surrounding sounds. The letter **й** is a glide, a semi-vowel. It needs a full vowel right before it to "anchor" it smoothly. We use **й** between vowels, and after a vowel before a consonant. 
+In Ukrainian, the choice between the conjunctions «і» and «й» depends entirely on the surrounding sounds. The letter «й» is a semi-vowel. It needs to attach itself to a full vowel that comes right before it, acting like a phonetic bridge. We use «й» between two vowels. The letter «і» is a full vowel, which we use to break up clusters of consonants.
 
-«Читаємо українською»:
-* **Ольга й Андрій** ідуть у кіно. *(Olha and Andrii are going to the cinema.)*
-* Надворі **тепло й затишно**. *(It is warm and cozy outside.)*
+Ольга й Андрій пішли в кіно. У кімнаті були тільки син і мати. Вони купили яблука й огірки.
+> *Olha and Andriy went to the cinema. Only the son and mother were in the room. They bought apples and cucumbers.*
 
-The letter **і** is a full vowel. We use it to break up hard consonant clusters. We use **і** between consonants, and after a consonant before a vowel.
+When building complex sentences, punctuation changes these rules. A comma acts as a phonetic fence. Even if the word before the comma ends in a vowel, the pause breaks the fluid glide that «й» requires. Because of this natural breath, we always use the full vowel «і» after a comma.
 
-«Читаємо українською»:
-* Її **син і мати** живуть тут. *(Her son and mother live here.)*
-* Її **брат іде** додому. *(Her brother is going home.)*
+Вона гарно співала, і всі слухали. Ми купили квитки, і наша подорож почалася.
+> *She sang beautifully, and everyone listened. We bought tickets, and our journey began.*
 
-When we build complex sentences, punctuation marks change the rules. A comma acts as a phonetic "fence" or boundary. Even if the word before the comma ends in a vowel, the pause breaks the glide. After a comma, we start a new phonetic context. Because of this pause, the full vowel **і** is usually preferred to introduce the new clause.
+:::info
+**Grammar box** — Never use «й» immediately after a comma or a dash. The pause destroys the vowel environment. Always use «і» to start a new thought after punctuation.
+:::
 
-«Читаємо українською»:
-> — **Тарас:** Де всі студенти? *(Where are all the students?)*
-> — **Олена:** **Вона співала, і всі слухали.** *(She sang, and everyone listened.)*
-> — **Тарас:** А потім? *(And then?)*
-> — **Олена:** **Ми закінчили, і концерт завершився.** *(We finished, and the concert ended.)*
+There is one strict rule of phonetic hygiene where «й» is completely forbidden. You can never use «й» before words starting with the letters «й», «я», «ю», «є», or «ї». These letters already contain a hidden "y" sound. Placing «й» in front of them creates an ugly collision. In these cases, «і» is mandatory.
 
-Notice we say «...співала, і всі...», not «й всі». The comma always resets the rhythm.
+Завтра прийдуть Олена і її брат. Мій маршрут — це Одеса і Ялта.
+> *Tomorrow Olena and her brother will come. My route is Odesa and Yalta.*
 
-There is one absolute rule for phonetic hygiene: the "forbidden collision." The glide **й** is never used before words starting with the sounds **й**, **я**, **ю**, **є**, **ї**. These letters already contain a hidden "y" sound. Adding **й** before them would create an ugly "double-y" stutter. We always use **і** before these letters, regardless of the previous word.
+If you are unsure whether to use «і» or «й», you have a completely safe alternative: the conjunction «та». It means exactly the same thing, but it never alternates. Using «та» helps avoid repetitive sounds and makes your Ukrainian sound stylish.
 
-«Читаємо українською»:
-* Це **Олена і її** брат. *(This is Olena and her brother.)*
-* Це **Одеса і Ялта**. *(This is Odesa and Yalta.)*
-* Тут є **кава і яблука**. *(There is coffee and apples here.)*
+На столі лежали хліб та масло. Мама та тато чекали на нас удома.
+> *Bread and butter lay on the table. Mom and dad were waiting for us at home.*
 
-Sometimes you might feel unsure about the phonetic rules, or you want to avoid a repetitive "i-i-i" sound in a sentence. Ukrainian has a safe, stylish alternative: the conjunction **та** *(and)*. Unlike **і/й**, **та** does not alternate. It is a stable word that works perfectly in any phonetic environment.
+Let's practice these conjunctions with compound objects in the Genitive case. Notice how the boundaries dictate the choice.
 
-«Читаємо українською»:
-> — **Ігор:** Хто там стоїть? *(Who is standing there?)*
-> — **Марія:** Там стоять **мама та тато**. *(Mom and dad are standing there.)*
-> — **Ігор:** Що вони купили? *(What did they buy?)*
-> — **Марія:** Вони купили **хліб та молоко**. *(They bought bread and milk.)*
+У нас немає ні соку, і ні кави. Я не купив хліба й молока.
+> *We have neither juice, nor coffee. I didn't buy bread and milk.*
 
-Let's practice this with compound objects in the Genitive case. This case often groups words together, so euphony is very noticeable. Pay attention to the endings and the conjunctions between them.
-
-«Читаємо українською»:
-* У нас **немає сиру й молока**. *(We have no cheese and milk.)*
-* У нас **немає яблук і бананів**. *(We have no apples and bananas.)*
-
-<!-- INJECT_ACTIVITY: match-up-conjunctions --> [match-up, Match sentence beginnings with ends that require a specific conjunction form (i/y/ta), 8 items]
+<!-- INJECT_ACTIVITY: match-up-conjunctions -->

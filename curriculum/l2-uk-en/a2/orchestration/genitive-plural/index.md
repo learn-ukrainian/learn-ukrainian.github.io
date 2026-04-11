@@ -1,6 +1,6 @@
 # Build Summary: genitive-plural (A2)
 
-Generated: 2026-04-07 23:28
+Generated: 2026-04-11 02:23
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-07 23:28
 | vocab | complete | 2026-04-07 21:22:06 |
 | enrich | complete | 2026-04-07 21:22:06 |
 | verify | complete | 2026-04-07 21:22:07 |
-| review | complete | 2026-04-07 21:24:21 |
 | stress | complete | 2026-04-07 21:28:04 |
-| publish | complete | 2026-04-07 21:28:10 |
+| publish | complete | 2026-04-11 00:23:02 |
+| audit | complete | 2026-04-11 00:23:02 |
 
 ## Reviews
 
@@ -39,8 +39,15 @@ Generated: 2026-04-07 23:28
 | review | gemini-tools (gemini-3.1-pro-preview) | 134s | ✅ |
 | pre-verify-retry | gemini-tools (auto) | 420s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 123s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 135s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
+
+## Friction
+
+- `friction.yaml` (129 bytes)
 
 ## Files
 
@@ -49,6 +56,7 @@ Generated: 2026-04-07 23:28
 - `chunk-02.md`
 - `chunk-03.md`
 - `exercise-verification.json`
+- `friction.yaml`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`

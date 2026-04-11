@@ -1,0 +1,55 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered all required sections, vocabulary, and grammar points. The dialogue
+    correctly matches the Київський вокзал scenario. Deducted 1 point because the
+    writer strictly followed a flaw in the plan ("
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Found a typo ("словосолучення") and two instances of a semantic Russianism
+    ("знаходиться" for physical location). Additionally, the module teaches a strict
+    violation of Pravopys 2019 regarding the hyp
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding breakdown of grammar rules. The "Grammar box" and "Quick tip"
+    callouts are highly effective. The contrast between formal and colloquial time
+    reading is clear and well-explained.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Seamlessly integrated all required and recommended vocabulary, including
+    spatial words ("поверх"), historical units ("століття"), and complex adverbs ("вдруге",
+    "утретє") in natural contexts.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Markers immediately follow the concepts they test. Deducted 1 point due
+    to the use of duplicate marker IDs (`quiz` appears twice).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional yet warmly encouraging ("One of the most comforting
+    aspects..."). The real-world scenarios (buying train tickets, reading schedules)
+    make the dry topic of numerals feel immedi
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Total word count is 5567 (safely above the 4000 target). All H2 headings
+    match the plan exactly. Markdown formatting and tables are clean and consistent.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Proactively addresses and corrects common Russian calques in telling time
+    (explicitly prohibiting "*без десяти п'ять"). Culturally relevant dates like Independence
+    Day are naturally included.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The train station dialogue is realistic, natural, and brilliantly demonstrates
+    rapid shifts in grammatical cases depending on whether the speaker is discussing
+    dates, static locations, or points of or
+findings: []

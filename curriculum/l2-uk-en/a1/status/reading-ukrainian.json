@@ -1,0 +1,59 @@
+{
+  "module": "reading-ukrainian",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:50:16.246406Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:50:15.662899Z",
+    "meta": null,
+    "activities": "2026-04-10T23:57:18.190180Z",
+    "vocabulary": "2026-04-09T00:25:31.374995Z",
+    "research": null,
+    "plan": "2026-03-31T12:56:26.663903Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1536/1200 (raw: 1576)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "54/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

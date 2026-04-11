@@ -1,0 +1,68 @@
+{
+  "module": "euphony-advanced",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T02:14:01.361493Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T02:13:57.831449Z",
+    "meta": null,
+    "activities": "2026-04-11T02:10:53.365665Z",
+    "vocabulary": "2026-04-07T22:35:34.996624Z",
+    "research": null,
+    "plan": "2026-04-04T22:08:14.297423Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2311/2000 (raw: 2375) | immersion: 35.9% LOW (target 40-70% (A2.1))"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "6/0 | density: 4 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "35/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -45 | premature=9 | gaps=0 | well-paced=0",
+      "delta": -45,
+      "premature": 9,
+      "gaps": 0,
+      "well_paced": 0
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

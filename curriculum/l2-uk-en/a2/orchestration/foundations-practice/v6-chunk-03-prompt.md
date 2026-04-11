@@ -28,7 +28,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**немає домашнього сиру**. *(Sorry, today there is no homemade cottage cheese.)* * У мене **немає свіжих яблук**. *(I do not have fresh apples.)* If you are looking for something specific but cannot spot it on the counter, you also use the Genitive case after a negated verb. Compare the positive sentence with the negative one. * Я бачу червоні помідори. *(I see red tomatoes. — Accusative)* * Я не бачу **червоних помідорів**. *(I do not see red tomatoes. — Genitive)* When asking for a **кілограм** (kilogram) of something, the product itself must be in the Genitive case. However, there is a difference between uncountable items and items you usually count. For uncountable products like **картопля** (potatoes) or **морква** (carrots), we use the Genitive Singular. * Дайте мені кілограм **картоплі**. *(Give me a kilogram of potatoes.)* * Скільки коштує кілограм **моркви**? *(How much does a kilogram of carrots cost?)* For items that we naturally count, like **яблуко** (apple) or **помідор** (tomato), we use the Genitive Plural after «кілограм». * Я куплю кілограм **яблук**. *(I will buy a kilogram of apples.)* * Дайте два кілограми **помідорів**. *(Give two kilograms of tomatoes.)* When speaking with vendors, Ukrainians frequently use diminutive suffixes. These small word endings make the conversation much friendlier and warmer. It is a sign of good rapport. If you use these forms, the vendor will smile and might even give you a **знижка** (discount). * Замість «картопля» продавці кажуть **картопелька**. *(Instead of "potatoes", vendors say "nice little potatoes".)* * Замість «морква» вони пропонують **морквочка**. *(Instead of "carrots", they offer "nice little carrots".)* * Замість «ягоди» ви почуєте **ягідки**. *(Instead of "berries", you will hear "nice little berries".)* You do not have to use these words yourself, but you must be ready to understand them when the vendor offers you «свіжа картопелька» or «солодка морквочка». Here is a quick summary of the essential verbs and nouns you need for a successful market trip. You already know **коштувати** (to cost). When you are at the stall, the vendor might let you **вибирати / вибрати** (to choose) the best tomatoes yourself. Once you make your choice, the vendor will **важити** (to weigh) the produce. Finally, after you pay, always remember to take your **решта** (change / money back). ### Читаємо українською (Reading Practice) У суботу ми завжди ходимо на ринок. *(On Saturday we always go to the market.)* Там продають дуже смачні продукти. *(There they sell very tasty products.)* Сьогодні я хочу купити багато свіжих ягід. *(Today I want to buy many fresh berries.)* Я підходжу до продавця і питаю ціну. *(I approach the vendor and ask the price.)* Кілограм полуниці коштує сто гривень. *(A kilogram of strawberries costs one hundred hryvnias.)* Я прошу зважити мені два кілограми. *(I ask to weigh two kilograms for me.)* Продавець дає мені гарні ягоди і решту. *(The vendor gives me nice berries and the change.)* Я дуже люблю цей старий ринок. *(I really love this old market.)* <!-- INJECT_ACTIVITY: fill-in, Role-play: Shopping for Groceries, 8 items -->
+word **кілограм** as well. You ask for **один кілограм**, but **два кілограми** or **п'ять кілограмів**. The market is also the perfect place to practice the Genitive of negation and absence. When a vendor runs out of a product, they will use the word **немає**, which strictly requires the Genitive case. Вибачте, сьогодні у мене немає домашнього сиру, але є дуже смачне молоко. Я бачу жовті яблука, але я зовсім не бачу червоних помідорів на вашому столі. > *Excuse me, today I do not have cottage cheese, but there is very tasty milk. I see yellow apples, but I absolutely do not see red tomatoes on your table.* Notice how the shopper contrasts their statements. When they state what they see affirmatively, they use the simple Accusative case: **Я бачу жовті яблука.** But the moment they introduce a negative verb like **не бачу** (do not see) or express absence with **немає**, the object must immediately switch to the Genitive case. You must also differentiate between uncountable goods and individual items when dealing with feminine nouns. When you buy vegetables in bulk, you usually treat them as a single mass. Дайте мені, будь ласка, один кілограм картоплі і один кілограм моркви. Але я також хочу купити один кілограм солодких яблук і кілограм груш. > *Give me, please, one kilogram of potatoes and one kilogram of carrots. But I also want to buy one kilogram of sweet apples and a kilogram of pears.* Words like **картопля** (potatoes) and **морква** (carrots) remain in the Genitive singular because they are treated as an uncountable mass. However, items you can easily count individually, like **яблука** (apples) or **груші** (pears), take the Genitive plural ending after the word **кілограм**. :::tip **Did you know?** At a Ukrainian market, you will hear a wonderful variety of diminutive suffixes. Vendors use these affectionate word forms to build rapport, show the high quality of their goods, and create a welcoming atmosphere. ::: Продавці дуже часто пропонують покупцям свіжу картопельку, солодку морквочку або смачні ягідки. Якщо ви також використовуєте ці теплі слова, продавець може дати вам хорошу знижку. > *Vendors very often offer buyers fresh little potatoes, sweet little carrots, or tasty little berries. If you also use these warm words, the vendor might give you a good discount.* Using forms like **картопелька** instead of **картопля**, or **морквочка** instead of **морква**, demonstrates that you appreciate the local culture. It changes the interaction from a simple commercial transaction into a friendly conversation between neighbors. Before you grab your reusable bag and head to the stalls, let us review the essential market verbs. You will frequently need the imperfective verb **коштувати** (to cost) to ask about prices. When you are looking at the produce, you need time to **вибирати** (to choose, process), but eventually, you must **вибрати** (to choose, result) the best items. The vendor will then **важити** (to weigh) your purchases on the scale. Finally, after you hand over your cash, always remember to wait for your **решта** (change). <!-- INJECT_ACTIVITY: fill-in-market-genitive -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -469,7 +469,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -497,14 +564,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

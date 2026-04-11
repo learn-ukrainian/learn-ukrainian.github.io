@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-максимальну межу: «У залі було до п'ятдесяти глядачів». Натомість слово **«понад»** *(more than, over)* означає перевищення межі. Воно вимагає **знахідного відмінка** *(accusative case)*: «Цей проєкт коштує понад тисячу гривень» або «В Україні живе понад сорок мільйонів людей». У розмовному стилі часто використовують прийменник **«з»** *(about, around)* із формою знахідного відмінка: «Він купив з десяток яблук». Пам'ятайте важливе правило: казати «біля ста людей» — це русизм, граматично правильно використовувати лише «близько ста людей». Окрему групу становлять слова, що виражають **надмірність** *(excess)* або **достатність** *(sufficiency)*. Це слова **«забагато»** *(too much, too many)*, **«замало»** *(too little, too few)* та **«достатньо»** *(enough)*. Вони також завжди керують родовим відмінком. Ми часто використовуємо їх, коли обговорюємо фінансовий бюджет, час або кулінарні рецепти. Наприклад: «Для проєкту нам виділили замало грошей», «У мене забагато роботи на цьому тижні» або «Нам достатньо двох годин для відпочинку». У побутових ситуаціях ви можете почути: «Додайте солі, але не забагато» або «Цієї порції достатньо для трьох осіб». Ці короткі слова роблять ваше мовлення точним і дуже природним. <!-- INJECT_ACTIVITY: fill-in-indefinite-quantity --> ## 6. Кількісні вирази в контексті: Рецепти та Статистика (~750 слів) У світі кулінарії точність має велике значення. Коли ми читаємо **рецепт** *(recipe)*, ми постійно зустрічаємо кількісні вирази. Наприклад, для ідеального пирога вам знадобляться «три яйця» (називний множини після «три»), «двісті грамів борошна» та «півтори склянки молока». Зверніть увагу на **одиниці виміру** *(units of measurement)*. Після числівників «два», «три», «чотири» ми використовуємо називний відмінок множини: «два кілограми», «три літри». Але після слова «п'ять» і більше, а також після сотень, необхідний родовий відмінок множини: «п'ять кілограмів», «двісті грамів», «сім літрів». Хоча в розмовній мові ви можете почути «двісті грам», граматично правильною формою є саме «грамів». Коли ми читаємо новини або вивчаємо географію, ми потрапляємо у світ чисел і фактів. Для опису країни чи великого міста нам потрібні **великі числа** *(large numbers)* — тисячі та мільйони. Наприклад, ми можемо сказати: «**Населення** *(population)* України становить близько сорока мільйонів людей». Тут слово «близько» вимагає родового відмінка від усього складеного числівника. Якщо ми говоримо про розмір території, ми скажемо: «**Площа** *(area)* становить шістсот три тисячі квадратних кілометрів». Зверніть увагу, що числівник «три» визначає форму іменника «тисячі» (називний множини), а слово «тисячі» вже керує родовим відмінком для «квадратних кілометрів». У таких текстах часто трапляються також дроби: «майже дві третіх території». На ринку чи в супермаркеті ми щодня використовуємо кількісні вирази під час **покупок** *(shopping)*. Тут важливо правильно узгоджувати вагу та ціну з товаром. Розглянемо типовий діалог між покупцем і продавцем: > — **Покупець:** Добрий день! Дайте, будь ласка, три кілограми яблук і пів кілограма слив. > — **Продавець:** Прошу. Ось ваші яблука. Слив залишилося мало, лише триста грамів. > — **Покупець:** Добре, я візьму їх. А скільки коштують ці п'ять персиків? > — **Продавець:** Вони великі, тому витягнули на півтора кілограма. Це буде дев'яносто п'ять гривень. > — **Покупець:** У мене є тільки купюра в двісті гривень. У вас буде **решта** *(change)*? У цьому діалозі ми бачимо, як числівники керують іменниками у реальному житті. Практикуйте ці фрази, щоб почуватися впевнено в українських магазинах. <!-- INJECT_ACTIVITY: essay-response-contextual-quantity -->
+ложки солі». Ці вирази роблять процес приготування їжі чудовим тренуванням для вашої граматики. > *When you open a Ukrainian cookbook, you immediately see a multitude of quantitative expressions. A typical recipe for crepes might require you to take three eggs, two hundred grams of flour, and one and a half cups of milk. Pay attention to the cases: the numeral "три" (three) requires the nominative plural, so we say "яйця" (eggs). In contrast, after the word "двісті" (two hundred), the noun is in the genitive plural, forming "грамів" (grams). The word "півтори" (one and a half) always combines with the genitive singular for feminine nouns, so we use the form "склянки" (cups). Often in spoken language, you can hear shortened forms, such as "півкіло цукру" (half a kilo of sugar) or "чверть ложки солі" (a quarter spoon of salt). These expressions make the cooking process an excellent workout for your grammar.* :::note **Quick tip** — When measuring weight, the standard literary forms for the genitive plural are **грамів** and **кілограмів**. However, in everyday speech, you will frequently hear people drop the ending and say **двісті грам**, **п'ять кілограм**. While common, it is best to stick to the full forms in writing. ::: Another area where numbers play a crucial role is in reading news, geography, and statistics. Large numbers, such as thousands and millions, are used to describe populations, distances, and areas. Українська статистика та географія також використовують великі числа, які вимагають правильного узгодження. Якщо ви хочете описати велику країну, ви можете сказати, що її населення становить близько сорока мільйонів людей. У цьому випадку числівник «сорока» стоїть у родовому відмінку після прийменника «близько». Коли ми говоримо про площу, ми часто використовуємо великі складені числівники. Наприклад, площа України становить шістсот три тисячі шістсот двадцять вісім квадратних кілометрів. Оскільки останнє слово числівника — «вісім», воно вимагає від іменника родового відмінка множини, тому ми кажемо «кілометрів». Якщо ж місто має площу вісімсот двадцять два квадратні кілометри, іменник стоїть у називному відмінку множини через числівник «два». Читання новин або географічних статей допомагає швидко звикнути до таких конструкцій. Finally, shopping at a local market is the ultimate test of your numeral skills. Here, you must rapidly combine numbers, weights, and prices while interacting with sellers. Let us look at a typical conversation at a bazaar. > — **Покупець:** Добрий день! Дайте, будь ласка, три кілограми яблук. *(Good day! Give me three kilograms of apples, please.)* > — **Продавець:** Ось, тримайте. Це буде рівно три кілограми. Щось ще? *(Here you go. This is exactly three kilograms. Anything else?)* > — **Покупець:** Так, скільки коштують ці п'ять персиків? *(Yes, how much do these five peaches cost?)* > — **Продавець:** Вони великі, тому коштують вісімдесят п'ять гривень. Але я зроблю вам знижку на п'ятнадцять відсотків. *(They are large, so they cost eighty-five hryvnias. But I will give you a discount of fifteen percent.)* > — **Покупець:** Дякую! Тоді візьму ще півкілограма слив. *(Thank you! Then I will also take half a kilogram of plums.)* <!-- INJECT_ACTIVITY: essay-response-contextual-quantity -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -549,7 +549,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -562,14 +629,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

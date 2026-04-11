@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-places (A1)
 
-Generated: 2026-04-09 01:48
+Generated: 2026-04-11 01:36
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 01:48
 | vocab | complete | 2026-04-08 23:45:31 |
 | enrich | complete | 2026-04-08 23:45:31 |
 | verify | complete | 2026-04-08 23:45:31 |
-| review | complete | 2026-04-08 23:48:46 |
 | stress | complete | 2026-04-08 23:48:48 |
-| publish | complete | 2026-04-08 23:48:50 |
+| review | complete | 2026-04-10 23:35:56 |
+| publish | complete | 2026-04-10 23:36:01 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-09 01:48
 |-------|------|
 | 1 | checkpoint-places-review-r1.md |
 | 2 | checkpoint-places-review-r2.md |
+| 3 | checkpoint-places-review-r3.md |
 
 ## Dispatch Log
 
@@ -41,14 +42,17 @@ Generated: 2026-04-09 01:48
 | vocab | gemini (gemini-3-flash-preview) | 127s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 121s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 125s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

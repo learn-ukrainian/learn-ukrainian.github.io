@@ -1,42 +1,34 @@
 ## Спосіб 2: Зміна в корені або суфіксі
 
-У попередньому розділі ми бачили, як префікс перетворює недоконаний процес на доконаний результат. In the previous section, we saw how adding a prefix builds a perfective result from an imperfective process. However, the Ukrainian language also employs the exact opposite logic. Sometimes, the perfective verb is the shorter, simpler form, representing a quick, defined action. To talk about the ongoing process leading up to that result, we stretch the verb by adding a suffix or changing its internal structure, creating the imperfective form. This reverse engineering is especially common with verbs that already contain a prefix as part of their core meaning. Instead of piling on more prefixes, the language modifies the end of the word to show duration. Recognizing these suffix patterns helps you instantly identify whether a verb describes a quick result or a drawn-out process.
+Not all imperfective verbs are short and simple dictionary forms. In many cases, the perfective verb is actually the shorter base form. This is especially common when the verb already contains a prefix that gives it a specific meaning. If the verb already has a prefix, we cannot simply add another one to change its aspect. Instead, we have to "stretch" the verb by adding a special suffix to the end. This extra length physically represents the extended duration of the ongoing process. When you encounter a long verb with multiple syllables, it is very likely an imperfective verb describing a continuous action, while its shorter partner describes the completed result. By recognizing these stretching suffixes, you will easily identify whether a verb focuses on the journey or the destination.
 
-One of the most frequent ways to stretch a perfective verb into an imperfective process is by inserting the suffix «-ува-» or «-юва-». Think of this suffix as a rubber band that elongates the action. Let us look at an essential pair for making choices.
+The most recognizable stretching suffixes in Ukrainian are **-ува-** and **-юва-**. They transform a short, perfective result into a long, imperfective process. The extra syllables literally take longer to pronounce, which mimics the duration of the action itself. You can feel the physical difference between the drawn-out process and the sharp resolution of the perfective form. This pattern is essential for verbs describing mental processes or communication.
 
-* **Вирішувати / вирішити** — to decide (process) / to decide (result).
+Ми часто додаємо суфікси «-ува-» або «-юва-», щоб зробити слово довшим. Коли ви довго думаєте, ви можете «вирішувати» проблему. Але коли ви нарешті маєте відповідь, ви змогли її «вирішити». Так само працює слово «запитувати», коли ви ставите багато питань. А коли ви ставите одне коротке питання, ви можете просто «запитати».
 
-Notice how «вирішити» is a sharp, crisp action. You make the choice, and it is done. But «вирішувати» takes longer to say. Those extra syllables mimic the duration of the thinking process and the weighing of options. «Я довго вирішував, що робити.» This means "I was deciding for a long time what to do." «Нарешті я вирішив.» This means "Finally, I decided." Another crucial pair uses this exact pattern.
+> *We often add the suffixes "-ува-" or "-юва-" to make the word longer. When you think for a long time, you might "вирішувати" (be deciding) a problem. But when you finally have an answer, you managed to "вирішити" (decide/solve) it. The word "запитувати" (to be asking) works the same way when you ask many questions. And when you ask one short question, you can simply "запитати" (ask once).*
 
-* **Запитувати / запитати** — to ask (process) / to ask (result).
+Another common pattern involves shifting the vowel right before the infinitive ending. The most frequent shift is between the broad vowel **-а-** (or **-я-**) for the imperfective aspect and the narrower **-и-** for the perfective aspect. The **-а-** sound requires opening the mouth wider, which feels continuous. In contrast, the **-и-** sound feels "sharper" and more final, signaling the end of the action. 
 
-If you are constantly asking questions, you use the long «запитувати». For one quick question, you use the short «запитати». 
+Викладач може «відповідати» на питання студентів цілу годину. Але студент на іспиті має швидко «відповісти» на одне запитання. Ми можемо повільно «відчиняти» важкі двері в кімнату. Або ми можемо різко «відчинити» вікно вранці.
 
-Another extremely common pattern involves shifting the vowel suffix just before the infinitive ending. We frequently see imperfective verbs using the broad, open «-а-» or «-я-», while their perfective partners switch to a tighter «-и-» or a completely different concise ending. The open «-а-» sound naturally feels more continuous, whereas the «-и-» ending feels sharper and more final.
+> *A teacher can "відповідати" (be answering) students' questions for a whole hour. But a student at an exam must quickly "відповісти" (give an answer) to one question. We can slowly "відчиняти" (be opening) heavy doors into a room. Or we can sharply "відчинити" (open/throw open) a window in the morning.*
 
-* **Відчиняти / відчинити** — to open (process) / to open (result).
+:::info
+**Grammar box**
+When you see a verb ending in **-ати** or **-яти**, it is very often the imperfective partner. Its perfective twin will frequently end in **-ити**, providing a crisp conclusion.
+:::
 
-When you say «відчиняти», the mouth stays open longer, reflecting the ongoing action of pushing the door. When you say «відчинити», the action snaps shut like a lock. «Хто відчиняв вікно?» This translates to "Who was opening the window?" We see a similar, though slightly irregular, shift in another vital verb pair.
+Sometimes, stretching the verb requires changing a vowel right inside the root of the word. This internal change is called vowel alternation, or **чергування**. A common phonetic shift is changing the vowel **о** to the vowel **а** when moving from a perfective result to an imperfective process. The wider **а** sound physically opens the mouth more, reflecting the expanded duration of the ongoing action. 
 
-* **Відповідати / відповісти** — to answer (process) / to answer (result).
+Мій брат завжди готовий мені «допомагати» з ремонтом. Минулого тижня він зміг «допомогти» мені перевезти меблі. У першому слові корінь має звук «а», бо це довгий процес. У другому слові корінь має звук «о», бо це швидкий результат.
 
-The long «відповідати» describes the ongoing process of giving a detailed response, while the compact «відповісти» is the final, delivered answer.
+> *My brother is always ready to "допомагати" (be helping) me with repairs. Last week he was able to "допомогти" (help/give help) me move furniture. In the first word, the root has the sound "a" because it is a long process. In the second word, the root has the sound "o" because it is a quick result.*
 
-Sometimes, adding an imperfective suffix forces a deeper phonetic change inside the word. The root vowel changes to accommodate the new rhythm. This phenomenon is called vowel alternation, or «чергування». The most frequent shift is the vowel «о» transforming into the broad «а» when moving from a quick result to an extended process. Let us examine a high-frequency verb pair.
+Finally, there is a special suffix that works in the exact opposite direction. Instead of stretching the verb into a process, the suffix **-ну-** instantly compresses it. When you add **-ну-** to an imperfective verb, it immediately turns it into a perfective, lightning-fast action. It is the grammatical equivalent of a single burst of energy or a momentary event that happens in the blink of an eye. 
 
-* **Допомагати / допомогти** — to help (process) / to help (result).
+Хтось може довго «стукати» у ваші двері. Але вітер може раптом «стукнути» вікном лише один раз. Діти на вулиці можуть голосно «кричати» під час гри. Але перехожий може злякано «крикнути», якщо побачить небезпеку. Ніколи не можна «штовхати» людей у транспорті. Навіть випадково «штовхнути» людину дуже негарно.
 
-The perfective base «допомогти» describes a single, completed act of assistance. To create the imperfective form, we add the «-а-» suffix. But the root also changes from «допомог-» to «допомаг-». The double «а» sounds make the word feel much wider. «Вона завжди мені допомагала.» This means "She always helped me." Conversely, «Він допоміг мені вчора.» This translates to "He helped me yesterday," emphasizing a single intervention.
+> *Someone can "стукати" (be knocking) on your door for a long time. But the wind can suddenly "стукнути" (give a knock) with a window just once. Children outside can loudly "кричати" (be shouting) during a game. But a passerby can frighteningly "крикнути" (let out a cry) if they see danger. One must never "штовхати" (be pushing) people in transport. Even to accidentally "штовхнути" (give a shove to) a person is very ugly.*
 
-Finally, we must look at a special suffix used to create perfective verbs out of continuous sounds or repetitive movements. Adding the suffix «-ну-» instantly transforms an ongoing action into a single, sudden, and complete event. It acts like a camera flash, capturing just one split second of a longer activity.
-
-* **Стукати / стукнути** — to knock (repeatedly) / to give a single knock.
-
-If you are standing at the door knocking over and over, you use «стукати». If you just tap the wood once, it is «стукнути». This pattern applies to many physical actions and loud noises.
-
-* **Кричати / крикнути** — to shout (process) / to let out a single cry.
-* **Штовхати / штовхнути** — to push (continuously) / to give a single shove.
-
-The «-ну-» suffix is your clearest indicator that something happened once, abruptly, and is now entirely over.
-
-<!-- INJECT_ACTIVITY: fill-in, Categorize by Formation Type, 8 items -->
+<!-- INJECT_ACTIVITY: fill-in-categorize-formation -->

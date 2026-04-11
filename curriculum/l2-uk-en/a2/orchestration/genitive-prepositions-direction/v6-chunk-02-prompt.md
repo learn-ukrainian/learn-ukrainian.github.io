@@ -25,26 +25,24 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 ## Вступ та діалог
 
-> — **Пасажир:** Добрий день! Мені потрібно до вокзалу *(to the station)*, будь ласка. Ви вільні?
-> — **Таксист:** Добрий день! Так, сідайте. Їдемо до центрального вокзалу?
-> — **Пасажир:** Так. Але спочатку, будь ласка, поїдемо до аптеки *(to the pharmacy)*. Мені дуже треба купити ліки.
-> — **Таксист:** Добре, я знаю, де є аптека. Вона знаходиться біля старого парку.
-> — **Пасажир:** Дякую. Скажіть, а ви можете чекати мене там до п'ятої години *(until five o'clock)*?
-> — **Таксист:** Звичайно, я можу чекати вас до п'ятої години. Це не проблема.
-> — **Пасажир:** Чудово! А вже потім ми поїдемо до готелю *(to the hotel)* «Україна».
-> — **Таксист:** Зрозумів вас. Наш маршрут: спочатку до аптеки, чекаємо до п'ятої години, а потім їдемо до готелю. Поїхали!
+> — **Пасажир:** Добрий день! Мені потрібно до вокзалу, будь ласка. *(Good afternoon! I need to go to the station, please.)*
+> — **Таксист:** Добрий день! Сідайте. До центрального вокзалу? *(Good afternoon! Have a seat. To the central station?)*
+> — **Пасажир:** Так. А потім ми поїдемо до аптеки. *(Yes. And then we will go to the pharmacy.)*
+> — **Таксист:** Добре. Яка адреса аптеки? *(Okay. What is the address of the pharmacy?)*
+> — **Пасажир:** Вулиця Шевченка. Мені треба купити ліки до п'ятої години. *(Shevchenko street. I need to buy medicine by five o'clock.)*
+> — **Таксист:** Ми встигнемо. А після аптеки куди? *(We will make it. And after the pharmacy, where to?)*
+> — **Пасажир:** Після аптеки поїдемо до готелю. *(After the pharmacy, we will go to the hotel.)*
+> — **Таксист:** Зрозумів. Поїхали! *(Understood. Let's go!)*
 
-In the A1 level, we learned how to describe where something is located. Now, in A2, we are moving beyond simple location to express direction, purpose, and time limits. The key to all of these is the small but powerful preposition **до** *(to, toward, until)*. Whether you are traveling to a specific destination, setting a deadline, or going to see a person, **до** is your primary tool. It translates to "toward" when discussing movement, and "until" when discussing time.
+In earlier lessons, you learned how to say where you are located using the Locative case. Now, we are moving beyond simple location to talk about direction, movement, and time limits. When you want to express that you are moving *toward* a destination or doing something *until* a certain deadline, you need the preposition **до**. This is a powerful word that connects movement in space with movement in time, and it always requires the Genitive case.
 
-The most important rule to remember is that the preposition **до** always requires the Genitive case *(родовий відмінок)*. When you say "to the station," **вокзал** *(station)* becomes **до вокзалу**. When you say "until morning," **ранок** *(morning)* becomes **до ранку**. Let us explore how this works in practice.
+У цьому уроці ми вивчаємо напрямок і час. Ви вже знаєте, як сказати, де ви знаходитеся. Тепер ми будемо говорити, куди ми йдемо або їдемо. Прийменник «до» завжди вимагає родового відмінка.
 
-:::tip Читаємо українською
-Я йду до парку. *(I am going to the park.)*
-Ми їдемо до Києва. *(We are traveling to Kyiv.)*
-Він працює до вечора. *(He works until evening.)*
-Вона чекає до завтра. *(She is waiting until tomorrow.)*
+> *In this lesson, we study direction and time. You already know how to say where you are located. Now we will talk about where we are walking or driving. The preposition "до" always requires the Genitive case.*
+
+:::tip
+**Direction and Time** — Whether you are heading to the pharmacy, visiting a doctor, or waiting until evening, **до** is your guide. It is the most common way to express your goal or your deadline.
 :::
-
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -498,7 +496,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -525,14 +590,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

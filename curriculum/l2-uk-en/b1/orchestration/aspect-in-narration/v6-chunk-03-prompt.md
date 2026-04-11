@@ -29,7 +29,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-дуже важливо бути обережним і завжди уникати пастки «випадкового доконаного виду» (**випадковий** - accidental). Іноді студенти щиро намагаються описати красивий фон, але випадково обирають абсолютно неправильний граматичний аспект. Уважно порівняйте дві схожі фрази. Перша звучить так: «Надворі холодно дув сильний вітер». Друга фраза: «Надворі раптом подув сильний вітер». Семантична різниця між ними просто величезна. Дієслово «дув» (**дути** - to blow) — це наше класичне, спокійне недоконане тло. Вітер вже був там до початку сцени і, ймовірно, буде після неї. Натомість форма «подув» (**подути** - to start blowing) чітко належить до різкого доконаного виду. Вона миттєво перетворює звичайний вітер на нову, дуже раптову подію. Це означає, що раніше вітру взагалі не було, і його поява несподівано змінює всю ситуацію. Якщо ви випадково використаєте доконаний вид в описі спокійної природи, ви повністю зламаєте атмосферу розповіді. Ви змусите читача думати, що ця декорація є активним учасником вашого сюжету. Щоб надійно закріпити цю нову навичку, давайте виконаємо одне велике письмове завдання. Ваша головна мета — детально описати тихий осінній вечір у маленькому українському містечку, наприклад, у затишних Бережанах. Ваше найголовніше правило: ви повинні свідомо використовувати виключно недоконаний вид дієслів. Опишіть прохолодну погоду, вечірні звуки, знайомі запахи та місцевих людей, які повільно йдуть вузькими вулицями. Що саме вони робили в цей час? Яким був їхній загальний настрій? Завжди пам'ятайте, що в цьому описі не повинно бути абсолютно жодної швидкої дії, жодного несподіваного сюрпризу і жодного завершеного результату. Тут має бути присутня лише чиста, глибока і безперервна атмосферність. Коли ви нарешті напишете свої п'ять або шість речень, обов'язково прочитайте їх уголос. Ви одразу відчуєте, як цей текст магічно діє на ваше сприйняття. Така фонова розповідь завжди здається дуже спокійною, меланхолійною і цілком позачасовою. Вона створює ідеальну текстову базу для вашої драми. Коротко підсумовуючи все сказане вище, можна впевнено стверджувати, що недоконаний вид має свій особливий наративний вайб (**наративний вайб** - narrative vibe). Він свідомо і дуже майстерно уповільнює загальний плин часу у вашій захопливій історії. Замість того, щоб швидко гнатися за фінальним результатом, він повністю фокусується на людських відчуттях (**відчуття** - sensation) та безпосередньому чуттєвому досвіді. Він надійно фіксує читача в конкретному фізичному середовищі. Це дає змогу почути шум дощу, побачити світло вуличних ліхтарів і глибоко відчути внутрішню тривогу вашого героя. Без цього фундаментального статичного шару абсолютно будь-який динамічний сюжет здаватиметься дуже порожнім і відверто штучним. Ваше тло — це глибоке міцне коріння історії, з якого згодом органічно виростають усі ваші подальші конфлікти. Але що ж нам робити далі, коли наша сцена вже була ідеально підготовлена? Наше тло — це лише дуже широке полотно (**полотно** - canvas), на якому ми малюємо красиву картину. Але що тоді є нашим головним гострим пензлем (**пензель** - brush)? Як нам нарешті ефективно порушити цей глибокий спокій і швидко змусити нашу історію рухатися вперед? Саме в цей вирішальний момент на літературну сцену виходить інший, набагато більш агресивний граматичний інструмент. Це той самий унікальний інструмент, який рішуче розрізає нескінченний час на конкретні шматки і створює справжній динамічний сюжет. Отже, тепер настав ідеальний час максимально детально поговорити про передній план нашої захопливої розповіді.
+і герої повинні шукати укриття. Випадковий доконаний вид повністю ламає статичність фону. > *The difference between the two aspects is critical for understanding the general situation in the story. If you say "it was raining outside," you are simply describing the weather as a decoration for your narrative. But if you say "it started raining outside," the action instantly becomes an event. This means that the rain suddenly started right now, and the characters must look for shelter. An accidental perfective aspect completely breaks the static nature of the background.* :::tip **Aspect Check** If you can logically add "suddenly" to your sentence without changing the core meaning, you have likely created a foreground event. Background descriptions rarely happen "suddenly." ::: To truly master the imperfective background, you must practice building scenes without relying on events. Imagine you need to describe a quiet evening in a small Ukrainian town, like Berezhany or Kolomyia. Your goal is to write a paragraph using exclusively background verbs. Focus entirely on the atmosphere, the parallel activities of the townspeople, and the general mood. Describe how the old streetlamps were glowing, how the distant sound of a train was echoing, and how the locals were strolling through the main square. By temporarily banning perfective verbs from your writing, you force your brain to engage with the descriptive power of the imperfective aspect. Уявіть собі старовинне українське містечко пізнього вечора. Сонце повільно сідало за високі пагорби, і на вузьких вулицях ставало темніше. Місцеві жителі неквапливо гуляли площею, а з відчинених вікон лунала музика. Старі ліхтарі м'яко світили, освітлюючи кам'яну бруківку. Ніхто нікуди не поспішав, і час ніби зупинився. Спробуйте самостійно написати подібний текст, фокусуючись лише на процесах. Ultimately, the imperfective aspect in a narrative is all about controlling the rhythm and the "vibe" of your story. When you rely on imperfective verbs, you deliberately slow down time. You invite your listener to pause, look around, and focus on the sensory details of the environment. You anchor the reader in the specific space and emotional reality of your characters before the plot disrupts their world. The background is the wide, expansive canvas upon which the actual story will eventually be painted. Недоконаний вид працює як потужний кінематографічний інструмент, який ефективно уповільнює час і дозволяє нам уважно роздивитися деталі. Він зовсім не штовхає історію вперед, а розширює її вглиб. Завдяки йому ми можемо фізично відчути атмосферу, почути звуки навколишнього світу та зрозуміти емоції людей. Це фундамент, без якого будь-яка пригода здаватиметься штучною. We have spent considerable time setting the stage, adjusting the lighting, and establishing the mood. But a stage set, no matter how beautifully described, is not a story on its own. A narrative requires action, consequence, and change. If the imperfective background is the wide canvas and the subtle shading, what is the brush that draws the sharp, defining lines of the plot? To turn a static scene into a compelling tale, we must introduce the foreground, and that requires a complete shift in our aspect strategy.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -578,7 +578,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -591,14 +658,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

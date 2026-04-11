@@ -1,0 +1,59 @@
+{
+  "module": "pluralia-tantum",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-10T21:26:05.292548Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-09T22:22:30.873378Z",
+    "meta": null,
+    "activities": "2026-04-09T22:15:56.364303Z",
+    "vocabulary": "2026-04-09T22:16:37.017009Z",
+    "research": null,
+    "plan": "2026-04-04T21:31:33.324165Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "4272/4000 (raw: 4360) | engagement: 0/5 | richness: 62% < 95% min (grammar) - REWRITE needed | salad: Phase 7 (Early B1 (B1 M01-M30)): 1 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 8 inline **term** (gloss) markers across 8 sentence(s) \u2014 too dense; move to vocabulary section or convert "
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "13/0 | density: 3 < 6"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "54/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

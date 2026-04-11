@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The dialogue ignores the specific setting prompts ("Допомагаю бабусі нести
+    сумки", "Раджу сусідці нового лікаря", "Мені подобається допомагати!"). Used an
+    incorrect H2 heading ("Давальний відмінок осо
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'CRITICAL ERROR: "Ви бачите, як змінюється слово «мама»? Вона має закінчення...".
+    The noun "слово" is neuter and requires "воно", not "вона" (which incorrectly
+    agrees with the quoted string rather than'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Strong, clear explanations ("The action goes from the object to the person",
+    "Age is treated as an experience that happens to someone"). PPP flow is maintained
+    effectively.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are properly introduced and placed
+    in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All required activity markers are present, matching the planned type and
+    focus perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teaching persona that is encouraging without being overly gamified
+    or patronizing.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The module includes an unrequested `## Підсумок` section at the end. The
+    rubric strictly prohibits duplicate summary sections. Word count exceeds the budget
+    beautifully.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explicitly contrasts the correct Ukrainian dative structure against the
+    common Russian interference ("дякую вас"), which is highly useful.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The provided dialogue sounds natural, but it misses several of the specific
+    narrative beats requested in the plan.
+findings: []

@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-40-7a5ffbcf.json
+phase: write-chunk-03
+prompt_chars: 50793
+response_chars: 5522
+prompt_words: 6727
+response_words: 820
+sections:
+- name: header
+  start: 0
+  length: 458
+  fraction: 0.009
+- name: skeleton
+  start: 458
+  length: 1468
+  fraction: 0.0289
+- name: prior_summary
+  start: 1926
+  length: 3522
+  fraction: 0.0693
+- name: plan
+  start: 5448
+  length: 18774
+  fraction: 0.3696
+- name: wiki
+  start: 19351
+  length: 26443
+  fraction: 0.5206
+- name: output_spec
+  start: 50665
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in, complete sentences with the correct simple future form based on aspect
+  covered: false
+  coverage_note: marker missing

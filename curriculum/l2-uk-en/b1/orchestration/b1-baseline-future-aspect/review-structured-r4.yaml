@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text misses several specific verb examples from the outline (показувати
+    → показати, класти → покласти, веліти, женити, придбати, потріскувати). It also
+    misses the preview of the next module at the
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Exceptional. Consonant alternations (сидіти → сиджу, попросити → попрошу)
+    and archaic conjugations (відповім, відповідять, дам, дадуть) are flawlessly executed.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding. The explanation of why perfective verbs have no present tense
+    ("результат — це лише одна коротка мить") and the historical origin of the synthetic
+    form ("имати") are brilliantly presented
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is present, correctly bolded, and properly introduced
+    in context (e.g., "категорія виду", "видова пара", "одновидовий").
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Strong exercise concepts, but the `group-sort` activity is misplaced,
+    asking students to sort into 3 groups before the third group has been introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, supportive, and substantive. The "bridge" metaphor for imperfective
+    vs perfective is highly effective. No corporate filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All headings present and correct. Word count is strong at 4911 words.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of real-world context (Kharkiv University, Shevchenko
+    Park, Carpathian mountains, poet V. Sosiura).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, correctly contextualized, and beautifully demonstrate
+    the functional difference between the tenses (e.g., the student committee planning
+    the charity concert).
+findings: []

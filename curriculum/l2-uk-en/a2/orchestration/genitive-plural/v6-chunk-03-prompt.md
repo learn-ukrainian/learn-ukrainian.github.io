@@ -33,7 +33,7 @@ Grand total: ~2100 words
 <previous_context>
 [...previous sections truncated...]
 
-п'ять **лекцій** *(of lectures)* - **мрія** *(dream)* → багато **мрій** *(of dreams)* **Читаємо українською:** Сьогодні ми слухали кілька довгих лекцій. *(Today we listened to several long lectures.)* Наш поїзд проїхав п'ять станцій. *(Our train passed five stations.)* У неї є багато великих мрій. *(She has many big dreams.)* Вони закінчили будівництво нових станцій. *(They finished the construction of new stations.)* Скільки статей ти прочитав? *(How many articles did you read?)* While the zero ending is the absolute rule for most feminine nouns, a small but vital group of feminine words takes the **-ей** ending. This often happens with words ending in double consonants plus **я** or certain nouns from the third declension. You simply need to remember these high-frequency words. - **стаття** *(article)* → багато **статей** *(of articles)* - **сім'я** *(family)* → кілька **сімей** *(of families)* - **миша** *(mouse)* → багато **мишей** *(of mice)* - **ніч** *(night)* → п'ять **ночей** *(of nights)* **Читаємо українською:** Вона написала п'ять наукових статей. *(She wrote five scientific articles.)* У цьому будинку живе кілька сімей. *(Several families live in this building.)* Кіт спіймав багато мишей у саду. *(The cat caught many mice in the garden.)* Ми провели там кілька холодних ночей. *(We spent a few cold nights there.)* На цій вулиці немає площ. *(There are no squares on this street.)* Finally, there is the mixed group of feminine nouns. These are words whose stems end in the consonants **ж**, **ч**, **ш**, or **щ** (like **площа**). These words take a clean zero ending without any vowel insertion. You simply drop the final **-а**. - **площа** *(square)* → багато **площ** *(of squares)* - **задача** *(task/math problem)* → десять **задач** *(of tasks)* - **тиша** *(silence)* → багато **тиш** *(of silences)* **Читаємо українською:** У центрі міста є кілька площ. *(There are several squares in the city center.)* Студенти вирішили десять складних задач. *(The students solved ten difficult tasks.)* Тут було багато тиш. *(There were many silences here.)* Я знаю мало таких площ. *(I know few such squares.)* Багато людей читають книги. *(Many people read books.)* Let's put all these feminine Genitive plural forms into practice using quantity words. Notice how the ending changes depending on the word's stem, but the core rule of dropping the **-а** remains consistent. Remember that numbers five and above always require the Genitive plural. > — **Максим:** Скільки пісень ти знаєш? *(How many songs do you know?)* > — **Олена:** Я знаю дуже багато українських пісень. *(I know very many Ukrainian songs.)* > — **Максим:** А скільки казок ти пам'ятаєш? *(And how many fairy tales do you remember?)* > — **Олена:** Я пам'ятаю кілька казок, але багато історій. *(I remember a few fairy tales, but many stories.)* **Читаємо українською:** У бібліотеці кілька нових книг. *(There are several new books in the library.)* На площі багато красивих жінок. *(There are many beautiful women on the square.)* Мама купила десять червоних сумок. *(Mom bought ten red bags.)* Нам треба вирішити п'ять задач. *(We need to solve five tasks.)* <!-- INJECT_ACTIVITY: fill-in-genitive-plural --> <!-- INJECT_ACTIVITY: quiz-ending-choice -->
+This group includes some words ending in a double consonant plus "-я" (like **стаття** → **статей**), words with an apostrophe (like **сім'я** → **сімей**), and a few specific nouns (like **миша** → **мишей**). Additionally, feminine nouns of the third declension that end in a consonant, such as **ніч** (night), also take this ending, becoming **ночей**. Відомий журналіст написав кілька цікавих наукових статей. У цьому сучасному місті живе багато молодих сімей. У підвалі старого будинку ми знайшли п'ять мишей. Я дуже втомився, бо працював кілька довгих ночей. Вони не бачили цих статей. > *The famous journalist wrote several interesting scientific articles. Many young families live in this modern city. In the basement of the old house, we found five mice. I am very tired because I worked for several long nights. They did not see these articles.* Finally, we have feminine nouns whose stems end in the shibilant consonants "ж", "ч", "ш", or "щ". These words belong to the mixed group. When forming the Genitive plural, they take a clean zero ending without any inserted vowels, even if it looks like there might be a cluster. For example, **площа** (square) becomes **площ**, and **задача** (task) becomes **задач**. Note that the word **тиша** (silence) grammatically becomes **тиш**, though it is rarely used in the plural in everyday speech. У центрі європейського міста є кілька старовинних площ. На математичному іспиті студенти вирішили п'ять складних задач. У цьому районі немає великих площ. Діти не зрозуміли цих важких задач. > *In the center of the European city, there are several ancient squares. At the math exam, the students solved five difficult tasks. There are no large squares in this area. The children did not understand these hard tasks.* Now that we have seen the different patterns for the **жіночий рід** (feminine gender), let's put them together in context. You will soon compare these to the **чоловічий рід** (masculine gender) and the **середній рід** (neuter gender). The Genitive plural is most frequently used after quantity words like **кілька** (a few, several), **багато** (many), **мало** (few, a little), and the question word **скільки** (how many). Using these words naturally requires you to instantly recall the correct plural form of the noun. Practice reading these sentences aloud to get used to the sound of these combinations. Скільки українських народних пісень ти вже знаєш? У центральній бібліотеці є кілька рідкісних книг. На головній площі міста завжди багато красивих жінок. У нього мало вільних хвилин для відпочинку. Скільки цікавих статей ви сьогодні прочитали? На вулиці зараз багато різних людей. У мене є кілька важливих питань і нових завдань. > *How many Ukrainian folk songs do you already know? There are several rare books in the central library. There are always many beautiful women on the main square of the city. He has few free minutes for rest. How many interesting articles did you read today? There are many different people on the street now. I have several important questions and new tasks.* <!-- INJECT_ACTIVITY: fill-in-genitive-plural --> <!-- INJECT_ACTIVITY: quiz-ending-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -545,7 +545,74 @@ Understanding numeral agreement is a crucial hub connecting several grammatical 
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -572,14 +639,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

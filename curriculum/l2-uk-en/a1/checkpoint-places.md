@@ -1,6 +1,6 @@
 ## Що ми зна́ємо? (What Do We Know?)
 
-Navigating a new city is often your very first real test of survival in a completely new language environment. Before reaching this point in your studies, you could name a few isolated objects, describe who you are, or exchange basic daily greetings. Now, you have acquired the tools to confidently step out into the street, find what you need, and interact with the world around you. This module serves as a comprehensive checkpoint to review the essential skills you acquired throughout the "Places" section. 
+Navigating a new city is often your very first real test of survival in a completely new language environment. This module serves as a comprehensive checkpoint to review the essential skills you acquired throughout the "Places" section. 
 
 Moving from speaking in isolated words to building connected urban navigation phrases is an important step. You are no longer just pointing and saying **центр** (center) or **метро́** (subway); instead, you are constructing full ideas by saying **у це́нтрі** (in the center) and **на метро** (by subway). This review highlights the critical differences between simply being somewhere, actively going somewhere, and returning from somewhere. 
 
@@ -55,7 +55,7 @@ The most crucial grammatical concept in urban navigation is understanding the th
 
 *   **Де?** (Where?) indicates a static location. It uses the Locative case. 
     *   **В апте́ці** (In the pharmacy)
-    *   **В шко́лі** (In school)
+    *   **У шко́лі** (In school)
     *   **На робо́ті** (At work)
 *   **Куди?** (To where?) indicates the direction of movement. It uses the Accusative case.
     *   **В апте́ку** (To the pharmacy)
@@ -91,6 +91,12 @@ You also see how prepositions shift based on the point of reference. The local u
 :::note
 To fully consolidate your urban vocabulary, try describing your own city or a city you love. Imagine video-calling a friend while walking through a coastal city like **Оде́са** (Odesa). You might show them the sights: **Дерибасівська ву́лиця** (Derybasivska street), the famous **Потьо́мкінські сходи** (Potemkin Stairs), a large **порт** (port), and a sunny **пляж** (beach). Practice describing exactly where you are and where you are going using these nouns!
 :::
+
+> **Мешка́нець:** Приві́т! Диви́сь, я за́раз в Оде́сі. Це Дериба́сівська ву́лиця. *(Hi! Look, I am currently in Odesa. This is Derybasivska street.)*
+> **Онлайн-друг:** Клас! А куди́ ти йдеш? *(Cool! And where are you going?)*
+> **Мешка́нець:** Я йду пі́шки. Тут Потьо́мкінські схо́ди. *(I am walking on foot. Here are the Potemkin Stairs.)*
+> **Онлайн-друг:** А де порт? *(And where is the port?)*
+> **Мешка́нець:** Порт напра́во. А налі́во — пляж. Я йду на пляж! *(The port is to the right. And to the left is the beach. I am going to the beach!)*
 
 <!-- INJECT_ACTIVITY: fill-in-dialogue-forms -->
 

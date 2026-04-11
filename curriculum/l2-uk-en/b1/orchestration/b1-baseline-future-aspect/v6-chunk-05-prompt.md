@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-конструкцію «will be» та дієслово з закінченням «-ing». Але в українській мові нам взагалі не потрібно додавати жодних спеціальних суфіксів чи закінчень до основного слова. Це значно полегшує процес спілкування. Щоб правильно і впевнено будувати складену форму, вам потрібно ідеально знати дієвідмінювання слова **бути** *(to be)*. Це дуже давнє, унікальне і трохи неправильне дієслово. Воно цікаве тим, що не має простої форми майбутнього часу, бо історично не має прямої доконаної пари для цієї ролі. Його форми у майбутньому часі виглядають так. Я **буду** *(I will be)*, ти **будеш** *(you will be)*, він, вона або воно **буде** *(he/she/it will be)*. Для множини форми змінюються так. Ми **будемо** *(we will be)*, ви **будете** *(you [pl] will be)*, вони **будуть** *(they will be)*. Ретельно запам'ятайте цю коротку базову таблицю. Якщо ви знаєте ці шість слів, ви зможете миттєво утворити майбутній час для абсолютно будь-якого дієслова недоконаного виду. Просто візьміть потрібну форму слова «бути» і додайте до неї незмінну початкову форму вашого цільового дієслова. Давайте подивимося, як різні форми майбутнього часу гармонійно працюють разом у реальній життєвій ситуації. Уявіть, що активні студенти планують організувати масштабний благодійний концерт. Вони зібралися в просторій аудиторії, яку їм надав **Харківський університет** *(Kharkiv University)*. > — **Голова комітету:** Друзі, ми **будемо збирати** *(will be collecting)* **кошти** *(funds)* цілий тиждень біля головного входу до нашого корпусу. > — **Студентка:** Це просто чудова ідея. А коли саме ми розкажемо про сам концерт усім іншим студентам факультету? > — **Голова комітету:** Ми **оголосимо** *(will announce)* точну дату вже завтра вранці на наших сторінках у соціальних мережах. > — **Волонтер:** Я досить добре малюю, тому я швидко **напишу** *(will write/draw)* велику і яскраву **афішу** *(poster)* для нашого майбутнього заходу. Зверніть увагу на логіку студентів. Збирання грошей — це довгий і безперервний процес, тому вони використовують аналітичну форму «будемо збирати». А от швидке оголошення дати та створення готової афіші — це конкретні фінальні результати. Тому тут ідеально працює проста доконана форма: «оголосимо» та «напишу». Складена форма майбутнього часу — це справжня безпечна гавань і рятувальне коло для іноземних студентів. Вона утворюється максимально легко і ніколи не вимагає від вас знати складне чергування приголосних звуків. Крім того, ця форма є надзвичайно популярною в сучасному повсякденному розмовному мовленні. Ви будете гарантовано чути конструкції на зразок «я буду робити» чи «ми будемо чекати» абсолютно скрізь. Вони лунають від офіційних телевізійних новин до невимушених дружніх розмов за кавою. Вона також має стабільно високу частотність використання у західних українських діалектах, де її чути на кожному кроці. Можливо, ви зараз запитаєте себе: що ж усе-таки краще використовувати в розмові? Що обрати — «я буду працювати» чи синтетичну форму «я працюватиму»? Відповідь дуже проста: обидві ці форми є абсолютно правильними і рівнозначними. Форма «буду працювати» звучить дещо більш нейтрально, звично і прямолінійно в щоденному побутовому спілкуванні. Натомість форма «працюватиму» додає вашій мові певної глибокої літературної елегантності та традиційної української милозвучності. Ви можете сміливо і вільно комбінувати та чергувати ці дві форми у своїх розповідях. Це допоможе зробити вашу українську мову ще більш живою, багатою та стилістично різноманітною. <!-- INJECT_ACTIVITY: fill-in-future-choice -->
+grammatically impossible. ::: Щоб утворити складену форму, вам потрібно знати лише одне дієслово. Дієслово «бути» є унікальним, оскільки воно має власну форму майбутнього часу. Воно не підкоряється стандартним правилам видових пар і не має доконаного відповідника для цієї конструкції. Ви просто відмінюєте його за особами та числами, а потім додаєте будь-який інфінітив недоконаного виду. > *To form the analytic form, you only need to know one verb. The verb "бути" is unique because it has its own future tense form. It does not obey the standard rules of aspect pairs and has no perfective counterpart for this construction. You simply conjugate it by person and number, and then add any imperfective infinitive.* | Особа | Однина | Множина | | :--- | :--- | :--- | | 1-ша | я **буду** | ми **будемо** | | 2-га | ти **будеш** | ви **будете** | | 3-тя | він, вона, воно **буде** | вони **будуть** | Let's see how this works in a practical context. Imagine a student planning committee at a Kharkiv university (Харківський університет). They are organizing a large charity concert and delegating tasks. Notice how they naturally mix the analytic future for ongoing processes and the simple future for concrete results. > — **Голова комітету:** Ми будемо збирати кошти цілий тиждень біля головного корпусу. *(We will be collecting funds all week near the main building.)* > — **Волонтер 1:** А завтра ми оголосимо дату нашого благодійного концерту. *(And tomorrow we will announce the date of our charity concert.)* > — **Волонтер 2:** Я напишу афішу та опублікую її в соціальних мережах. *(I will write the poster and publish it on social networks.)* > — **Голова комітету:** Добре, а я буду шукати музикантів. *(Good, and I will be looking for musicians.)* Here, the continuous effort of collecting funds and looking for musicians uses the analytic form. The discrete, completed tasks of announcing the date and writing the poster use the simple perfective future. For language learners, the analytic form is the ultimate safe harbor. Because it completely bypasses the consonant mutations and stress shifts that can occur in the simple future, it offers a stress-free way to speak about your plans. You will hear this two-word construction constantly in everyday spoken Ukrainian. It is particularly dominant in Western dialects, where the analytic form is often preferred over the synthetic one in casual conversation. Складена форма «буду працювати» є абсолютно нейтральною та підходить для будь-якої ситуації. Вона означає те саме, що й синтетична форма «працюватиму». Ви можете вільно замінювати їх у своєму мовленні. Форма «працюватиму» може звучати трохи більш літературно або елегантно, але обидві конструкції є абсолютно правильними. Вибір між ними часто залежить лише від особистих уподобань або загального ритму речення. :::tip **Quick tip** If you ever feel unsure about how to conjugate a complex verb in the synthetic future, fall back to the analytic form. As long as the verb is imperfective, adding **буду** will always result in perfectly natural and grammatically correct Ukrainian. ::: <!-- INJECT_ACTIVITY: fill-in-future-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,7 +596,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -609,14 +676,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

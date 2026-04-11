@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module hits all required points, objectives, and vocabulary perfectly.
+    Word counts for individual sections deviate slightly from budgets (mostly slightly
+    shorter), but overall length is great.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Identified a morphological error (`перевірімо`) and inconsistent pronoun
+    register in the dialogue (Chef addresses Oksana with polite plural `наріжте`,
+    then singular `будь уважною`; addresses Maksym wi
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'PPP flow is solid, but the logic explaining the `-мо` suffix for `робити`
+    is contradictory. The text says `роби` + `мо` = `робімо`, which is false (it would
+    be `робимо`). The `и` -> `і` shift must be '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Flawless. All required and recommended vocabulary items naturally integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Two markers (`fill-in` and `unjumble`) were placed pedagogically out of
+    order, testing concepts before they had been formally introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent tone. "Зрозуміти цю логіку означає зрозуміти українську душу"
+    is a beautiful way to encourage learning blessings.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Clean structure, but the writer accidentally left `(~550 words)` inside
+    the heading for the Vocative section.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fantastic explanation of Ukrainian toasts (`Будьмо!`), everyday blessings,
+    and correct avoidance of the `давайте` + infinitive calque.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Great contextual setting (cooking class). Deducting slightly for the register
+    inconsistencies, but the dialogue flows naturally otherwise.
+findings: []

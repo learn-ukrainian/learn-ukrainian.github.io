@@ -168,17 +168,17 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Dialogues
+## Діало́ги — Dialogues
 
-When you meet someone new in Ukraine, small talk often quickly turns to your personal life. People want to know who you are and where you come from. Sharing information about your **сім'я** (family) is the most common way to build a connection. Showing photos of your relatives on your phone is a natural icebreaker. You can easily start a conversation by showing a picture and talking about "my family" — **моя сім'я**.
+When you meet someone new in Ukraine, small talk often quickly turns to your personal life. People want to know who you are and where you come from. Sharing information about your **сім'я́** (family) is the most common way to build a connection. Showing photos of your relatives on your phone is a natural icebreaker. You can easily start a conversation by showing a picture and talking about "my family" — **моя́ сім'я**.
 
 Here is a typical conversation between two friends, Оля and Марк. They are taking a break and looking at photos on their phones.
 
-> **Оля:** У тебе є брати чи сестри? *(Do you have brothers or sisters?)*
-> **Марк:** Так, у мене є два брати і одна сестра. *(Yes, I have two brothers and one sister.)*
-> **Оля:** Ого! У мене тільки один брат. *(Wow! I have only one brother.)*
-> **Марк:** Як його звати? *(What is his name?)*
-> **Оля:** Коля. *(Kolya.)*
+> **Оля:** У тебе́ є брати́ чи се́стри? *(Do you have brothers or sisters?)*
+> **Марк:** Так, у мене́ є два брати і одна́ сестра́. *(Yes, I have two brothers and one sister.)*
+> **Оля:** Ого́! У мене ті́льки оди́н брат. *(Wow! I have only one brother.)*
+> **Марк:** Як йо́го зва́ти? *(What is his name?)*
+> **Оля:** Ко́ля. *(Kolya.)*
 
 Notice the core question: **У тебе є брати чи сестри?** means "Do you have brothers or sisters?". The word **чи** means "or" in questions. Марк responds with a very specific pattern: **Так, у мене є два брати і одна сестра** (Yes, I have two brothers and one sister). He then asks about the brother's name using **Як його звати?** (What is his name?).
 
@@ -188,35 +188,33 @@ In Ukraine, asking **У тебе є брати чи сестри?** is a very no
 
 Later, Оля shows a larger group picture on her screen.
 
-> **Оля:** Це моя сім'я на фотографії. *(This is my family in the photograph.)*
-> **Марк:** Класно! Хто це? *(Cool! Who is this?)*
-> **Оля:** Це моя мама Марина. *(This is my mom Maryna.)*
-> **Оля:** Це мій тато Євген. *(This is my dad Yevhen.)*
-> **Оля:** Це моя сестра Катя і мої брати — Іван і Денис. *(This is my sister Katya and my brothers — Ivan and Denys.)*
-> **Марк:** А це твоя бабуся? *(And is this your grandmother?)*
-> **Оля:** Так, її звати Тетяна. *(Yes, her name is Tetiana.)*
+> **Оля:** Це моя сім'я на фотогра́фії. *(This is my family in the photograph.)*
+> **Марк:** Кла́сно! Хто це? *(Cool! Who is this?)*
+> **Оля:** Це моя ма́ма Мари́на. *(This is my mom Maryna.)*
+> **Оля:** Це мій та́то Євге́н. *(This is my dad Yevhen.)*
+> **Оля:** Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с. *(This is my sister Katya and my brothers — Ivan and Denys.)*
+> **Марк:** А це твоя́ бабу́ся? *(And is this your grandmother?)*
+> **Оля:** Так, її звати Тетя́на. *(Yes, her name is Tetiana.)*
 
 This dialogue relies heavily on the **Це** (This is) pattern combined with possessive words. Оля identifies each person clearly: **Це моя мама** (This is my mom) and **Це мій тато** (This is my dad). When Марк asks about the older woman, he points and asks, **А це твоя бабуся?** (And is this your grandmother?). Оля confirms and gives her name using the phrase **її звати** (her name is).
 
 You can combine these questions and answers into a connected self-introduction. This is how you introduce your world to someone else in a clear, structured way.
 
-> Привіт! Мене звати Анна. *(Hi! My name is Anna.)*
-> Я з Лондона. *(I am from London.)*
-> Моя мама — вчителька. *(My mom is a teacher.)*
-> Мій тато — інженер. *(My dad is an engineer.)*
+> Приві́т! Мене звати А́нна. *(Hi! My name is Anna.)*
+> Я з Ло́ндона. *(I am from London.)*
+> Моя мама — вчи́телька. *(My mom is a teacher.)*
+> Мій тато — інжене́р. *(My dad is an engineer.)*
 > У мене є один брат. *(I have one brother.)*
 
 This short monologue demonstrates how family vocabulary anchors your personal identity. You state your name, your origin, identify your parents and their professions, and mention your siblings.
 
-<!-- INJECT_ACTIVITY: fill-in-dialogue -->
-
 ## Сім'я — Family Vocabulary
 
-Ukrainian has two common words for "family." The word **сім'я** typically refers to the immediate, nuclear family. Notice the apostrophe in this word; it tells you to pause slightly and pronounce the **я** clearly. The word **родина** is also very common but often implies a broader network of relatives or kin. Both words are used frequently in daily life.
+Ukrainian has two common words for "family." The word **сім'я** typically refers to the immediate, nuclear family. Notice the apostrophe in this word; it tells you to pause slightly and pronounce the **я** clearly. The word **роди́на** is also very common but often implies a broader network of relatives or kin. Both words are used frequently in daily life.
 
-For your immediate family, you will use these core terms. A mother is **мати** (formal) or **мама** (informal). A father is **батько** (formal) or **тато** (informal). In everyday conversation, Ukrainians almost always use **мама** and **тато**. A brother is a **брат**, and a sister is a **сестра**. If you have children, a son is a **син**, and a daughter is a **дочка** or **донька**. Both words for daughter are equally common and correct. A husband is a **чоловік** (which also means "man"), and a wife is a **дружина**.
+For your immediate family, you will use these core terms. A mother is **ма́ти** (formal) or **мама** (informal). A father is **ба́тько** (formal) or **тато** (informal). In everyday conversation, Ukrainians almost always use **мама** and **тато**. A brother is a **брат**, and a sister is a **сестра**. If you have children, a son is a **син**, and a daughter is a **дочка́** or **до́нька**. Both words for daughter are equally common and correct. A husband is a **чолові́к** (which also means "man"), and a wife is a **дружи́на**.
 
-Your extended family network adds more essential words to your vocabulary. A grandmother is a **бабуся**, and a grandfather is a **дідусь**. An aunt is a **тітка**, and an uncle is a **дядько**. 
+Your extended family network adds more essential words to your vocabulary. A grandmother is a **бабуся**, and a grandfather is a **діду́сь**. An aunt is a **ті́тка**, and an uncle is a **дя́дько**. 
 
 English has convenient grouping words like "grandparents," but Ukrainian operates differently. Ukrainian has absolutely no single word that translates to "grandparents." If you want to talk about them together, you must name them both. You say **бабуся і дідусь** (grandmother and grandfather) or **мої дідусь і бабуся** (my grandfather and grandmother). This is a strict rule of the language. You must always specify both individuals when referring to your grandparents.
 
@@ -244,20 +242,20 @@ When you count your family members, the numbers one and two must match the gende
 
 <!-- INJECT_ACTIVITY: quiz-possession -->
 
-## Мій, моя, моє — Possessive Pronouns
+## Мій, моя, моє́ — Possessive Pronouns
 
 When you talk about your family, you need possessive words. The Ukrainian word for "my" changes its shape to match the grammatical gender of the noun it belongs to. The pronoun must agree with the person or object, not with you.
 
 If the family member is masculine, use **мій**: **мій тато** (my dad), **мій брат** (my brother), **мій син** (my son). 
 If the family member is feminine, use **моя**: **моя мама** (my mom), **моя сестра** (my sister), **моя донька** (my daughter). 
-If the noun is neuter, use **моє**: **моє місто** (my city).
+If the noun is neuter, use **моє**: **моє мі́сто** (my city).
 If you are talking about multiple people, use the plural form **мої**: **мої брати** (my brothers). 
 
 :::note
-The word for parents, **батьки**, is always grammatically plural in Ukrainian. Therefore, it must always be paired with the plural pronoun, meaning you must say **мої батьки** (my parents).
+The word for parents, **батьки́**, is always grammatically plural in Ukrainian. Therefore, it must always be paired with the plural pronoun, meaning you must say **мої батьки** (my parents).
 :::
 
-The informal word for "your" follows the exact same gender pattern as "my." You use **твій** for masculine nouns, **твоя** for feminine nouns, **твоє** for neuter nouns, and **твої** for plural nouns. For example, you say **твій тато** (your dad) and **твоя мама** (your mom).
+The informal word for "your" follows the exact same gender pattern as "my." You use **твій** for masculine nouns, **твоя** for feminine nouns, **твоє́** for neuter nouns, and **твої́** for plural nouns. For example, you say **твій тато** (your dad) and **твоя мама** (your mom).
 
 Talking about a third person is actually much easier. The words for "his" and "her" are static. They never change their shape, regardless of the noun that follows them. The word for "his" is **його**. The word for "her" is **її**.
 You say **його мама** (his mom) and **його тато** (his dad). 
@@ -277,6 +275,8 @@ Self-check questions:
 - Can you use **його** and **її** correctly? Remember that these words never change their form based on the noun.
 
 Mini-challenge: Introduce your own family right now. Speak out loud and create four sentences. Use the **Це моя...** pattern to identify people and the **У мене є...** pattern to state who is in your family.
+
+<!-- INJECT_ACTIVITY: fill-in-dialogue -->
 </generated_module_content>
 
 **PIPELINE NOTE — Word count: 1456 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
@@ -455,21 +455,35 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 54 words | Not found: 10 words
+Verified: 48 words | Not found: 24 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Євген — NOT IN VESUM
-  ✗ Іван — NOT IN VESUM
-  ✗ Анна — NOT IN VESUM
-  ✗ Денис — NOT IN VESUM
+  ✗ Євге — NOT IN VESUM
+  ✗ Іва — NOT IN VESUM
+  ✗ Дени — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
   ✗ Катя — NOT IN VESUM
-  ✗ Коля — NOT IN VESUM
-  ✗ Лондона — NOT IN VESUM
+  ✗ Кла — NOT IN VESUM
   ✗ Марк — NOT IN VESUM
   ✗ Оля — NOT IN VESUM
-  ✗ Тетяна — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ Тетя — NOT IN VESUM
+  ✗ дько — NOT IN VESUM
+  ✗ зва — NOT IN VESUM
+  ✗ льки — NOT IN VESUM
+  ✗ ндона — NOT IN VESUM
+  ✗ нна — NOT IN VESUM
+  ✗ нька — NOT IN VESUM
+  ✗ сно — NOT IN VESUM
+  ✗ стри — NOT IN VESUM
+  ✗ телька — NOT IN VESUM
+  ✗ тка — NOT IN VESUM
+  ✗ тько — NOT IN VESUM
+  ✗ фотогра — NOT IN VESUM
+  ✗ фії — NOT IN VESUM
+  ✗ інжене — NOT IN VESUM
 
-All 54 other words are confirmed to exist in VESUM.
+All 48 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

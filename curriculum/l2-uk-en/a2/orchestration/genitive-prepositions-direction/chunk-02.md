@@ -1,96 +1,67 @@
 ## Куди ти йдеш? До + родовий для напрямку
 
-Коли ми плануємо подорож, ми завжди маємо **напрямок** *(direction)*. To express your destination, Ukrainian uses the preposition **до** *(to, toward)* followed by the Genitive case *(родовий відмінок)*. Let us start with geographical locations like cities and countries. For masculine cities, the Genitive ending is usually **-а** or **-я**. For feminine countries, the ending is usually **-и** or **-ії**. This is how we build the phrase "to the city" or "to the country". When talking about moving towards places, these endings are extremely consistent.
+We use the preposition **до** followed by the Genitive case to answer the question **куди?** (where to?). This is the standard way to talk about moving toward a city or a country. The endings follow specific rules. When a masculine city name ends in a consonant, it takes the **-а** or **-я** ending in the Genitive case. Feminine countries ending in **-а** change to **-и**, and those ending in **-ія** change to **-ії**. This is one of the first patterns you will notice when traveling.
 
-:::tip Читаємо українською
-— Я їду до Києва. *(I am going to Kyiv.)*
-— Завтра ми їдемо до Львова. *(Tomorrow we are traveling to Lviv.)*
-— Вони летять до Харкова. *(They are flying to Kharkiv.)*
-— Моя сестра їде до України. *(My sister is traveling to Ukraine.)*
-— Студенти їдуть до Польщі. *(The students are going to Poland.)*
-— Мій друг поїхав до Франції. *(My friend went to France.)*
+> — **Оксана:** Привіт! Куди ти їдеш у відпустку цього року? *(Hi! Where are you going on vacation this year?)*
+> — **Марко:** Я зараз їду до Києва. А потім ми летимо до Франції. *(I am currently driving to Kyiv. And then we are flying to France.)*
+> — **Оксана:** Це дуже класно! А куди поїхав твій брат? *(That is very cool! And where did your brother go?)*
+> — **Марко:** Він переїхав до Львова два роки тому. Ми часто їздимо до Польщі разом. *(He moved to Lviv two years ago. We often travel to Poland together.)*
+> — **Оксана:** Зрозуміло. Мої друзі часто приїжджають до України влітку. *(Understood. My friends often come to Ukraine in the summer.)*
+> — **Марко:** Так, а студенти часто їдуть до Харкова на цікаву екскурсію. *(Yes, and students often go to Kharkiv for an interesting excursion.)*
+
+Notice how the major cities (Київ, Львів, Харків) all receive an **-а** ending. The countries (Польща, Франція, Україна) follow the standard feminine rules, taking **-і** or **-ї**. You will use these forms constantly when describing your travel plans.
+
+In Ukrainian, you cannot use **в** or **на** when your destination is a person. If you are going "to see someone" or "to someone's place", you must always use **до** plus the Genitive case. This is a very common difference between English and Ukrainian grammar. You cannot say you are going "into" a doctor or "on" a friend.
+
+Читаємо українською:
+Сьогодні я йду до лікаря, бо я дуже захворів. Увечері ми всі їдемо до бабусі на смачну вечерю. Мій чоловік пішов до сусіда, щоб допомогти йому. Завтра я маю важливий візит до стоматолога. Маленькі діти часто бігають до друзів після школи. Ми завжди радісно приходимо до вчителя після уроку.
+
+> *Today I am going to the doctor because I got very sick. In the evening we are all going to grandma's for a tasty dinner. My husband went to the neighbor's to help him. Tomorrow I have an important visit to the dentist. Little children often run to friends after school. We always joyfully come to the teacher after the lesson.*
+
+Using the preposition **в** with people (like *в лікар*) is a grammatical error. Always remember that living beings require the preposition **до**. It shows respect and logical direction toward a person.
+
+:::info
+**Grammar box** — Never walk "into" a person! Use **до** + Genitive whenever your destination is a living being. It implies going to their location or to visit them.
 :::
 
-> — **Олена:** Привіт! Ти куди їдеш на вихідні? *(Hi! Where are you going for the weekend?)*
-> — **Марко:** Я їду до Одеси. А ти? *(I am going to Odesa. And you?)*
-> — **Олена:** Я залишаюся тут. Але влітку я планую поїхати до Італії. *(I am staying here. But in the summer I plan to go to Italy.)*
-> — **Марко:** Чудово! Передавай вітання! *(Wonderful! Send my regards!)*
+You might wonder when to use **до** (plus Genitive) instead of **в** or **на** (plus Accusative) when talking about physical places. Both structures are correct, but they have a slight difference in their focus. The preposition **до** emphasizes the journey, the distance, and the direction toward the perimeter of a place. The prepositions **в** and **на** emphasize crossing the boundary and entering the destination itself.
 
-Sometimes our destination is not a city or a building, but a person. We go "to see someone" or "to someone's place". In Ukrainian, this is always expressed using **до** plus the Genitive case of the person. You can never use the prepositions **в** *(in/into)* or **на** *(on/onto)* when the destination is a living being. This is a very common mistake for learners, who might translate directly from English and try to say «**в лікар**» *(into the doctor)*. Instead, you must always use **до лікаря** *(to the doctor)*. This rule applies to all professions, family members, and friends.
+> — **Анна:** Куди ти так швидко йдеш? *(Where are you walking so fast?)*
+> — **Іван:** Я йду до магазину. Мені треба купити свіжий хліб. *(I am walking to the store. I need to buy fresh bread.)*
+> — **Анна:** А я йду в магазин. Надворі холодно, а там дуже тепло. *(And I am walking into the store. It is cold outside, and it is very warm there.)*
+> — **Іван:** Ми потім їдемо до парку гуляти. Підеш з нами? *(We are driving to the park to walk later. Will you go with us?)*
+> — **Анна:** Ні, дуже дякую. Я йду додому читати книгу. *(No, thank you very much. I am going home to read a book.)*
+> — **Іван:** Добре, тоді побачимось пізніше! *(Okay, see you later then!)*
 
-:::tip Читаємо українською
-— Я йду до лікаря, тому що я хворий. *(I am going to the doctor because I am sick.)*
-— На вихідних ми їдемо до бабусі. *(On the weekend we are going to grandmother's.)*
-— Увечері я йду до сусіда. *(In the evening I am going to the neighbor's.)*
-— Ти йдеш до вчителя після уроку? *(Are you going to the teacher after the lesson?)*
-— Вони їдуть до друзів. *(They are going to their friends' place.)*
-:::
+In everyday conversation, Ukrainians use these phrases interchangeably for most buildings. However, **до** is often preferred when you are focusing on the route or the approach, while **в** is used when you are definitely going inside the building.
 
-> — **Анна:** Ти вільний сьогодні ввечері? *(Are you free tonight?)*
-> — **Ігор:** Ні, я йду до друга. У нього день народження. *(No, I am going to a friend's place. It is his birthday.)*
-> — **Анна:** Зрозуміло. А завтра? *(Understood. And tomorrow?)*
-> — **Ігор:** Завтра зранку я маю йти до стоматолога. *(Tomorrow morning I have to go to the dentist.)*
+Let us carefully review how hard and soft stems behave with the preposition **до**. For masculine inanimate nouns, the Genitive ending is usually **-у** or **-ю**. Institutions, abstract concepts, and large buildings typically take this ending. Feminine nouns take **-и**, **-і**, or **-ї** depending entirely on their stem type.
 
-You might remember from the A1 level that we can also use **в** or **на** with the Accusative case to show direction, for example, «**іду в магазин**» *(I am going into the store)*. So, what is the exact difference between **до магазину** *(toward the store)* and **в магазин** *(into the store)*? The preposition **до** emphasizes the journey or the movement toward the vicinity of the destination. You are heading *toward* the store. The preposition **в** emphasizes entering the destination itself. Both are grammatically correct and completely standard in Ukrainian. You can use whichever fits your focus: the journey or the final entry.
+Читаємо українською:
+Студент швидко поспішає до університету на першу лекцію. Ми тихо підійшли до великого будинку біля річки. Туристи повільно йдуть до історичного музею в центрі. Моя маленька сестра щоранку йде до школи. Наш швидкий потяг прибуває до станції за розкладом. Ми довго гуляємо від головної площі до театру. Наша туристична група підійшла до зупинки.
 
-:::tip Читаємо українською
-— Я йду до магазину. *(I am walking toward the store.)*
-— Я йду в магазин. *(I am going into the store.)*
-— Ми їдемо до університету. *(We are traveling toward the university.)*
-— Ми йдемо в університет. *(We are going inside the university.)*
-— Він іде до парку. *(He is heading to the park.)*
-:::
+> *The student is hurrying quickly to the university for the first lecture. We quietly approached the large building near the river. The tourists are walking slowly to the historical museum in the center. My little sister walks to school every morning. Our fast train arrives at the station on schedule. We are walking for a long time from the main square to the theater. Our tourist group approached the stop.*
 
-> — **Тарас:** Де ти зараз? *(Where are you now?)*
-> — **Марія:** Я йду до метро. *(I am walking to the subway.)*
-> — **Тарас:** Ти вже в метро? *(Are you inside the subway?)*
-> — **Марія:** Ще ні, я тільки підходжу до станції. *(Not yet, I am just approaching the station.)*
+Pay close attention to the masculine words. While cities take **-а**, institutions like **університет** and buildings like **будинок** take **-у**. The feminine words follow the expected vowel shifts: hard stems take **-и** (школа → школи), soft stems take **-ії** (станція → станції), and sibilant stems take **-і** (площа → площі).
 
-To form the Genitive case correctly with **до**, pay close attention to the stem of the noun. For masculine nouns, hard stems often take **-у**, while soft stems take **-ю**. However, remember that specific objects, people, and cities usually take **-а** or **-я**. Institutions, abstract concepts, and large buildings usually take **-у** or **-ю**. For feminine nouns, hard stems take **-и**, while soft stems take **-ії** or **-і** (especially if they end in a sibilant sound like "щ", "ч", or "ш"). Knowing these patterns will help you guess the right ending for new words.
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences with 'до' + correct noun forms for direction, 8 items -->
 
-:::note Форми родового відмінка (Genitive Forms)
-**Чоловічий рід (Masculine):**
-будинок *(building)* → до будинку
-музей *(museum)* → до музею
-університет *(university)* → до університету
+When you add an adjective to describe your destination, the adjective must also take the Genitive case to match the noun. Masculine and neuter adjectives end in **-ого**, while feminine adjectives end in **-ої**.
 
-**Жіночий рід (Feminine):**
-школа *(school)* → до школи
-станція *(station)* → до станції
-площа *(square)* → до площі
-:::
+> — **Олег:** Ви куди йдете зараз по цій вулиці? *(Where are you walking now along this street?)*
+> — **Марія:** Ми йдемо до нового будинку. Там живе мій старший брат. *(We are walking to the new building. My older brother lives there.)*
+> — **Олег:** А твоя мама куди поїхала зранку? *(And where did your mom drive to in the morning?)*
+> — **Марія:** Вона поїхала до старого друга. А автобус їде до великої станції. *(She drove to an old friend. And the bus is driving to the large station.)*
+> — **Олег:** Я теж дуже поспішаю до центральної площі на зустріч. *(I am also hurrying very much to the central square for a meeting.)*
+> — **Марія:** Вони завжди повертаються до рідного міста на свята. *(They always return to their native city for the holidays.)*
 
-:::tip Читаємо українською
-— Вони йдуть до великого будинку. *(They are going to the big building.)*
-— Туристи їдуть до музею. *(The tourists are going to the museum.)*
-— Студенти поспішають до університету. *(The students are hurrying to the university.)*
-— Діти йдуть до школи. *(The children are going to school.)*
-— Машина під'їхала до станції. *(The car drove up to the station.)*
-— Ми йдемо до центральної площі. *(We are going to the central square.)*
-:::
+Adjectives always match the gender, number, and case of the noun they describe. This creates a rhythmic harmony in the sentence, clearly linking the description to the destination.
 
-<!-- INJECT_ACTIVITY: fill-in-genitive-forms -->
+There is one very important direction word that does not require a separate noun or a preposition at all. The word for "homeward" or "to home" is simply **додому**.
 
-When you add adjectives to describe your destination, they must also match the Genitive case. For masculine and neuter adjectives, the ending is **-ого**. For feminine adjectives, the ending is **-ої**. Adjectives always follow the noun they describe in gender, number, and case. This makes the whole phrase "agree" perfectly. You will hear this matching rhythm clearly when Ukrainians speak.
+Читаємо українською:
+Після важкої роботи я завжди йду додому відпочивати. Діти довго грали в парку, а потім побігли додому. Вона хоче швидше повернутися додому до родини. Ввечері всі студенти повертаються додому. Мій кіт теж любить бігати додому, коли хоче їсти.
 
-:::note Узгодження прикметників (Adjective Agreement)
-новий будинок *(new building)* → до нового будинку
-велика станція *(big station)* → до великої станції
-старий друг *(old friend)* → до старого друга
-:::
+> *After hard work, I always go home to rest. The children played in the park for a long time, and then ran home. She wants to return home faster to her family. In the evening, all the students return home. My cat also loves to run home when it wants to eat.*
 
-:::tip Читаємо українською
-— Ми йдемо до нового будинку. *(We are going to the new building.)*
-— Поїзд прибуває до великої станції. *(The train is arriving at the big station.)*
-— Я їду до старого друга. *(I am traveling to an old friend.)*
-— Вона йде до гарної школи. *(She is going to a beautiful school.)*
-— Туристи їдуть до історичного музею. *(The tourists are going to the historical museum.)*
-:::
-
-There is one special word you will use every single day: **додому** *(homeward, to home)*. Historically, it comes directly from the two-word phrase **до дому** *(to the house)*. Today, it is written as one single word and acts as a fixed adverb of direction. You do not need to think about cases or endings here; just use it as a complete direction word whenever you are heading back to your own house or apartment.
-
-:::tip Читаємо українською
-— Після роботи я йду додому. *(After work I am going home.)*
-— Діти дуже втомилися і хочуть додому. *(The children are very tired and want to go home.)*
-— Коли ти поїдеш додому сьогодні? *(When will you go home today?)*
-:::
+Historically, this word was the phrase **до дому** (to the house), but over time it merged into a single adverb. You never need to use a preposition before it; the word itself already contains the direction and the destination.

@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-повністю завершена подія, яка агресивно втручається в цей спокійний фон і перериває його. Інший яскравий приклад: «Ми довго **їхали** *(were riding)* нічним автобусом, і раптом автобус різко **зупинився** *(stopped)* посеред дороги». Однак ми повинні чітко відрізняти це від ситуації, коли в історії відбуваються **паралельні дії** *(parallel actions)*. Якщо два незалежні процеси тривають одночасно і не переривають один одного, ми використовуємо сполучник **поки** *(while)* і два дієслова недоконаного виду. Наприклад: «Поки я **обідав** *(was having lunch)*, Тарас уважно **читав** *(was reading)* свіжі новини». Тут обидві дії є паралельними, вони не заважають одна одній і плавно розгортаються у фоновому режимі. Тепер давайте проаналізуємо **типові помилки** *(typical errors)*, які часто роблять студенти, намагаючись правильно передати тонкі нюанси виду в розповіді. Найбільш класична помилка — це спроба поєднання дієслова доконаного виду з конкретною, вимірюваною тривалістю часу. Ви ніколи не можете сказати: *«Вчора я прочитав книжку три години»*. Це граматично абсолютно неможливо в українській мові. Дієслово «прочитав» означає фінальний результат і абсолютне завершення дії, це лише одна точка на шкалі часу. Точка не може фізично тривати три години. Якщо ви хочете акцентувати увагу на тривалості процесу, ви зобов'язані використати недоконаний вид: «Вчора я **читав** *(was reading)* книжку цілих три години». Інша поширена помилка — це використання недоконаного виду саме там, де мається на увазі один конкретний результат дії. Наприклад: *«Я вчора писав важливий лист і відправляв його»*. Таке формулювання звучить неприродно. Якщо ви закінчили писати лист і відправили його адресату один раз, найбільш природним вибором буде доконаний вид: «Я вчора **написав** *(wrote)* лист і одразу **відправив** *(sent)* його». Завжди надавайте перевагу результату, якщо ваша дія є повністю завершеною. Щоб по-справжньому відчути, як саме вибір виду змінює загальну **атмосферу** *(atmosphere)* вашого тексту, давайте подивимося на так звану **трансформацію розповіді** *(narrative transformation)*. Ми розкажемо одну коротку історію про ранок у Києві двома різними способами. Версія перша використовує переважно дієслова доконаного виду. Вона фокусується на сухих фактах і чіткій послідовності кроків: > Вранці я **приїхав** *(arrived)* до Києва. Я швидко **вийшов** *(walked out)* на Хрещатик, **побачив** *(saw)* гарну кав'ярню і одразу **зайшов** *(entered)* туди. Там я **замовив** *(ordered)* каву, **випив** *(drank)* її та **пішов** *(went)* на зустріч. Цей текст є дуже динамічним і швидким. Він нагадує чіткий звіт. Нас цікавить лише те, що було фактично зроблено. Версія друга використовує переважно дієслова недоконаного виду. Вона фокусується на тривалому процесі та художньому описі деталей: > Вранці я повільно **приїжджав** *(was arriving)* до Києва. Я спокійно **виходив** *(was walking out)* на Хрещатик, **бачив** *(was seeing)* гарні кав'ярні і часто **заходив** *(was entering)* туди. Там я **замовляв** *(would order)* каву, довго **пив** *(was drinking)* її та повільно **йшов** *(was walking)* на зустріч. Зверніть увагу, як глибоко змінюється загальний настрій розповіді. Це більше не звучить як звіт про один конкретний ранок. Натомість цей текст звучить як регулярна звичка, ностальгічний спогад або красива сцена з фільму в уповільненій зйомці. Вільне володіння українською мовою означає розуміння того, що вид дієслова — це не просто граматичний інструмент. Це ваш головний режисерський пульт, який дозволяє філігранно керувати уявою співрозмовника. <!-- INJECT_ACTIVITY: error-correction-aspect --> <!-- INJECT_ACTIVITY: open-writing-yesterday -->
+яка перервала цей процес. Якщо ж дві дії відбуваються одночасно і не заважають одна одній, ми використовуємо два дієслова недоконаного виду і слово «поки». Наприклад: «Поки я обідав, Тарас читав новини». Тут немає конфлікту чи переривання, лише дві паралельні прямі. > *When we want to show such an intersection, we say: "I was eating lunch peacefully when Taras unexpectedly called." The process of eating is the continuous background, and the call is the instantaneous event that interrupted this process. But if two actions happen simultaneously and do not interfere with each other, we use two verbs of the imperfective aspect and the word "while" (поки). For example: "While I was eating lunch, Taras was reading the news." Here there is no conflict or interruption, only two parallel lines.* Understanding this cinematic distinction helps you avoid one of the most common mistakes made by language learners. Because English often relies on context to show duration, you might be tempted to pair a perfective verb with a specific block of time. This creates a severe logical contradiction in Ukrainian. You cannot state that a single, instantaneous, completed milestone lasted for three hours. The logic of the Ukrainian language demands a strict boundary between the ongoing process of an action and its final, achieved result. Неможливо сказати: «Вчора я прочитав книжку три години». Слово «прочитав» означає фінальну точку, результат дії, тому воно несумісне з тривалістю. Ви маєте обрати: або ви акцентуєте на витраченому часі і кажете «я читав книжку три години», або ви хвалитеся результатом і кажете «я прочитав книжку за три години». Завжди запитуйте себе, що важливіше: як довго ви щось робили, чи той факт, що ви довели справу до кінця. To truly master this concept, let us observe how aspect choice completely transforms the mood and rhythm of a story. We can narrate the exact same day in Kyiv using two entirely different grammatical strategies. First, we will construct the story strictly out of perfective verbs. This creates a dry, factual report of achievements, sounding exactly like a rigid checklist of tasks successfully crossed off your daily agenda. Вранці я приїхав до Києва. Я вийшов з вокзалу, купив каву і пішов на Хрещатик. Там я зустрів старого друга. Ми зайшли в кафе, з'їли борщ і випили чай. Потім ми подивилися новий фільм у кінотеатрі. Увечері я сів у поїзд і повернувся додому. Now, let us rewrite that exact same day using primarily imperfective verbs. Suddenly, the rigid checklist disappears. The narrative instantly slows down, inviting the listener to actually experience the atmosphere, the continuous states, and the unfolding daily routines rather than just rushing towards the final destinations. Той день у Києві був чудовим. Зранку я гуляв біля вокзалу, пив гарячу каву і повільно йшов Хрещатиком. Світило сонце, навколо розмовляли люди. Ми з другом сиділи в затишному кафе, їли смачний борщ і довго пили чай. У кінотеатрі показували цікавий фільм. Увечері я просто сидів у поїзді, дивився у вікно і думав про дім. <!-- INJECT_ACTIVITY: error-correction-aspect --> <!-- INJECT_ACTIVITY: open-writing-yesterday -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -607,7 +607,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -620,14 +687,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

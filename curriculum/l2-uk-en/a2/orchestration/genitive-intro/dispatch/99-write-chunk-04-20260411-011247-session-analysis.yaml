@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-12-191b8f3c.json
+phase: write-chunk-04
+prompt_chars: 43037
+response_chars: 1386
+prompt_words: 6338
+response_words: 228
+sections:
+- name: header
+  start: 0
+  length: 427
+  fraction: 0.0099
+- name: skeleton
+  start: 427
+  length: 610
+  fraction: 0.0142
+- name: prior_summary
+  start: 1037
+  length: 3273
+  fraction: 0.0761
+- name: plan
+  start: 4310
+  length: 10533
+  fraction: 0.2447
+- name: wiki
+  start: 8586
+  length: 28066
+  fraction: 0.6521
+- name: output_spec
+  start: 42909
+  length: 128
+  fraction: 0.003
+large_sections:
+- wiki
+directives_total: 8
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: For example, words for numbers like `п'ять` were originally nouns that required
+    the genitive plural (`п'ять братів` - literally "a five of brothers").
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: '* **Drill 1 (Multiple Choice):** Provide sentences where the learner must
+    choose the correct genitive form.'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: '* **Introduction to Cases**: The learner must know what a "case" is and that
+    Ukrainian nouns change their endings.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: inject_activity
+  text: match-up-genitive-plural-quantity
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-translate-genitive
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-genitive-phrases
+  covered: false
+  coverage_note: marker missing

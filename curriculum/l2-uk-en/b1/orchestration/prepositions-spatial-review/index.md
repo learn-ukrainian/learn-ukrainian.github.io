@@ -1,0 +1,74 @@
+# Build Summary: prepositions-spatial-review (B1)
+
+Generated: 2026-04-10 01:35
+
+## Pipeline Phases
+
+| Phase | Status | Timestamp |
+|-------|--------|-----------|
+| check | complete | 2026-04-09 23:17:50 |
+| research | complete | 2026-04-09 23:17:50 |
+| skeleton | complete | 2026-04-09 23:21:13 |
+| pre-verify | complete | 2026-04-09 23:23:03 |
+| write | complete | 2026-04-09 23:30:23 |
+| exercises | complete | 2026-04-09 23:30:23 |
+| activities | complete | 2026-04-09 23:31:45 |
+| verify-exercises | complete | 2026-04-09 23:31:45 |
+| annotate | complete | 2026-04-09 23:31:45 |
+| vocab | complete | 2026-04-09 23:32:18 |
+| enrich | complete | 2026-04-09 23:32:18 |
+| verify | complete | 2026-04-09 23:32:19 |
+| review | complete | 2026-04-09 23:35:13 |
+| stress | complete | 2026-04-09 23:35:14 |
+| publish | complete | 2026-04-09 23:35:18 |
+
+## Reviews
+
+| Round | File |
+|-------|------|
+| 1 | prepositions-spatial-review-review-r1.md |
+
+## Dispatch Log
+
+| Phase | Agent | Duration | OK |
+|-------|-------|----------|----|
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 110s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 30s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 82s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 25s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 174s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 66s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 87s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 42s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 58s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
+| write-chunk-07 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
+
+## Files
+
+- `.build.lock`
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
+- `chunk-05.md`
+- `chunk-06.md`
+- `chunk-07.md`
+- `exercise-verification.json`
+- `pre-verify-results.md`
+- `quick-verify.json`
+- `review-structured-r1.yaml`
+- `skeleton.md`
+- `state.json`
+- `v6-activities-prompt.md`
+- `v6-chunk-01-prompt.md`
+- `v6-chunk-02-prompt.md`
+- `v6-chunk-03-prompt.md`
+- `v6-chunk-04-prompt.md`
+- `v6-chunk-05-prompt.md`
+- `v6-chunk-06-prompt.md`
+- `v6-chunk-07-prompt.md`
+- `v6-pre-verify-prompt.md`
+- `v6-review-prompt.md`
+- `v6-skeleton-prompt.md`

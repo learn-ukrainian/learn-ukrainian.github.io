@@ -101,7 +101,7 @@ To find the dative case in a sentence, we ask two core questions. For people and
 > Чому я даю воду? *(To what am I giving water?)*
 > Я даю воду дереву. *(I am giving water to the tree.)*
 
-Let us look closer at the concept of the indirect object. In a standard sentence, the Nominative case acts as the doer of the action, while the Accusative case is the direct object that is being handled, moved, or affected. The Dative case steps in as the indirect object—the person who benefits from the action, receives the item, or gets the information. It is the target of your generosity or your words.
+Let us look closer at the concept of the indirect object. In a standard sentence, each case has its own question and function. The Nominative acts as the doer of the action. We can compare this with the Genitive (Кого? Чого?), which shows possession, and the Accusative (Кого? Що?), which marks the direct object being handled. The Dative case steps in as the indirect object—the person who benefits from the action, receives the item, or gets the information. It is the target of your generosity or your words.
 
 Think of a simple, foundational interaction: «Я даю книгу тобі» *(I give the book to you)*. Here, **«я»** *(I)* is the active doer in the Nominative case. The word **«книгу»** *(the book)* is the direct object being physically moved, so it takes the Accusative case. Finally, the word **«тобі»** *(to you)* is the ultimate recipient, taking the Dative case. The dative always marks the end destination of the giving or telling process. Understanding this relationship is the key to mastering Ukrainian sentence structure.
 
@@ -125,18 +125,15 @@ Whenever you use these verbs, the person receiving the action must take the dati
 
 Let us see how these forms work in a natural setting. Imagine a family gathering where a birthday is being celebrated, and the host is enthusiastically distributing gifts to everyone in the room. This scene relies heavily on personal pronouns in their dative forms.
 
-> — **Іменинник:** Цей великий пакунок — це мій подарунок! *(This big package is my gift!)*
-> — **Мама:** Кому цей подарунок? *(To whom is this gift?)*
-> — **Іменинник:** **Мені** — цікаву книгу. **Тобі** — солодкий шоколад. *(For me — an interesting book. For you — sweet chocolate.)*
+> — **Іменинник:** Ці великі пакунки — це наші подарунки! *(These big packages are our gifts!)*
+> — **Мама:** Кому ці подарунки? *(To whom are these gifts?)*
+> — **Іменинник:** **Мені** — цікава книга. **Тобі** — солодкий шоколад. *(For me — an interesting book. For you — sweet chocolate.)*
 > — **Брат:** А що є для тата? *(And what is there for dad?)*
 > — **Іменинник:** **Йому** — теплий зимовий шарф. *(For him — a warm winter scarf.)*
 > — **Мама:** А нашій бабусі? *(And for our grandma?)*
 > — **Іменинник:** **Їй** — дуже гарні квіти. *(For her — very beautiful flowers.)*
 > — **Брат:** А що ми всі будемо їсти? *(And what will we all eat?)*
 > — **Іменинник:** **Нам** — великий і смачний торт! *(For us — a big and tasty cake!)*
-
-<!-- INJECT_ACTIVITY: match-up-match-nominative-pronoun-to-its-dative-form -->
-
 
 ## Особові займенники у давальному відмінку (Personal Pronouns in the Dative)
 
@@ -170,6 +167,8 @@ The plural forms of personal pronouns in the dative case are thankfully much sim
 > Директор розповідає їм про важливий проєкт. *(The director tells them about the important project.)*
 > Ми радіємо вам і вашим добрим новинам. *(We are happy for you and your good news.)*
 
+<!-- INJECT_ACTIVITY: match-up-match-nominative-pronoun-to-its-dative-form -->
+
 When learning the Genitive and Accusative cases, you likely learned that third-person pronouns gain an initial letter 'н' after prepositions (for example, «до нього» or «у неї»). However, the Dative case behaves differently. First, the dative is very rarely used with prepositions in basic speech. When it is used with rare prepositions like **«завдяки»** *(thanks to)*, the pronoun generally does NOT gain an 'н'. Therefore, you will almost always use the standard forms «йому», «їй», and «їм» for the recipient. Do not over-generalize the rule from other cases. Keep it simple: when you give something, tell something, or help someone, use the base dative forms without the extra letter.
 
 > Читаємо українською:
@@ -188,10 +187,9 @@ Let us see how these pronouns naturally shift during a conversation. Read this d
 > — **Олена:** А що ми скажемо нашим друзям? *(And what will we tell our friends?)*
 > — **Максим:** Їм ми скажемо все завтра вранці. *(We will tell them everything tomorrow morning.)*
 > — **Олена:** Добре, а їй ми нічого не скажемо? *(Good, and will we not tell her anything?)*
-> — **Максим:** Ні, їй це буде великий сюрприз! *(No, for her it will be a big surprise!)*
+> — **Максим:** Ні, ми зробимо їй великий сюрприз! *(No, we will make a big surprise for her!)*
 
 <!-- INJECT_ACTIVITY: fill-in-dative-pronouns -->
-
 
 ## Мені холодно: Безособові конструкції (Impersonal Constructions)
 
@@ -207,7 +205,7 @@ In English, you say "I am cold" or "She is sad" using the subject "I" or "She." 
 > Ми готові починати новий великий проєкт. *(We are ready to start a big project.)*
 > Нам страшно дивитися цей новий фільм. *(It is scary for us to watch this movie.)*
 
-We build these sentences using state adverbs that describe a physical sensation or emotional feeling. You will notice that they almost always end in the neutral letter **-о**. Common examples include **«холодно»** *(cold)*, **«тепло»** *(warm)*, **«сумно»** *(sad)*, **«весело»** *(joyful)*, **«приємно»** *(pleasant)*, and **«цікаво»** *(interesting)*. To say "I am cold," you literally say "To me it is cold": **«Мені холодно»**. To ask if a friend is interested, you ask: **«Тобі цікаво?»**. You do not need a verb like "is" in the present tense. Just pair the Dative pronoun directly with the adverb.
+We build these sentences using state adverbs that describe a physical sensation or emotional feeling. You will notice that they almost always end in the neutral letter **-о**. Common examples include **«холодно»** *(cold)*, **«тепло»** *(warm)*, **«сумно»** *(sad)*, **«весело»** *(joyful)*, **«приємно»** *(pleasant)*, **«цікаво»** *(interesting)*, **«легко»** *(easy)*, **«важко»** *(difficult)*, and **«нудно»** *(boring)*. To say "I am cold," you literally say "To me it is cold": **«Мені холодно»**. To ask if a friend is interested, you ask: **«Тобі цікаво?»**. You do not need a verb like "is" in the present tense. Just pair the Dative pronoun directly with the adverb.
 
 > Читаємо українською:
 > Взимку мені завжди дуже холодно. *(In winter I am always very cold.)*
@@ -227,7 +225,7 @@ We also use the Dative case for modal adverbs expressing necessity, permission, 
 :::
 
 > Читаємо українською:
-> Мені треба йти додому прямо зараз. *(I need to go home right now.)*
+> Мені треба йти додому негайно. *(I need to go home immediately.)*
 > Тобі потрібно купити новий мобільний телефон. *(You need to buy a new mobile phone.)*
 > Вам можна тут сидіти і читати. *(You are allowed to sit here and read.)*
 > Йому варто добре відпочити після роботи. *(He should rest well after work.)*
@@ -249,7 +247,6 @@ Let us look at how these impersonal constructions sound in a real conversation. 
 > — **Анна:** Добре, зараз нам можна спокійно відпочити. *(Good, we are allowed to rest calmly now.)*
 
 <!-- INJECT_ACTIVITY: true-false-impersonal -->
-
 
 ## Давальний чи знахідний? (Dative or Accusative?)
 
@@ -294,8 +291,7 @@ Let us see how native speakers switch between these cases naturally in a convers
 > — **Олег:** Тоді я дарую вам обом квитки в театр. *(Then I give you both tickets to the theater.)*
 > — **Ірина:** О, ми дуже любимо тебе за це! *(Oh, we love you very much for this!)*
 
-<!-- INJECT_ACTIVITY: quiz-case-choice --> [quiz, Choose between Dative and Accusative pronoun forms (e.g., тобі vs тебе) based on the verb in the sentence, 8 items]
-
+<!-- INJECT_ACTIVITY: quiz-case-choice -->
 
 ## Підсумок (Summary)
 

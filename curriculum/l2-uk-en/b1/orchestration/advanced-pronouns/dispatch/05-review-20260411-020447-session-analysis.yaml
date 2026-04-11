@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-02-87fe4db5.json
+phase: review
+prompt_chars: 64112
+response_chars: 7501
+prompt_words: 8996
+response_words: 1075
+sections:
+- name: preamble
+  start: 0
+  length: 462
+  fraction: 0.0072
+- name: plan
+  start: 462
+  length: 60594
+  fraction: 0.9451
+- name: output_spec
+  start: 61056
+  length: 3056
+  fraction: 0.0477
+large_sections:
+- plan
+directives_total: 19
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: reading-reading-interrogative-relative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-fill-in-interrogative-relative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-quiz-interrogative-relative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-reflexive-self
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-reflexive-self
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-reflexive-self
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: indefinite-pronoun-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-negative-pronouns-and-prepositions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: self-check-classify-pronouns-by-type
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-practice-definitive-pronouns-and-their-declension
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

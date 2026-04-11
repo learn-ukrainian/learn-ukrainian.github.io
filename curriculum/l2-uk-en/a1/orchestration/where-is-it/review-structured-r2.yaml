@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all outline points, dialogues, grammatical rules, and the decolonization
+    note.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Vocabulary and forms are correct, but `магазин` is incorrectly categorized
+    under the `-у` ending group.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The explanation lists `* магази́н → у/в магази́ні` as an example of masculine
+    nouns that take the `-у` ending, despite the word having an `-і` ending. This
+    is highly confusing for learners trying to o
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is included naturally
+    in the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercises are logically placed and align perfectly with the plan's activity
+    hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging teacher tone without excessive filler. Excellent use
+    of dialogue framing.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count (1291) is comfortably above the 1200 target. H2 headers map
+    correctly to the plan outline.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The Decolonization Note regarding "в Україні" vs "на Україні" is precise,
+    historically accurate, and extremely well-phrased.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, multi-turn, formatted with named speakers, and
+    provide solid contextual examples of the grammar.
+findings: []

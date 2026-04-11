@@ -1,0 +1,41 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-11-05fc411a.json
+phase: write-chunk-01
+prompt_chars: 46938
+response_chars: 6477
+prompt_words: 6570
+response_words: 949
+sections:
+- name: header
+  start: 0
+  length: 436
+  fraction: 0.0093
+- name: skeleton
+  start: 436
+  length: 2238
+  fraction: 0.0477
+- name: plan
+  start: 2674
+  length: 15446
+  fraction: 0.3291
+- name: wiki
+  start: 13259
+  length: 28690
+  fraction: 0.6112
+- name: output_spec
+  start: 46810
+  length: 128
+  fraction: 0.0027
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: Explain how relative pronouns agree with the antecedent in gender and number
+    but take the case required by their role in the subordinate clause.
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)

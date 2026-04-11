@@ -1,0 +1,169 @@
+vocabulary:
+- word: повести́
+  translation: to start leading / to take someone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: повезти́
+  translation: to start transporting
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: полеті́ти
+  translation: to fly away / to take off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поплисти́
+  translation: to set sail / to start swimming
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відлеті́ти
+  translation: to fly away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпливти́
+  translation: to sail away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перо́н
+  translation: platform
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відбува́ти
+  translation: to depart (for scheduled transport)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виїжджа́ти
+  translation: to depart / to leave regularly
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пої́хати
+  translation: to depart by vehicle / to set off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: побі́гти
+  translation: to take off running / to start running
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: понести́
+  translation: to start carrying
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відійти́
+  translation: to step away / to walk away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: від'ї́хати
+  translation: to drive / to ride away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відбі́гти
+  translation: to run away from
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: віднести́
+  translation: to carry away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відвести́
+  translation: to lead away / to take someone away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відвезти́
+  translation: to transport away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: від'їжджа́ти
+  translation: to drive away / to depart regularly
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: від'ї́зд
+  translation: departure
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: проводжа́ючі
+  translation: those seeing off
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: мандрівники́
+  translation: travelers
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ї́хати
+  translation: to be riding / to drive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: від
+  translation: from / away from
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: з / із
+  translation: from
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: відігна́ти
+  translation: to drive away / to chase away
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відірва́ти
+  translation: to tear off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: піти у світ
+  translation: to leave home and start an independent life
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,6 +1,6 @@
 # Build Summary: where-from (A1)
 
-Generated: 2026-04-09 01:25
+Generated: 2026-04-11 00:58
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 01:25
 | verify | complete | 2026-04-08 23:23:01 |
 | review | complete | 2026-04-08 23:25:18 |
 | stress | complete | 2026-04-08 23:25:20 |
-| publish | complete | 2026-04-08 23:25:22 |
+| publish | complete | 2026-04-10 22:58:55 |
+| audit | complete | 2026-04-10 22:58:55 |
 
 ## Reviews
 
@@ -41,6 +42,7 @@ Generated: 2026-04-09 01:25
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`

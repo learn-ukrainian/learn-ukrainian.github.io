@@ -1,6 +1,6 @@
 # Build Summary: education-and-work (A2)
 
-Generated: 2026-04-09 00:43
+Generated: 2026-04-11 00:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-09 00:43
 | vocab | complete | 2026-04-08 22:40:07 |
 | enrich | complete | 2026-04-08 22:40:07 |
 | verify | complete | 2026-04-08 22:40:07 |
-| review | complete | 2026-04-08 22:43:09 |
 | stress | complete | 2026-04-08 22:43:09 |
-| publish | complete | 2026-04-08 22:43:12 |
+| publish | complete | 2026-04-10 22:40:40 |
+| audit | complete | 2026-04-10 22:40:40 |
 
 ## Reviews
 
@@ -44,10 +44,7 @@ Generated: 2026-04-09 00:43
 
 ## Files
 
-- `chunk-01.md`
-- `chunk-02.md`
-- `chunk-03.md`
-- `chunk-04.md`
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

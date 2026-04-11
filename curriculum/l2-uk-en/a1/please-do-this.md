@@ -30,7 +30,7 @@ In Ukrainian grammar, this way of speaking is called the **наказовий с
 
 > **Тре́нер:** **Принеси́ м'яч! Розста́в ко́нуси!** *(Bring the ball! Set up the cones!)*
 > **Гравці́:** Добре! *(Okay!)*
-> **Тренер:** **Натягни́ сі́тку! По́клади рушники́ на ла́вку! Відчини́ две́рі!** *(Tighten the net! Put the towels on the bench! Open the doors!)*
+> **Тренер:** **Натягни́ сі́тку! Поклади́ рушники́ на ла́вку! Відкри́й две́рі!** *(Tighten the net! Put the towels on the bench! Open the doors!)*
 
 Whether you are instructing athletes, inviting a guest to sit, or asking a barista for a napkin, you are using this exact grammatical structure.
 
@@ -63,10 +63,10 @@ To create the informal **ти** form, we look at the verb's infinitive. For many
 
 For verbs in Group II, the process is slightly different. You usually replace the entire **-ити** or **-іти́** ending with **-и**. For reflexive verbs, the ending becomes **-ись**. The stress often plays a key role here, landing clearly on that final vowel to give the command its punchy rhythm.
 
-*   **говори́ти** (to speak) → **го́вори** (speak!)
-*   **ходи́ти** (to go/walk) → **хо́ди** (go!)
+*   **говори́ти** (to speak) → **говори́** (speak!)
+*   **ходи́ти** (to go/walk) → **ходи́** (go!)
 *   **сиді́ти** (to sit) → **сиди́** (sit!)
-*   **диви́тися** (to look) → **дивись** (look!)
+*   **диви́тися** (to look) → **диви́сь** (look!)
 
 Because the imperative is used so frequently in real life, some of the most essential verbs have irregular or slightly shortened forms that every A1 learner needs. These are words you will hear constantly, so it is best to simply memorize them as core vocabulary items. Notice how short and direct they are.
 
@@ -85,8 +85,8 @@ Once you know the informal **ти** form, creating the formal or plural **ви**
 
 *   **читай** + **те** = **читайте** (read! — formal/plural)
 *   **дай** + **те** = **да́йте** (give! — formal/plural)
-*   **говори** → **говорі́ть** (speak! — formal/plural)
-*   **пиши** → **пишіть** (write! — formal/plural)
+*   **говори́** → **говорі́ть** (speak! — formal/plural)
+*   **пиши́** → **пиші́ть** (write! — formal/plural)
 
 <!-- INJECT_ACTIVITY: fill-in-imperative-formation -->
 <!-- INJECT_ACTIVITY: quiz-polite-choice -->

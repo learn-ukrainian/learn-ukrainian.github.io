@@ -1,0 +1,64 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-33-aec218fb.json
+phase: review
+prompt_chars: 65528
+response_chars: 5314
+prompt_words: 9782
+response_words: 777
+sections:
+- name: preamble
+  start: 0
+  length: 469
+  fraction: 0.0072
+- name: plan
+  start: 469
+  length: 61863
+  fraction: 0.9441
+- name: output_spec
+  start: 62332
+  length: 3196
+  fraction: 0.0488
+large_sections:
+- plan
+directives_total: 27
+directives_covered: 19
+directives_missed:
+- kind: must
+  text: 'To understand how it works, we must revisit the core definition of the perfective
+    aspect: it describes an action that is fully completed, a finalized result.'
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: You must determine whether the verb belongs to the first conjugation (typically
+    taking **-е-** or **-є-**) or the second conjugation (taking **-и-** or **-ї-**).
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: If you want to confidently state that you will arrive at a specific destination
+    once and achieve a result, you must switch aspects and use the perfective simple
+    future, such as «я прийду».
+  covered: false
+  coverage_note: 8/21 keywords (38%)
+- kind: must
+  text: Therefore, if you need to describe anything that is happening right now, you
+    must use an imperfective verb.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: 'The very first question you must ask yourself is: "Do I need a result, or
+    am I describing a process?" If your goal is to emphasize a completed action or
+    a specific guaranteed result, you must choose a perfective verb.'
+  covered: false
+  coverage_note: 8/21 keywords (38%)
+- kind: must
+  text: You must clearly envision whether your action is a journey or a destination.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

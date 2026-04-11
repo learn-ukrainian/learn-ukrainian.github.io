@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Missing English translations in 3 section headings. Mandatory references
+    (Заболотний, ULP) and recommended vocabulary (одноразовий, концепція) are omitted
+    from the text.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: The text incorrectly translates "Я бачив це" as "I was looking at it".
+    "Бачити" means "to see"; "to look" is "дивитися".
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: Quizzes testing both aspects are placed at the end of Section 2, before
+    the perfective aspect is taught in Section 3.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: All required vocabulary is included, but recommended words "одноразовий"
+    and "концепція" are missing.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Activity markers match the plan exactly in number and focus, though their
+    placement needs fixing (deducted in Pedagogy).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. The movie vs. "The End" screen analogy is highly
+    effective.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Excellent word count (2478 words), but missing English translations in
+    headings breaks structural consistency with the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explains aspect natively without comparing it directly to Russian, using
+    standard Ukrainian pedagogical tricks ("Що робити?").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The football match dialogue perfectly demonstrates the grammar points
+    in a natural context.
+findings: []

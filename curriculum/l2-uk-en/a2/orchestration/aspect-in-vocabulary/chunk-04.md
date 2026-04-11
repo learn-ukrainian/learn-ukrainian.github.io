@@ -1,42 +1,40 @@
 ## Спосіб 3: Зовсім інші слова (суплетивізм)
 
-Sometimes, the most fundamental verbs in a language do not follow predictable patterns at all. Instead of adding a prefix or changing a suffix, they use completely different words for the continuous process and the final result. Linguists call this phenomenon suppletion. You already know how this works in English; the past tense of "go" is "went," which looks like a completely unrelated word. In Ukrainian, a few essential aspectual pairs work the exact same way. Because these verbs describe actions we perform every single day, you simply have to memorize them as distinct pairs. The most critical pair in this category is **брати / взяти** (to take). You use «брати» when you are in the process of taking things, and «взяти» for a single, completed grab. 
+Sometimes, a verb changes so drastically between its forms that it becomes a completely different word. This is called suppletion. You know this from English, where the past tense of "go" is "went." In Ukrainian, a few basic verbs use entirely different roots to distinguish between the ongoing process and the final result. The most critical pair is the verb for taking.
 
-«Вона часто брала мої речі.» (She often took my things.)
+Уявіть, що ви берете речі з полиці. Це довгий процес. Але коли ви нарешті взяли останню річ, дія завершилася. Тому ми маємо два слова: «брати» для процесу і «взяти» для результату.
 
-«Вчора вона взяла мій телефон.» (Yesterday she took my phone.)
+> *Imagine that you are taking things from a shelf. This is a long process. But when you finally took the last thing, the action finished. That is why we have two words: "брати" (to be taking) for the process and "взяти" (to take) for the result.*
 
-Another incredibly common pair is the speech pair: **говорити / сказати** (to speak, talk / to say, tell). It is vital to understand the difference here. «Говорити» describes the ongoing act of communicating, having a conversation, or speaking a language. It is a continuous process. On the other hand, «сказати» is the act of delivering a specific message or making a single statement. It is the end result of the speaking process.
+Another essential pair relates to speech. The imperfective verb «говорити» describes the continuous act of speaking. It is a process that can last for hours. However, to express the result of delivering a single message, you must use the perfective verb «сказати». This is the instantaneous act of saying or telling a concrete fact.
 
-«Ми довго говорили про життя.» (We talked about life for a long time.)
+Вчора ми довго говорили про роботу. Ми говорили дві години, але колега так і не сказав мені новину. Тільки сьогодні він сказав правду.
 
-«Він сказав правду.» (He told the truth.)
+> *Yesterday we talked for a long time about work. We talked for two hours, but the colleague still did not tell me the news. Only today he told the truth.*
 
-You cannot use «сказати» to mean "having a conversation," and you cannot use «говорити» when you mean "he said one specific thing."
+Students always learn another famous pair together: «шукати» (to search) and «знайти» (to find). Strictly speaking, they are different actions rather than a true grammatical pair. The actual perfective partner for «шукати» is «пошукати» (to search for a bit). But in daily life, finding is the natural result of searching, so we treat them as a practical pair. A similar jump happens with «ловити» (to catch - process) and «піймати» (to catch - result).
 
-Next, we must look at the "search versus find" distinction. Learners are almost always taught the verbs **шукати** (to search, look for) and **знайти** (to find) as an aspectual pair. While they function together logically in real life, they are technically two different actions. You search (the process), and as a result, you find (the result). The true perfective form of «шукати» is actually «пошукати» (to search for a little while), but in everyday situations, «знайти» is the result we are usually hoping for. Similarly, we have the pair **ловити / піймати** (to catch). You spend time trying to catch something («ловити»), but the moment of capture is instantaneous («піймати»).
+Мій брат любить ловити рибу. Він може ловити її цілий день. Але рідко він може дійсно піймати велику рибу. Коли він шукає гриби, він хоче їх знайти.
 
-We have covered a lot of ground in this module. To help you organize your vocabulary, here is a summary table of the most important aspectual pairs you need for the A2 level, grouped by how they are formed. We have also included one more essential suffix pair to round out your daily vocabulary: **купувати / купити** (to buy).
+> *My brother likes catching fish. He can be catching them all day. But rarely can he actually catch a big fish. When he searches for mushrooms, he wants to find them.*
 
-| Форма (Formation) | Недоконаний (Process) | Доконаний (Result) | Переклад (Translation) |
-| :--- | :--- | :--- | :--- |
-| **Префікс** | читати | **про**читати | to read |
-| | писати | **на**писати | to write |
-| | робити | **з**робити | to do |
-| | бачити | **по**бачити | to see |
-| | готувати | **при**готувати | to cook |
-| **Суфікс** | відчин**я**ти | відчин**и**ти | to open |
-| | куп**ува**ти | куп**и**ти | to buy |
-| | виріш**ува**ти | виріш**и**ти | to decide |
-| | запит**ува**ти | запит**а**ти | to ask |
-| **Корінь** | допом**ага**ти | допом**ог**ти | to help |
-| | відповід**а**ти | відповід**іс**ти | to answer |
-| **Інші слова** | брати | взяти | to take |
-| | говорити | сказати | to speak / to say |
-| | ловити | піймати | to catch |
-| | шукати | знайти* | to search / to find |
+:::info
+**Grammar box**
+Always memorize verbs in their aspectual pairs. If you only know the imperfective form, you will never be able to express that you have successfully finished an action!
+:::
 
-*\*Ці слова пов'язані логічно, але не є граматичною парою (These words are logically linked, but are not a grammatical pair).*
+Now that you understand the three main ways Ukrainian forms aspectual pairs, let us look at the big picture. We have grouped twenty essential verb pairs for this level into a reference table. This includes examples of prefixation, suffix changes, and completely different words. Notice the essential pair «купувати» and «купити» (to buy), which drops its long suffix to form the perfective result.
 
-<!-- INJECT_ACTIVITY: match-up, Fill in the Blanks with the Correct Pair, 8 items -->
-<!-- INJECT_ACTIVITY: fill-in, Choose the Correct Aspect Partner, 8 items -->
+Ось найважливіші дієслова для вашого рівня. Вивчайте їх тільки парами. Так ви зможете завжди правильно описувати дію.
+
+> *Here are the most important verbs for your level. Learn them only in pairs. This way you will always be able to correctly describe the action.*
+
+| Спосіб | Недоконаний вид (Процес) | Доконаний вид (Результат) |
+| :--- | :--- | :--- |
+| **Префікс по-** | снідати, думати, бачити | поснідати, подумати, побачити |
+| **Інші префікси** | робити, читати, писати, пити | зробити, прочитати, написати, випити |
+| **Суфікси / Корінь**| купувати, допомагати, відчиняти | купити, допомогти, відчинити |
+| **Інші слова** | брати, говорити, шукати, ловити | взяти, сказати, знайти, піймати |
+
+<!-- INJECT_ACTIVITY: match-up-blanks-pairs -->
+<!-- INJECT_ACTIVITY: fill-in-aspect-choice -->

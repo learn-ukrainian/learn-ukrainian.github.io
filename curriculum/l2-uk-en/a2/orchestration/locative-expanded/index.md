@@ -1,6 +1,6 @@
 # Build Summary: locative-expanded (A2)
 
-Generated: 2026-04-08 01:32
+Generated: 2026-04-11 02:52
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-08 01:32
 | vocab | complete | 2026-04-07 23:27:05 |
 | enrich | complete | 2026-04-07 23:27:05 |
 | verify | complete | 2026-04-07 23:27:05 |
-| review | complete | 2026-04-07 23:32:55 |
 | stress | complete | 2026-04-07 23:32:55 |
-| publish | complete | 2026-04-07 23:32:57 |
+| publish | complete | 2026-04-11 00:52:24 |
+| audit | complete | 2026-04-11 00:52:24 |
 
 ## Reviews
 
@@ -40,19 +40,29 @@ Generated: 2026-04-08 01:32
 | review | gemini-tools (gemini-3.1-pro-preview) | 161s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 189s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 38s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 79s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 31s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 64s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 24s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
+
+## Friction
+
+- `friction.yaml` (134 bytes)
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
 - `chunk-04.md`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
+- `friction.yaml`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`

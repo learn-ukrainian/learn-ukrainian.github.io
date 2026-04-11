@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-**чию**, **чиєю**, на **чиїй**. У множині для всіх родів форми однакові: **чиї**, **чиїх**, **чиїм**, **чиїми**, на **чиїх**. Наприклад: «**Чийого** листа ти так уважно читаєш?» *(Whose letter are you reading so carefully?)* або «З **чиєю** сестрою він розмовляє?» *(With whose sister is he talking?)*. Займенник **котрий** відмінюється абсолютно так само, як прикметник твердої групи (наприклад, як слово **новий**). Він переважно використовується для порядкових запитань (коли ми запитуємо про точне місце в якомусь ряду) або як більш вишуканий літературний синонім до **який** у складних реченнях. У мовленні часто виникає плутанина між займенниками **який** та **котрий**. Їхні значення здаються близькими, але вони мають дуже суттєву стилістичну та смислову різницю. Займенник **який** завжди запитує про характеристику, внутрішню якість або зовнішню властивість певного предмета. Коли ви питаєте «**Який** це фільм?» *(What kind of movie is it?)*, ви очікуєте почути детальну відповідь про його жанр чи настрій (цікавий, нудний, комедійний, документальний). Натомість **котрий** використовується виключно для запитання про точний порядок предметів у певній послідовності, довгій серії або про час. Якщо ви стоїте на пероні і запитуєте «**Котрий** це вагон?» *(Which carriage is it?)*, відповідь має бути точним порядковим числівником: п'ятий, десятий або останній. Так само ми завжди використовуємо **котрий** для запитання про час: «**Котра** зараз година?» *(What time is it now?)*. Говорити «Яка година?» — це поширена стилістична помилка. Також: «**Котрий** день ми вже чекаємо?» *(What day are we waiting already?)*. У ролі відносних займенників обидва ці слова можуть бути повноцінними синонімами. Наприклад, ви можете цілком природно сказати: «Книжка, **яку** я зараз читаю, дуже цікава» або «Книжка, **котру** я зараз читаю, дуже цікава» *(The book which I am reading now is very interesting)*. Варіант із займенником **котру** звучить дещо більш формально і підходить для літературних текстів. Найскладніший аспект використання відносних займенників — це їхня синтаксична роль і узгодження у складному реченні. Коли відносний займенник (наприклад, **який** або **чий**) з'єднує підрядну частину з головною, він повинен правильно граматично узгоджуватися з тим словом, яке він замінює. Фундаментальне правило таке: відносний займенник завжди бере свій рід та число від слова-антецедента *(antecedent)* у головному реченні. Але його відмінок залежить виключно від його граматичної ролі всередині самого підрядного речення. Розгляньмо детальний приклад: «Я знаю людину, **чия** дитина тут грається» *(I know the person whose child is playing here)*. У головному реченні слово «людину» стоїть у знахідному відмінку жіночого роду (це прямий додаток від слова «людина»). Займенник **чия** бере саме жіночий рід від слова «людина». Проте він стоїть у називному відмінку, тому що в підрядному реченні він тісно пов'язаний зі словом «дитина», яка є підметом (**чия** дитина грається). Інший класичний приклад: «Ось той старий будинок, у **якому** ми колись жили» *(Here is that old house in which we once lived)*. Слово «будинок» — це чоловічий рід, називний відмінок. Займенник **якому** має чоловічий рід (як будинок), але він обов'язково стоїть у місцевому відмінку, бо цього вимагає прийменник «у» та дієслово «жили» (жити в чому? — у будинку). Розуміння цього правила дозволить вам вільно будувати складні речення українською мовою. <!-- INJECT_ACTIVITY: reading, reading-interrogative-relative --> <!-- INJECT_ACTIVITY: fill-in, fill-in-interrogative-relative --> <!-- INJECT_ACTIVITY: quiz, quiz-interrogative-relative -->
+мовленні постійно, тому їхня автоматизація є критичною для вільного спілкування. :::info **Займенники «хто» і «що»** — це фундамент української системи займенників. Зверніть увагу, що прийменники завжди стоять перед займенником і ніколи не розривають його основу: *з ким*, *до чого*, *на кому*. ::: Займенники «який», «чий» та «котрий» вказують на ознаку або належність і змінюються за родами, числами та відмінками. Їхня поведінка дуже нагадує прикметники. Займенник «який» відмінюється як звичайний прикметник твердої групи. У чоловічому роді він має форми: якого, якому, яким, на якому. Займенник «котрий» також дотримується парадигми твердої групи прикметників і змінюється абсолютно аналогічно: котрого, котрому, котрим. А от займенник «чий» має дещо специфічне відмінювання, яке нагадує м'яку групу, але з певними особливостями. Його форми у чоловічому роді: чийого, чийому (або чиєму), чиїм, на чийому. У жіночому роді він має форми: чия, чиєї, чиїй, чию, чиєю, на чиїй. У множині: чиї, чиїх, чиїм, чиїми, на чиїх. Ці займенники узгоджуються з іменником, до якого вони належать. Якщо ви запитуєте про книгу, ви скажете: «Чию книгу ти взяв?» або «Яку книгу ти читаєш?». Відмінкові закінчення цих займенників допомагають точно передати граматичний зв'язок у реченні. Хоча займенники «який» та «котрий» іноді здаються схожими, вони мають чіткі смислові відмінності. Займенник «який» використовується для того, щоб запитати про характеристику, якість або властивість предмета чи особи. Наприклад: «Який це фільм?», «Яка сьогодні погода?», «Які плани на вечір?». Натомість займенник «котрий» вказує на порядок предметів при лічбі або на вибір одного варіанта з кількох можливих. Найчастіше ми використовуємо його, коли запитуємо про час: «Котра зараз година?». Також ми питаємо «Котрий вагон наш?», коли шукаємо своє місце у поїзді. В українській мові поширеною помилкою є вживання «який» замість «котрий» у питаннях про час або номер. У ролі відносних займенників «який» і «котрий» можуть бути абсолютними синонімами. Наприклад, можна сказати «Книжка, яку я читаю» або «Книжка, котру я читаю». Однак варіант із «котру» звучить більш книжно та літературно, тоді як «яку» є нейтральним і повсякденним. :::note **«Який» чи «котрий»?** — Якщо ви питаєте про якість (добрий, цікавий, нудний) — використовуйте *який*. Якщо ви питаєте про порядок (перший, п'ятий) або точний час — використовуйте *котрий*. ::: Коли питально-відносні займенники виконують роль відносних, вони стають сполучними словами у складнопідрядних реченнях. Їхня граматична форма залежить від двох різних факторів. По-перше, такі займенники як «який», «чий» та «котрий» завжди узгоджуються у роді та числі з тим словом у головному реченні, на яке вони вказують. По-друге, їхній відмінок повністю визначається їхньою синтаксичною роллю всередині підрядного речення. Розглянемо приклад: «Я знаю жінку, чия дитина тут грається». У головному реченні слово «жінку» стоїть у знахідному відмінку і має жіночий рід. Відносний займенник «чия» бере від цього слова жіночий рід та однину. Проте у своєму підрядному реченні займенник «чия» узгоджується з підметом «дитина», тому стоїть у називному відмінку. Інший приклад: «Це проєкт, яким ми пишаємося». Слово «проєкт» чоловічого роду, тому маємо чоловічий рід. Але в підрядному реченні дієслово «пишатися» вимагає орудного відмінка, тому ми використовуємо форму «яким». Це правило гарантує правильну побудову складних речень. <!-- INJECT_ACTIVITY: reading-interrogative-relative --> <!-- INJECT_ACTIVITY: fill-in-interrogative-relative --> <!-- INJECT_ACTIVITY: quiz-interrogative-relative -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -584,7 +584,74 @@ _Джерела: 5-klas-ukrmova-zabolotnyi-2023_s0110, 10-klas-ukrmova-glazova-2
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -597,14 +664,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

@@ -28,7 +28,7 @@ Grand total: ~2420 words
 <previous_context>
 [...previous sections truncated...]
 
-пробудження** *(after waking up)*. > — **Марія:** Як проходить твій звичайний день? *(How does your usual day go?)* > — **Олег:** **Після ранкового сніданку** я відразу починаю працювати. *(After morning breakfast I immediately start working.)* > — **Марія:** Ти працюєш вдома чи в офісі? *(Do you work at home or in the office?)* > — **Олег:** Вдома, а **після роботи** я йду на пробіжку. *(At home, and after work I go for a jog.)* > — **Марія:** Що ти робиш **після довгої пробіжки**? *(What do you do after a long jog?)* > — **Олег:** **Після прохолодного душу** я готую легку вечерю. *(After a cool shower I cook a light dinner.)* > — **Марія:** А **після вечері** ти відпочиваєш? *(And after dinner do you rest?)* > — **Олег:** Так, **після смачної вечері** я зазвичай читаю. *(Yes, after a delicious dinner I usually read.)* To truly solidify your understanding, it is highly helpful to contrast **після** *(after)* with its exact opposite: **до** *(before)*. Both of these time prepositions strictly require the Genitive case. You can effectively think of them as a grammatical "case-pair". Whenever you learn a new event noun, practice it with both **до** and **після** to double your descriptive power immediately. This structural symmetry makes remembering the grammar rule much easier for learners. Seeing them side-by-side reinforces the pattern in your memory. :::tip Use the pair **до** and **після** together to describe a complete timeline. Since both take the Genitive case, you only need to remember one ending for the noun! ::: «до обіду» *(before lunch)* / «після обіду» *(after lunch)* «до війни» *(before the war)* / «після війни» *(after the war)* «до лекції» *(before the lecture)* / «після лекції» *(after the lecture)* «до сніданку» *(before breakfast)* / «після сніданку» *(after breakfast)* Читаємо українською: — Я маю зробити це завдання **до обіду** *(before lunch)*. — Ми обговоримо всі деталі **після обіду** *(after lunch)*. — Їхнє життя було зовсім іншим **до війни** *(before the war)*. — Ми обов'язково відбудуємо місто **після війни** *(after the war)*. — Студенти повинні прочитати текст **до лекції** *(before the lecture)*. — Викладач відповість на запитання **після лекції** *(after the lecture)*. > — **Віктор:** Ти п'єш каву **до сніданку** чи **після сніданку**? *(Do you drink coffee before breakfast or after breakfast?)* > — **Катерина:** Я завжди п'ю каву тільки **після сніданку**. *(I always drink coffee only after breakfast.)* > — **Віктор:** А я люблю випити чашку ще **до роботи**. *(And I like to drink a cup even before work.)* > — **Катерина:** Я розумію, але я не можу пити каву **до їжі**. *(I understand, but I cannot drink coffee before food.)* > — **Віктор:** Це логічно. А що ти робиш **після вечері**? *(This is logical. And what do you do after dinner?)* > — **Катерина:** **До сну** я просто читаю цікаву книгу. *(Before sleep I just read an interesting book.)* > — **Віктор:** А я **після фільму** відразу йду спати. *(And I immediately go to sleep after a film.)* <!-- INJECT_ACTIVITY: match-up-preposition-meanings --> <!-- INJECT_ACTIVITY: group-sort-preposition-usage -->
+**Grammar box** Remember that masculine abstract nouns and events usually take the **-у** ending in the Genitive case. This is why we say **після обіду** (after lunch) and **після екзамену** (after the exam). ::: Now that you know how to form the words, you can describe your entire daily routine. Stringing events together with **після** makes your speech sound much more natural and connected. Instead of just listing isolated actions, you can show how one activity logically follows another. This is an excellent way to practice the Genitive case in a real-world context. Let's trace a typical busy day from morning to night. Після сніданку я відразу йду на роботу. Після роботи я зазвичай повертаюся додому і готую смачну вечерю. Після вечері я трохи читаю або дивлюся цікавий фільм. Після фільму я нарешті лягаю спати. Це мій звичайний розклад. > *After breakfast I immediately go to work. After work I usually return home and cook a tasty dinner. After dinner I read a little or watch an interesting film. After the film I finally go to sleep. This is my usual schedule.* > — **Максим:** Що ти робиш після роботи? *(What do you do after work?)* > — **Олена:** Після роботи я йду в спортзал. А ти? *(After work I go to the gym. And you?)* > — **Максим:** Я йду додому. Після вечері я дивлюся серіал. *(I go home. After dinner I watch a TV series.)* > — **Олена:** А я після спортзалу тільки читаю. *(And I after the gym only read.)* To truly master time expressions, it is helpful to learn prepositions in pairs. The natural opposite of **після** is **до**, which means "before" or "until." The wonderful news is that both of these prepositions require exactly the same grammar rule. They both must be followed by the Genitive case. Because they share this requirement, you can treat them as a "case-pair" in your mind. If you know how to say "after work," you automatically know how to say "before work" just by swapping the first word. Practicing these opposites together will double your vocabulary and solidify the case endings in your memory. Let's observe how these pairs function in everyday situations. Студенти читають текст до лекції, а потім обговорюють його після лекції. Я п'ю каву до сніданку, а мій брат п'є чай після сніданку. Наше місто було дуже красивим до війни, і ми відбудуємо його після війни. Важливо вимити руки до обіду, а посуд ми миємо після обіду. Вона завжди нервує до екзамену, але радіє після екзамену. > *The students read the text before the lecture, and then discuss it after the lecture. I drink coffee before breakfast, and my brother drinks tea after breakfast. Our city was very beautiful before the war, and we will rebuild it after the war. It is important to wash hands before lunch, and we wash the dishes after lunch. She is always nervous before the exam, but is happy after the exam.* <!-- INJECT_ACTIVITY: match-up-preposition-meanings --> <!-- INJECT_ACTIVITY: group-sort-preposition-usage -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -477,7 +477,74 @@ These examples are drawn from the provided sources and demonstrate natural usage
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -504,14 +571,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

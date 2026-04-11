@@ -1,52 +1,51 @@
 ## З, із чи зі? Правила перед збігами приголосних
 
-Українська мова дуже мелодійна. Ми уникаємо складних збігів приголосних. *(The Ukrainian language is very melodious. We avoid difficult consonant clusters.)* The preposition **з** *(from/with)* has three forms. We use them to maintain a smooth rhythm.
+Український прийменник «з» має три форми: з, із та зі. Базова форма — це «з», але мова розширює її до «із» або «зі», щоб уникнути важких збігів приголосних. Головна мета — зберегти плавний потік повітря під час розмови, без раптових зупинок.
 
-:::tip Правило (Rule)
-**Форма «з»** *(Default)*:
-* перед голосними *(before vowels)*
-* перед простими приголосними *(before simple consonants)*
+> *The Ukrainian preposition "з" (with/from) has three forms: з, із, and зі. The base form is "з", but the language expands it to "із" or "зі" to avoid difficult consonant clusters. The main goal is to maintain a smooth airflow during conversation, without sudden stops.*
 
-**Форма «із»** *(Vowel bridge)*:
-* між групами приголосних *(between consonant clusters)*
-* перед шиплячими: з, с, ц, ш, ч, ж *(before sibilants)*
+Найчастіше ми використовуємо форму «з». Вона стоїть перед словами, які починаються на голосний звук, або перед одним приголосним (якщо це не шиплячий чи свистячий звук). У таких випадках немає фонетичного тертя, і слова легко поєднуються.
 
-**Форма «зі»** *(Strong buffer)*:
-* перед важкими збігами: з, с, ш, щ *(before heavy clusters)*
-* слова-винятки: зі мною, зі Львова *(exceptions: with me, from Lviv)*
+> *Most often, we use the form "з". It stands before words that begin with a vowel sound, or before a single consonant (if it is not a hushing or sibilant sound). In such cases, there is no phonetic friction, and the words combine easily.*
+
+**Читаємо українською**
+
+Я вчора ходила в кіно з Оленою. Він розмовляв з братом про нову роботу. Ми з мамою часто готуємо вечерю разом. Мій друг повернувся з Києва.
+
+> *Yesterday I went to the cinema with Olena. He talked with his brother about the new job. My mom and I often cook dinner together. My friend returned from Kyiv.*
+
+Форма «із» працює як голосовий місток між двома групами приголосних звуків. Також ми обов'язково вживаємо «із» перед свистячими та шиплячими звуками (з, с, ц, ш, ч, ж), щоб вони не зливалися з прийменником.
+
+> *The form "із" works as a vocal bridge between two groups of consonant sounds. We also mandatorily use "із" before sibilant and hushing sounds (з, с, ц, ш, ч, ж) so that they do not merge with the preposition.*
+
+**Читаємо українською**
+
+Сьогодні я отримала лист із Бразилії. У нас була дуже цікава зустріч із вчителем. Я допоможу тобі із задоволенням. Ми із сестрою любимо читати.
+
+> *Today I received a letter from Brazil. We had a very interesting meeting with the teacher. I will help you with pleasure. My sister and I love to read.*
+
+:::info
+**Grammar box** — The choice between **з**, **із**, and **зі** depends on the sounds of the words *before* and *after* the preposition. Always look at the whole phrase, not just the word that follows!
 :::
 
-«Читаємо українською»:
-* Він швидко вийшов **з кімнати**. *(He quickly walked from the room.)*
-* Це нова студентка **із Франції**. *(This is a new student from France.)*
-* Вона забрала речі **зі столу**. *(She took things from the table.)*
+Форма «зі» — це найсильніший буфер для вашого язика. Вона стоїть перед словами, які починаються на збіг приголосних, особливо якщо перша літера — це «з», «с», «ш» або «щ». Також є два надзвичайно важливі винятки, які треба просто запам'ятати: «зі мною» та «зі Львова».
 
-The default form is **з**, used when there is no phonetic friction.
+> *The form "зі" is the strongest buffer for your tongue. It stands before words that begin with a cluster of consonants, especially if the first letter is "з", "с", "ш", or "щ". There are also two extremely important exceptions that you just need to remember: "зі мною" (with me) and "зі Львова" (from Lviv).*
 
-«Читаємо українською»:
-> — **Оксана:** Ваш брат повернувся **з Америки**? *(Did your brother return from America?)*
-> — **Степан:** Так, він приїхав **з Європи**. *(Yes, he arrived from Europe.)*
-> — **Оксана:** Ти сьогодні гуляєш **з Оленою**? *(Are you walking with Olena today?)*
-> — **Степан:** Ні, я зараз гуляю **з мамою**. *(No, I'm walking with mom now.)*
+**Читаємо українською**
 
-The form **із** connects two consonants, or appears before hissing sounds.
+Діти повернулися зі школи дуже пізно. Моя подруга приїхала зі Львова. Ти хочеш піти в театр зі мною? Вони ліпили сніговика зі снігу.
 
-«Читаємо українською»:
-> — **Ігор:** Це старий лист **із Бразилії**? *(Is this an old letter from Brazil?)*
-> — **Марія:** Ні, це лист **із Житомира**. *(No, this is a letter from Zhytomyr.)*
-> — **Ігор:** Ти підеш у кіно **із сестрою**? *(Will you go to the cinema with sister?)*
-> — **Марія:** Так, я працюю **із задоволенням**. *(Yes, I work with pleasure.)*
+> *The children returned from school very late. My friend arrived from Lviv. Do you want to go to the theater with me? They were making a snowman from snow.*
 
-The form **зі** softens heavy consonant combinations (**з**, **с**, **ш**, **щ**) and fixed phrases. Never say «з школи».
+Зараз ми активно вивчаємо родовий відмінок. Правила милозвучності роблять практику цього відмінка дуже природною. Звертайте увагу на те, як прийменники поєднуються із закінченнями родового відмінка. Вивчайте ці фрази як єдиний фонетичний блок.
 
-«Читаємо українською»:
-> — **Тарас:** Ви приїхали **зі Львова**? *(Did you arrive from Lviv?)*
-> — **Олена:** Так, ми їхали **зі своїми** друзями. *(Yes, we traveled with our friends.)*
-> — **Тарас:** Ти зараз ідеш **зі школи**? *(Are you walking from school now?)*
-> — **Олена:** Ні, я йду **зі старого** парку. *(No, I'm walking from the old park.)*
-> — **Тарас:** Поїдеш завтра **зі мною**? *(Will you go with me tomorrow?)*
-> — **Олена:** Звісно, поїдемо **зі студентами**. *(Of course, we will go with the students.)*
+> *Now we are actively studying the genitive case. The rules of euphony make the practice of this case very natural. Pay attention to how the prepositions combine with the endings of the genitive case. Learn these phrases as a single phonetic block.*
 
-In the Genitive case, the preposition and noun form a single melodic unit. Pronounce them together.
+**Читаємо українською**
 
-<!-- INJECT_ACTIVITY: fill-in-z-variants, Complete sentences with the correct variant of z/iz/zi based on following nouns and pronouns, 8 items -->
+Цей хлопець походить з родини лікарів. Він пішов із сім'ї багато років тому. Моя донька прийшла зі школи втомлена. Вона взяла книгу зі столу.
+
+> *This boy comes from a family of doctors. He left the family many years ago. My daughter came from school tired. She took the book from the table.*
+
+<!-- INJECT_ACTIVITY: fill-in-z-variants -->

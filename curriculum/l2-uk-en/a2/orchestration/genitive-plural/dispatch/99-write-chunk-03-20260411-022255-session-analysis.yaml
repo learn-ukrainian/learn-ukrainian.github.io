@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T00-22-cbb4a447.json
+phase: write-chunk-03
+prompt_chars: 46866
+response_chars: 5441
+prompt_words: 7000
+response_words: 883
+sections:
+- name: header
+  start: 0
+  length: 444
+  fraction: 0.0095
+- name: skeleton
+  start: 444
+  length: 1862
+  fraction: 0.0397
+- name: prior_summary
+  start: 2306
+  length: 3427
+  fraction: 0.0731
+- name: plan
+  start: 5733
+  length: 11518
+  fraction: 0.2458
+- name: wiki
+  start: 11007
+  length: 29487
+  fraction: 0.6292
+- name: output_spec
+  start: 46738
+  length: 128
+  fraction: 0.0027
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 13
+directives_missed:
+- kind: must
+  text: English speakers often struggle with the case changes required by Ukrainian
+    numerals, leading to predictable errors.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: Learners must use the standard cardinal numeral (`три`) instead.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: The student must supply the correct noun form.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '* **Cases (Відмінки):** The student must understand the concept of the Nominative
+    and Genitive cases (Source 14, 40).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-genitive-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-ending-choice
+  covered: false
+  coverage_note: marker missing

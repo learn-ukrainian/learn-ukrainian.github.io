@@ -108,7 +108,6 @@ required:
 
 Ваше головне завдання — постійно розширювати свій словниковий запас. *(Your main task is to constantly expand your vocabulary.)* Завжди використовуйте **словник синонімів** *(dictionary of synonyms)* під час навчання. *(Always use a dictionary of synonyms during your studies.)* Він швидко допоможе вам знайти ідеальне слово для будь-якого контексту. *(It will quickly help you find the perfect word for any context.)* Ці слова-друзі завжди готові зробити вашу мову яскравішою! *(These word-friends are always ready to make your language brighter!)*
 
-
 ## Епітети та метафори: мова, що малює
 
 Ми бачимо, як слова збагачують текст. *(We see how words enrich a text.)* Кожне слово має **пряме значення** *(literal meaning)*. *(Every word has a literal meaning.)* Наприклад, «золотий годинник» *(gold watch)* означає просто матеріал. *(For example, "gold watch" simply means the material.)* Це звичайний факт. *(This is an ordinary fact.)* Але слова мають також **переносне значення** *(figurative meaning)*. *(But words also have a figurative meaning.)* Ми переносимо ознаку одного предмета на інший. *(We transfer the characteristic of one object to another.)* Наприклад, ми часто кажемо «золота осінь» *(golden autumn)*. *(For example, we often say "golden autumn".)* Листя має жовтий колір, як золото. *(The leaves have a yellow color, like gold.)* Майстер має «золоті руки» *(skilful hands)*. *(A craftsman has "skilful hands".)* Це означає, що він усе робить ідеально. *(This means that he does everything perfectly.)* Переносне значення — це основа української **образності** *(expressiveness)*. *(Figurative meaning is the foundation of Ukrainian expressiveness.)* Воно допомагає нам малювати словами. *(It helps us paint with words.)*
@@ -121,7 +120,6 @@ required:
 
 <!-- INJECT_ACTIVITY: quiz-identify-the-literary-device-epithet-metaphor-personification-in-short-phrases -->
 
-
 ## Зменшувальні суфікси: ласкаві слова
 
 Українська мова дуже ніжна та емоційна. *(The Ukrainian language is very tender and emotional.)* Ми часто використовуємо **зменшувально-пестливі суфікси** *(diminutive-affectionate suffixes)*. Вони показують не лише малий розмір предмета. *(They show not only the small size of an object.)* Головна їхня функція — це емоції. *(Their main function is emotions.)* Вони виражають любов, ніжність та близькість. *(They express love, tenderness, and closeness.)* Це не тільки слова для дітей. *(These are not only words for children.)* Дорослі люди постійно використовують їх у розмові. *(Adult people constantly use them in conversation.)* Наприклад, звичайний **кіт** *(cat)* стає милим словом **котик** *(kitty)*. *(For example, an ordinary cat becomes the cute word kitty.)* Слово **бабуся** *(grandmother)* перетворюється на тепле слово **бабусенька** *(dear grandmother)*. *(The word grandmother turns into the warm word dear grandmother.)* Ці суфікси роблять мову теплішою. *(These suffixes make the language warmer.)* Українці дуже люблять **ласкаві слова** *(words of endearment)*. *(Ukrainians love words of endearment very much.)* 
@@ -133,7 +131,6 @@ required:
 В Україні ми дуже часто змінюємо імена людей. *(In Ukraine we very often change people's names.)* Зменшувальні форми імен показують нашу любов. *(Diminutive forms of names show our love.)* Наприклад, ім'я **Оксана** стає ласкавим іменем **Оксаночка**. *(For example, the name Oksana becomes the affectionate name Oksanochka.)* Ім'я **Іван** перетворюється на тепле ім'я **Іванко**. *(The name Ivan turns into the warm name Ivanko.)* А **Марія** часто стає формою **Марійка**. *(And Mariia often becomes the form Mariyka.)* Цікаво, що іноді ці суфікси повністю змінюють значення слова. *(Interestingly, sometimes these suffixes completely change the meaning of the word.)* Наприклад, слово **рука** *(arm/hand)* — це частина тіла. *(For example, the word arm/hand is a body part.)* Але форма **ручка** *(pen/handle)* може означати предмет, яким ми пишемо. *(But the form pen/handle can mean the object we write with.)* Слово **голова** *(head)* — це частина тіла людини. *(The word head is a body part of a person.)* А слово **головка** *(garlic head)* часто означає частину рослини. *(And the word garlic head often means a part of a plant.)* Контекст завжди дуже важливий. *(Context is always very important.)* 
 
 <!-- INJECT_ACTIVITY: fill-in-form-diminutives-from-base-words-e-g-using-correct-suffixes -->
-
 
 ## Синтаксична стилістика: еліпсис і повтор
 
@@ -149,10 +146,9 @@ required:
 
 <!-- INJECT_ACTIVITY: group-sort-sort-examples-into-syntactic-stylistic-categories-ellipsis-vs-repetition -->
 
-
 ## Підсумок
 
-Сьогодні ми вивчили, як зробити мову багатою. *(Today we learned how to make our language rich.)* Слова мають друзів та ворогів. *(Words have friends and enemies.)* Синоніми допомагають уникати нудьги. *(Synonyms help avoid boredom.)* Антоніми створюють драму та контраст. *(Antonyms create drama and contrast.)* Зменшувальні суфікси додають серця у розмову. *(Diminutive suffixes add heart to a conversation.)* А такі прийоми, як еліпсис, роблять мову живою. *(And devices, like ellipsis, make the language alive.)*
+Сьогодні ми вивчили, як зробити мову багатою. *(Today we learned how to make our language rich.)* Слова мають друзів та ворогів. *(Words have friends and enemies.)* Синоніми допомагають уникати нудьги. *(Synonyms help avoid boredom.)* Антоніми створюють драму та контраст. *(Antonyms create drama and contrast.)* Зменшувальні суфікси додають серця у розмову. *(Diminutive suffixes add heart to a conversation.)* А такі засоби, як еліпсис, роблять мову живою. *(And devices, like ellipsis, make the language alive.)*
 
 Тепер час перевірити себе. *(Now it is time to check yourself.)* Дайте відповідь на ці запитання: *(Answer these questions:)*
 
@@ -161,7 +157,7 @@ required:
 3. Який суфікс ви використаєте для слова «кіт», щоб він став ласкавим? *(What suffix will you use for the word "cat" to make it affectionate?)*
 4. Що означає речення «Я — в парк»? *(What does the sentence "I am [going] to the park" mean?)*
 
-Якщо ви знаєте відповіді, ви готові йти далі! *(If you know the answers, you are ready to go further!)* Використовуйте ці нові інструменти щодня. *(Use these new tools every day.)*
+Якщо ви знаєте відповіді, ви готові йти далі! *(If you know the answers,  *(Use these new tools every day.)*
 
 </module_content>
 

@@ -25,7 +25,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-*(This is the dative case, the action goes to the person.)* Ви бачите, як змінюється слово «мама»? *(Do you see how the word "mom" changes?)* Вона має закінчення «-у» у знахідному відмінку, і «-і» у давальному. *(It has the ending "-u" in the accusative case, and "-i" in the dative.)* Ось ще кілька корисних прикладів. *(Here are a few more useful examples.)* «Я бачу друга». *(I see a friend.)* Це знахідний відмінок. *(This is the accusative case.)* «Я дзвоню другові». *(I call a friend.)* Це вже давальний відмінок. *(This is already the dative case.)* «Ми чекаємо подругу». *(We wait for a friend.)* Знахідний відмінок. *(Accusative case.)* «Ми дякуємо подрузі». *(We thank the friend.)* Давальний відмінок. *(Dative case.)* Деякі дієслова можуть використовувати обидва відмінки одночасно. *(Some verbs can use both cases simultaneously.)* Найкращі приклади — це слова **давати** *(to give)* та **розповідати** *(to tell)*. *(The best examples are the words "to give" and "to tell".)* Структура таких речень є дуже логічною. *(The structure of such sentences is very logical.)* Спочатку йде дієслово, потім людина у давальному відмінку, а потім річ у знахідному. *(First goes the verb, then the person in the dative case, and then the thing in the accusative.)* Формула така: дієслово + кому? + що? *(The formula is this: verb + to whom? + what?)* Я даю мамі квіти. *(I give mom flowers.)* Кому я даю? Мамі. *(To whom do I give? To mom.)* Що я даю? Квіти. *(What do I give? Flowers.)* Він розповідає нам історію. *(He tells us a story.)* Кому він розповідає? Нам. *(To whom does he tell? To us.)* Що він розповідає? Історію. *(What does he tell? A story.)* Вони купують синові подарунок. *(They buy a present for the son.)* Такі речення дають багато інформації одразу. *(Such sentences give a lot of information at once.)* Як обрати правильний відмінок під час розмови? *(How to choose the correct case during a conversation?)* There is a simple strategic rule. Якщо людина є отримувачем вашої дії, використовуйте давальний відмінок. *(If the person is the recipient of your action, use the dative case.)* Communication, help, or gifts always travel to a destination. Якщо людина є об'єктом дії, використовуйте знахідний відмінок. *(If the person is the object of the action, use the accusative case.)* Seeing, liking, or waiting are direct actions on an object. Цікавий приклад — це слова для виклику людини. *(An interesting example is words for calling a person.)* Слово **дзвонити** *(to call by phone)* вимагає давального відмінка. *(The word "to call by phone" requires the dative case.)* Я дзвоню братові. *(I call my brother.)* Це комунікація, яка йде до нього. *(This is communication that goes to him.)* Але слово **кликати** *(to call/summon)* вимагає знахідного відмінка. *(But the word "to call/summon" requires the accusative case.)* Я кличу брата. *(I call my brother.)* Це пряма дія безпосередньо на нього. *(This is a direct action directly on him.)* <!-- INJECT_ACTIVITY: quiz, focus: choosing between Dative and Accusative for the noun/pronoun after specific verbs (e.g., 'Ми бачимо [брата/братові]'), 8 items -->
+objects do not always translate to the Ukrainian Accusative case. Давайте порівняємо ці два відмінки на практиці. Зверніть увагу на закінчення. Коли дія пряма, ми використовуємо знахідний відмінок. Я люблю маму. Я бачу друга. Я чекаю подругу. Жіночий рід має закінчення «-у», а чоловічий — «-а». Але коли дія спрямована до людини, потрібен давальний відмінок. Я допомагаю мамі. Я дзвоню другові. Я дякую подрузі. Тепер жіночий рід має закінчення «-і», а чоловічий отримує «-ові». Ця зміна повністю змінює роль людини в реченні. > *Let's compare these two cases in practice. Pay attention to the endings. When the action is direct, we use the accusative case. I love my mom. I see a friend. I wait for a girlfriend. The feminine gender has the "-u" ending, and the masculine has "-a". But when the action is directed toward a person, the dative case is needed. I help my mom. I call a friend. I thank a girlfriend. Now the feminine gender has the "-i" ending, and the masculine receives "-ovi". This change completely changes the person's role in the sentence.* Деякі дієслова можуть вимагати і давального, і знахідного відмінків одночасно. Найкращі приклади — це дієслова «давати» та «розповідати». Людина, яка отримує дію, завжди стоїть у давальному відмінку. А предмет, який ми передаємо, стоїть у знахідному відмінку. Наприклад, я даю мамі квіти. Тут слово «мамі» відповідає на питання «кому?», а слово «квіти» відповідає на питання «що?». Інший приклад: він розповідає нам історію. Слово «нам» — це адресат у давальному відмінку, а «історію» — це прямий об'єкт. > *Some verbs can require both the dative and the accusative cases simultaneously. The best examples are the verbs "to give" and "to tell". The person who receives the action always stands in the dative case. And the object that we transfer stands in the accusative case. For example, I give flowers to my mom. Here the word "to my mom" answers the question "to whom?", and the word "flowers" answers the question "what?". Another example: he tells us a story. The word "us" is the addressee in the dative case, and "story" is the direct object.* Ask yourself about the nature of the action to decide which case it requires. If the person is the destination of your communication, help, or gift, use the Dative case. If the person is the physical object of the action, such as seeing or finding them, use the Accusative case. A perfect illustration is the English word "call". If you mean making a phone call to someone, you send a message to a destination. In Ukrainian, this is **дзвонити**, requiring the Dative case. If you mean physically calling someone over, they are the direct object. This is **кликати**, which strictly requires the Accusative case. :::info **Learn the question with the verb** When learning new vocabulary, write down the question word the verb demands. Memorize "**допомагати (кому?)**" instead of just "to help". This habit will prevent you from guessing cases based on English grammar. ::: <!-- INJECT_ACTIVITY: quiz, quiz-case-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -506,7 +506,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -525,14 +592,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

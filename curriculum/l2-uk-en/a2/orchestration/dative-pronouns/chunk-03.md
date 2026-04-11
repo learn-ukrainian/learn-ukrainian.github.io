@@ -1,56 +1,35 @@
 ## Мені холодно: Безособові конструкції (Impersonal Constructions)
 
-In English, you say "I am cold" or "She is sad" using the subject "I" or "She." In Ukrainian, many physical and emotional states are not something you "are," but something that "is to you." These are called impersonal constructions because there is no traditional subject doing an action. The person experiencing the feeling is the "logical subject" in the Dative case. Compare a permanent description of identity with a temporary feeling. When you say **«Я щаслива»** *(I am happy)*, you describe your overall state. When you say **«Мені весело»** *(I feel joyful)*, you describe a current feeling happening to you right now. 
+In English, we usually describe our physical or emotional states using the verb "to be" and an adjective, making ourselves the grammatical subject: "I am cold" or "She is sad." In Ukrainian, this works differently. We use impersonal constructions where the person experiencing the feeling is the logical subject, placed in the Dative case, while the feeling itself is expressed by an adverb. Instead of saying "I am cold," Ukrainians literally say "To me it is cold." This highlights that the environment is acting upon you, rather than you possessing the quality of coldness.
 
-> Читаємо українською:
-> Я сьогодні дуже щаслива дівчина. *(I am very happy today.)*
-> Зараз мені дуже весело на святі. *(I feel very joyful at the party.)*
-> Він завжди спокійний і серйозний хлопець. *(He is a calm, serious guy.)*
-> Сьогодні йому дуже сумно без друзів. *(He feels sad without friends today.)*
-> Вона втомлена після важкого робочого дня. *(She is tired after a hard workday.)*
-> Їй важко працювати так багато годин. *(It is hard for her to work long hours.)*
-> Ми готові починати новий великий проєкт. *(We are ready to start a big project.)*
-> Нам страшно дивитися цей новий фільм. *(It is scary for us to watch this movie.)*
+Коли ми описуємо свій характер або постійний фізичний стан, ми завжди використовуємо називний відмінок. Наприклад, ми кажемо: «Я щаслива людина» або «Він дуже серйозний студент». Але коли ми говоримо про наші емоції чи відчуття саме в цей момент, ми використовуємо давальний відмінок. Тому ми кажемо: «Мені сьогодні дуже весело» або «Йому зараз некомфортно».
 
-We build these sentences using state adverbs that describe a physical sensation or emotional feeling. You will notice that they almost always end in the neutral letter **-о**. Common examples include **«холодно»** *(cold)*, **«тепло»** *(warm)*, **«сумно»** *(sad)*, **«весело»** *(joyful)*, **«приємно»** *(pleasant)*, and **«цікаво»** *(interesting)*. To say "I am cold," you literally say "To me it is cold": **«Мені холодно»**. To ask if a friend is interested, you ask: **«Тобі цікаво?»**. You do not need a verb like "is" in the present tense. Just pair the Dative pronoun directly with the adverb.
+> *When we describe our character or a permanent physical state, we always use the Nominative case. For example, we say: "I am a happy person" or "He is a very serious student." But when we talk about our emotions or feelings exactly at this moment, we use the Dative case. Therefore, we say: "I am having a lot of fun today" or "He is uncomfortable right now."*
 
-> Читаємо українською:
-> Взимку мені завжди дуже холодно. *(In winter I am always very cold.)*
-> Тобі цікаво читати цю нову книгу? *(Is it interesting for you to read this book?)*
-> Нам дуже приємно вас тут бачити. *(It is very pleasant for us to see you.)*
-> Їй весело грати з великим собакою. *(It is joyful for her to play with the dog.)*
-> Йому тепло у цій новій куртці. *(He is warm in this new jacket.)*
-> Їм нудно сидіти вдома цілий день. *(It is boring for them to sit at home.)*
-> Мені дуже соромно за цю велику помилку. *(I am very ashamed of this big mistake.)*
-> Вам зручно сидіти на цьому старому кріслі? *(Is it comfortable for you to sit on this chair?)*
-
-We also use the Dative case for modal adverbs expressing necessity, permission, or advice. The most important ones are **«треба»** or **«потрібно»** *(need)*, **«можна»** *(allowed / may)*, and **«варто»** *(should / worth doing)*. When you want to say "I need," you must literally say "To me it is necessary." You absolutely cannot use the word "I" (**я**) here. This is a common mistake for English speakers. Simply add an infinitive verb after these modal adverbs to show what action is needed or allowed.
-
-:::tip Запам'ятайте (Remember)
-**Я треба йти.** ❌
-**Мені треба йти.** ✅ *(I need to go.)*
+:::tip
+**Logical subjects** — Think of these sentences not as actions you are doing, but as states that are happening *to* you. The Dative case perfectly captures this sense of receiving a temporary experience from your environment.
 :::
 
-> Читаємо українською:
-> Мені треба йти додому прямо зараз. *(I need to go home right now.)*
-> Тобі потрібно купити новий мобільний телефон. *(You need to buy a new mobile phone.)*
-> Вам можна тут сидіти і читати. *(You are allowed to sit here and read.)*
-> Йому варто добре відпочити після роботи. *(He should rest well after work.)*
-> Їй не можна пити чорну каву. *(She is not allowed to drink black coffee.)*
-> Нам треба багато працювати сьогодні ввечері. *(We need to work a lot tonight.)*
-> Їм потрібно швидко написати цей довгий лист. *(They need to write this long letter quickly.)*
-> Мені варто запитати про це нашого вчителя. *(I should ask our teacher about this.)*
+To build these sentences, you simply combine a Dative pronoun with a state adverb. These adverbs almost always end in the letter «-о», giving them a distinctly neutral and impersonal feel. Unlike adjectives, these adverbs do not change their endings depending on your gender or the number of people. Whether a man, a woman, or a group of people is speaking, the word for "cold" remains exactly the same.
 
-Let us look at how these impersonal constructions sound in a real conversation. Read this dialogue between two friends sitting at a cafe. They discuss their comfort and what they need to order.
+Найчастіше ми використовуємо такі короткі слова: холодно, тепло, сумно, весело, приємно та цікаво. Взимку на вулиці мені часто буває дуже холодно. А тобі цікаво читати цю нову українську книгу про історію? Моїй молодшій сестрі зараз сумно, тому що надворі йде сильний дощ. Нам дуже приємно бачити вас у нашому новому домі.
 
-> — **Анна:** Тобі тут тепло біля вікна? *(Are you warm near the window?)*
-> — **Богдан:** Так, мені приємно тут сидіти. *(Yes, it is pleasant to sit here.)*
-> — **Анна:** Мені цікаво, що ти сьогодні замовиш. *(I wonder what you will order today.)*
-> — **Богдан:** Мені потрібно випити велику чашку кави. *(I need to drink a big cup of coffee.)*
-> — **Анна:** Чому тобі хочеться саме чорної кави? *(Why exactly do you want black coffee?)*
-> — **Богдан:** Бо мені сумно без неї зранку. А тобі що треба? *(Because I feel sad without it in the morning. What do you need?)*
-> — **Анна:** Мені варто випити гарячий зелений чай. Мені трохи холодно. *(I should drink hot green tea. I am a little cold.)*
-> — **Богдан:** Тобі можна взяти ще теплий десерт. *(You can also take a warm dessert.)*
-> — **Анна:** Добре, зараз нам можна спокійно відпочити. *(Good, we are allowed to rest calmly now.)*
+> *Most often we use such short words: cold, warm, sad, fun, pleasant, and interesting. In winter on the street, I am often very cold. And is it interesting for you to read this new Ukrainian book about history? My younger sister is sad right now because it is raining heavily outside. It is very pleasant for us to see you in our new home.*
+
+This exact same impersonal structure is also used to express necessity, permission, or advice. Instead of using active verbs like "must" or "should," Ukrainian relies on modal adverbs such as «треба» or «потрібно» (need/necessary), «можна» (allowed/possible), and «варто» (should/worthwhile). When you want to say "I need to go," the literal translation is "To me it is necessary to go." This is a fundamental pattern you will hear constantly in everyday life.
+
+Зараз уже пізно, тому мені негайно треба йти додому. Чи можна вам тут сидіти і так голосно розмовляти під час лекції? Йому варто більше відпочити після такого важкого робочого тижня в офісі. Їм потрібно купити квитки на ранковий поїзд заздалегідь. Нам можна взяти ці смачні червоні яблука зі столу?
+
+> *It is already late now, so I immediately need to go home. Are you allowed to sit here and talk so loudly during the lecture? He should rest more after such a hard work week in the office. They need to buy tickets for the morning train in advance. Can we take these tasty red apples from the table?*
+
+Let's see how these impersonal expressions naturally flow in a real conversation. Notice how often the speakers use the Dative pronouns to check in on each other's physical comfort and to express their own immediate desires. This makes the dialogue sound authentically Ukrainian.
+
+> — **Остап:** Привіт! Тобі тут тепло біля великого вікна? *(Hi! Are you warm here by the large window?)*
+> — **Ганна:** Так, дуже дякую. Мені приємно тут сидіти і спокійно дивитися на вулицю. *(Yes, thank you very much. It is pleasant for me to sit here and calmly look at the street.)*
+> — **Остап:** Мені цікаво, що ти замовиш сьогодні на обід. *(I wonder what you will order today for lunch.)*
+> — **Ганна:** Мені потрібно випити чашку гарячої чорної кави. *(I need to drink a cup of hot black coffee.)*
+> — **Остап:** Чому саме кави? *(Why specifically coffee?)*
+> — **Ганна:** Бо мені трохи сумно без неї зранку, я ще хочу спати. *(Because I am a little sad without it in the morning, I still want to sleep.)*
+> — **Остап:** Зрозуміло. Тоді нам усім варто покликати нашого офіціанта. *(Understood. Then we all should call our waiter.)*
 
 <!-- INJECT_ACTIVITY: true-false-impersonal -->

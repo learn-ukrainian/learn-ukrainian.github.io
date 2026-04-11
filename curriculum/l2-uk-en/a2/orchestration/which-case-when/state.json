@@ -47,17 +47,9 @@
       "status": "complete",
       "ts": "2026-04-08T01:24:13.993715+00:00"
     },
-    "review": {
-      "status": "complete",
-      "ts": "2026-04-08T01:27:33.958061+00:00"
-    },
     "stress": {
       "status": "complete",
       "ts": "2026-04-08T01:27:34.119585+00:00"
-    },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-08T01:27:35.623902+00:00"
     },
     "pre-verify": {
       "status": "complete",

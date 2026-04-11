@@ -1,0 +1,46 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-10-4ad27481.json
+phase: write-chunk-01
+prompt_chars: 41056
+response_chars: 5049
+prompt_words: 6008
+response_words: 858
+sections:
+- name: header
+  start: 0
+  length: 498
+  fraction: 0.0121
+- name: skeleton
+  start: 498
+  length: 1831
+  fraction: 0.0446
+- name: plan
+  start: 2329
+  length: 10533
+  fraction: 0.2566
+- name: wiki
+  start: 6605
+  length: 28066
+  fraction: 0.6836
+- name: output_spec
+  start: 40928
+  length: 128
+  fraction: 0.0031
+large_sections:
+- wiki
+directives_total: 7
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: For example, words for numbers like `п'ять` were originally nouns that required
+    the genitive plural (`п'ять братів` - literally "a five of brothers").
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: '* **Drill 1 (Multiple Choice):** Provide sentences where the learner must
+    choose the correct genitive form.'
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)

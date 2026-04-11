@@ -1,90 +1,60 @@
 ## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive)
 
-When we want to describe where something is located in relation to another object, we often use the preposition **біля** (near, next to, by). This is the most common preposition for expressing spatial proximity in spoken Ukrainian. The logic is simple: you have a reference point, and something else is situated close to it. Because it defines a relationship of location based on a specific object, it always requires the Genitive case.
+When we want to say that something is located near or next to something else, we use the preposition **біля**. It is the most common and versatile word for expressing proximity in Ukrainian. Just like the prepositions we learned for purpose and absence, **біля** always requires the Genitive case to complete its meaning. Think of it as establishing a clear reference point: you are not inside the object, and you are not moving toward it, but you are sharing its immediate space.
 
-Змінюємо закінчення (Changing endings):
-«школа» (school) → «біля школи»
-«будинок» (building, house) → «біля будинку»
-«вікно» (window) → «біля вікна»
+Коли ми зустрічаємося в місті, ми часто чекаємо одне одного біля школи або біля великого будинку. Вдома мій улюблений стілець стоїть біля вікна. Вона залишила свої важкі сумки біля дверей.
 
-«Читаємо українською»:
-— Моя нова робота знаходиться **біля школи** (My new job is located near the school).
-— Ми живемо в квартирі **біля будинку** моїх батьків (We live in an apartment near my parents' building).
-— Вона любить читати книгу **біля вікна** (She likes to read a book by the window).
-— Зустрінемося завтра **біля метро** (Let's meet tomorrow near the subway).
+> *When we meet in the city, we often wait for each other near the school or near a large building. At home, my favorite chair stands by the window. She left her heavy bags by the door.*
 
-Let's practice how different noun genders change their endings after **біля**. Remember that masculine nouns usually take **-а** or **-у**, feminine nouns take **-и** or **-і**, and neuter nouns take **-а** or **-я**. You will hear this preposition constantly when Ukrainians describe their cities, neighborhoods, or favorite places.
+To use **біля** correctly, you must confidently apply the Genitive endings for all three genders. Masculine nouns describing places or objects will usually take the **-у** or **-а** ending. Feminine nouns will take **-и** or **-і**, and neuter nouns will consistently end in **-а** or **-я**. You will hear this preposition constantly when navigating a city or describing where things are located on a map.
 
-Змінюємо закінчення (Changing endings):
-«парк» (park) → «біля парку»
-«річка» (river) → «біля річки»
-«море» (sea) → «біля моря»
+У неділю ми часто гуляємо біля великого парку. Влітку всі люди хочуть відпочивати біля річки або біля моря. Мій брат припаркував свій автомобіль біля супермаркету.
 
-«Читаємо українською»:
-— Цей чудовий ресторан розташований **біля парку** (This wonderful restaurant is located near the park).
-— Влітку ми часто відпочиваємо **біля річки** (In the summer we often relax by the river).
-— Вони купили маленьку дачу **біля моря** (They bought a small summer house by the sea).
-— Діти радісно грають у футбол **біля лісу** (The children joyfully play football near the forest).
+> *On Sunday, we often walk near the large park. In the summer, all people want to relax near the river or near the sea. My brother parked his car near the supermarket.*
 
-Another very useful spatial preposition is **навпроти** (opposite, across from). We use this word when two objects are facing each other, usually separated by a street, a corridor, or a table. Like our previous prepositions, it strictly demands the Genitive case for the noun that follows it.
+Another very useful preposition for describing locations is **навпроти**, which translates to "opposite" or "across from". We use this word when two objects are directly facing each other, often with a street or an empty space sitting between them. It paints a specific spatial picture that is essential for giving accurate directions. Like the other prepositions in this group, **навпроти** strictly governs the Genitive case.
 
-Змінюємо закінчення (Changing endings):
-«банк» (bank) → «навпроти банку»
-«вокзал» (train station) → «навпроти вокзалу»
-«церква» (church) → «навпроти церкви»
+Нова кав'ярня відкрилася прямо навпроти нашого банку. Кожного ранку я бачу багато людей навпроти головного вокзалу. Цей дорогий готель знаходиться навпроти старої церкви.
 
-«Читаємо українською»:
-— Нова кав'ярня відкрилася **навпроти банку** (A new coffee shop opened opposite the bank).
-— Наш готель знаходиться прямо **навпроти вокзалу** (Our hotel is located right across from the train station).
-— Вони зустрілися на площі **навпроти церкви** (They met on the square opposite the church).
-— Я мовчки сиджу **навпроти нього** і слухаю (I silently sit opposite him and listen).
+> *A new coffee shop opened right opposite our bank. Every morning I see many people opposite the main train station. This expensive hotel is located opposite the old church.*
 
-You will also encounter the preposition **коло** (near, by). It has exactly the same meaning as **біля** and also takes the Genitive case. While it is slightly less common in everyday urban speech, it is extremely frequent in Ukrainian literature, folk songs, and rural contexts. Knowing it will help you understand traditional stories and poetic descriptions.
+You might also encounter the preposition **коло**, which is a direct synonym for **біля**. While **біля** is the standard choice in everyday urban speech, **коло** has a slightly softer, more traditional flavor. It is extremely common in classical Ukrainian literature, folk songs, and rural descriptions. Even though it feels a bit more poetic, the grammatical rule is absolutely identical: it requires the Genitive case.
 
-Змінюємо закінчення (Changing endings):
-«хата» (house, traditional Ukrainian dwelling) → «коло хати»
-«дорога» (road) → «коло дороги»
+Ввечері вся родина збиралася коло хати. Високе дерево росте прямо коло широкої дороги. Маленькі діти дуже довго гралися коло холодної води.
 
-«Читаємо українською»:
-— У селі є старий сад **коло хати** (In the village there is an old orchard by the house).
-— Вони зупинили машину **коло дороги** (They stopped the car by the road).
-— Ця красива пісня розповідає про дівчину **коло річки** (This beautiful song tells about a girl by the river).
-— Бабуся завжди сидить **коло вікна** і дивиться на вулицю (Grandmother always sits by the window and looks at the street).
+> *In the evening, the whole family gathered by the house. A tall tree grows right by the wide road. Little children played by the cold water for a very long time.*
 
-When navigating a Ukrainian city, pay special attention to soft-stem feminine nouns, particularly those ending in **-ія**, **-я**, or a soft consonant like in **площа** (square (city)). These nouns will take the ending **-і** or **-ї** in the Genitive case. 
+:::tip
+**Did you know?**
+While both mean "near", you will hear **біля** constantly in the city when asking for directions. **Коло** often appears in poetry and older texts, giving the phrase a cozy, traditional feeling.
+:::
 
-Змінюємо закінчення (Changing endings):
-«станція» (station) → «біля станції»
-«площа» → «біля площі»
-«лікарня» (hospital) → «навпроти лікарні»
+When describing city infrastructure, you will frequently use feminine nouns that belong to the soft group or end in **-ія**. These nouns require special attention because their Genitive ending is **-і** or **-ї**, which can sound very similar to the Locative case. Always remember the context of the sentence: if the noun immediately follows **біля** or **навпроти**, it is definitively in the Genitive case.
 
-«Читаємо українською»:
-— Я зараз стою **біля станції** метро (I am standing near the subway station right now).
-— Головний музей міста розташований **біля площі** (The main museum of the city is located near the square).
-— Ми припаркували автомобіль **навпроти лікарні** (We parked the car opposite the hospital).
-— Ця довга вулиця закінчується **біля академії** (This long street ends near the academy).
+Нова пекарня завжди знаходиться біля зупинки. Велика парковка є тільки біля станції. Ми домовилися зустрітися біля площі. Ця аптека розташована навпроти лікарні.
 
-Let's build a mental map to see how these prepositions work together to describe a neighborhood. When you ask for directions, locals will often use landmarks and spatial relationships rather than exact street addresses. 
+> *The new bakery is always located near the stop. A large parking lot is only near the station. We agreed to meet near the square. This pharmacy is located opposite the hospital.*
 
-«Читаємо українською»:
-— Мій район дуже зручний для життя (My neighborhood is very convenient for living).
-— Велика **аптека** (pharmacy) знаходиться **біля ринку** (A large pharmacy is located near the market).
-— Якщо ви хочете випити кави, є гарне кафе **навпроти бібліотеки** (If you want to drink coffee, there is a nice cafe opposite the library).
-— Також тут є автобусна **зупинка** (stop) прямо **біля станції** метро (Also here is a bus stop right near the subway station).
-— Я часто гуляю **навпроти театру** (I often walk opposite the theater).
-— Мій дім стоїть **біля парку**, де весело співають птахи (My house stands near the park where birds sing merrily).
+Now let's put these prepositions to work by describing a specific neighborhood. Being able to explain where places are relative to each other is a critical survival skill. When you combine the Nominative case for the subject you are looking for with the Genitive case for the spatial reference point, you can create a clear mental map for anyone asking for directions.
 
-Let's rejoin Ігор (Igor) and Марта (Marta). They have finally arrived at their campsite in the mountains. Now they need to decide exactly where to pitch their tent. Notice how they use our new prepositions to discuss the best location.
+Вибачте, ви не знаєте, де тут аптека? Аптека знаходиться біля міського ринку. А де я можу випити кави? Кафе є навпроти бібліотеки. Зупинка розташована біля станції метро.
 
-> — **Ігор:** Нарешті ми приїхали. Де ми поставимо наш намет? *(Finally we arrived. Where will we put our tent?)*
-> — **Марта:** Я думаю, що найкраще місце — **біля річки**. *(I think that the best place is near the river.)*
-> — **Ігор:** Ні, **біля річки** може бути холодно вночі. *(No, near the river it can be cold at night.)*
-> — **Марта:** Тоді, можливо, там, **навпроти дерева**? *(Then maybe there, opposite the tree?)*
-> — **Ігор:** Там дуже гарно. І ми зможемо сидіти **коло вогню** ввечері. *(It is very nice there. And we will be able to sit by the fire in the evening.)*
-> — **Марта:** Чудова ідея. Я покладу наші речі **біля намету**. *(Great idea. I will put our things near the tent.)*
-> — **Ігор:** А я піду шукати сухі дрова для вогню. *(And I will go look for dry firewood for the fire.)*
+> *Excuse me, do you not know where the pharmacy is here? The pharmacy is located near the city market. And where can I drink coffee? A cafe is opposite the library. The stop is located near the subway station.*
 
-These location words are part of a larger system of spatial prepositions that use the Genitive case. Later, you will learn prepositions like **до** (to), **з** (from), and **від** (from, away from). The key difference is that **біля**, **навпроти**, and **коло** describe a static position—where something simply exists in space. Prepositions like **до**, on the other hand, will describe active direction or movement toward a destination.
+Let's return to Igor and Marta. They have finally arrived at the campsite and now face the most important task of the evening: deciding exactly where to set up their tent. Watch how they actively use **біля**, **навпроти**, and **коло** with various Genitive nouns to describe the surrounding nature and plan their camp layout.
+
+> — **Ігор:** Я думаю, ми повинні поставити намет біля річки. *(I think we should put the tent near the river.)*
+> — **Марта:** Ні, там буде дуже холодно. Краще поставити його навпроти дерева. *(No, it will be very cold there. It is better to put it opposite the tree.)*
+> — **Ігор:** Добре. А де ми зробимо вогонь? *(Good. And where will we make the fire?)*
+> — **Марта:** Ми можемо сидіти коло вогню прямо тут. *(We can sit by the fire right here.)*
+> — **Ігор:** Чудово. Наш табір біля лісу — це ідеальне місце. *(Wonderful. Our camp near the forest is an ideal place.)*
+
+The prepositions **біля**, **навпроти**, and **коло** are just the beginning of a larger system of spatial prepositions that require the Genitive case. Later in your studies, you will learn how to express active movement towards a destination using the preposition **до**, or movement away from a starting point using **з** and **від**. For now, remember that the prepositions we learned today are static: they describe a fixed location in space rather than the direction of travel.
+
+:::info
+**Grammar box**
+Prepositions like **біля** and **навпроти** answer the question **де?** (where?). They describe a static location next to a reference point, requiring that noun to be in the Genitive case.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-location -->
 <!-- INJECT_ACTIVITY: true-false-grammar -->

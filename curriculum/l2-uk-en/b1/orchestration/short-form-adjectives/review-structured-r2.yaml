@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all points in the outline exactly. Beautifully explains the core
+    difference between archaic folk short forms (`зелен`, `ясен`) and modern predicative
+    ones (`потрібен`, `певен`).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains a non-existent word typo (`лінгвіністичний`). Uses multiple `давайте`
+    + verb Russian calques (`Давайте детально розглянемо`, `Давайте уявимо`, `Давайте
+    порівняємо`). Contains a lowercase char
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Superb pedagogical breakdown. The direct and explicit warning against
+    trying to create short forms like in Russian (`Цей студент розумен` - error) is
+    exactly what learners need to prevent negative L1 '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Flawlessly integrates all required and recommended vocabulary items naturally
+    into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 `INJECT_ACTIVITY` markers are appropriately placed right after the
+    corresponding teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is engaging, teacher-appropriate, and encourages students while
+    staying academic. ("Це слова, які надають мовленню ритмічності...")
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Formatting is flawless. Headings match the plan. Word count is robust
+    at 4255 words, clearing the 4000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: Using `старослов’янській` to translate "Old East Slavic" is a significant
+    historical inaccuracy; it must be `давньоруській`. Aside from this, cultural references
+    (folklore, Chernihiv) are well-integra
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogue is perfectly fitted for its pedagogical purpose, although
+    the participants sound slightly robotic/textbook-like ("Зверніть увагу, ви щойно
+    використали класичну коротку форму").
+findings: []

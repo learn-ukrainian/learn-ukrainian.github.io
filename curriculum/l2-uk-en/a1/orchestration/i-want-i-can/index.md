@@ -1,6 +1,6 @@
 # Build Summary: i-want-i-can (A1)
 
-Generated: 2026-04-09 05:09
+Generated: 2026-04-11 00:54
 
 ## Pipeline Phases
 
@@ -20,7 +20,8 @@ Generated: 2026-04-09 05:09
 | verify | complete | 2026-04-09 03:01:04 |
 | review | complete | 2026-04-09 03:09:00 |
 | stress | complete | 2026-04-09 03:09:02 |
-| publish | complete | 2026-04-09 03:09:03 |
+| publish | complete | 2026-04-10 22:54:34 |
+| audit | complete | 2026-04-10 22:54:34 |
 
 ## Reviews
 
@@ -44,6 +45,7 @@ Generated: 2026-04-09 05:09
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pacing-plan.txt`

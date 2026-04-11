@@ -21,7 +21,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-> — **Тарас:** І вона дуже працьовита. Ми всі її поважаємо. *(And she is very hardworking. We all respect her.)* <!-- INJECT_ACTIVITY: fill-in-adjective-agreement --> <!-- INJECT_ACTIVITY: group-sort-traits --> ## Описуємо людину цілком (Describing a Person Fully) To describe a person fully, we usually combine three details: who they are to us, what they look like, and what kind of person they are. Here is a complete profile. * Це мій найкращий друг Андрій. *(This is my best friend Andrii.)* * Він високий і спортивний хлопець із темним волоссям. *(He is a tall and athletic guy with dark hair.)* * Андрій дуже веселий і завжди допомагає друзям. *(Andrii is very cheerful and always helps friends.)* This structure gives a clear picture of the person. You start with the relationship, add physical details, and finish with their personality. ### Порівнюємо різних людей (Comparing Different People) When we describe people we know, we often contrast their traits. Notice how we combine physical descriptions with character adjectives in these examples. * Моя працьовита колега Олена — невисока жінка. *(My hardworking colleague Olena is a short woman.)* * Вона має коротке світле волосся і карі очі. *(She has short light hair and brown eyes.)* * Олена дуже серйозна і відповідальна. *(Olena is very serious and responsible.)* Now we can describe someone with a completely different energy: * А це моя весела сусідка Марія. *(And this is my cheerful neighbor Mariia.)* * Вона повна і має довге русяве волосся. *(She is plump and has long dark blond hair.)* * Марія — дуже щира і привітна людина. *(Mariia is a very sincere and welcoming person.)* Both descriptions follow our pattern but paint completely different pictures. ### Читаємо українською (Reading Practice) Read this short conversation where two friends look at a photo. Notice how they blend physical appearance with character traits. > — **Тарас:** Хто це на фото? *(Who is this in the photo?)* > — **Оксана:** Це мій дідусь Іван. *(This is my grandfather Ivan.)* > — **Тарас:** Він дуже високий і сильний чоловік. *(He is a very tall and strong man.)* > — **Оксана:** Так, він старий, але має добрі блакитні очі. *(Yes, he is old, but he has kind blue eyes.)* > — **Тарас:** Який у нього характер? *(What is his character like?)* > — **Оксана:** Мій дідусь — надзвичайно розумна і спокійна людина. Я його дуже поважаю, бо він завжди мені допомагає. *(My grandfather is an extremely smart and calm person. I respect him a lot because he always helps me.)* :::tip Культурний контекст (Cultural Note) In Ukrainian culture, we value a person's inner qualities more than their physical appearance. Calling someone **красива людина** *(a beautiful person)* usually refers to their looks. However, calling someone **гарна людина** *(a good person)* or **добра людина** *(a kind person)* is a much deeper compliment. It means they have a good heart and treat others well. When Ukrainians say «Він справді добра людина» *(He is a truly kind person)*, it is the highest praise you can give. :::
+and relationships, we can put it all together to create a complete profile of a person. A natural description usually follows a simple pattern: first, we state who the person is to us, then we describe what they look like, and finally, we explain what kind of character they have. Let's look at how this works in practice. Це мій найкращий друг Андрій. Ми познайомилися в університеті. Він високий і міцний хлопець із темним волоссям. Андрій дуже веселий, привітний і завжди допомагає друзям. Коли я маю проблему, він уважно слухає і дає гарну пораду. Я дуже поважаю його. > *This is my best friend Andrii. We met at the university. He is a tall and sturdy guy with dark hair. Andrii is very cheerful, friendly, and always helps his friends. When I have a problem, he listens carefully and gives good advice. I respect him very much.* Let's compare two different people from our daily lives. Notice how we combine physical traits with personality adjectives to create a clear picture of each person and their typical behavior. Це моя нова колега Олена. Вона невисока, струнка жінка з карими очима. Олена — дуже працьовита, серйозна і відповідальна працівниця. Вона завжди приходить на роботу вчасно. А це моя сусідка Марія. Вона старша жінка, має сиве волосся і приємну усмішку. Марія дуже весела, щира і чуйна. Вона часто пече пироги і пригощає всіх сусідів. > *This is my new colleague Olena. She is a short, slim woman with brown eyes. Olena is a very hardworking, serious, and responsible worker. She always comes to work on time. And this is my neighbor Mariia. She is an older woman; she has gray hair and a pleasant smile. Mariia is very cheerful, sincere, and responsive. She often bakes pies and treats all the neighbors.* In Ukrainian culture, how a person acts and treats others is often considered much more important than their physical appearance. В Україні ми часто кажемо «вона добра людина» або «він гарна людина». Це означає, що людина має щирий характер, допомагає іншим і нікого не ображає. Краса обличчя чи фігури — це приємно, але внутрішня доброта є набагато важливішою. Ми можемо сказати, що хтось «красивий», якщо говоримо про зовнішність. Але слова «гарна людина» описують саме душу і характер. > *In Ukraine, we often say "she is a kind person" or "he is a good person". This means that the person has a sincere character, helps others, and offends no one. Beauty of the face or figure is pleasant, but inner kindness is much more important. We can say that someone is "beautiful" if we are talking about appearance. But the words "a good person" describe exactly the soul and character.* :::tip **Inner vs. Outer Beauty** — In Ukrainian, the word **красивий** (beautiful, handsome) is strictly used for physical appearance. However, the word **гарний** (good, nice, pretty) is much broader. When you call someone **гарна людина**, you are praising their inner qualities, character, and soul, making it a very powerful and authentic compliment. :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -514,7 +514,74 @@ This grammar topic is a hub that connects to several other key areas of Ukrainia
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.
 LANGUAGE ROLES:
@@ -542,14 +609,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

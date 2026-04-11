@@ -23,22 +23,9 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ та діалог: Сільський перепис
+[...previous sections truncated...]
 
-У нашому повсякденному житті ми постійно щось рахуємо *(count)*: від кількості людей у країні під час офіційного перепису населення *(official census)* до точних грамів борошна *(grams of flour)* чи мілілітрів води у складному кулінарному рецепті. Точність та уважність до деталей важлива абсолютно скрізь: у фінансових звітах, на ринку чи під час планування великої подорожі. Проте в українській мові для успішної комунікації недостатньо просто вивчити цифри напам'ять. Кількісні вирази *(quantity expressions)* є своєрідною математикою мови, яка вимагає особливої уваги до закінчень сусідніх іменників. Залежно від конкретного числа або спеціального слова, яке ви використовуєте для позначення кількості, іменник може стояти в називному *(nominative)* або родовому *(genitive)* відмінку, змінюватися в однині *(singular)* чи множині *(plural)*. Якщо ви скажете «два студента» замість «два студенти», вас, звичайно, зрозуміють, але це звучатиме неприродно. У цьому розділі ми навчимося правильно поєднувати кількісні числівники *(cardinal numerals)*, збірні числівники *(collective numerals)* та слова, що позначають неозначену кількість *(indefinite quantity)*, зі словами, щоб ваше мовлення було бездоганним.
-
-Уявіть класичну ситуацію: державний переписувач прийшов до типової сільської хати *(village house)*, щоб зібрати необхідні статистичні дані про родину та їхнє господарство.
-
-> — **Переписувач:** Доброго дня! Я працюю в службі статистики і зараз проводжу перепис. Скажіть, будь ласка, скільки людей постійно живе у вашому великому домі? *(How many people live constantly in your large house?)*
-> — **Господар:** Добрий день! Загалом нас тут п'ятеро *(five)*: я, моя дружина, двоє дітей *(two children)* та моя старенька мати. Усі разом мешкаємо.
-> — **Переписувач:** Зрозуміло, дякую. А скільки тут є житлових приміщень? *(How many living spaces are here?)*
-> — **Господар:** Будинок просторий. У нас є кілька кімнат *(several rooms)*, велика вітальня та одна літня кухня.
-> — **Переписувач:** Дуже добре. Для нашої анкети також важливо знати про господарство. Ви маєте багато землі *(a lot of land)* навколо двору?
-> — **Господар:** Так, маємо велику ділянку. Ми витрачаємо чимало зусиль *(quite a lot of effort)* щовесни, щоб обробити весь город.
-> — **Переписувач:** А чи тримаєте ви свійських тварин у селі?
-> — **Господар:** Раніше мали багато, але зараз тримаємо мало худоби *(little livestock)*: залишилися тільки дві корови *(two cows)*, троє поросят *(three piglets)* та десяток курей.
-> — **Переписувач:** Чудово. Запишу, що ви маєте достатньо ресурсів *(enough resources)*. Дякую за ваші детальні та щирі відповіді!
-
+стоїть перед ним. Вибір правильної форми часто стає справжнім випробуванням для тих, хто вивчає мову. > *Accurate counting is of immense importance in our lives, starting from a nationwide census and ending with the proportions of ingredients in culinary recipes. When we talk about quantity in the Ukrainian language, it is not enough to simply know the numerals. The greatest difficulty lies in the agreement of these numerals with nouns. Unlike many other languages, Ukrainian quantity expressions require our special attention to cases, because the ending of the noun changes drastically depending on exactly which number stands before it. Choosing the correct form often becomes a real test for language learners.* This module will guide you through the intricate rules of Ukrainian quantity expressions. We will explore how numbers like two, three, and four demand completely different noun endings than numbers from five onwards. We will also learn how to use collective numerals and indefinite quantity words, which are essential for sounding natural in everyday conversations. Уявіть ситуацію: до українського села приїхав державний переписувач. Його завдання — зібрати точну статистику про кожного мешканця, розміри господарства та кількість майна. Господар дому відповідає на запитання, використовуючи різноманітні кількісні вирази. Зверніть увагу на те, як змінюються закінчення іменників після різних чисел та слів, що позначають кількість. > *Imagine a situation: a state census worker has arrived in a Ukrainian village. His task is to collect accurate statistics about every resident, the size of the household, and the amount of property. The master of the house answers the questions using various quantity expressions. Pay attention to how the noun endings change after different numbers and words that denote quantity.* > — **Переписувач:** Добрий день! Я проводжу перепис населення. Скільки людей постійно проживає у вашому домі? *(Good day! I am conducting a census. How many people permanently live in your house?)* > — **Господар:** Добрий день. П'ятеро: я, моя дружина, двоє дітей та моя літня мати. *(Good day. Five: me, my wife, two children, and my elderly mother.)* > — **Переписувач:** Зрозуміло. А скільки кімнат має ваш будинок? *(Understood. And how many rooms does your house have?)* > — **Господар:** Ми маємо кілька кімнат: три спальні, одну велику вітальню та кухню. *(We have several rooms: three bedrooms, one large living room, and a kitchen.)* > — **Переписувач:** Ви маєте багато землі біля хати? *(Do you have a lot of land near the house?)* > — **Господар:** Так, чимало. Ми обробляємо два гектари поля. На це йде дуже багато зусиль та часу. *(Yes, quite a lot. We cultivate two hectares of field. It takes a lot of effort and time.)* > — **Переписувач:** Чи тримаєте ви худобу? *(Do you keep livestock?)* > — **Господар:** Мало худоби залишилося. Тільки одна корова, двоє коней та десять курей. *(Little livestock is left. Only one cow, two horses, and ten chickens.)* :::note **Grammar spotlight** — Notice how the noun endings shift dramatically in the dialogue: **двоє дітей** (genitive plural) versus **одна корова** (nominative singular) or **два гектари** (nominative plural). :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -560,7 +547,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -573,14 +627,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

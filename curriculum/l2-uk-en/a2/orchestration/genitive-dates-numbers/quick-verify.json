@@ -7,12 +7,7 @@
       "check": "VOCABULARY",
       "severity": "WARNING",
       "message": "Missing 1/15 required vocab: місяць (month)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-07T19:47:26.977325+00:00"
+  "timestamp": "2026-04-10T23:45:14.060816+00:00"
 }

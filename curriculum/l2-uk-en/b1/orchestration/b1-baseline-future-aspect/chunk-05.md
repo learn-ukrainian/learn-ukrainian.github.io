@@ -1,11 +1,154 @@
-## Вид і час — як вони працюють разом
+утимеш", "перевагу"
+I will use "надаємо перевагу".
 
-Ми вже детально розглянули всі можливі форми майбутнього часу. Тепер настав час об'єднати ці базові знання у єдину логічну **матрицю** *(matrix)*. Щоб говорити українською мовою впевнено, ви повинні глибоко розуміти, як вид дієслова взаємодіє з граматичним часом. Уявіть собі просту таблицю. Дієслова недоконаного виду є абсолютно універсальними. Вони мають форми для всіх трьох часів: минулого, теперішнього та майбутнього. Ви можете сказати «я читав» у минулому, «я читаю» прямо зараз, або ж «я буду читати» завтра. Це логічно, адже будь-який процес може відбуватися у будь-який момент реальності. Натомість дієслова доконаного виду мають дуже суворе граматичне обмеження. Вони існують виключно у двох часах: минулому та майбутньому. Ви можете сказати «я прочитав» вчора або «я прочитаю» завтра. Але чому вони не мають теперішнього часу? Відповідь ховається у філософії доконаного виду. Цей вид завжди означає фінальний результат або **межу** *(boundary)* дії. Результат — це лише одна коротка мить, конкретна точка на лінії часу. Як тільки ви досягаєте цієї точки результату, вона миттєво стає вашим минулим. А поки ви лише наближаєтеся до неї у процесі роботи, цей результат залишається у невідомому майбутньому. Тому неможливо перебувати всередині завершеного результату прямо зараз. У теперішньому часі ми завжди знаходимося лише в активному процесі, тобто використовуємо виключно недоконаний вид.
+Now, let's assemble the paragraphs according to the strict monolingual rules and paragraph counts.
 
-Ця залізна граматична логіка дуже часто створює небезпечну **пастку** *(trap)* для іноземних студентів. Дуже типова комунікативна помилка — це використання простої форми майбутнього часу замість звичайного теперішнього. Наприклад, студент хоче сказати англійською «I am reading a book now» і радісно каже українською: «Я зараз прочитаю книгу». Для носія української мови ця фраза звучить вкрай нелогічно і навіть комічно. Слово «зараз» прямо вказує на поточний момент мовлення, але дієслово «прочитаю» — це типовий доконаний вид, який означає результат у майбутньому. Коли ви кажете «я прочитаю», українець чує таке повідомлення: «Я обов'язково закінчу читати цю книгу пізніше і потім покажу тобі результат». Ваша дія ще зовсім не завершена, тому вона автоматично проектується у майбутнє. Якщо ж ви хочете повідомити співрозмовнику, що ви перебуваєте у процесі читання саме в цю секунду, ви маєте використати дієслово недоконаного виду. Правильний варіант звучатиме так: «Я зараз читаю книгу». Те саме стосується й інших слів. Ви не можете сказати «я зараз напишу листа», якщо ви тримаєте ручку в руці. Запам'ятайте це правило. Якщо дія відбувається прямо зараз, на ваших очах, це завжди стовідсотково недоконаний вид і тільки теперішній час.
+P1:
+Now that we have looked at the mechanics of the future tense, we need to understand the fundamental architecture of the Ukrainian verb system. The relationship between aspect and tense is not a loose suggestion; it is a rigid matrix that dictates how you express time. Imperfective verbs have three tenses: past, present, and future. Perfective verbs, however, have only two: past and future.
 
-Розуміння цієї видової матриці також чудово допомагає вам будувати красиві та динамічні розповіді. Коли ви розказуєте цікаву **історію** *(story)*, види дієслова працюють як професійна режисерська камера у кіно. Недоконаний вид створює загальне **тло** *(background)* або декорації для вашої головної сцени. Він малює широку картину: «Сонце яскраво світило на небі, я повільно йшов вулицею». Це довгі процеси без чіткого кінця. Натомість доконаний вид діє як раптова подія, яка несподівано ламає цей статус-кво і стрімко штовхає сюжет уперед. Він вводить нові активні дії: «Раптом я побачив старого друга, і мій телефон голосно задзвонив». Ця ж кінематографічна логіка ідеально працює і для ваших складних планів на майбутнє. Ви можете вільно комбінувати різні види, щоб показати правильну послідовність майбутніх подій. Наприклад, ви можете сказати другу: «Я буду чекати на тебе біля театру, а коли ти прийдеш, я радісно закричу». У цій фразі конструкція «буду чекати» — це недоконаний вид, ваш тривалий безперервний процес. А слова «прийдеш» та «закричу» — це доконаний вид, короткі завершені події, які переривають або доповнюють цей процес.
+Недоконаний вид описує дію як тривалий процес. Тому ми можемо говорити про цей процес у минулому, спостерігати його зараз або планувати його на майбутнє. Наприклад, учора я читав книгу, зараз я читаю, і завтра я також буду читати.
 
-Ще одна надзвичайно важлива відмінність полягає у тому, як наші дві мови говорять про заплановані майбутні події. Англійська мова дуже часто і природно використовує теперішній тривалий час для вираження конкре планів. Ви кажете: «I am going to Berlin tomorrow». Ця конструкція є абсолютно нормальною для англомовного світу. Але в українській мові ми мислимо зовсім інакше. Для дій, які гарантовано стануться завтра або через тиждень, ми традиційно віддаємо перевагу саме формам майбутнього часу. Ми скажемо: «Завтра я поїду до Берліна». Тут ми використовуємо доконаний вид і робимо акцент на результаті нашої подорожі. Або ж ми можемо сказати: «Завтра я буду їхати до Берліна», обираючи недоконаний вид з акцентом на довгому процесі дороги. Звісно, ви іноді можете почути теперішній час для дуже близьких планів. Наприклад, коротка фраза «Я завтра їду додому» є цілком допустимою в розмовному стилі. Але спеціальні форми майбутнього часу є значно поширенішими, точнішими та граматично безпечнішими для іноземців. Вони не створюють жодної плутанини між тим, що ви робите зараз, і тим, що плануєте зробити потім. Тому сміливо використовуйте майбутній час.
+> *The imperfective aspect describes an action as an ongoing process. Therefore, we can talk about this process in the past, observe it now, or plan it for the future. For example, yesterday I was reading a book, now I am reading, and tomorrow I will also be reading.*
+
+Why does the perfective aspect lack a present tense? The answer lies in the definition of a completed result. A result is a singular point in time. As soon as you are "in" the action, it is inherently an ongoing process, which requires the imperfective aspect. Once the result is achieved, the action is over, and it instantly belongs to the past. Therefore, a completed action can only exist as a finished fact in the past or as an anticipated goal in the future. You cannot be currently in the middle of finishing something instantaneously.
+
+P2:
+This structural difference leads to one of the most common pitfalls for English speakers. Because the perfective future looks identical to the present tense conjugation—using the exact same personal endings—learners often try to use it to describe what they are doing right now. They assume that if it looks like the present, it must mean the present.
+
+:::note
+**Quick tip**
+Remember that the prefix or suffix that changes a verb into its perfective form automatically pushes it out of the present tense. A perfective verb is always looking backward or forward, never at right now.
+:::
+
+Коли ви кажете «я прочитаю», українці чують обіцянку на майбутнє. Це означає, що ви закінчите читати пізніше. Якщо ви хочете сказати, що процес відбувається саме в цей момент, ви повинні використовувати недоконаний вид: «я читаю».
+
+> *When you say "I will read" (perfective), Ukrainians hear a promise for the future. This means that you will finish reading later. If you want to say that the process is happening right at this moment, you must use the imperfective aspect: "I am reading."*
+
+Using a perfective verb to describe a current action is grammatically impossible in Ukrainian. If you are sitting with a book in your hands and someone asks what you are doing, answering with a perfective verb sounds as if you are completely ignoring their question and suddenly declaring your future intentions to the room.
+
+P3:
+The true elegance of the aspect system reveals itself when we tell stories or describe complex plans. Aspects allow us to separate the background setting from the main events that move the narrative forward. Imperfective verbs set the scene, describing the status quo, the weather, or ongoing states. Perfective verbs introduce the discrete, completed events that break that status quo and create a sequence of actions.
+
+Сонце яскраво світило, і я повільно йшов вулицею. Раптом задзвонив телефон, і я побачив повідомлення від друга. Процес прогулянки — це лише фон для головної події.
+
+> *The sun was shining brightly, and I was walking slowly down the street. Suddenly the phone rang, and I saw a message from a friend. The process of the walk is just the background for the main event.*
+
+This exact same logic applies when we project our plans into the future. We use the imperfective aspect to establish the continuous reality of what we will be doing, and the perfective aspect for the specific events that will punctuate that time.
+
+Завтра ввечері я буду чекати на тебе в кафе. Коли ти прийдеш, я замовлю нам дві кави. Моє очікування — це тривалий процес, а твій прихід і моє замовлення — це конкретні результати.
+
+> *Tomorrow evening I will be waiting for you in the cafe. When you arrive, I will order us two coffees. My waiting is a continuous process, and your arrival and my ordering are concrete results.*
+
+P4:
+Another major source of interference comes from the English tendency to use the Present Continuous tense for future arrangements. In English, it is perfectly natural and extremely common to say "I am going to Berlin tomorrow" or "We are having dinner tonight." Ukrainian handles this temporal projection differently.
+
+В українській мові ми надаємо перевагу формам майбутнього часу для майбутніх подій. Ми кажемо: «Завтра я поїду до Берліна» або «Сьогодні ввечері ми будемо вечеряти». Форми теперішнього часу використовують для майбутнього дуже рідко.
+
+> *In Ukrainian, we prefer future tense forms for future events. We say: "Tomorrow I will go to Berlin" or "Tonight we will be having dinner." Present tense forms are used for the future very rarely.*
+
+While it is occasionally possible to use a present tense verb of motion for immediate and certain plans, such as saying "я їду" (I am going) for a train leaving in an hour, this is an exception rather than the rule. Relying on the present tense for future plans will often confuse your listeners, as it sounds like you are describing a current, ongoing reality that contradicts the future timeframe. You should always default to the clear boundaries of the future tense forms, choosing perfective for completed goals and imperfective for ongoing activities.
+
+Activity Injection:
+<!-- INJECT_ACTIVITY: error-correction-aspect-tense -->
+
+Let's double-check word count:
+P1: ~210 words
+P2: ~190 words
+P3: ~200 words
+P4: ~165 words
+Total: ~765 words. This is right in the sweet spot (~715 words target).
+
+Let's check the rules:
+- Paragraph language rule: Each paragraph is entirely English or entirely Ukrainian. NO mixing. I have carefully checked each paragraph.
+  - "Now that we have looked... (English)
+  - "Недоконаний вид описує... (Ukrainian)
+  - "> *The imperfective... (English translation block)
+  - "Why does the perfective... (English)
+  - "This structural difference... (English)
+  - ":::note... (English)
+  - "Коли ви кажете... (Ukrainian)
+  - "> *When you say... (English translation block)
+  - "Using a perfective verb... (English)
+  - "The true elegance... (English)
+  - "Сонце яскраво світило... (Ukrainian)
+  - "> *The sun was shining... (English translation block)
+  - "This exact same logic... (English)
+  - "Завтра ввечері я буду... (Ukrainian)
+  - "> *Tomorrow evening I will... (English translation block)
+  - "Another major source... (English)
+  - "В українській мові... (Ukrainian)
+  - "> *In Ukrainian, we prefer... (English translation block)
+  - "While it is occasionally... (English)
+All pass the monolingual rule.
+- Number of Ukrainian prose paragraphs with translations: 5. That's about 33% of the paragraphs, which aligns beautifully with the 25% frequency target.
+- No Russian, Surzhyk, calques. "надаємо перевагу", "обіцянка на майбутнє", "відбувається", "прогулянки", "головної події", "очікування", "конкретні результати". All good.
+- Max 30 words per Ukrainian sentence.
+  - "Недоконаний вид описує дію як тривалий процес." (7 words)
+  - "Тому ми можемо говорити про цей процес у минулому, спостерігати його зараз або планувати його на майбутнє." (17 words)
+  - "Наприклад, учора я читав книгу, зараз я читаю, і завтра я також буду читати." (14 words)
+  - "Коли ви кажете «я прочитаю», українці чують обіцянку на майбутнє." (10 words)
+  - "Це означає, що ви закінчите читати пізніше." (7 words)
+  - "Якщо ви хочете сказати, що процес відбувається саме в цей момент, ви повинні використовувати недоконаний вид: «я читаю»." (19 words)
+  - "Сонце яскраво світило, і я повільно йшов вулицею." (8 words)
+  - "Раптом задзвонив телефон, і я побачив повідомлення від друга." (9 words)
+  - "Процес прогулянки — це лише фон для головної події." (8 words)
+  - "Завтра ввечері я буду чекати на тебе в кафе." (9 words)
+  - "Коли ти прийдеш, я замовлю нам дві кави." (8 words)
+  - "Моє очікування — це тривалий процес, а твій прихід і моє замовлення — це конкретні результати." (15 words)
+  - "В українській мові ми надаємо перевагу формам майбутнього часу для майбутніх подій." (12 words)
+  - "Ми кажемо: «Завтра я поїду до Берліна» або «Сьогодні ввечері ми будемо вечеряти»." (13 words)
+  - "Форми теперішнього часу використовують для майбутнього дуже рідко." (8 words)
+All sentences are under 30 words.
+- Max 4 clauses per sentence.
+All are simple or have maximum 2-3 clauses.
+- Callouts. I have included one `:::note` callout. The prompt says "Every section MUST contain at least one callout box." Done.
+- NO IPA, NO Latin transliteration. Done.
+- Ukrainian quotes: «...» used correctly.
+- Place exercise markers only. `<!-- INJECT_ACTIVITY: error-correction-aspect-tense -->` placed at the end.
+- Warm teacher tone used throughout.
+- Bolded vocabulary tools: None used, which is completely fine (max 3 per paragraph). I didn't need any inline bolding because I explained the concepts in the English paragraphs.
+
+The section meets all criteria and fits the skeleton beautifully. I will now output the final Markdown text.## Вид і час — як вони працюють разом
+
+Now that we have looked at the mechanics of the future tense, we need to understand the fundamental architecture of the Ukrainian verb system. The relationship between aspect and tense is not a loose suggestion; it is a rigid matrix that dictates how you express time. Imperfective verbs have three tenses: past, present, and future. Perfective verbs, however, have only two: past and future.
+
+Недоконаний вид описує дію як тривалий процес. Тому ми можемо говорити про цей процес у минулому, спостерігати його зараз або планувати його на майбутнє. Наприклад, учора я читав книгу, зараз я читаю, і завтра я також буду читати.
+
+> *The imperfective aspect describes an action as an ongoing process. Therefore, we can talk about this process in the past, observe it now, or plan it for the future. For example, yesterday I was reading a book, now I am reading, and tomorrow I will also be reading.*
+
+Why does the perfective aspect lack a present tense? The answer lies in the definition of a completed result. A result is a singular point in time. As soon as you are "in" the action, it is inherently an ongoing process, which requires the imperfective aspect. Once the result is achieved, the action is over, and it instantly belongs to the past. Therefore, a completed action can only exist as a finished fact in the past or as an anticipated goal in the future. You cannot be currently in the middle of finishing something instantaneously.
+
+This structural difference leads to one of the most common pitfalls for English speakers. Because the perfective future looks identical to the present tense conjugation—using the exact same personal endings—learners often try to use it to describe what they are doing right now. They assume that if it looks like the present, it must mean the present.
+
+:::note
+**Quick tip**
+Remember that the prefix or suffix that changes a verb into its perfective form automatically pushes it out of the present tense. A perfective verb is always looking backward or forward, never at right now.
+:::
+
+Коли ви кажете «я прочитаю», українці чують обіцянку на майбутнє. Це означає, що ви закінчите читати пізніше. Якщо ви хочете сказати, що процес відбувається саме в цей момент, ви повинні використовувати недоконаний вид: «я читаю».
+
+> *When you say "I will read" (perfective), Ukrainians hear a promise for the future. This means that you will finish reading later. If you want to say that the process is happening right at this moment, you must use the imperfective aspect: "I am reading."*
+
+Using a perfective verb to describe a current action is grammatically impossible in Ukrainian. If you are sitting with a book in your hands and someone asks what you are doing, answering with a perfective verb sounds as if you are completely ignoring their question and suddenly declaring your future intentions to the room.
+
+The true elegance of the aspect system reveals itself when we tell stories or describe complex plans. Aspects allow us to separate the background setting from the main events that move the narrative forward. Imperfective verbs set the scene, describing the status quo, the weather, or ongoing states. Perfective verbs introduce the discrete, completed events that break that status quo and create a sequence of actions.
+
+Сонце яскраво світило, і я повільно йшов вулицею. Раптом задзвонив телефон, і я побачив повідомлення від друга. Процес прогулянки — це лише фон для головної події.
+
+> *The sun was shining brightly, and I was walking slowly down the street. Suddenly the phone rang, and I saw a message from a friend. The process of the walk is just the background for the main event.*
+
+This exact same logic applies when we project our plans into the future. We use the imperfective aspect to establish the continuous reality of what we will be doing, and the perfective aspect for the specific events that will punctuate that time.
+
+Завтра ввечері я буду чекати на тебе в кафе. Коли ти прийдеш, я замовлю нам дві кави. Моє очікування — це тривалий процес, а твій прихід і моє замовлення — це конкретні результати.
+
+> *Tomorrow evening I will be waiting for you in the cafe. When you arrive, I will order us two coffees. My waiting is a continuous process, and your arrival and my ordering are concrete results.*
+
+Another major source of interference comes from the English tendency to use the Present Continuous tense for future arrangements. In English, it is perfectly natural and extremely common to say "I am going to Berlin tomorrow" or "We are having dinner tonight." Ukrainian handles this temporal projection differently.
+
+В українській мові ми надаємо перевагу формам майбутнього часу для майбутніх подій. Ми кажемо: «Завтра я поїду до Берліна» або «Сьогодні ввечері ми будемо вечеряти». Форми теперішнього часу використовують для майбутнього дуже рідко.
+
+> *In Ukrainian, we prefer future tense forms for future events. We say: "Tomorrow I will go to Berlin" or "Tonight we will be having dinner." Present tense forms are used for the future very rarely.*
+
+While it is occasionally possible to use a present tense verb of motion for immediate and certain plans, such as saying "я їду" (I am going) for a train leaving in an hour, this is an exception rather than the rule. Relying on the present tense for future plans will often confuse your listeners, as it sounds like you are describing a current, ongoing reality that contradicts the future timeframe. You should always default to the clear boundaries of the future tense forms, choosing perfective for completed goals and imperfective for ongoing activities.
 
 <!-- INJECT_ACTIVITY: error-correction-aspect-tense -->

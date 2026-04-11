@@ -1,7 +1,18 @@
 {
-  "attempt": 2,
+  "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [],
-  "timestamp": "2026-04-07T20:58:48.166961+00:00"
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: дозвіл (permission)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 4"
+    }
+  ],
+  "timestamp": "2026-04-11T00:19:34.565752+00:00"
 }

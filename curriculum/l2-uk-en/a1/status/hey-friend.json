@@ -1,0 +1,59 @@
+{
+  "module": "hey-friend",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-11T00:59:54.929639Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-11T00:59:54.139009Z",
+    "meta": null,
+    "activities": "2026-04-09T03:36:14.307986Z",
+    "vocabulary": "2026-04-09T03:37:46.955232Z",
+    "research": null,
+    "plan": "2026-03-30T22:17:20.658073Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2023/1200 (raw: 2169) | immersion: 15.5% LOW (target 20-40% (M42))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

@@ -1,0 +1,312 @@
+{
+  "total_items": 216,
+  "grounded_items": 167,
+  "ungrounded": [
+    {
+      "word": "вивчила",
+      "exercise_type": "fill-in",
+      "context": "Вона вивчила цей вірш ____ один вечір.",
+      "role": "context"
+    },
+    {
+      "word": "повернеться",
+      "exercise_type": "fill-in",
+      "context": "Мій брат повернеться з відрядження ____ тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "відрядження",
+      "exercise_type": "fill-in",
+      "context": "Мій брат повернеться з відрядження ____ тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "доїхали",
+      "exercise_type": "fill-in",
+      "context": "Ми доїхали до центру міста ____ пів години.",
+      "role": "context"
+    },
+    {
+      "word": "центру",
+      "exercise_type": "fill-in",
+      "context": "Ми доїхали до центру міста ____ пів години.",
+      "role": "context"
+    },
+    {
+      "word": "пів",
+      "exercise_type": "fill-in",
+      "context": "Ми доїхали до центру міста ____ пів години.",
+      "role": "context"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "fill-in",
+      "context": "Новий фільм почнеться ____ п'ятнадцять хвилин.",
+      "role": "context"
+    },
+    {
+      "word": "фільм",
+      "exercise_type": "fill-in",
+      "context": "Новий фільм почнеться ____ п'ятнадцять хвилин.",
+      "role": "context"
+    },
+    {
+      "word": "почнеться",
+      "exercise_type": "fill-in",
+      "context": "Новий фільм почнеться ____ п'ятнадцять хвилин.",
+      "role": "context"
+    },
+    {
+      "word": "зустрінемося",
+      "exercise_type": "quiz",
+      "context": "Ми зустрінемося біля метро...",
+      "role": "context"
+    },
+    {
+      "word": "метро",
+      "exercise_type": "quiz",
+      "context": "Ми зустрінемося біля метро...",
+      "role": "context"
+    },
+    {
+      "word": "приготував",
+      "exercise_type": "quiz",
+      "context": "Я приготував цю вечерю...",
+      "role": "context"
+    },
+    {
+      "word": "вечерю",
+      "exercise_type": "quiz",
+      "context": "Я приготував цю вечерю...",
+      "role": "context"
+    },
+    {
+      "word": "приїдуть",
+      "exercise_type": "quiz",
+      "context": "Мої батьки приїдуть у гості...",
+      "role": "context"
+    },
+    {
+      "word": "гості",
+      "exercise_type": "quiz",
+      "context": "Мої батьки приїдуть у гості...",
+      "role": "context"
+    },
+    {
+      "word": "робітники",
+      "exercise_type": "quiz",
+      "context": "Робітники збудували цей будинок...",
+      "role": "context"
+    },
+    {
+      "word": "збудували",
+      "exercise_type": "quiz",
+      "context": "Робітники збудували цей будинок...",
+      "role": "context"
+    },
+    {
+      "word": "будинок",
+      "exercise_type": "quiz",
+      "context": "Робітники збудували цей будинок...",
+      "role": "context"
+    },
+    {
+      "word": "літак",
+      "exercise_type": "quiz",
+      "context": "Літак приземлиться в аеропорту...",
+      "role": "context"
+    },
+    {
+      "word": "приземлиться",
+      "exercise_type": "quiz",
+      "context": "Літак приземлиться в аеропорту...",
+      "role": "context"
+    },
+    {
+      "word": "аеропорту",
+      "exercise_type": "quiz",
+      "context": "Літак приземлиться в аеропорту...",
+      "role": "context"
+    },
+    {
+      "word": "прочитала",
+      "exercise_type": "quiz",
+      "context": "Вона прочитала цю довгу статтю...",
+      "role": "context"
+    },
+    {
+      "word": "довгу",
+      "exercise_type": "quiz",
+      "context": "Вона прочитала цю довгу статтю...",
+      "role": "context"
+    },
+    {
+      "word": "статтю",
+      "exercise_type": "quiz",
+      "context": "Вона прочитала цю довгу статтю...",
+      "role": "context"
+    },
+    {
+      "word": "сніданком",
+      "exercise_type": "error-correction",
+      "context": "сніданком",
+      "role": "answer"
+    },
+    {
+      "word": "будемо",
+      "exercise_type": "error-correction",
+      "context": "Ми будемо гуляти після обідом.",
+      "role": "context"
+    },
+    {
+      "word": "п'ятницею",
+      "exercise_type": "error-correction",
+      "context": "Цей проект треба здати до п'ятницею.",
+      "role": "context"
+    },
+    {
+      "word": "розмовляти",
+      "exercise_type": "error-correction",
+      "context": "Не можна розмовляти під час урок.",
+      "role": "context"
+    },
+    {
+      "word": "урок",
+      "exercise_type": "error-correction",
+      "context": "Не можна розмовляти під час урок.",
+      "role": "context"
+    },
+    {
+      "word": "перевірили",
+      "exercise_type": "error-correction",
+      "context": "Перед початку лекції ми перевірили звук.",
+      "role": "context"
+    },
+    {
+      "word": "тренування",
+      "exercise_type": "error-correction",
+      "context": "тренування",
+      "role": "answer"
+    },
+    {
+      "word": "відпочивав",
+      "exercise_type": "error-correction",
+      "context": "Я відпочивав після тренуванням.",
+      "role": "context"
+    },
+    {
+      "word": "тренуванням",
+      "exercise_type": "error-correction",
+      "context": "Я відпочивав після тренуванням.",
+      "role": "context"
+    },
+    {
+      "word": "сьома",
+      "exercise_type": "match-up",
+      "context": "за чверть сьома",
+      "role": "context"
+    },
+    {
+      "word": "дев'яту",
+      "exercise_type": "match-up",
+      "context": "десять хвилин на дев'яту",
+      "role": "context"
+    },
+    {
+      "word": "гори",
+      "exercise_type": "quiz",
+      "context": "Ми поїдемо в гори...",
+      "role": "context"
+    },
+    {
+      "word": "конференція",
+      "exercise_type": "quiz",
+      "context": "Конференція почнеться...",
+      "role": "context"
+    },
+    {
+      "word": "були",
+      "exercise_type": "quiz",
+      "context": "Цього року ми були на морі...",
+      "role": "context"
+    },
+    {
+      "word": "повернуся",
+      "exercise_type": "fill-in",
+      "context": "Я повернуся додому ____ дві години.",
+      "role": "context"
+    },
+    {
+      "word": "товсту",
+      "exercise_type": "fill-in",
+      "context": "Він прочитав цю товсту книгу ____ один день.",
+      "role": "context"
+    },
+    {
+      "word": "телефоном",
+      "exercise_type": "fill-in",
+      "context": "Не можна користуватися телефоном ____ вистави.",
+      "role": "context"
+    },
+    {
+      "word": "вистави",
+      "exercise_type": "fill-in",
+      "context": "Не можна користуватися телефоном ____ вистави.",
+      "role": "context"
+    },
+    {
+      "word": "мию",
+      "exercise_type": "fill-in",
+      "context": "Я завжди мию руки ____ обідом.",
+      "role": "context"
+    },
+    {
+      "word": "руки",
+      "exercise_type": "fill-in",
+      "context": "Я завжди мию руки ____ обідом.",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Фраза «я зроблю це в десять хвилин» є правильною.",
+      "role": "context"
+    },
+    {
+      "word": "потребує",
+      "exercise_type": "true-false",
+      "context": "Слово «взимку» не потребує жодних додаткових прийменників.",
+      "role": "context"
+    },
+    {
+      "word": "родовому",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «минулого року» у Родовому відмінку без прийменник",
+      "role": "context"
+    },
+    {
+      "word": "десятій",
+      "exercise_type": "error-correction",
+      "context": "о десятій годині",
+      "role": "answer"
+    },
+    {
+      "word": "прилітає",
+      "exercise_type": "error-correction",
+      "context": "Літак прилітає в десять годин.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "вранці",
+      "зранку",
+      "навесні",
+      "тривалість",
+      "часовий"
+    ]
+  },
+  "all_grounded": false
+}

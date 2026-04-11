@@ -1,0 +1,413 @@
+{
+  "total_items": 198,
+  "grounded_items": 133,
+  "ungrounded": [
+    {
+      "word": "кінець",
+      "exercise_type": "group-sort",
+      "context": "Кінець руху (при-, до-)",
+      "role": "context"
+    },
+    {
+      "word": "дійти",
+      "exercise_type": "group-sort",
+      "context": "дійти",
+      "role": "answer"
+    },
+    {
+      "word": "доїхати",
+      "exercise_type": "group-sort",
+      "context": "доїхати",
+      "role": "answer"
+    },
+    {
+      "word": "прибігти",
+      "exercise_type": "group-sort",
+      "context": "прибігти",
+      "role": "answer"
+    },
+    {
+      "word": "прилетіти",
+      "exercise_type": "group-sort",
+      "context": "прилетіти",
+      "role": "answer"
+    },
+    {
+      "word": "поїзді",
+      "exercise_type": "fill-in",
+      "context": "Завтра ми _____ в Карпати на поїзді.",
+      "role": "context"
+    },
+    {
+      "word": "важку",
+      "exercise_type": "fill-in",
+      "context": "Мій старший брат _____ важку валізу на перон.",
+      "role": "context"
+    },
+    {
+      "word": "злякалася",
+      "exercise_type": "fill-in",
+      "context": "Пташка злякалася і _____ від кота.",
+      "role": "context"
+    },
+    {
+      "word": "повела",
+      "exercise_type": "fill-in",
+      "context": "повела",
+      "role": "answer"
+    },
+    {
+      "word": "взяла",
+      "exercise_type": "fill-in",
+      "context": "Вона взяла дитину за руку і _____ її до школи.",
+      "role": "context"
+    },
+    {
+      "word": "відплив",
+      "exercise_type": "fill-in",
+      "context": "відплив",
+      "role": "answer"
+    },
+    {
+      "word": "відійдіть",
+      "exercise_type": "fill-in",
+      "context": "відійдіть",
+      "role": "answer"
+    },
+    {
+      "word": "приплисти",
+      "exercise_type": "match-up",
+      "context": "приплисти",
+      "role": "context"
+    },
+    {
+      "word": "принести",
+      "exercise_type": "match-up",
+      "context": "принести",
+      "role": "context"
+    },
+    {
+      "word": "привести",
+      "exercise_type": "match-up",
+      "context": "привести",
+      "role": "context"
+    },
+    {
+      "word": "привезти",
+      "exercise_type": "match-up",
+      "context": "привезти",
+      "role": "context"
+    },
+    {
+      "word": "магазину",
+      "exercise_type": "quiz",
+      "context": "Вона _____ до магазину за хлібом.",
+      "role": "context"
+    },
+    {
+      "word": "хлібом",
+      "exercise_type": "quiz",
+      "context": "Вона _____ до магазину за хлібом.",
+      "role": "context"
+    },
+    {
+      "word": "багаття",
+      "exercise_type": "quiz",
+      "context": "_____ від багаття, там дуже гаряче!",
+      "role": "context"
+    },
+    {
+      "word": "гаряче",
+      "exercise_type": "quiz",
+      "context": "_____ від багаття, там дуже гаряче!",
+      "role": "context"
+    },
+    {
+      "word": "хлопчик",
+      "exercise_type": "quiz",
+      "context": "Хлопчик взяв м'яч і _____ до друзів.",
+      "role": "context"
+    },
+    {
+      "word": "взяв",
+      "exercise_type": "quiz",
+      "context": "Хлопчик взяв м'яч і _____ до друзів.",
+      "role": "context"
+    },
+    {
+      "word": "м'яч",
+      "exercise_type": "quiz",
+      "context": "Хлопчик взяв м'яч і _____ до друзів.",
+      "role": "context"
+    },
+    {
+      "word": "друзів",
+      "exercise_type": "quiz",
+      "context": "Хлопчик взяв м'яч і _____ до друзів.",
+      "role": "context"
+    },
+    {
+      "word": "собака",
+      "exercise_type": "quiz",
+      "context": "Собака злякався машини і _____ від дороги.",
+      "role": "context"
+    },
+    {
+      "word": "злякався",
+      "exercise_type": "quiz",
+      "context": "Собака злякався машини і _____ від дороги.",
+      "role": "context"
+    },
+    {
+      "word": "машини",
+      "exercise_type": "quiz",
+      "context": "Собака злякався машини і _____ від дороги.",
+      "role": "context"
+    },
+    {
+      "word": "камеру",
+      "exercise_type": "quiz",
+      "context": "Коли я взяв камеру, пташка _____ від мене.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "quiz",
+      "context": "Коли я взяв камеру, пташка _____ від мене.",
+      "role": "context"
+    },
+    {
+      "word": "рано",
+      "exercise_type": "error-correction",
+      "context": "Завтра я відійду на роботу дуже рано.",
+      "role": "context"
+    },
+    {
+      "word": "від'їхала",
+      "exercise_type": "error-correction",
+      "context": "від'їхала",
+      "role": "answer"
+    },
+    {
+      "word": "машина",
+      "exercise_type": "error-correction",
+      "context": "Машина поїхала від нашого будинку.",
+      "role": "context"
+    },
+    {
+      "word": "доїхали",
+      "exercise_type": "error-correction",
+      "context": "Ми доїхали в Карпати і почали відпочивати.",
+      "role": "context"
+    },
+    {
+      "word": "почали",
+      "exercise_type": "error-correction",
+      "context": "Ми доїхали в Карпати і почали відпочивати.",
+      "role": "context"
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "error-correction",
+      "context": "Ми доїхали в Карпати і почали відпочивати.",
+      "role": "context"
+    },
+    {
+      "word": "вікна",
+      "exercise_type": "error-correction",
+      "context": "Він прийшов від вікна, щоб краще бачити кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "краще",
+      "exercise_type": "error-correction",
+      "context": "Він прийшов від вікна, щоб краще бачити кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "бачити",
+      "exercise_type": "error-correction",
+      "context": "Він прийшов від вікна, щоб краще бачити кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "кімнату",
+      "exercise_type": "error-correction",
+      "context": "Він прийшов від вікна, щоб краще бачити кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "error-correction",
+      "context": "Давай відійдемо в кіно сьогодні ввечері!",
+      "role": "context"
+    },
+    {
+      "word": "гори",
+      "exercise_type": "fill-in",
+      "context": "Ми обов'язково _____ в гори влітку.",
+      "role": "context"
+    },
+    {
+      "word": "влітку",
+      "exercise_type": "fill-in",
+      "context": "Ми обов'язково _____ в гори влітку.",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютера",
+      "exercise_type": "fill-in",
+      "context": "Ти _____ від комп'ютера чи ні?",
+      "role": "context"
+    },
+    {
+      "word": "понесе",
+      "exercise_type": "fill-in",
+      "context": "понесе",
+      "role": "answer"
+    },
+    {
+      "word": "книги",
+      "exercise_type": "fill-in",
+      "context": "Вона _____ ці книги в бібліотеку.",
+      "role": "context"
+    },
+    {
+      "word": "бібліотеку",
+      "exercise_type": "fill-in",
+      "context": "Вона _____ ці книги в бібліотеку.",
+      "role": "context"
+    },
+    {
+      "word": "від'їдуть",
+      "exercise_type": "fill-in",
+      "context": "від'їдуть",
+      "role": "answer"
+    },
+    {
+      "word": "готелю",
+      "exercise_type": "fill-in",
+      "context": "Вони _____ від готелю о дев'ятій.",
+      "role": "context"
+    },
+    {
+      "word": "попливете",
+      "exercise_type": "fill-in",
+      "context": "попливете",
+      "role": "answer"
+    },
+    {
+      "word": "човні",
+      "exercise_type": "fill-in",
+      "context": "Ви _____ на човні до острова?",
+      "role": "context"
+    },
+    {
+      "word": "острова",
+      "exercise_type": "fill-in",
+      "context": "Ви _____ на човні до острова?",
+      "role": "context"
+    },
+    {
+      "word": "побіжимо",
+      "exercise_type": "match-up",
+      "context": "побіжимо",
+      "role": "context"
+    },
+    {
+      "word": "понесете",
+      "exercise_type": "match-up",
+      "context": "понесете",
+      "role": "context"
+    },
+    {
+      "word": "створенні",
+      "exercise_type": "true-false",
+      "context": "Префікс 'від-' фокусується на створенні дистанції від певног",
+      "role": "context"
+    },
+    {
+      "word": "піти'",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'піти' можна використовувати, коли ми їдемо на маши",
+      "role": "context"
+    },
+    {
+      "word": "можна",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'піти' можна використовувати, коли ми їдемо на маши",
+      "role": "context"
+    },
+    {
+      "word": "їдемо",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'піти' можна використовувати, коли ми їдемо на маши",
+      "role": "context"
+    },
+    {
+      "word": "машині",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'піти' можна використовувати, коли ми їдемо на маши",
+      "role": "context"
+    },
+    {
+      "word": "відправлятися'",
+      "exercise_type": "true-false",
+      "context": "Слово 'відправлятися' — це правильний український термін для",
+      "role": "context"
+    },
+    {
+      "word": "український",
+      "exercise_type": "true-false",
+      "context": "Слово 'відправлятися' — це правильний український термін для",
+      "role": "context"
+    },
+    {
+      "word": "термін",
+      "exercise_type": "true-false",
+      "context": "Слово 'відправлятися' — це правильний український термін для",
+      "role": "context"
+    },
+    {
+      "word": "від'",
+      "exercise_type": "true-false",
+      "context": "Після дієслів із префіксом 'від-' дуже часто використовуєтьс",
+      "role": "context"
+    },
+    {
+      "word": "поїхати'",
+      "exercise_type": "true-false",
+      "context": "Дієслова 'піти' та 'поїхати' — це дієслова недоконаного виду",
+      "role": "context"
+    },
+    {
+      "word": "регулярну",
+      "exercise_type": "true-false",
+      "context": "Дієслова 'піти' та 'поїхати' — це дієслова недоконаного виду",
+      "role": "context"
+    },
+    {
+      "word": "від'їхати'",
+      "exercise_type": "true-false",
+      "context": "Слово 'від'їхати' пишеться з апострофом.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 22,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "виїжджати",
+      "від'їжджати",
+      "від'їзд",
+      "відбувати",
+      "відбігти",
+      "відпливти",
+      "відходити",
+      "повезти",
+      "повести",
+      "понести"
+    ]
+  },
+  "all_grounded": false
+}

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-(usually ending in a soft sign or «й» in the Nominative), it takes the Genitive ending **-ього**. The soft sign ensures that the consonant before the ending remains soft. For example, «синій олівець» *(blue pencil)* becomes **«синього олівця»**. «Вчорашній день» *(yesterday's day)* changes to **«вчорашнього дня»**, and «літнє море» *(summer sea)* becomes **«літнього моря»**. Remember that the soft sign is crucial here. «Читаємо українською» Ми живемо недалеко від синього моря. *(We live not far from the blue sea.)* У нього немає вчорашнього хліба. *(He does not have yesterday's bread.)* Я не пам'ятаю останнього уроку. *(I do not remember the last lesson.)* Він не має осіннього пальта. *(He does not have an autumn coat.)* Вони приїхали після ранкового дощу. *(They arrived after the morning rain.)* Feminine adjectives take completely different endings in the Genitive case. Hard stem adjectives take the ending **-ої**. For example, «нова книга» *(new book)* becomes **«нової книги»**, and «гарна дівчина» *(pretty girl)* becomes **«гарної дівчини»**. Soft stem adjectives take the ending **-ьої** or **-ньої**. For instance, «синя сукня» *(blue dress)* changes to **«синьої сукні»**, and «вечірня школа» *(evening school)* becomes **«вечірньої школи»**. Pay close attention to these feminine endings. The Ukrainian **-ої** and **-ьої** are unique and distinct. They are pronounced with two clear vowel sounds at the end, unlike the single blended sound found in Russian. Do not confuse them. «Читаємо українською» Вона читає сторінку з нової книги. *(She is reading a page from a new book.)* У мене немає синьої ручки. *(I do not have a blue pen.)* Вони живуть біля великої річки. *(They live near a large river.)* Він вийшов з вечірньої школи. *(He came out of the evening school.)* Це лист від моєї старої бабусі. *(This is a letter from my old grandmother.)* Ми йдемо від гарної площі. *(We are walking from the beautiful square.)* We frequently use Genitive adjectives in full phrases after prepositions like «без», «для», «біля», and «від» *(from)*. When you form a sentence, both the adjective and the noun must align in the Genitive case. For example, «Я не можу жити без цієї доброї кави» *(I cannot live without this good coffee)*. Or when giving a present: «Це подарунок для мого старого вчителя» *(This is a gift for my old teacher)*. You can string multiple adjectives together, and they all take the same Genitive ending. For example, «без великого чорного стола» *(without a big black table)*. Practice saying the adjective and the noun together as one flowing unit. «Читаємо українською» Я йду додому від старого лікаря. *(I am going home from the old doctor.)* Ми граємо у футбол біля нового стадіону. *(We are playing football near the new stadium.)* Вона п'є чай без солодкого цукру. *(She drinks tea without sweet sugar.)* Це ліки для маленької дитини. *(This is medicine for a small child.)* У мене є лист від старшого брата. *(I have a letter from an older brother.)* Я не хочу жити без вільної України. *(I do not want to live without a free Ukraine.)* <!-- INJECT_ACTIVITY: fill-in-adj-noun -->
+English word "home". It sounds like [-oho]. Never pronounce it as [-ovo], which is a feature of the Russian language. Emphasizing the [h] sound makes your Ukrainian sound authentic, decolonized, and completely natural. ::: Not all adjectives have hard stems. Some adjectives belong to the soft group. You can easily recognize them because their dictionary form ends in a soft consonant followed by «-ій», such as «синій» (blue), «вчорашній» (yesterday's), or «літній» (summer). For these masculine and neuter adjectives, the Genitive ending becomes **-ього**. The soft sign is crucial here because it ensures that the consonant right before the ending remains soft during pronunciation. Сьогодні немає синього олівця на моєму столі. Ми дуже довго чекали цього теплого літнього дня. Він зовсім не пам'ятає вчорашнього вечора. Це був колір глибокого моря. > *Today there is no blue pencil on my table. We waited a very long time for this warm summer day. He does not remember yesterday evening at all. It was the color of the deep sea.* Feminine adjectives have entirely distinct Genitive endings. You do not use the «-ого» or «-ього» suffixes here. Instead, for hard stem feminine adjectives, you drop the «-а» and add the ending **-ої**. For soft stem adjectives, which typically end in «-я» in the Nominative case, you change the ending to **-ьої** or **-ньої**. This creates a beautiful, melodic sound that is very characteristic of spoken Ukrainian. Він уважно читає першу сторінку з нової книги. Я ніколи не бачив цієї гарної дівчини раніше. Вона купила дорогі ґудзики для синьої сукні. Учні повільно повертаються з вечірньої школи. > *He carefully reads the first page from a new book. I have never seen this beautiful girl before. She bought expensive buttons for a blue dress. The students slowly return from evening school.* :::tip **Watch out for calques!** Notice that the Ukrainian feminine Genitive endings are **-ої** and **-ьої** (for example, «нової», «синьої»). They are distinct from the Russian endings. Pay close attention to pronouncing these Ukrainian vowels clearly to avoid mixing the two languages and to preserve the unique rhythm of Ukrainian. ::: The most frequent and practical way you will use these Genitive adjectives is alongside prepositions that demand the Genitive case. Prepositions such as «без» (without), «для» (for), «біля» (near), and «від» (from) are your primary triggers. Whenever you use one of these words to build a phrase, you must expect both the descriptive adjective and the main noun to take their Genitive forms. Mastering these combinations will dramatically elevate your speaking ability. Я справді не можу працювати без того важливого документа. Це спеціальний подарунок для нашої нової вчительки. Ми вчора зустрілися біля великого торгового центру. Вона нарешті отримала повідомлення від молодого лікаря. > *I truly cannot work without that important document. This is a special gift for our new teacher. We met near the large shopping center yesterday. She finally received a message from the young doctor.* <!-- INJECT_ACTIVITY: fill-in, Put the adjective and noun into the correct Genitive form, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -566,7 +566,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -593,14 +660,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

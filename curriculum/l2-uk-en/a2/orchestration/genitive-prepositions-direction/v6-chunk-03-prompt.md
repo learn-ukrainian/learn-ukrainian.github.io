@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-the station.)* To form the Genitive case correctly with **до**, pay close attention to the stem of the noun. For masculine nouns, hard stems often take **-у**, while soft stems take **-ю**. However, remember that specific objects, people, and cities usually take **-а** or **-я**. Institutions, abstract concepts, and large buildings usually take **-у** or **-ю**. For feminine nouns, hard stems take **-и**, while soft stems take **-ії** or **-і** (especially if they end in a sibilant sound like "щ", "ч", or "ш"). Knowing these patterns will help you guess the right ending for new words. :::note Форми родового відмінка (Genitive Forms) **Чоловічий рід (Masculine):** будинок *(building)* → до будинку музей *(museum)* → до музею університет *(university)* → до університету **Жіночий рід (Feminine):** школа *(school)* → до школи станція *(station)* → до станції площа *(square)* → до площі ::: :::tip Читаємо українською — Вони йдуть до великого будинку. *(They are going to the big building.)* — Туристи їдуть до музею. *(The tourists are going to the museum.)* — Студенти поспішають до університету. *(The students are hurrying to the university.)* — Діти йдуть до школи. *(The children are going to school.)* — Машина під'їхала до станції. *(The car drove up to the station.)* — Ми йдемо до центральної площі. *(We are going to the central square.)* ::: <!-- INJECT_ACTIVITY: fill-in-genitive-forms --> When you add adjectives to describe your destination, they must also match the Genitive case. For masculine and neuter adjectives, the ending is **-ого**. For feminine adjectives, the ending is **-ої**. Adjectives always follow the noun they describe in gender, number, and case. This makes the whole phrase "agree" perfectly. You will hear this matching rhythm clearly when Ukrainians speak. :::note Узгодження прикметників (Adjective Agreement) новий будинок *(new building)* → до нового будинку велика станція *(big station)* → до великої станції старий друг *(old friend)* → до старого друга ::: :::tip Читаємо українською — Ми йдемо до нового будинку. *(We are going to the new building.)* — Поїзд прибуває до великої станції. *(The train is arriving at the big station.)* — Я їду до старого друга. *(I am traveling to an old friend.)* — Вона йде до гарної школи. *(She is going to a beautiful school.)* — Туристи їдуть до історичного музею. *(The tourists are going to the historical museum.)* ::: There is one special word you will use every single day: **додому** *(homeward, to home)*. Historically, it comes directly from the two-word phrase **до дому** *(to the house)*. Today, it is written as one single word and acts as a fixed adverb of direction. You do not need to think about cases or endings here; just use it as a complete direction word whenever you are heading back to your own house or apartment. :::tip Читаємо українською — Після роботи я йду додому. *(After work I am going home.)* — Діти дуже втомилися і хочуть додому. *(The children are very tired and want to go home.)* — Коли ти поїдеш додому сьогодні? *(When will you go home today?)* :::
+підійшла до зупинки. > *The student is hurrying quickly to the university for the first lecture. We quietly approached the large building near the river. The tourists are walking slowly to the historical museum in the center. My little sister walks to school every morning. Our fast train arrives at the station on schedule. We are walking for a long time from the main square to the theater. Our tourist group approached the stop.* Pay close attention to the masculine words. While cities take **-а**, institutions like **університет** and buildings like **будинок** take **-у**. The feminine words follow the expected vowel shifts: hard stems take **-и** (школа → школи), soft stems take **-ії** (станція → станції), and sibilant stems take **-і** (площа → площі). <!-- INJECT_ACTIVITY: fill-in, Complete sentences with 'до' + correct noun forms for direction, 8 items --> When you add an adjective to describe your destination, the adjective must also take the Genitive case to match the noun. Masculine and neuter adjectives end in **-ого**, while feminine adjectives end in **-ої**. > — **Олег:** Ви куди йдете зараз по цій вулиці? *(Where are you walking now along this street?)* > — **Марія:** Ми йдемо до нового будинку. Там живе мій старший брат. *(We are walking to the new building. My older brother lives there.)* > — **Олег:** А твоя мама куди поїхала зранку? *(And where did your mom drive to in the morning?)* > — **Марія:** Вона поїхала до старого друга. А автобус їде до великої станції. *(She drove to an old friend. And the bus is driving to the large station.)* > — **Олег:** Я теж дуже поспішаю до центральної площі на зустріч. *(I am also hurrying very much to the central square for a meeting.)* > — **Марія:** Вони завжди повертаються до рідного міста на свята. *(They always return to their native city for the holidays.)* Adjectives always match the gender, number, and case of the noun they describe. This creates a rhythmic harmony in the sentence, clearly linking the description to the destination. There is one very important direction word that does not require a separate noun or a preposition at all. The word for "homeward" or "to home" is simply **додому**. Читаємо українською: Після важкої роботи я завжди йду додому відпочивати. Діти довго грали в парку, а потім побігли додому. Вона хоче швидше повернутися додому до родини. Ввечері всі студенти повертаються додому. Мій кіт теж любить бігати додому, коли хоче їсти. > *After hard work, I always go home to rest. The children played in the park for a long time, and then ran home. She wants to return home faster to her family. In the evening, all the students return home. My cat also loves to run home when it wants to eat.* Historically, this word was the phrase **до дому** (to the house), but over time it merged into a single adverb. You never need to use a preposition before it; the word itself already contains the direction and the destination.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -477,7 +477,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -504,14 +571,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

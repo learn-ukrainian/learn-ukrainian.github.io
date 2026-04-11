@@ -1,17 +1,19 @@
-## Підсумок — Summary
+## Підсумок — Summary (~150 words)
 
-You have mastered three prepositions that require the Genitive case. Let's review the main concepts.
+In this module, we explored how to talk about origins, materials, sources, and time sequences. You learned that expressing "from" a place requires the preposition **з** followed by the Genitive case.
 
-How do we say we are "from" a city? We use **з** *(from)* plus the Genitive case: «Вона з Києва» *(She is from Kyiv)*.
+Ми тепер знаємо, як сказати, з якого ми міста чи країни. Ми також розуміємо, з чого зроблені різні речі навколо нас.
 
-When do we use **зі** instead of **з**? We use it before a consonant cluster for easier pronunciation. For example: «Я зі Львова» *(I am from Lviv)* or «Він іде зі школи» *(He is walking from school)*.
+> *We now know how to say which city or country we are from. We also understand what various things around us are made of.*
 
-What is the difference between **з** and **від**? Both mean "from", but **з** indicates a place or material, while **від** indicates a person as the source. Compare: «Лист з Америки» *(A letter from America)* versus «Лист від брата» *(A letter from a brother)*.
+To maintain the beautiful flow of the language, remember the rules of euphony. We use the variant **зі** before words that start with a cluster of consonants, such as **зі Львова** or **зі школи**. This makes pronunciation much smoother and more natural.
 
-Which case follows **після** *(after)*? It strictly requires the Genitive case, just like **до** *(before)*.
+When deciding between **з** and **від**, think about the source. We use **з** for places and materials, but we use **від** when receiving something from a specific person. Finally, we learned to describe our daily routines using **після**, which also always requires the Genitive case to show what happens next.
 
-Читаємо українською:
-> — **Питання:** Як правильно: з Львова чи зі Львова? *(Question: How is it correct: з Львова or зі Львова?)*
-> — **Відповідь:** Правильно говорити «зі Львова». *(Answer: It is correct to say "зі Львова".)*
-> — **Питання:** Який відмінок після прийменника «після»? *(Question: Which case is after the preposition "після"?)*
-> — **Відповідь:** Тільки родовий відмінок. *(Answer: Only the Genitive case.)*
+:::note
+**Самоперевірка — Self-check**
+— **Питання:** Як правильно: з Львова чи зі Львова?
+— **Відповідь:** Зі Львова.
+— **Питання:** Який відмінок після прийменника «після»?
+— **Відповідь:** Родовий.
+:::

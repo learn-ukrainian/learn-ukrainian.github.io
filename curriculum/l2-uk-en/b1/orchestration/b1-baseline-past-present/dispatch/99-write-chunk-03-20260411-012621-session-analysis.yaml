@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-10T23-25-908d4e05.json
+phase: write-chunk-03
+prompt_chars: 51186
+response_chars: 6452
+prompt_words: 6879
+response_words: 988
+sections:
+- name: header
+  start: 0
+  length: 442
+  fraction: 0.0086
+- name: skeleton
+  start: 442
+  length: 1377
+  fraction: 0.0269
+- name: prior_summary
+  start: 1819
+  length: 3358
+  fraction: 0.0656
+- name: plan
+  start: 5177
+  length: 17625
+  fraction: 0.3443
+- name: wiki
+  start: 17934
+  length: 28256
+  fraction: 0.552
+- name: output_spec
+  start: 51058
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: If a woman looks into the mirror, the reflection must be feminine (**-ла**).
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-tense-forms
+  covered: false
+  coverage_note: marker missing

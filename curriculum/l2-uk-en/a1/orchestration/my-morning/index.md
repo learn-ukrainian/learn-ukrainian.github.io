@@ -1,6 +1,6 @@
 # Build Summary: my-morning (A1)
 
-Generated: 2026-04-09 05:38
+Generated: 2026-04-11 01:29
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-09 05:38
 | pre-verify | complete | 2026-04-09 03:32:02 |
 | write | complete | 2026-04-09 03:33:33 |
 | exercises | complete | 2026-04-09 03:33:33 |
-| activities | complete | 2026-04-09 03:34:49 |
+| activities | complete | 2026-04-10 22:57:07 |
 | verify-exercises | complete | 2026-04-09 03:34:49 |
 | annotate | complete | 2026-04-09 03:34:49 |
 | vocab | complete | 2026-04-09 03:35:56 |
 | enrich | complete | 2026-04-09 03:35:56 |
 | verify | complete | 2026-04-09 03:35:57 |
-| review | complete | 2026-04-09 03:38:36 |
 | stress | complete | 2026-04-09 03:38:38 |
-| publish | complete | 2026-04-09 03:38:40 |
+| review | complete | 2026-04-10 23:29:00 |
+| publish | complete | 2026-04-10 23:29:05 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-09 05:38
 |-------|------|
 | 1 | my-morning-review-r1.md |
 | 2 | my-morning-review-r2.md |
+| 3 | my-morning-review-r3.md |
 
 ## Dispatch Log
 
@@ -37,17 +38,21 @@ Generated: 2026-04-09 05:38
 | skeleton | gemini (gemini-3-flash-preview) | 51s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 91s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 77s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 145s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 60s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 120s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 130s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

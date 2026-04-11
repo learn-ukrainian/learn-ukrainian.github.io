@@ -1,6 +1,6 @@
 # Build Summary: where-is-it (A1)
 
-Generated: 2026-04-09 19:39
+Generated: 2026-04-11 01:33
 
 ## Pipeline Phases
 
@@ -17,15 +17,16 @@ Generated: 2026-04-09 19:39
 | vocab | complete | 2026-04-09 16:39:37 |
 | enrich | complete | 2026-04-09 16:39:37 |
 | verify | complete | 2026-04-09 16:39:37 |
-| review | complete | 2026-04-09 16:41:02 |
 | stress | complete | 2026-04-09 16:41:04 |
-| publish | complete | 2026-04-09 16:41:07 |
+| review | complete | 2026-04-10 23:33:46 |
+| publish | complete | 2026-04-10 23:33:50 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | where-is-it-review-r1.md |
+| 2 | where-is-it-review-r2.md |
 
 ## Dispatch Log
 
@@ -38,6 +39,7 @@ Generated: 2026-04-09 19:39
 | activities | gemini-tools (gemini-3.1-pro-preview) | 387s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 484s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 160s | ✅ |
 | pre-verify-retry | gemini-tools (gemini-3-flash-preview) | 600s | ❌ |
 | pre-verify-retry | gemini-tools (gemini-3-flash-preview) | 279s | ❌ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 77s | ✅ |
@@ -51,6 +53,7 @@ Generated: 2026-04-09 19:39
 - `exercise-verification.json`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-1-ша особа однини (я): **роблю**, **говорю** * 2-га особа однини (ти): **робиш**, **говориш** * 3-тя особа однини (він/вона/воно): **робить**, **говорить** * 1-ша особа множини (ми): **робимо**, **говоримо** * 2-га особа множини (ви): **робите**, **говорите** * 3-тя особа множини (вони): **роблять**, **говорять** Тут ми дуже чітко бачимо літеру «и» у більшості особових форм. Важливо запам'ятати одне базове правило: перша і друга дієвідміни мають абсолютно однакові закінчення тільки в першій особі однини (я пишу, я роблю). В усіх інших особах вони категорично різняться своїми тематичними голосними. Глибоке розуміння цієї різниці є ключем до правильного та грамотного мовлення, адже змішування закінчень (наприклад, сказати «він говоре» замість правильного «він говорить») є однією з найпоширеніших помилок серед початківців. Як швидко і точно визначити дієвідміну, якщо ви сумніваєтеся? Існує надійний метод — перевірка за формою третьої особи множини (вони). Цей спосіб є детермінованим і працює майже завжди. Якщо дієслово у формі «вони» має закінчення **-уть** або **-ють** — це гарантовано перша дієвідміна. Наприклад: вони **читають** *(they read)*, вони **несуть** *(they carry)*. Якщо ж дієслово у формі «вони» закінчується на **-ать** або **-ять** — це друга дієвідміна. Наприклад: вони **сплять** *(they sleep)*, вони **стоять** *(they stand)*. Цей трюк особливо корисний для дієслів, які виглядають нестандартно. Візьмемо дієслово **хотіти** *(to want)*. Здавалося б, воно схоже на інші, але у формі «вони» ми маємо **хочуть** *(they want)*. Отже, це перша дієвідміна (ти хочеш, він хоче). Натомість дієслово **боятися** *(to be afraid)* має форму **бояться** *(they are afraid)* (закінчення -ять), тому це друга дієвідміна (ти боїшся, він боїться). Ще одна важлива особливість дієвідмінювання — **чергування приголосних** *(consonant alternations)*. Під час утворення форм теперішнього часу змінюється не лише закінчення, але й приголосний звук перед ним. Це явище найчастіше відбувається у формі першої особи однини (я). Деякі приголосні змінюються так: * **д** змінюється на **дж**: **сидіти** *(to sit)* — я **сиджу** (але: ти сидиш), **водити** *(to lead)* — я **воджу**. * **с** змінюється на **ш**: **просити** *(to request)* — я **прошу** (але: ти просиш), **носити** *(to carry)* — я **ношу**. * **з** змінюється на **ж**: **возити** *(to transport)* — я **вожу** (але: ти возиш). Крім того, губні приголосні **б, п, в, м, ф** перед закінченням -ю отримують додатковий звук «л». Наприклад: * **любити** *(to love)* — я **люблю** (але: ти любиш) * **купити** *(to buy)* — я **куплю** (але: ти купиш) Ці чергування роблять вимову більш плавною та природною для української фонетичної системи. Вони відбуваються тільки в першій особі однини для дієслів другої дієвідміни, а в інших особах повертається початковий приголосний основи. Зверніть особливу увагу на одну дуже характерну рису української мови. У третій особі однини (він, вона, воно) для дієслів першої дієвідміни ми ніколи не пишемо і не вимовляємо літеру «т» у самому кінці слова. Ми завжди говоримо: він **знає**, вона **несе**, воно **пише**. Відпадіння цього кінцевого приголосного звука є ключовою історичною та морфологічною відмінністю від російської мови, де ця літера неухильно зберігається. Ця граматична особливість є надзвичайно важливим маркером української мовної ідентичності та автентичного, природного звучання. <!-- INJECT_ACTIVITY: group-sort, Distribute verbs between I and II conjugation classes, 10 items -->
+цих закінчень є критично важливим для того, щоб ваша українська звучала природно і грамотно. Плутанина між «е» та «и» в закінченнях — це дуже помітна помилка. The easiest and most deterministic way to identify a verb's conjugation class is to look at its third person plural form, which corresponds to the pronoun «вони». This is the ultimate test. If the verb ends in **-уть** or **-ють**, it always belongs to the first conjugation. If it ends in **-ать** or **-ять**, it always belongs to the second conjugation. This simple rule will save you from endless guessing. :::tip **The 3rd Person Plural Trick** Always check the «вони» form when in doubt. First conjugation: **-уть** / **-ють** Second conjugation: **-ать** / **-ять** ::: You must be careful with some tricky verbs that look like they belong to one group but actually belong to another. For example, the verb «хотіти» ends in «-іти», which often signals the second conjugation. But if we look at its plural form, it is «хочуть». Because it has the **-уть** ending, it belongs to the first conjugation, giving us forms like «ти хочеш» and «він хоче». Similarly, the verb «стояти» looks like it might belong to the first conjugation because of the «-яти» ending, but its plural form is «стоять». The **-ять** ending places it firmly in the second conjugation, resulting in forms like «ти стоїш» and «вона стоїть». Ви, напевно, помітили щось незвичне, коли ми відмінювали дієслово «робити». В інфінітиві ми маємо літеру «б», але у формі першої особи однини з'являється «роблю», що додає зайвий звук. Це мовне явище називається чергуванням приголосних, і в теперішньому часі воно впливає виключно на форму першої особи однини. Певні приголосні в кінці основи змінюються перед закінченням «-у» або «-ю». Найпоширеніші зміни такі: звук «д» перетворюється на «дж» (сидіти — сиджу), а «с» стає «ш» (просити — прошу). Також звук «з» переходить у «ж» (возити — вожу), а буквосполучення «зд» стає «ждж» (їздити — їжджу). Крім того, губні приголосні, такі як «б», «п», «в», «м» та «ф», отримують додатковий звук «л» перед закінченням. Це означає, що «б» стає «бл» (любити — люблю), а «п» перетворюється на «пл» (терпіти — терплю). Ці чергування роблять слова легшими для вимови та дозволяють їм звучати більш природно. Не дозволяйте їм збити вас із пантелику. Решта парадигми завжди повертається до оригінального приголосного, який ви бачите в інфінітиві. :::info **Decolonization Marker: The Dropped "-ть"** A key morphological feature of the modern Ukrainian language is the dropping of the **-ть** ending in the third person singular of the first conjugation. While some neighboring languages retain this ending (e.g., Russian *он знает*, *он несёт*), Ukrainian drops it entirely: **він знає**, **він несе**. This is not a colloquial simplification or a recent change; it is the established literary standard and a historical marker of Ukrainian linguistic identity. Always ensure your third person singular verbs in the first conjugation end cleanly on the thematic vowel without any trailing consonants. ::: <!-- INJECT_ACTIVITY: group-sort, Distribute verbs between I and II conjugation classes -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -610,7 +610,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -623,14 +690,34 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*

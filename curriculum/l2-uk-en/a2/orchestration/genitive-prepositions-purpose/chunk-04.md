@@ -1,19 +1,16 @@
-## Підсумок — Summary
+## Підсумок — Summary (~150 words)
 
-In this module, we explored three common functions that require the Genitive case. First, we learned how to express purpose or an intended recipient using **для** (for). Next, we discussed how to describe the absence of something using **без** (without). Finally, we looked at how to define a location using the prepositions **біля** (near), **навпроти** (opposite), and **коло** (by). 
+In this module, we explored three essential prepositions that all share one strict grammatical requirement: they always take the Genitive case. You learned how to express purpose or designate a recipient using **для** (for). We also covered how to indicate the absence or lack of something with **без** (without). Finally, we mapped out spatial relationships using the location prepositions **біля**, **навпроти**, and **коло** (near, opposite, by). Mastering these small words drastically expands your ability to explain why you are doing something, what you are missing, and exactly where things are located in the world around you.
 
-Remember that all of these prepositions always demand the Genitive case. The noun that follows them must change its ending according to its gender and stem.
+Here is a final self-check list before you move on to the next lesson:
+1. Do you remember the typical ending for masculine nouns after the preposition **біля**?
+2. How do you say "coffee without sugar" in Ukrainian?
+3. Which preposition is the best choice to translate the word "opposite"?
 
-«Читаємо українською»:
-— Цей подарунок **для** мами. *(This gift is for mom.)*
-— Я п'ю чай **без** цукру. *(I drink tea without sugar.)*
-— Моя машина стоїть **навпроти** школи. *(My car stands opposite the school.)*
-— Ми зустрінемося **біля** театру. *(We will meet near the theater.)*
-— Кіт спить **коло** вікна. *(The cat sleeps by the window.)*
+Ви чудово попрацювали сьогодні. Знання цих прийменників допоможе вам вільно орієнтуватися в місті та замовляти улюблені напої.
 
-Before we finish, try this quick self-check:
-1. Чи пам'ятаєте ви закінчення для чоловічого роду після «біля»? *(Do you remember the endings for masculine gender after "біля"?)*
-2. Як сказати "coffee without sugar"? *(How to say "coffee without sugar"?)*
-3. Який прийменник краще для "opposite"? *(Which preposition is better for "opposite"?)*
+> *You did a great job today. Knowing these prepositions will help you freely navigate the city and order your favorite drinks.*
 
-Keep practicing these small but important words, and soon the Genitive case will feel natural.
+:::note
+**Quick tip** — When in doubt about whether a masculine noun takes **-а** or **-у** in the Genitive case, remember that concrete, physical objects usually take **-а** (біля стола), while abstract concepts or substances often take **-у** (без цукру).
+:::

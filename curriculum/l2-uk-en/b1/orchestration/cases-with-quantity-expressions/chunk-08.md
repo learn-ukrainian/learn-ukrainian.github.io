@@ -1,21 +1,33 @@
 ## Підсумок
 
-Узгодження кількісних числівників з іменниками — це одна з найважливіших тем в українській граматиці. Ви вже побачили, що ця граматична система має свою унікальну логіку і суттєво відрізняється від інших слов'янських мов. Її не можна перекладати дослівно. Щоб вам було значно легше запам'ятати всі ці базові правила узгодження, ми підготували для вас коротку **таблицю-шпаргалку** *(cheat sheet table)*:
+Let us review the most important rules for quantitative expressions. The way numerals interact with nouns is one of the most distinctive features of the Ukrainian language, requiring your constant attention to cases and endings.
 
-| Числівник | Відмінок іменника | Приклад |
+Узгодження числівників з іменниками залежить від останнього слова у складеному числі. Це фундаментальне правило, яке допомагає швидко будувати правильні фрази під час розмови. Якщо число закінчується на один, ми використовуємо називний відмінок однини. Якщо на два, три або чотири — називний відмінок множини. А числа від п'яти і більше вимагають родового відмінка множини.
+
+> *The agreement of numerals with nouns depends on the last word in a compound number. This is a fundamental rule that helps you quickly build correct phrases during a conversation. If the number ends in one, we use the nominative singular. If in two, three, or four — the nominative plural. And numbers from five onwards require the genitive plural.*
+
+Here is a quick reference table to help you remember the core agreement patterns in the nominative case:
+
+| Числівник (Останнє слово) | Відмінок іменника | Приклад |
 | :--- | :--- | :--- |
-| **1 (один, одна, одне)** | Називний однини | один новий стілець, одна цікава книжка |
-| **2, 3, 4 (обидва, обидві)** | Називний множини | два великі столи, три широкі вікна |
-| **5 і більше (5-20, 30, 100...)** | Родовий множини | п'ять розумних студентів, десять метрів |
-| **Дроби (половина, третина, чверть)** | Родовий однини | половина солодкого яблука, чверть години |
-| **Збірні (двоє, троє, четверо)** | Родовий множини | двоє веселих хлопців, троє дверей |
+| **1** (один, одна, одне) | Називний однини | двадцять одна сторінка |
+| **2, 3, 4** | Називний множини | тридцять дві сторінки |
+| **5... 20, 30...** (та інші) | Родовий множини | сорок п'ять сторінок |
 
-Тепер настав ідеальний час перевірити свої нові знання. Спробуйте швидко дати відповіді на цей **список самоперевірки** *(self-check list)*:
+:::info
+**Grammar box** — Remember that collective numerals like **двоє** and **троє** are only used with specific groups of nouns, such as masculine persons or pluralia tantum nouns. They always require the genitive plural. You can say **двоє хлопців** (two boys), but you must say **два столи** (two tables), because tables are inanimate objects.
+:::
 
-*   Чи можете ви правильно узгодити складені числівники «21» та «22» з іменником «сторінка»? Завжди пам'ятайте, що форму визначає лише останнє слово: двадцять одна сторінка, але двадцять дві сторінки.
-*   Коли саме ви використаєте збірний числівник «двоє», а коли стандартний кількісний «два»? Ми обов'язково кажемо «двоє хлопців» (особи чоловічої статі), але граматика вимагає казати «два столи» (неістоти).
-*   Як правильно сказати «1.5 hours» українською мовою? Правильна та єдина літературна форма — «півтори години», оскільки слово «година» жіночого роду.
-*   Який відмінок завжди вимагає неозначено-кількісне слово «кілька»? Воно, як і слово «багато», постійно керує родовим відмінком множини: кілька нових книжок, кілька теплих днів.
-*   Як правильно провідміняти базовий вираз «три студенти» в орудному відмінку? У непрямих відмінках числівник та іменник завжди повинні стояти в однаковому відмінку: з трьома студентами.
+Щоб вільно використовувати ці конструкції, намагайтеся звертати увагу на числа у повсякденному житті. Коли ви йдете до магазину, подумки перекладайте ціни та вагу продуктів українською мовою. Практика з реальними об'єктами допоможе вам швидко закріпити правила узгодження та навчитися автоматично обирати правильний відмінок.
 
-Ці фундаментальні граматичні знання стануть вашим надійним інструментом для подальшого навчання. Зовсім скоро ми почнемо активно використовувати ці складні кількісні вирази у розширених синтаксичних конструкціях. Ви навчитеся впевнено обговорювати особисті фінанси, аналізувати економічну статистику та детально описувати графіки. Ви зможете вільно і без помилок застосовувати їх у своєму щоденному **професійному мовленні** *(professional speech)*. Регулярна розмовна практика та виконання інтерактивних вправ обов'язково допоможуть вам довести ці корисні навички до повного автоматизму.
+> *To use these constructions fluently, try to pay attention to numbers in everyday life. When you go to the store, mentally translate the prices and weights of products into Ukrainian. Practicing with real objects will help you quickly solidify the agreement rules and learn to automatically choose the correct case.*
+
+Now, test your understanding with this short self-check list. If you can answer these questions confidently, you are ready to move forward:
+
+*   **Self-check 1:** Can you agree the numbers 21 and 22 with the noun for page? The last digit dictates the rule. It is **двадцять одна сторінка** and **двадцять дві сторінки**.
+*   **Self-check 2:** When do you use the collective numeral instead of the regular cardinal? Use the collective form for groups of people, like **двоє хлопців**. Use the regular cardinal numeral for inanimate objects, like **два столи**.
+*   **Self-check 3:** How do you say "1.5 hours" in Ukrainian? The word for hour is feminine, so we use the feminine form of one and a half, which is **півтори години**.
+*   **Self-check 4:** Which case does the word "кілька" require? Indefinite quantity words require the genitive plural, just like the number five. We say **кілька студентів**.
+*   **Self-check 5:** How do you decline the phrase for "three students" in the instrumental case? In oblique cases, the noun and the numeral must agree in the same case. The instrumental form is **трьома студентами**.
+
+In the next module, we will explore advanced pronouns, which will add even more flexibility and precision to your speech. This will be your final grammatical stepping stone before our comprehensive communication checkpoint.

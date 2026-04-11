@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the "торт" and "Олег" specific scenario from the `dialogue_situations`
+    motivation in the plan ("Хтось з'їв торт... Дехто підозрює Олега").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Used the incorrect colloquial form "з абиким" instead of "аби з ким".
+    Semantic error with "Будь-хто з наших гостей зараз сидить у залі" (used meaning
+    "everyone" instead of "anyone"). Minor calque "пря
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'Confusing explanation: "Ми завжди пишемо їх разом і ставимо прийменник
+    прямо перед словом. Ми кажемо тільки так: «з кимось»." (implies writing as a single
+    word, but "з кимось" is two words).'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Used all required and recommended vocabulary words in natural context.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: Premature placement of exercise markers `group-sort` and `fill-in` before
+    the corresponding grammar (`ні-`, `будь-`, `де-`) was taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Good teacher persona, uses natural examples like "Хтось забув парасольку",
+    but the calque "прямо зараз" slightly breaks the immersion.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections present, word count (2762) is excellent and well above the
+    2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly identifies and warns against Russian suffixes "-то" and "-либо".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The dialogue is a bit stilted due to the forced inclusion of pronouns,
+    and the line "Будь-хто з наших гостей зараз сидить" makes no semantic sense in
+    context.
+findings: []

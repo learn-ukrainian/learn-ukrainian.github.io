@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-communication (A1)
 
-Generated: 2026-04-09 05:26
+Generated: 2026-04-11 02:00
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-09 05:26
 | vocab | complete | 2026-04-09 03:25:42 |
 | enrich | complete | 2026-04-09 03:25:42 |
 | verify | complete | 2026-04-09 03:25:42 |
-| review | complete | 2026-04-09 03:26:49 |
 | stress | complete | 2026-04-09 03:26:50 |
-| publish | complete | 2026-04-09 03:26:52 |
+| review | complete | 2026-04-11 00:00:09 |
+| publish | complete | 2026-04-11 00:00:13 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | checkpoint-communication-review-r1.md |
+| 2 | checkpoint-communication-review-r2.md |
 
 ## Dispatch Log
 
@@ -39,13 +40,16 @@ Generated: 2026-04-09 05:26
 | activities | gemini-tools (gemini-3.1-pro-preview) | 157s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 301s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covered almost all points perfectly, but missed the shorter vocabulary
+    variants `баба` and `дід` which were explicitly specified in the outline: "Extended:
+    бабуся/баба, дідусь/дід".'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Highly accurate text, except for the stress mark on Катя́ (should be Ка́тя).
+    The rest of the vocabulary, phrasing, and structures are correct.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Perfectly follows the constraint to avoid introducing
+    the genitive negative prematurely ("У мене немає") and teaches possession as memorized
+    chunks instead.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required and recommended words are present. Missed the informal/shorter
+    variants `баба` and `дід` for grandparents from the section outline.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed optimally after each target concept and align perfectly
+    with the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Friendly, natural tone. Great cultural context about showing photos and
+    the nature of small talk in Ukraine.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Word count is strong (1456 words). Deducted slightly for an awkward repetition
+    of the speaker tag `> **Оля:**` three times consecutively for a single conversational
+    turn.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly emphasizes that there is no single word for "grandparents" in
+    Ukrainian, a great decolonized insight that prevents learners from mapping English
+    directly onto Ukrainian.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and fit the scenarios perfectly, though the line-by-line
+    formatting of Olya's monologue was slightly robotic.
+findings: []
