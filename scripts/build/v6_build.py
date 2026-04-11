@@ -850,35 +850,30 @@ def _should_skip_batch_module(level: str, slug: str, step: str,
 
     Skip policy — a module is ONLY skipped when ALL of these are true:
 
-      1. For `--step review`: latest saved review score ≥ threshold.
-         (Anything else means we need to run review again.)
-
-      2. For any other step:
-         - All pipeline phases complete
-         - Status cache is FRESH (content + audit engine both older than
-           status.json — otherwise re-audit before trusting it)
-         - Audit overall == "pass" AND every tracked gate has status "pass"
-           (gates in "info"/"pending" state are treated as unverified →
-           re-run, never skip)
-         - Latest review score ≥ review_threshold (default 9.0)
+      - All required pipeline phases complete (every phase for non-review
+        steps; the `review` phase only when `--step review`)
+      - Status cache is FRESH (content + audit engine both older than
+        status.json — otherwise re-audit before trusting it)
+      - Audit overall == "pass" AND every tracked gate has status "pass"
+        (gates in "info"/"pending" state are treated as unverified →
+        re-run, never skip)
+      - Latest review score ≥ review_threshold (default 9.0)
 
     Design intent: the skip logic is the LAST line of defense against
     shipping broken modules. Err on the side of re-running. User rule
     (2026-04-10): "never skip if audit not passing or review below 9."
+
+    Bug fix 2026-04-11: the `--step review` branch used to short-circuit
+    on review-score-only and ignore the audit. That let modules with
+    failing immersion / density gates skip the heal pipeline because
+    their old review still scored 9+. The audit-gate check is now
+    enforced for every step, including review.
     """
     if step == "review":
         completed = _load_completed_phases(level, slug)
         if "review" not in completed:
             return False, "review not complete yet"
-
-        latest_review = _load_latest_review_result(level, slug)
-        if latest_review is None:
-            return False, "no saved review found"
-        if latest_review.score < review_threshold:
-            return False, f"latest review {latest_review.score}/10 < {review_threshold:.1f}"
-        return True, f"latest review {latest_review.score}/10 >= {review_threshold:.1f}"
-
-    if not _all_phases_complete(level, slug):
+    elif not _all_phases_complete(level, slug):
         return False, "module incomplete"
 
     status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
@@ -6351,7 +6346,14 @@ def main():
                     args.level, args.module, slug,
                     packet_path=_heal_packet,
                     writer=args.writer,
-                    max_retries=0,  # Single attempt — if it still salads, flag for human
+                    # Heal regen gets 3 attempts (was 1). The single-shot
+                    # heal was producing friction reports labeled "Exhausted
+                    # 1 attempts" because it couldn't apply a correction
+                    # directive even when quick_verify had a clear fix path.
+                    # 3 attempts = first regen + 2 corrected retries — same
+                    # economics as the main write loop's recovery budget,
+                    # capped lower to keep heal time bounded. (#1189)
+                    max_retries=2,
                     skeleton=_heal_skeleton,
                     no_chunk=args.no_chunk,
                     verification_text=_heal_verification,
