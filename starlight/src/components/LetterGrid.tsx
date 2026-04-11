@@ -19,7 +19,7 @@ export default function LetterGrid({ letters, title }: LetterGridProps) {
   if (!letters || letters.length === 0) return null;
 
   return (
-    <div className={directStyles.letterGridContainer}>
+    <div className={directStyles.letterGridContainer} data-activity="letter-grid">
       {title && <h3 className={directStyles.letterGridTitle}>{title}</h3>}
       <div className={directStyles.letterGrid}>
         {letters.map((letter) => (
@@ -32,6 +32,9 @@ export default function LetterGrid({ letters, title }: LetterGridProps) {
                 ? directStyles.letterCardSpecial
                 : directStyles.letterCardConsonant
             }`}
+            data-activity="letter-card"
+            data-upper={letter.upper}
+            data-sound-type={letter.sound_type || 'consonant'}
           >
             <div className={directStyles.letterCardUpper}>{letter.upper}</div>
             <div className={directStyles.letterCardLower}>{letter.lower}</div>

@@ -66,16 +66,17 @@ export function TranslateItem({
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
 
   return (
-    <div className={styles.translateItem}>
-      <div className={styles.sourceText}>
+    <div className={styles.translateItem} data-activity="translate-item">
+      <div className={styles.sourceText} data-activity="translate-source">
         {source}
       </div>
 
-      <div className={styles.translateOptions}>
+      <div className={styles.translateOptions} data-activity="translate-options">
         {displayOptions.map((option, idx) => (
           <button
             key={idx}
             className={`${styles.translateOption} ${getOptionClass(option)}`}
+            data-activity="translate-option"
             onClick={() => handleSelect(option)}
             disabled={submitted}
           >
@@ -86,7 +87,11 @@ export function TranslateItem({
 
       {submitted && (
         <>
-          <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+          <div
+            className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+            data-activity="translate-feedback"
+            data-correct={isCorrect ? 'true' : 'false'}
+          >
             {isCorrect ? (
               correctLabel
             ) : (
@@ -156,7 +161,7 @@ export default function Translate({ questions, direction = 'to-uk', instruction,
   }, [questions]);
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="translate" data-direction={direction}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>{icon}</span>
         <span>{title}</span>

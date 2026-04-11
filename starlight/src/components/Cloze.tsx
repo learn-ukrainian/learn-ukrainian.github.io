@@ -74,6 +74,8 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
           <select
             key={blank.index}
             className={`${styles.clozeSelect} ${isCorrect ? styles.correct : ''} ${isIncorrect ? styles.incorrect : ''}`}
+            data-activity="cloze-blank"
+            data-blank-index={blank.index}
             value={selected || ''}
             onChange={(e) => handleSelect(blank.index, e.target.value)}
             disabled={submitted}
@@ -105,7 +107,7 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
   const errorLabel = isUkrainian ? '✗ Деякі відповіді неправильні. Правильні відповіді:' : '✗ Some answers are incorrect. Correct answers:';
 
   return (
-    <div>
+    <div data-activity="cloze-passage">
       <p className={styles.clozePassage}>
         {renderText()}
       </p>
@@ -124,7 +126,11 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
 
       {submitted && (
         <>
-          <div className={`${styles.feedback} ${allCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+          <div
+            className={`${styles.feedback} ${allCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+            data-activity="cloze-feedback"
+            data-correct={allCorrect ? 'true' : 'false'}
+          >
             {allCorrect ? (
               successLabel
             ) : (
@@ -201,7 +207,7 @@ export default function Cloze({ passage, blanks = [], instruction, children, isU
   const headerLabel = isUkrainian ? 'Заповніть текст' : 'Complete the Passage';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="cloze">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📝</span>
         <span>{headerLabel}</span>
