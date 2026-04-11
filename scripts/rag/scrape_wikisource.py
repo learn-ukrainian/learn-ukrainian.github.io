@@ -163,7 +163,7 @@ def get_page_text(title: str) -> str | None:
     else — including content-carrying tables — is kept and flattened
     to text.
     """
-    from bs4 import BeautifulSoup, Tag
+    from bs4 import BeautifulSoup
 
     params = {
         "action": "parse",
@@ -277,8 +277,38 @@ def expand_collection_pages(title: str, author_short: str, depth: int = 0) -> li
     return content_pages
 
 
-def chunk_text(text: str, work_title: str, metadata: dict) -> list[dict]:
-    """Split text into chunks at paragraph boundaries."""
+# Minimum fraction of Cyrillic letters (out of letters total) for a chunk
+# to be kept. Wikisource hosts a lot of trilingual / parallel-text pages
+# (e.g. Конституція Пилипа Орлика has Latin original + book Ukrainian +
+# modern Ukrainian in three columns). A naive paragraph-chunker will
+# emit chunks that are 30-50% Latin, polluting FTS5 search and the wiki
+# agent's "real Ukrainian content" filter. Default 0.6 keeps anything
+# majority-Cyrillic; --cyrillic-min on the CLI can override.
+_DEFAULT_CYRILLIC_MIN = 0.6
+_CYRILLIC_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ]")
+_LATIN_RE = re.compile(r"[a-zA-Z]")
+
+
+def _cyrillic_ratio(text: str) -> float:
+    """Fraction of letter characters that are Cyrillic. 1.0 = all Ukrainian,
+    0.0 = all Latin / no letters at all."""
+    cyr = len(_CYRILLIC_RE.findall(text))
+    lat = len(_LATIN_RE.findall(text))
+    total = cyr + lat
+    return (cyr / total) if total else 0.0
+
+
+def chunk_text(
+    text: str,
+    work_title: str,
+    metadata: dict,
+    cyrillic_min: float = _DEFAULT_CYRILLIC_MIN,
+) -> list[dict]:
+    """Split text into chunks at paragraph boundaries.
+
+    Chunks below `cyrillic_min` letter ratio are dropped — this filters
+    out Latin-heavy passages from trilingual Wikisource pages.
+    """
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
     if not paragraphs:
         return []
@@ -286,18 +316,25 @@ def chunk_text(text: str, work_title: str, metadata: dict) -> list[dict]:
     chunks = []
     current_text = ""
     chunk_idx = 0
+    dropped = 0
     work_id = re.sub(r'[^\w]', '_', work_title)[:50]
     id_prefix = f"ws_{work_id}"
 
     def _flush():
-        nonlocal current_text, chunk_idx
+        nonlocal current_text, chunk_idx, dropped
         if not current_text.strip():
+            return
+        ratio = _cyrillic_ratio(current_text)
+        if ratio < cyrillic_min:
+            dropped += 1
+            current_text = ""
             return
         chunk_id = f"{id_prefix}_c{chunk_idx:03d}"
         chunks.append({
             "chunk_id": chunk_id,
             "text": current_text.strip(),
             "token_count": len(current_text.strip()) // 4,
+            "cyrillic_ratio": round(ratio, 2),
             **metadata,
         })
         chunk_idx += 1
@@ -332,6 +369,7 @@ def scrape_author(
     period: str = "modern",
     dry_run: bool = False,
     pages: list[str] | None = None,
+    cyrillic_min: float = _DEFAULT_CYRILLIC_MIN,
 ) -> int:
     """Scrape all works by an author from Wikisource."""
     LITERARY_DIR.mkdir(parents=True, exist_ok=True)
@@ -401,7 +439,7 @@ def scrape_author(
                 "source": "uk.wikisource.org",
             }
 
-            chunks = chunk_text(text, title, metadata)
+            chunks = chunk_text(text, title, metadata, cyrillic_min=cyrillic_min)
             for chunk in chunks:
                 f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
             total_chunks += len(chunks)
@@ -421,6 +459,15 @@ def main():
     parser.add_argument("--period", default="modern", help="Language period (default: modern)")
     parser.add_argument("--pages", nargs="+", help="Specific page titles to scrape")
     parser.add_argument("--dry-run", action="store_true", help="List pages without scraping")
+    parser.add_argument(
+        "--cyrillic-min", type=float, default=_DEFAULT_CYRILLIC_MIN,
+        help=(
+            "Minimum Cyrillic letter fraction for a chunk to be kept (0.0-1.0). "
+            "Defaults to 0.6 — drops chunks that are mostly Latin/Greek, which "
+            "happens on trilingual / parallel-text pages like the Orlyk "
+            "Constitution. Set to 0.0 to keep everything."
+        ),
+    )
     args = parser.parse_args()
 
     scrape_author(
@@ -432,6 +479,7 @@ def main():
         period=args.period,
         dry_run=args.dry_run,
         pages=args.pages,
+        cyrillic_min=args.cyrillic_min,
     )
 
 
