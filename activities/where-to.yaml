@@ -1,0 +1,195 @@
+version: "1.0"
+module: where-to
+level: a1
+
+inline:
+  - id: fill-in-accusative-places
+    type: fill-in
+    instruction: "Вставте правильну форму (Insert the correct form)"
+    items:
+      - sentence: "Я йду у ____ (школа)."
+        answer: "школу"
+      - sentence: "Він іде на ____ (робота)."
+        answer: "роботу"
+      - sentence: "Ми йдемо у ____ (банк)."
+        answer: "банк"
+      - sentence: "Вона йде в ____ (аптека)."
+        answer: "аптеку"
+      - sentence: "Степан іде у ____ (парк)."
+        answer: "парк"
+      - sentence: "Оксана йде на ____ (пошта)."
+        answer: "пошту"
+      - sentence: "Вони йдуть у ____ (магазин)."
+        answer: "магазин"
+      - sentence: "Студент іде в ____ (бібліотека)."
+        answer: "бібліотеку"
+      - sentence: "Ми йдемо в ____ (ресторан)."
+        answer: "ресторан"
+      - sentence: "Ти йдеш у ____ (кафе)?"
+        answer: "кафе"
+
+  - id: quiz-de-vs-kudy
+    type: quiz
+    instruction: "Оберіть правильне питання (Choose the correct question)"
+    items:
+      - question: "_____ ти йдеш?"
+        options: ["Куди", "Де", "Що", "Хто"]
+        correct: 0
+      - question: "_____ Степан? Він у банку."
+        options: ["Де", "Куди", "Як", "Що"]
+        correct: 0
+      - question: "_____ вона їде? В Одесу."
+        options: ["Куди", "Де", "Коли", "Хто"]
+        correct: 0
+      - question: "_____ ми? Ми в парку."
+        options: ["Де", "Куди", "Чому", "Як"]
+        correct: 0
+      - question: "_____ іде Оксана? На пошту."
+        options: ["Куди", "Де", "Що", "Хто"]
+        correct: 0
+      - question: "_____ магазин? Магазин у центрі."
+        options: ["Де", "Куди", "Як", "Що"]
+        correct: 0
+      - question: "_____ ви їдете? У Київ."
+        options: ["Куди", "Де", "Чому", "Хто"]
+        correct: 0
+      - question: "_____ мій банк? Він тут."
+        options: ["Де", "Куди", "Як", "Коли"]
+        correct: 0
+
+  - id: group-sort-locative-accusative
+    type: group-sort
+    instruction: "Розподіліть фрази (Sort the phrases)"
+    groups:
+      - label: "Де? (Locative)"
+        items: ["у школі", "на роботі", "у банку", "в аптеці", "вдома", "у кафе"]
+      - label: "Куди? (Accusative)"
+        items: ["у школу", "на роботу", "у банк", "в аптеку", "додому", "у місто"]
+
+  - id: quiz-vs
+    type: quiz
+    instruction: "Йти чи їхати? Оберіть правильне дієслово (Walk or drive? Choose the correct verb)"
+    items:
+      - question: "Степан _____ в Одесу."
+        options: ["їде", "іде", "йду", "їду"]
+        correct: 0
+      - question: "Я _____ в магазин (пішки - on foot)."
+        options: ["йду", "їду", "іде", "їде"]
+        correct: 0
+      - question: "Оксана _____ в кафе (пішки - on foot)."
+        options: ["іде", "їде", "йду", "їду"]
+        correct: 0
+      - question: "Ми _____ у Львів."
+        options: ["їдемо", "йдемо", "їдуть", "йдуть"]
+        correct: 0
+      - question: "Студент _____ в університет (пішки - on foot)."
+        options: ["іде", "їде", "йду", "їду"]
+        correct: 0
+      - question: "Вони _____ в аеропорт."
+        options: ["їдуть", "йдуть", "їдемо", "йдемо"]
+        correct: 0
+
+workbook:
+  - id: workbook-quiz-case
+    type: quiz
+    instruction: "Визначте відмінок: Знахідний чи Місцевий? (Identify the case)"
+    items:
+      - question: "Я йду в **школу**."
+        options: ["Знахідний (Accusative)", "Місцевий (Locative)", "Називний (Nominative)", "Родовий (Genitive)"]
+        correct: 0
+      - question: "Степан у **банку**."
+        options: ["Місцевий (Locative)", "Знахідний (Accusative)", "Називний (Nominative)", "Родовий (Genitive)"]
+        correct: 0
+      - question: "Оксана на **роботі**."
+        options: ["Місцевий (Locative)", "Знахідний (Accusative)", "Називний (Nominative)", "Родовий (Genitive)"]
+        correct: 0
+      - question: "Вона їде в **Одесу**."
+        options: ["Знахідний (Accusative)", "Місцевий (Locative)", "Називний (Nominative)", "Родовий (Genitive)"]
+        correct: 0
+      - question: "Ми йдемо у **парк**."
+        options: ["Знахідний (Accusative)", "Місцевий (Locative)", "Називний (Nominative)", "Родовий (Genitive)"]
+        correct: 0
+      - question: "Вони в **кафе**."
+        options: ["Місцевий (Locative)", "Знахідний (Accusative)", "Називний (Nominative)", "Родовий (Genitive)"]
+        correct: 0
+
+  - id: workbook-error-correction
+    type: error-correction
+    instruction: "Знайдіть і виправте помилку (Find and correct the error)"
+    items:
+      - sentence: "Я йду у школа."
+        error: "школа"
+        correction: "школу"
+        error_type: "word"
+        options: ["школу", "школі", "школою"]
+        explanation: "After verbs of motion (куди?), feminine nouns ending in -а change to -у (Знахідний відмінок)."
+      - sentence: "Він іде на робота."
+        error: "робота"
+        correction: "роботу"
+        error_type: "word"
+        options: ["роботу", "роботі", "роботою"]
+        explanation: "After verbs of motion (куди?), feminine nouns ending in -а change to -у (Знахідний відмінок)."
+      - sentence: "Оксана їде в Одеса."
+        error: "Одеса"
+        correction: "Одесу"
+        error_type: "word"
+        options: ["Одесу", "Одесі", "Одесою"]
+        explanation: "After verbs of motion (куди?), feminine nouns ending in -а change to -у (Знахідний відмінок)."
+      - sentence: "Степан іде в аптека."
+        error: "аптека"
+        correction: "аптеку"
+        error_type: "word"
+        options: ["аптеку", "аптеці", "аптекою"]
+        explanation: "After verbs of motion (куди?), feminine nouns ending in -а change to -у (Знахідний відмінок)."
+      - sentence: "Я йду вдома."
+        error: "вдома"
+        correction: "додому"
+        error_type: "word"
+        options: ["додому", "дім", "дому"]
+        explanation: "To say 'going home' (motion), use 'додому'. 'Вдома' means 'at home' (static)."
+      - sentence: "Ми йдемо в бібліотека."
+        error: "бібліотека"
+        correction: "бібліотеку"
+        error_type: "word"
+        options: ["бібліотеку", "бібліотеці", "бібліотекою"]
+        explanation: "After verbs of motion (куди?), feminine nouns ending in -а change to -у (Знахідний відмінок)."
+
+  - id: workbook-match-up
+    type: match-up
+    instruction: "З'єднайте запитання та відповідь (Match the question and the answer)"
+    pairs:
+      - left: "Де Оксана?"
+        right: "Вона в аптеці."
+      - left: "Куди йде Оксана?"
+        right: "Вона йде в аптеку."
+      - left: "Де Степан?"
+        right: "Він на роботі."
+      - left: "Куди іде Степан?"
+        right: "Він іде на роботу."
+      - left: "Де ви?"
+        right: "Ми вдома."
+      - left: "Куди ви йдете?"
+        right: "Ми йдемо додому."
+
+  - id: workbook-true-false
+    type: true-false
+    instruction: "Правда чи ні? (True or false?)"
+    items:
+      - statement: "Степан іде в банк."
+        correct: false
+        explanation: "Оксана іде в банк, а Степан — на роботу."
+      - statement: "Оксана іде на пошту."
+        correct: true
+        explanation: "Так, Оксана йде на пошту."
+      - statement: "Степан їде у Київ у суботу."
+        correct: false
+        explanation: "Степан їде у Львів."
+      - statement: "Олена їде в Одесу."
+        correct: true
+        explanation: "Так, Олена їде в Одесу."
+      - statement: "Оксана їде у Львів."
+        correct: false
+        explanation: "Оксана нікуди не їде. Вона йде в бібліотеку."
+      - statement: "У неділю Оксана йде в парк."
+        correct: true
+        explanation: "Так, вона йде в парк."
