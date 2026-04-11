@@ -36,25 +36,82 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rag.config import CHUNK_MAX_TOKENS, LITERARY_DIR
 
 API = "https://uk.wikisource.org/w/api.php"
-CRAWL_DELAY = 0.3
+
+# ── Rate limiting + 429 backoff ──────────────────────────────────────
+# Wikisource uses the same MediaWiki infrastructure as Wikipedia. The
+# polite ceiling is ~10 req/sec for logged-out bots, but rate limiters
+# vary by endpoint and time of day. Stay well under it.
+#
+# Same pattern we use in scripts/wiki/fetch_wikipedia.py (79291ce6d):
+# centralized pacing BEFORE every call (regardless of outcome) + 429
+# detection with exponential backoff. The old scrape_wikisource.py had
+# the bug that `CRAWL_DELAY` was only sleep'd in some code paths —
+# search_author_works() and get_page_links() had NO pacing at all.
+
+_MIN_INTERVAL_S = 0.8             # ~1.25 req/sec — conservative
+_BACKOFF_BASE_S = 30.0            # first backoff after 429
+_BACKOFF_MAX_S = 600.0            # cap at 10 minutes
+_MAX_429_RETRIES = 4              # total attempts per call before giving up
+
+_last_call_ts: float = 0.0        # module-level; tracks the last API hit
+
 SESSION = requests.Session()
 SESSION.headers.update({
-    "User-Agent": "Mozilla/5.0 (compatible; LearnUkrainian/1.0; educational project)",
+    "User-Agent": (
+        "LearnUkrainianBot/1.0 "
+        "(https://learn-ukrainian.github.io; educational project)"
+    ),
 })
 
 
+def _pace_api_call() -> None:
+    """Sleep just enough to guarantee _MIN_INTERVAL_S since the last
+    Wikisource API call. Called BEFORE every request so that even
+    FAILED requests count toward the rate budget — the old bug was
+    that failures skipped the sleep and fired immediate retries."""
+    global _last_call_ts
+    now = time.monotonic()
+    gap = now - _last_call_ts
+    if gap < _MIN_INTERVAL_S:
+        time.sleep(_MIN_INTERVAL_S - gap)
+    _last_call_ts = time.monotonic()
+
+
 def api_get(params: dict) -> dict:
-    """Make a MediaWiki API request."""
+    """Make a MediaWiki API request with pacing + 429 backoff.
+
+    Returns the decoded JSON on success. Returns {} (empty dict) on
+    any terminal failure (non-429 error, exhausted retries) so callers
+    can treat it as 'no results' without crashing mid-crawl.
+    """
     params["format"] = "json"
-    r = SESSION.get(API, params=params, timeout=30)
-    r.raise_for_status()
-    return r.json()
+    for attempt in range(_MAX_429_RETRIES):
+        _pace_api_call()
+        try:
+            r = SESSION.get(API, params=params, timeout=30)
+            if r.status_code == 429:
+                wait = min(_BACKOFF_BASE_S * (2 ** attempt), _BACKOFF_MAX_S)
+                print(f"    ⏳ rate-limited (429), sleeping {wait:.0f}s "
+                      f"(attempt {attempt + 1}/{_MAX_429_RETRIES})")
+                time.sleep(wait)
+                continue
+            r.raise_for_status()
+            return r.json()
+        except requests.exceptions.HTTPError as e:
+            print(f"    ⚠️  HTTP {e.response.status_code} from Wikisource API")
+            return {}
+        except requests.exceptions.RequestException as e:
+            print(f"    ⚠️  network error: {type(e).__name__}: {str(e)[:80]}")
+            return {}
+    print(f"    ❌ giving up after {_MAX_429_RETRIES} 429 retries")
+    return {}
 
 
 def search_author_works(author_name: str, limit: int = 100) -> list[dict]:
     """Search Wikisource for works by an author.
 
-    Returns list of {title, snippet} dicts.
+    Returns list of {title, snippet} dicts. Pacing is handled inside
+    api_get() so callers never need a manual sleep.
     """
     results = []
     params = {
@@ -92,44 +149,80 @@ def get_page_links(title: str) -> list[str]:
 
 
 def get_page_text(title: str) -> str | None:
-    """Fetch a page's parsed HTML and convert to clean text."""
+    """Fetch a page's parsed HTML and convert to clean text.
+
+    Uses BeautifulSoup to walk the DOM intelligently instead of
+    regex-stripping — critical for Wikisource pages that wrap primary
+    content in layout tables (parallel Latin/Ukrainian translations,
+    poem verses, etc.). The old regex-only stripper removed ALL tables,
+    which on pages like "Конституція Пилипа Орлика" ate ~89% of the
+    actual content.
+
+    Strips only NAVIGATION chrome: mw-heading, mw-editsection,
+    references, infoboxes, navboxes, TOCs, category links. Everything
+    else — including content-carrying tables — is kept and flattened
+    to text.
+    """
+    from bs4 import BeautifulSoup, Tag
+
     params = {
         "action": "parse",
         "page": title,
         "prop": "text",
     }
     data = api_get(params)
-    if "error" in data:
+    if not data or "error" in data:
         return None
 
     raw_html = data.get("parse", {}).get("text", {}).get("*", "")
     if not raw_html:
         return None
 
-    # Remove navigation elements, references, edit links
-    text = re.sub(r'<div class="mw-heading[^"]*">.*?</div>', "", raw_html, flags=re.DOTALL)
-    text = re.sub(r'<sup class="reference">.*?</sup>', "", text, flags=re.DOTALL)
-    text = re.sub(r'<span class="mw-editsection">.*?</span>', "", text, flags=re.DOTALL)
-    text = re.sub(r'<table[^>]*>.*?</table>', "", text, flags=re.DOTALL)
-    text = re.sub(r'<div[^>]*class="[^"]*(?:nav|header|footer|toc)[^"]*"[^>]*>.*?</div>', "", text, flags=re.DOTALL)
+    soup = BeautifulSoup(raw_html, "html.parser")
 
-    # Convert block elements to newlines
-    text = re.sub(r'<(?:p|br|div|li|h[1-6])[^>]*/?>', "\n", text)
-    # Decode HTML entities
+    # Strip navigation / editorial chrome. Be specific so we don't
+    # also strip content tables that happen to contain the word 'nav'
+    # in some unrelated class.
+    strip_selectors = [
+        "span.mw-editsection",           # [edit] links
+        "sup.reference",                  # footnote markers
+        "div.mw-heading",                 # wiki heading wrappers (keep h1/h2 children via get_text)
+        "table.infobox",                  # infoboxes
+        "table.navbox",                   # bottom navigation boxes
+        "table.metadata",                 # metadata tables
+        "div.toc",                        # table of contents
+        "div#toc",
+        "div.navbox",
+        "div.printfooter",                # "Retrieved from..." footer
+        "div.catlinks",                   # category links at bottom
+        "div.hatnote",                    # disambiguation hats
+        "noscript",
+        "style",
+        "script",
+    ]
+    for sel in strip_selectors:
+        for el in soup.select(sel):
+            el.decompose()
+
+    # Extract flat text. BeautifulSoup's get_text handles tables,
+    # lists, divs, and paragraphs uniformly — each element's content
+    # flows as text with a separator.
+    text = soup.get_text(separator="\n", strip=False)
+
+    # Normalize whitespace but preserve paragraph breaks
     text = html.unescape(text)
-    # Strip remaining tags
-    text = re.sub(r'<[^>]+>', '', text)
-    # Clean up whitespace
-    text = re.sub(r'[ \t]+', ' ', text)
-    text = re.sub(r'\n{3,}', '\n\n', text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r" *\n *", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
     text = text.strip()
 
     # Skip pages that are just redirects or disambiguation
     if len(text) < 100:
         return None
-    # Skip pages that are mostly navigation
+
+    # Strip pages that are mostly navigation arrows (works like "►" and "◄")
     if text.count("►") > 5 or text.count("◄") > 5:
-        lines = [l for l in text.split("\n") if "►" not in l and "◄" not in l]
+        lines = [line for line in text.split("\n") if "►" not in line and "◄" not in line]
         text = "\n".join(lines).strip()
 
     return text
@@ -156,7 +249,7 @@ def expand_collection_pages(title: str, author_short: str, depth: int = 0) -> li
     if depth > 2 or is_skip_page(title):
         return []
 
-    time.sleep(CRAWL_DELAY)
+    # Pacing is handled inside api_get() → get_page_links(); no manual sleep needed
     links = get_page_links(title)
 
     content_pages = []
@@ -283,7 +376,7 @@ def scrape_author(
     total_chunks = 0
     with open(outfile, "w", encoding="utf-8") as f:
         for i, title in enumerate(work_pages):
-            time.sleep(CRAWL_DELAY)
+            # Pacing is handled inside get_page_text() → api_get(); no manual sleep
             print(f"  [{i+1}/{len(work_pages)}] {title}...", end=" ")
 
             text = get_page_text(title)

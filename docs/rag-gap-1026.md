@@ -1,6 +1,6 @@
 # RAG Gap — Issue #1026 Status
 
-Last updated: 2026-04-11
+Last updated: 2026-04-11 (Wave 12 added)
 
 ## Verified state on disk
 
@@ -24,11 +24,89 @@ Verification done by:
 - HTTP body inspection of `/hrushrus/iur.htm`, `/rizne/orl.htm`, `/oldukr2/oldukr2.htm`, `/oldukr/oldukr.htm`
 - Single-page extraction test of `/hrushrus/iur601.htm` and `/oldukr2/oldukr58.htm` through `scrape_litopys.HTMLTextExtractor` — real Ukrainian text confirmed
 
+## 2026-04-11 update: Wikisource sweep verified negative
+
+After fixing `scripts/rag/scrape_wikisource.py` (BeautifulSoup-based
+table-aware extraction + 429 backoff + per-call pacing), dry-run
+searches for the Group B works on `uk.wikisource.org` return:
+
+| Search term | Result |
+|---|---|
+| `Остромирове Євангеліє` | 0 content pages |
+| `Пересопницьке Євангеліє` | 0 content pages |
+| `Дорошенко` | 3 hits, all about **Petro** Doroshenko (hetman), not **Dmytro** (historian) |
+| `Полонська-Василенко` | 0 content pages |
+
+So Wikisource is **not** an alternative source for any of the four —
+Doroshenko (Dmytro) is public-domain since 2021 but not scanned by
+volunteers, and Polonska-Vasylenko is still in copyright until 2043.
+These need a diasporiana/chtyvo PDF pipeline, not a scraper. The old
+Wikisource entry for the Orlyk Constitution that we pulled earlier
+was the same Latin+Russian 1847 editorial preface that litopys has.
+
+## 2026-04-11 update: Wave 12 — litopys sweep for gap fills + bonus
+
+Systematic diff of `litopys.org.ua/links/in{oldlit,lit op,istor,liter,polit}.htm`
+against already-scraped paths in `batch_scrape_izbornyk.py` produced
+**17 high-value primary-source collections** we hadn't touched, plus
+**2 substitutes** for #1026 works whose canonical forms aren't online.
+
+**#1026 substitutes** (in `WAVE_12_GAP_FILLS`, Category A):
+- `krupnytsky-orlyk-biohrafiia` — Krupnytsky's 1956 Ukrainian-language
+  biography of Pylyp Orlyk (117KB, single page). Substitutes for the
+  Constitution itself, which litopys has only in Latin.
+- `podolynskyi-slovo-perestorohy-1848` — Vasyl Podolynsky's 1848
+  Galician national-revival manifesto (74KB, single page). The
+  `perestor/` directory holds this, NOT the 1605 anti-Uniate polemic.
+  Valid Ukrainian text, different work.
+
+**Newly discovered primary sources** (Category B) verified by size-
+probe (>10KB of real content, not the 1295-byte placeholder):
+
+Chronicles (Kyivan Rus + Cossack era):
+- `paterikon-pecherskyi` — Києво-Печерський Патерик (1462 ред.)
+- `lavrentiivskyj-litopys` — Лаврентіївський літопис
+- `ipatskyj-litopys` — Іпатіївський літопис
+- `pvl-lavrentiivska` — Повість минулих літ (Лавр. список)
+- `pvl-yaremenko` — Повість врем'яних літ (переклад Яременка)
+- `novgorodskyj-litopys-1` — Новгородський перший літопис
+- `samovyd-litopys` — Літопис Самовидця (1648-1702)
+- `velychko-litopys` — Самійло Величко (not to be confused with
+  Ivan Velychkovsky, already in Wave 5 as `velychkovsky`)
+- `grabianka-litopys` — Літопис Грабянки
+- `chernihivsky-litopys` — Чернігівський літопис
+
+Literary anthologies:
+- `slovo-o-polku-ihorevim` — foundational
+- `slovo-pereklady` — Слово translations and adaptations
+- `ukrainska-poeziia-xvi-xvii` — Ukrainian poetry XVI-XVII cent.
+- `ukrainski-intermediyi` — Ukrainian intermedii XVII-XVIII
+- `bajky-xvii-xviii` — 17-18c Ukrainian fables
+
+Modern historiography:
+- `hrushevsky-iu-odnotom` — Hrushevsky's one-volume Історія України
+  (distinct from the multi-volume ІУР we already have in Waves 4/11)
+- `yakovenko-narys` — Natalia Yakovenko's 2006 survey
+
+Run with:
+```bash
+.venv/bin/python scripts/rag/batch_scrape_izbornyk.py --wave 12 --dry-run
+.venv/bin/python scripts/rag/batch_scrape_izbornyk.py --wave 12
+```
+
+Pacing: `scrape_litopys.py` sleeps 0.5s between Next-link pages, and
+the batch loop adds `--delay 2.0` (default) between different works.
+Through Waves 5-11, litopys.org.ua has been tolerant of this rate
+(no 429s observed over ~80 works). If a 429 does appear, interrupt
+with Ctrl-C — the scraper saves partial JSONL and `--start-from`
+lets you resume.
+
 ## Three groups of missing work
 
 ### Group A — covered by existing `batch_scrape_izbornyk.py`
 
-These are now in `WAVE_11_GAP_FILLS`:
+These are now in `WAVE_11_GAP_FILLS` (already scraped, see Wave 11
+section above) and `WAVE_12_GAP_FILLS` (commands above):
 
 1. **Hrushevsky ІУР т.6** — starts at `http://izbornyk.org.ua/hrushrus/iur601.htm`, follows Next chain. Expect ~600-800 chunks based on т4/т5 sizes. Note: start from `iur601.htm`, NOT `iur6.htm` (the latter is just a volume index with no Next link).
 

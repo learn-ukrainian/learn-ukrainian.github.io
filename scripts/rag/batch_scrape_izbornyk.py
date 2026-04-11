@@ -193,6 +193,129 @@ WAVE_11_GAP_FILLS = [
     },
 ]
 
+# ══════════════════════════════════════════════════════════════════════
+# Wave 12: Second gap-fill pass for #1026 + high-value primary sources
+# newly located on litopys.org.ua after a systematic index-page diff.
+#
+# Important finding: litopys does NOT host the Ukrainian text of the
+# 1710 Orlyk Constitution (only the Latin original + an 1847 Russian
+# preface in rizne/orl.htm — same garbage Wikisource had). Closest
+# substitute: Krupnytsky's 1956 Ukrainian-language biography of Orlyk
+# (rizne/krupn.htm, 117KB clean prose). The 1605 anonymous "Пересторога"
+# polemic is also NOT on litopys — the perestor/ directory actually
+# holds Vasyl Podolynsky's 1848 "Слово перестороги" (Galician national
+# revival manifesto). Both substitutes are genuine Ukrainian-language
+# prose worth having in the corpus; the #1026 originals remain out of
+# reach and need an OCR pipeline (Ostromir, Peresopnytske gospels,
+# Doroshenko, Polonska-Vasylenko — see docs/rag-gap-1026.md).
+#
+# Two categories:
+#   A) #1026 substitutes on litopys.
+#   B) Foundational primary sources we didn't know were here: Kyiv-Pechersk
+#      Paterikon, Laurentian + Hypatian chronicles, Povist' vremjanykh lit
+#      (two editions), Novgorod First Chronicle, Samovydets / Velychko /
+#      Hrabianka Cossack chronicles, Chernihiv chronicle, Slovo o polku
+#      Ihorevim + translations, Ukrainian poetry XVI-XVII anthology,
+#      Ukrainian intermedii, 17-18c fables, Hrushevsky's one-volume ИУ,
+#      Yakovenko's modern narys. All verified by HEAD probe (>10KB real
+#      content, not the 1295-byte placeholder page).
+#
+# Polite pacing: scrape_litopys.py sleeps 0.5s between sub-pages; the
+# batch loop adds --delay 2.0 between different works. litopys.org.ua
+# has been tolerant of this rate through Waves 5-11 (80+ works).
+# ══════════════════════════════════════════════════════════════════════
+WAVE_12_GAP_FILLS = [
+    # ── Category A: #1026 substitutes (originals not on litopys) ───
+    # Krupnytsky 1956 Ukrainian-language biography — substitute for the
+    # Orlyk Constitution whose Ukrainian text litopys does NOT host.
+    {"slug": "krupnytsky-orlyk-biohrafiia", "url": f"{BASE}/rizne/krupn.htm",
+     "work": "Крупницький — Гетьман Пилип Орлик (1672-1742): його життя і доля",
+     "author": "Крупницький Б.", "year": 1956, "genre": "scholarly",
+     "period": "modern", "follow": False, "max_pages": 1},
+    # Podolynsky's 1848 Galician-revival manifesto — the perestor/
+    # directory holds this, not the 1605 anti-Uniate polemic of the
+    # same title. Valid Ukrainian text, different work.
+    {"slug": "podolynskyi-slovo-perestorohy-1848",
+     "url": f"{BASE}/perestor/sloworus.htm",
+     "work": "Подолинський — Слово перестороги (1848)",
+     "author": "Подолинський В.", "year": 1848, "genre": "polemic",
+     "period": "modern", "follow": False, "max_pages": 1},
+
+    # ── Category B: primary chronicles (Kyivan Rus + Cossack era) ───
+    {"slug": "paterikon-pecherskyi",   "url": f"{BASE}/paterikon/paterikon.htm",
+     "work": "Патерик Києво-Печерський (II Касіянівська редакція, 1462)",
+     "author": "Невідомий", "year": 1462, "genre": "hagiography",
+     "period": "old_east_slavic", "follow": True, "max_pages": 80},
+    {"slug": "lavrentiivskyj-litopys", "url": f"{BASE}/lavrlet/lavr.htm",
+     "work": "Лаврентіївський літопис", "author": "Невідомий",
+     "year": 1377, "genre": "chronicle", "period": "old_east_slavic",
+     "follow": True, "max_pages": 120},
+    {"slug": "ipatskyj-litopys",       "url": f"{BASE}/ipatlet/ipat.htm",
+     "work": "Іпатіївський літопис", "author": "Невідомий",
+     "year": 1425, "genre": "chronicle", "period": "old_east_slavic",
+     "follow": True, "max_pages": 150},
+    {"slug": "pvl-lavrentiivska",      "url": f"{BASE}/pvllavr/pvllavr.htm",
+     "work": "Повість минулих літ (Лаврентіївський список)",
+     "author": "Нестор", "year": 1113, "genre": "chronicle",
+     "period": "old_east_slavic", "follow": True, "max_pages": 80},
+    {"slug": "pvl-yaremenko",          "url": f"{BASE}/pvlyar/yar.htm",
+     "work": "Повість врем'яних літ (переклад В. Яременка)",
+     "author": "Нестор", "year": 1990, "genre": "chronicle",
+     "period": "modern", "follow": True, "max_pages": 80},
+    {"slug": "novgorodskyj-litopys-1", "url": f"{BASE}/novglet/novg.htm",
+     "work": "Новгородський перший літопис", "author": "Невідомий",
+     "year": 1250, "genre": "chronicle", "period": "old_east_slavic",
+     "follow": True, "max_pages": 100},
+    {"slug": "samovyd-litopys",        "url": f"{BASE}/samovyd/sam.htm",
+     "work": "Літопис Самовидця (1648-1702)", "author": "Невідомий",
+     "year": 1702, "genre": "chronicle", "period": "middle_ukrainian",
+     "follow": True, "max_pages": 80},
+    {"slug": "velychko-litopys",       "url": f"{BASE}/velichko/vel.htm",
+     "work": "Самійло Величко. Літопис (1648-1700)",
+     "author": "Величко С.", "year": 1720, "genre": "chronicle",
+     "period": "middle_ukrainian", "follow": True, "max_pages": 200},
+    {"slug": "grabianka-litopys",      "url": f"{BASE}/grab/hrab.htm",
+     "work": "Літопис гадяцького полковника Григорія Грабянки (до 1709)",
+     "author": "Грабянка Г.", "year": 1710, "genre": "chronicle",
+     "period": "middle_ukrainian", "follow": True, "max_pages": 80},
+    {"slug": "chernihivsky-litopys",   "url": f"{BASE}/chernlet/chern.htm",
+     "work": "Чернігівський літопис", "author": "Невідомий",
+     "year": 1750, "genre": "chronicle", "period": "middle_ukrainian",
+     "follow": True, "max_pages": 40},
+
+    # ── Category B: foundational literary + anthologies ────────────
+    {"slug": "slovo-o-polku-ihorevim", "url": f"{BASE}/slovo/slovo.htm",
+     "work": "Слово о полку Ігоревім", "author": "Невідомий",
+     "year": 1187, "genre": "epic", "period": "old_east_slavic",
+     "follow": True, "max_pages": 30},
+    {"slug": "slovo-pereklady",        "url": f"{BASE}/slovo67/sl.htm",
+     "work": "Слово о полку Ігоревім: переклади і переспіви",
+     "author": "Антологія", "year": 1967, "genre": "poetry",
+     "period": "modern", "follow": True, "max_pages": 40},
+    {"slug": "ukrainska-poeziia-xvi-xvii", "url": f"{BASE}/ukrpoetry/anto.htm",
+     "work": "Українська поезія. Кінець XVI — середина XVII ст.",
+     "author": "Антологія", "year": 1600, "genre": "poetry",
+     "period": "middle_ukrainian", "follow": True, "max_pages": 100},
+    {"slug": "ukrainski-intermediyi",  "url": f"{BASE}/ukrinter/int.htm",
+     "work": "Українські інтермедії XVII-XVIII ст.",
+     "author": "Антологія", "year": 1700, "genre": "drama",
+     "period": "middle_ukrainian", "follow": True, "max_pages": 50},
+    {"slug": "bajky-xvii-xviii",       "url": f"{BASE}/bajky/bajk.htm",
+     "work": "Байки в українській літературі XVII-XVIII ст.",
+     "author": "Антологія", "year": 1700, "genre": "poetry",
+     "period": "middle_ukrainian", "follow": True, "max_pages": 50},
+
+    # ── Category B: modern Ukrainian historiography ────────────────
+    {"slug": "hrushevsky-iu-odnotom",   "url": f"{BASE}/hrushukr/hrushe.htm",
+     "work": "Грушевський — Історія України (однотомник)",
+     "author": "Грушевський М.", "year": 1920, "genre": "scholarly",
+     "period": "modern", "follow": True, "max_pages": 100},
+    {"slug": "yakovenko-narys",        "url": f"{BASE}/yakovenko/yak.htm",
+     "work": "Яковенко — Нарис історії середньовічної та ранньомодерної України",
+     "author": "Яковенко Н.", "year": 2006, "genre": "scholarly",
+     "period": "modern", "follow": True, "max_pages": 120},
+]
+
 ALL_WAVES = {
     5: WAVE_5_OLDLIT,
     6: WAVE_6_CHRONICLES,
@@ -201,6 +324,7 @@ ALL_WAVES = {
     9: WAVE_9_LINGUISTICS,
     10: WAVE_10_SHEVCHENKO,
     11: WAVE_11_GAP_FILLS,
+    12: WAVE_12_GAP_FILLS,
 }
 
 
