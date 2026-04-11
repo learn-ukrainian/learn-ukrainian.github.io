@@ -24,7 +24,14 @@ describe('Astro build renders all pages', () => {
   let buildOutput: string;
   let buildExitCode: number;
 
-  // Run build once for all tests
+  // Run build once for all tests.
+  //
+  // IMPORTANT: the third arg to `it()` is the test timeout. vitest
+  // defaults to 5000ms, which is far shorter than an Astro build (~15s
+  // on this repo). Without an explicit override the test hits vitest's
+  // SIGTERM before `execSync` even returns, so the `timeout: 60000`
+  // option inside execSync never gets a chance to fire. Match the
+  // external timeout to keep the outer bound consistent.
   it('astro build succeeds with zero errors', () => {
     try {
       buildOutput = execSync('npm run build 2>&1', {
@@ -46,7 +53,7 @@ describe('Astro build renders all pages', () => {
       .split('\n')
       .filter(line => line.includes('[ERROR]'));
     expect(errorLines).toEqual([]);
-  });
+  }, 120000);
 
   it('generates expected page count', () => {
     const distDir = join(STARLIGHT_DIR, 'dist');

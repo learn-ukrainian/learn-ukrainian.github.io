@@ -7,9 +7,10 @@ interface TrueFalseQuestionProps {
   statement: string;
   isTrue: boolean;
   explanation?: string;
+  isUkrainian?: boolean;
 }
 
-export function TrueFalseQuestion({ statement, isTrue, explanation }: TrueFalseQuestionProps) {
+export function TrueFalseQuestion({ statement, isTrue, explanation, isUkrainian }: TrueFalseQuestionProps) {
   const [answer, setAnswer] = useState<boolean | null>(null);
   const [showResult, setShowResult] = useState(false);
 
@@ -21,17 +22,27 @@ export function TrueFalseQuestion({ statement, isTrue, explanation }: TrueFalseQ
 
   const isCorrect = answer === isTrue;
 
+  // Labels mirror the wrapper below — previously this single-statement
+  // variant hardcoded English, which broke immersion when used inside
+  // isUkrainian={true} modules. (#1082 review r1 blocker)
+  const trueLabel = isUkrainian ? 'Правда' : 'True';
+  const falseLabel = isUkrainian ? 'Неправда' : 'False';
+  const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
+  const wrongLabel = isUkrainian
+    ? `✗ Це твердження ${isTrue ? 'правдиве' : 'хибне'}.`
+    : `✗ The statement is ${isTrue ? 'true' : 'false'}.`;
+
   return (
-    <div className={styles.trueFalseQuestion}>
+    <div className={styles.trueFalseQuestion} data-activity="tf-question">
       <p className={styles.statementText}>{parseMarkdown(statement)}</p>
-      <div className={styles.trueFalseButtons}>
+      <div className={styles.trueFalseButtons} data-activity="tf-buttons">
         <button
           className={`${styles.tfButton} ${styles.trueButton} ${showResult && isTrue ? styles.correct : ''
             } ${showResult && answer === true && !isTrue ? styles.incorrect : ''}`}
           onClick={() => handleAnswer(true)}
           disabled={showResult}
         >
-          True
+          {trueLabel}
         </button>
         <button
           className={`${styles.tfButton} ${styles.falseButton} ${showResult && !isTrue ? styles.correct : ''
@@ -39,12 +50,16 @@ export function TrueFalseQuestion({ statement, isTrue, explanation }: TrueFalseQ
           onClick={() => handleAnswer(false)}
           disabled={showResult}
         >
-          False
+          {falseLabel}
         </button>
       </div>
       {showResult && (
-        <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
-          {isCorrect ? '✓ Correct!' : `✗ The statement is ${isTrue ? 'true' : 'false'}.`}
+        <div
+          className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+          data-activity="tf-feedback"
+          data-correct={isCorrect ? 'true' : 'false'}
+        >
+          {isCorrect ? correctLabel : wrongLabel}
           {explanation && <p className={styles.explanation}>{explanation}</p>}
         </div>
       )}
@@ -75,12 +90,12 @@ export default function TrueFalse({ items, instruction, isUkrainian }: TrueFalse
 
   const headerLabel = isUkrainian ? 'Правда чи хибність' : 'True or False';
   const trueLabel = isUkrainian ? 'Правда' : 'True';
-  const falseLabel = isUkrainian ? 'Хибність' : 'False';
+  const falseLabel = isUkrainian ? 'Неправда' : 'False';
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="true-false">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>⚖️</span>
         <span>{headerLabel}</span>
@@ -94,7 +109,7 @@ export default function TrueFalse({ items, instruction, isUkrainian }: TrueFalse
           const isCorrect = selections[index] === item.isTrue;
 
           return (
-            <div key={index} className={styles.trueFalseRow}>
+            <div key={index} className={styles.trueFalseRow} data-activity="tf-row">
               <p className={styles.statementText}>{parseMarkdown(item.statement)}</p>
               <div className={styles.trueFalseButtons}>
                 <button
@@ -117,7 +132,11 @@ export default function TrueFalse({ items, instruction, isUkrainian }: TrueFalse
                 </button>
               </div>
               {showResults && (
-                <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+                <div
+                  className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+                  data-activity="tf-row-feedback"
+                  data-correct={isCorrect ? 'true' : 'false'}
+                >
                   {isCorrect ? '✓' : '✗'} {item.explanation}
                 </div>
               )}

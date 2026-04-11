@@ -72,11 +72,12 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
   const selectedColor = coloredOptions.find(o => o.text === selected)?.color;
 
   return (
-    <div className={styles.fillInQuestion}>
+    <div className={styles.fillInQuestion} data-activity="fillin-question">
       <p className={styles.sentenceWithBlank}>
         {parseMarkdown(parts[0])}
         <span
           className={`${styles.blankDropZone} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`}
+          data-activity="fillin-blank"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
           style={selected && selectedColor ? {
@@ -91,7 +92,7 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
       </p>
 
       {options.length > 0 && !showResult && (
-        <div className={styles.optionChips}>
+        <div className={styles.optionChips} data-activity="fillin-chips">
           {coloredOptions.map((option, index) => (
             <button
               key={index}
@@ -119,7 +120,11 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
       )}
 
       {showResult && (
-        <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+        <div
+          className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+          data-activity="fillin-feedback"
+          data-correct={isCorrect ? 'true' : 'false'}
+        >
           {isCorrect ? '✓ Correct!' : `✗ The answer is: ${answer}`}
         </div>
       )}
@@ -153,7 +158,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="fill-in">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>✍️</span>
         <span>{headerLabel}</span>
@@ -168,7 +173,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
           const isCorrect = answers[index] === item.answer;
 
           return (
-            <div key={index} className={styles.fillInRow}>
+            <div key={index} className={styles.fillInRow} data-activity="fillin-row">
               <span className={styles.fillInText}>
                 {parseMarkdown(parts[0])}
                 <select

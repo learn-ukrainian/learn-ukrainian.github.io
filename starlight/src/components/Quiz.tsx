@@ -35,9 +35,9 @@ export function QuizQuestion({ question, options, correctIndex, explanation, isU
   const incorrectLabel = isUkrainian ? '✗ Неправильно. Відповідь:' : '✗ Incorrect. The answer is:';
 
   return (
-    <div className={styles.quizQuestion}>
+    <div className={styles.quizQuestion} data-activity="quiz-question">
       <p className={styles.questionText}>{parseMarkdown(question)}</p>
-      <div className={styles.options}>
+      <div className={styles.options} data-activity="quiz-options">
         {shuffledOptions.map((item, index) => (
           <button
             key={index}
@@ -57,7 +57,11 @@ export function QuizQuestion({ question, options, correctIndex, explanation, isU
         ))}
       </div>
       {showResult && (
-        <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+        <div
+          className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+          data-activity="quiz-feedback"
+          data-correct={isCorrect ? 'true' : 'false'}
+        >
           {isCorrect ? correctLabel : `${incorrectLabel} ${options[correctIndex]}`}
           {explanation && <p className={styles.explanation}>{explanation}</p>}
         </div>
@@ -82,7 +86,7 @@ export default function Quiz({ questions, instruction, children, isUkrainian }: 
   const headerLabel = isUkrainian ? 'Тест' : 'Quiz';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="quiz">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📝</span>
         <span>{headerLabel}</span>
@@ -96,6 +100,18 @@ export default function Quiz({ questions, instruction, children, isUkrainian }: 
           // Transform options format: {text, correct} -> string[] + correctIndex
           const optionTexts = item.options.map(o => o.text);
           const correctIndex = item.options.findIndex(o => o.correct);
+          if (correctIndex < 0) {
+            // Graceful degradation — fall back to index 0 so the lesson
+            // still renders, but surface the data bug loudly in the
+            // browser console so content authors notice it during dev.
+            // Server-side validation (in the activity renderer) should
+            // catch this before publish, so seeing this warn in prod is
+            // a sign that the build pipeline missed a malformed question.
+            console.warn(
+              `[Quiz] Question "${item.question}" has no option with correct:true. ` +
+              `Falling back to index 0. This is a content-data bug — please fix the source.`
+            );
+          }
           return (
             <QuizQuestion
               key={index}
