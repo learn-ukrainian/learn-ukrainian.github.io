@@ -18,6 +18,8 @@ function Flashcard({ card }: { card: FlashcardData }) {
   return (
     <div
       className={`flashcard${flipped ? ' flipped' : ''}`}
+      data-activity="flashcard"
+      data-flipped={flipped ? 'true' : 'false'}
       onClick={() => setFlipped(!flipped)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFlipped(!flipped); } }}
       role="button"
@@ -60,7 +62,7 @@ export default function FlashcardDeck({ cards }: FlashcardDeckProps) {
   if (!cards || cards.length === 0) return null;
 
   return (
-    <div className="flashcards">
+    <div className="flashcards" data-activity="flashcard-deck">
       {cards.map((card, i) => (
         <Flashcard key={`${card.front}-${i}`} card={card} />
       ))}

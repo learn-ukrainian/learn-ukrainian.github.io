@@ -47,13 +47,18 @@ export default function WatchAndRepeat({
   };
 
   return (
-    <div className={styles.activityContainer}>
+    <div
+      className={styles.activityContainer}
+      data-activity="watch-and-repeat"
+      data-current-index={currentIndex}
+      data-total={total}
+    >
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔊</span>
         <span>{headerLabel}</span>
       </div>
 
-      <div className={directStyles.warProgress}>
+      <div className={directStyles.warProgress} data-activity="war-progress">
         <span>
           {currentIndex + 1} / {total}
         </span>
@@ -65,7 +70,7 @@ export default function WatchAndRepeat({
         </div>
       </div>
 
-      <div className={directStyles.warCard}>
+      <div className={directStyles.warCard} data-activity="war-card">
         {item.letter && (
           <div className={directStyles.warLetterDisplay}>{item.letter}</div>
         )}
@@ -75,7 +80,7 @@ export default function WatchAndRepeat({
 
         {videoId ? (
           playing ? (
-            <div className={directStyles.warVideoWrapper}>
+            <div className={directStyles.warVideoWrapper} data-activity="war-video">
               <iframe
                 key={videoId}
                 src={`https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`}
@@ -88,6 +93,7 @@ export default function WatchAndRepeat({
           ) : (
             <button
               className={directStyles.warThumbnailBtn}
+              data-activity="war-thumbnail"
               onClick={() => setPlaying(true)}
               aria-label={playLabel}
             >
@@ -113,9 +119,10 @@ export default function WatchAndRepeat({
         )}
       </div>
 
-      <div className={directStyles.warNav}>
+      <div className={directStyles.warNav} data-activity="war-nav">
         <button
           className={directStyles.warNavButton}
+          data-activity="war-prev"
           onClick={() => goTo(Math.max(0, currentIndex - 1))}
           disabled={currentIndex === 0}
         >
@@ -123,6 +130,7 @@ export default function WatchAndRepeat({
         </button>
         <button
           className={directStyles.warNavButton}
+          data-activity="war-next"
           onClick={() => goTo(Math.min(total - 1, currentIndex + 1))}
           disabled={currentIndex === total - 1}
         >
