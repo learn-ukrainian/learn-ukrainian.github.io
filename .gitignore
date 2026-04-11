@@ -102,6 +102,15 @@ temp*.md
 *_PROMPT.md
 issue_*_body.md
 
+# Damage report snapshots from scripts/audit/damage_report.py — generated
+# per-run, timestamped, and can be regenerated any time. Do not version.
+docs/damage-report-*.md
+docs/damage-report-*.csv
+
+# Stray top-level working files from ad-hoc agent dispatches
+/response.md
+/fix-markers.yml
+
 # Root-level scripts and data (all scripts go in scripts/)
 /*.py
 /*.js
