@@ -53,7 +53,7 @@ export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProp
   const successLabel = isUkrainian ? '✓ Все з’єднано правильно!' : '✓ All matched correctly!';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="match-up">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔗</span>
         <span>{headerLabel}</span>
@@ -63,13 +63,16 @@ export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProp
         <p className={styles.instruction}><strong>{instruction}</strong></p>
       )}
       <div className={styles.matchUpContainer}>
-        <div className={styles.matchColumn}>
+        <div className={styles.matchColumn} data-activity="match-left-column">
           {pairs.map((pair, index) => (
             <button
               key={`left-${index}`}
               className={`${styles.matchItem} ${matched.has(index) ? styles.matched : ''
                 } ${selectedLeft === index ? styles.selected : ''} ${wrongPair?.left === index ? styles.wrong : ''
                 }`}
+              data-activity="match-left-tile"
+              data-matched={matched.has(index) ? 'true' : 'false'}
+              data-selected={selectedLeft === index ? 'true' : 'false'}
               onClick={() => handleLeftClick(index)}
               disabled={matched.has(index)}
             >
@@ -77,12 +80,15 @@ export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProp
             </button>
           ))}
         </div>
-        <div className={styles.matchColumn}>
+        <div className={styles.matchColumn} data-activity="match-right-column">
           {shuffledRight.map((originalIndex, displayIndex) => (
             <button
               key={`right-${displayIndex}`}
               className={`${styles.matchItem} ${matched.has(originalIndex) ? styles.matched : ''
                 } ${wrongPair?.right === originalIndex ? styles.wrong : ''}`}
+              data-activity="match-right-tile"
+              data-matched={matched.has(originalIndex) ? 'true' : 'false'}
+              data-original-index={originalIndex}
               onClick={() => handleRightClick(originalIndex)}
               disabled={matched.has(originalIndex)}
             >
@@ -92,7 +98,11 @@ export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProp
         </div>
       </div>
       {allMatched && (
-        <div className={`${styles.feedback} ${styles.feedbackCorrect}`}>
+        <div
+          className={`${styles.feedback} ${styles.feedbackCorrect}`}
+          data-activity="match-feedback"
+          data-correct="true"
+        >
           {successLabel}
         </div>
       )}

@@ -33,6 +33,16 @@ export function ErrorCorrectionItem({
   // Split sentence into words while preserving punctuation
   const words = sentence.match(/[\wа-яіїєґА-ЯІЇЄҐ']+|[^\s\wа-яіїєґА-ЯІЇЄҐ']+|\s+/gi) || [];
 
+  const handleWordKeyDown = (e: React.KeyboardEvent, word: string) => {
+    // Enter and Space activate the span-as-button, matching native
+    // <button> keyboard semantics. preventDefault on Space blocks the
+    // default scroll behaviour.
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleWordClick(word);
+    }
+  };
+
   const handleWordClick = (word: string) => {
     if (step !== 'identify') return;
 
@@ -92,7 +102,7 @@ export function ErrorCorrectionItem({
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
 
   return (
-    <div className={styles.errorCorrectionItem}>
+    <div className={styles.errorCorrectionItem} data-activity="error-correction-item" data-step={step}>
       {/* Step indicator */}
       <div className={styles.stepIndicator}>
         {step === 'identify' && <span className={styles.stepBadge}>{step1Label}</span>}
@@ -101,7 +111,7 @@ export function ErrorCorrectionItem({
       </div>
 
       {/* Sentence with clickable words */}
-      <p className={styles.errorSentence}>
+      <p className={styles.errorSentence} data-activity="error-correction-sentence">
         {words.map((word, idx) => {
           const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
 
@@ -132,7 +142,14 @@ export function ErrorCorrectionItem({
                 ${isSelected ? styles.wordSelected : ''}
                 ${step === 'complete' && isError ? styles.wordError : ''}
               `}
+              data-activity="error-correction-word"
+              data-word={cleanWord}
+              data-is-error={isError ? 'true' : 'false'}
               onClick={() => handleWordClick(word)}
+              onKeyDown={(e) => handleWordKeyDown(e, word)}
+              role="button"
+              tabIndex={step === 'identify' ? 0 : -1}
+              aria-label={step === 'identify' ? `Click to flag "${cleanWord}" as the error` : undefined}
             >
               {step === 'complete' && isError ? (
                 <>
@@ -151,6 +168,7 @@ export function ErrorCorrectionItem({
       {step === 'identify' && (
         <button
           className={`${styles.noErrorButton} ${wrongAttempts.includes('__no_error__') ? styles.noErrorWrong : ''}`}
+          data-activity="error-correction-no-error"
           onClick={handleNoError}
         >
           {noErrorLabel}
@@ -159,13 +177,14 @@ export function ErrorCorrectionItem({
 
       {/* Options - only in fix step */}
       {step === 'fix' && shuffledOptions.length > 0 && (
-        <div className={styles.fixOptions}>
+        <div className={styles.fixOptions} data-activity="error-correction-fix-options">
           <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{errorWord}</strong>":</p>
           <div className={styles.optionChips}>
             {shuffledOptions.map((option, idx) => (
               <button
                 key={idx}
                 className={styles.chip}
+                data-activity="error-correction-fix-chip"
                 onClick={() => handleFixSelect(option)}
               >
                 {option}
@@ -178,7 +197,11 @@ export function ErrorCorrectionItem({
       {/* Result feedback */}
       {step === 'complete' && (
         <>
-          <div className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+          <div
+            className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+            data-activity="error-correction-feedback"
+            data-correct={(isFixCorrect || isNoErrorCorrect) ? 'true' : 'false'}
+          >
             {isNoErrorCorrect ? (
               isUkrainian ? '✓ Правильно! У цьому реченні не було помилок.' : '✓ Correct! There was no error in this sentence.'
             ) : isFixCorrect ? (
@@ -220,7 +243,7 @@ export default function ErrorCorrection({ items, children, instruction, isUkrain
   const headerLabel = isUkrainian ? 'Знайдіть і виправте помилку' : 'Find and Fix';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="error-correction">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔍</span>
         <span>{headerLabel}</span>

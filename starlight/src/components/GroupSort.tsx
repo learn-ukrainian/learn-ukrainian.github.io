@@ -170,7 +170,7 @@ export default function GroupSort({ groups, instruction, isUkrainian }: GroupSor
   const errorLabel = isUkrainian ? '✗ Деякі слова в неправильних групах.' : '✗ Some items are in the wrong group.';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="group-sort">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📊</span>
         <span>{headerLabel}</span>
@@ -184,6 +184,7 @@ export default function GroupSort({ groups, instruction, isUkrainian }: GroupSor
         {/* Word pool - draggable items */}
         <div
           className={`${styles.wordPool} ${dragOverGroup === '__pool__' ? styles.dropTarget : ''}`}
+          data-activity="group-sort-pool"
           onDragOver={(e) => handleDragOver(e, '__pool__')}
           onDragLeave={handleDragLeave}
           onDrop={handleDropOnPool}
@@ -211,11 +212,13 @@ export default function GroupSort({ groups, instruction, isUkrainian }: GroupSor
         </div>
 
         {/* Group containers / buckets */}
-        <div className={styles.groupContainers}>
+        <div className={styles.groupContainers} data-activity="group-sort-buckets">
           {groupNames.map(groupName => (
             <div
               key={groupName}
               className={`${styles.groupBucket} ${dragOverGroup === groupName ? styles.dropTarget : ''}`}
+              data-activity="group-sort-bucket"
+              data-group-name={groupName}
               onDragOver={(e) => handleDragOver(e, groupName)}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDropOnGroup(e, groupName)}
@@ -266,7 +269,11 @@ export default function GroupSort({ groups, instruction, isUkrainian }: GroupSor
       </div>
 
       {showResult && (
-        <div className={`${styles.feedback} ${isAllCorrect() ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+        <div
+          className={`${styles.feedback} ${isAllCorrect() ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+          data-activity="group-sort-feedback"
+          data-correct={isAllCorrect() ? 'true' : 'false'}
+        >
           {isAllCorrect() ? successLabel : errorLabel}
         </div>
       )}
