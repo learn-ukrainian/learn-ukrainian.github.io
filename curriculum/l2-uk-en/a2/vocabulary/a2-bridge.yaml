@@ -1,4 +1,22 @@
 vocabulary:
+- word: вид
+  translation: aspect (grammatical category of verbs — forward reference, taught fully in M02)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: доконаний
+  translation: perfective (verb aspect — forward reference)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: недоконаний
+  translation: imperfective (verb aspect — forward reference)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: милозву́чність
   translation: euphony, melodiousness
   expression: false

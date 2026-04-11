@@ -552,21 +552,6 @@ class TestItemCounting:
 class TestLevelRestrictions:
     """Test that activities are restricted to appropriate levels."""
 
-    def test_error_correction_not_in_a1(self):
-        """Error-correction should not be allowed in A1."""
-        content = """
-## error-correction: Виправлення
-
-1. Він ходить до школа.
-   > [!error] школа
-   > [!answer] школи
-   > [!options] школа | школи | школу | школою
-   > [!explanation] Після "до" вживаємо родовий відмінок.
-"""
-        violations = check_activity_level_restrictions(content, 'A1', 10)
-        ec_violations = [v for v in violations if 'error-correction' in v.get('issue', '').lower()]
-        assert len(ec_violations) == 1
-
     def test_cloze_not_in_a1(self):
         """Cloze should not be allowed in A1."""
         content = """

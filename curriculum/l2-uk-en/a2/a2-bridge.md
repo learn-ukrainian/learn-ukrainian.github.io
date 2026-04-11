@@ -33,7 +33,7 @@ The Locative case, or Місцевий відмінок, tells us exactly where 
 
 > *Right now we are sitting in a bright school. My older brother works at a factory. Last spring we were in Uzhhorod.*
 
-The Vocative case, or Кличний відмінок, is used exclusively for addressing people, animals, or personified objects directly. It does not answer any standard questions. This case is a vibrant, living marker of the Ukrainian language and carries deep cultural significance. Unlike Russian, where the vocative case has largely disappeared in modern speech, Ukrainian strictly requires it for natural communication. Using the Nominative dictionary form instead of the Vocative to address someone immediately marks a speaker as a foreigner or indicates the use of Surzhyk.
+The Vocative case, or Кличний відмінок, is used exclusively for addressing people, animals, or personified objects directly. It does not answer any standard questions. This case is a vibrant, living marker of the Ukrainian language and carries deep cultural significance — it preserves an ancient Slavic feature that Ukrainian has retained as a fully productive case in everyday speech. Ukrainian strictly requires it for natural communication: using the Nominative dictionary form instead of the Vocative to address someone immediately marks a speaker as a foreigner or indicates the use of Surzhyk.
 
 Привіт, найкращий друже! Олю, допоможи мені, будь ласка. Пане вчителю, я маю важливе запитання.
 
@@ -89,7 +89,7 @@ Finally, the mobility of stress extends deeply into noun and verb paradigms. As 
 
 > *This cold mountain water is very tasty. I gladly drink this cold water. My right hand hurts badly today. Raise both your hands high up.*
 
-<!-- INJECT_ACTIVITY: fill-in, Phonological Alternation Pairs, 8 items -->
+<!-- INJECT_ACTIVITY: fill-in-phonological-alternation-pairs -->
 
 ## Милозвучність мови: евфонія (The Melody of Language: Euphony)
 
@@ -122,8 +122,8 @@ Finally, the preposition meaning "with" or "from" expands into three distinct fo
 
 > *I always walk in the forest with my old dog. She drinks this coffee with pleasure. Tomorrow I will talk with my teacher. My friend takes a book from the cabinet.*
 
-<!-- INJECT_ACTIVITY: match-up, Euphony Choice Exercise, 8 items -->
-<!-- INJECT_ACTIVITY: error-correction, Euphony Error Correction, 6 items -->
+<!-- INJECT_ACTIVITY: match-up-euphony-choice-exercise -->
+<!-- INJECT_ACTIVITY: error-correction-euphony-error-correction -->
 
 ## Що нас чекає на рівні А2? (Summary & Roadmap)
 

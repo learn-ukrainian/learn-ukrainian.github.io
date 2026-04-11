@@ -200,17 +200,20 @@ def _check_quiz_complexity(title: str, body: str, act_obj, rules: dict,
     """Check quiz prompt length and option count complexity."""
     violations = []
     quiz_items = act_obj.items if act_obj else []
-
-    min_len, max_len = rules.get('min_len', 5), rules.get('max_len', 30)
+    max_len = rules.get('max_len', 30)
 
     for i, q in enumerate(quiz_items, 1):
         prompt = getattr(q, 'question', '')
         prompt_words = len(re.findall(r'[\w\u0400-\u04FF]+', prompt))
-        if prompt_words < min_len or prompt_words > max_len + 5:
+        # Only flag prompts that are too LONG. Short prompts ("Який
+        # відмінок?", "Виберіть правильне") are valid concise pedagogy
+        # — the min-length check was producing noise on every level.
+        # Removed 2026-04-11.
+        if prompt_words > max_len + 5:
             violations.append({
                 'type': 'COMPLEXITY_WORD_COUNT',
-                'issue': f"quiz '{title}' Q{i} prompt length {prompt_words} (target: {min_len}-{max_len})",
-                'fix': f"Adjust prompt length to {min_len}-{max_len} words."
+                'issue': f"quiz '{title}' Q{i} prompt length {prompt_words} (max: {max_len})",
+                'fix': f"Shorten prompt to ≤{max_len} words."
             })
 
         options_count = len(q.options)

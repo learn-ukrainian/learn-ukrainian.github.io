@@ -136,7 +136,12 @@ def check_colonial_framing(content: str, file_path: str = "") -> list[dict]:
                     continue
                 violations.append({
                     "type": "COLONIAL_FRAMING",
-                    "severity": "warning",
+                    # Severity = error (not warning) so it's not silently
+                    # filtered out by the pedagogy gate. Decolonized
+                    # pedagogy is a HARD project principle — "Unlike
+                    # Russian..." framing must never ship.
+                    "severity": "error",
+                    "blocking": True,
                     "issue": (
                         f'Line {line_num}: {pat_def["label"]} — '
                         f'"{match.group()}" positions Russian as baseline.'
