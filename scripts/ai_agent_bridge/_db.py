@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS channel_messages (
     context_rev_channel TEXT,             -- sha256 hex of {channel}/context.md at post-time
     monitor_state_snapshot TEXT,          -- JSON blob from /api/state/summary
     created_at TEXT NOT NULL,
-    FOREIGN KEY (channel) REFERENCES channels(name)
+    FOREIGN KEY (channel) REFERENCES channels(name),
+    FOREIGN KEY (parent_id) REFERENCES channel_messages(message_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_channel_messages_channel_time
@@ -127,10 +128,17 @@ def _tune_connection(conn: sqlite3.Connection) -> None:
     readers while a writer is active, so ``ab p`` and ``ab r`` don't
     block each other. ``busy_timeout`` gives writers up to 5 seconds
     to queue on contended inserts before raising ``SQLITE_BUSY``.
+
+    Row factory is ``sqlite3.Row`` — supports both integer-index access
+    (for legacy messages queries that use ``row[0]``) AND dict-style
+    access (``row["name"]``) for channel queries. Ported on Gemini's
+    B.1 review recommendation (task bridge-b1-review) to eliminate
+    tuple-index fragility in the ``_row_to_*`` helpers.
     """
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=5000")
     conn.execute("PRAGMA foreign_keys=ON")
+    conn.row_factory = sqlite3.Row
 
 
 def init_db():
@@ -182,9 +190,19 @@ def get_db():
             conn.execute("ALTER TABLE sessions ADD COLUMN codex_session_id TEXT")
 
         # --- Channel bridge tables (#1190) ---
-        # Idempotent — safe to run on every connection open because all
-        # CREATE TABLE / CREATE INDEX statements use IF NOT EXISTS.
-        conn.executescript(_CHANNELS_SCHEMA)
+        # GATED by table-existence check. Running executescript() on
+        # every connection — even with IF NOT EXISTS — parses the DDL
+        # and bumps SQLite's schema cookie, which invalidates cached
+        # prepared statements across ALL open connections and crashes
+        # concurrent readers with "database schema has changed". This
+        # was Gemini's #1 blocker in the B.1 adversarial review
+        # (task bridge-b1-review). Same mitigation pattern as the
+        # legacy messages-table migration above.
+        cursor.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='channels'"
+        )
+        if not cursor.fetchone():
+            conn.executescript(_CHANNELS_SCHEMA)
 
         conn.commit()
     except Exception:

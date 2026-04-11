@@ -51,7 +51,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sqlite3
+import urllib.request
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
@@ -69,6 +69,32 @@ VALID_DELIVERY_STATUSES = ("pending", "dispatched", "delivered", "failed")
 # Holds project-wide pinned context that agents need on every message
 # (coding conventions, current sprint summary, etc.).
 SHARED_CHANNEL = "shared"
+
+# ── B.2: Context injection + Monitor API fetch (#1190) ────────────────
+
+# Root directory for channel context files. In-repo, git-tracked,
+# reviewable — context drift becomes a first-class commit history.
+# Each channel gets its own subdirectory: docs/agent-channels/{channel}/
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+CONTEXT_ROOT = _PROJECT_ROOT / "docs" / "agent-channels"
+
+# Monitor API endpoint for dynamic project state.
+# See docs/MONITOR-API.md. Short timeout because the API is on the same
+# machine — if it's not responding in 2 seconds, it's down, not slow.
+MONITOR_API_URL = "http://localhost:8765/api/state/summary"
+MONITOR_FETCH_TIMEOUT_S = 2.0
+
+# Character budget for message history when building an agent prompt.
+# Reused from _messaging.get_conversation_context() pattern — truncate
+# by char count, not message count, so a single 400-line script doesn't
+# blow up the budget. Pattern attributed to Gemini's B.1 design review.
+DEFAULT_MAX_HISTORY_CHARS = 6000
+
+# Hard ceiling on the assembled agent prompt. If the context chain +
+# history + new body exceeds this, we drop history aggressively to fit.
+# This exists so a deep include chain can't accidentally blow up one
+# post to >50KB — the whole point of channels is to SAVE tokens.
+DEFAULT_MAX_PROMPT_CHARS = 24000
 
 
 # ── Helpers ────────────────────────────────────────────────────────────
@@ -108,6 +134,310 @@ def _validate_kind(kind: str) -> None:
         raise ValueError(
             f"Unknown kind '{kind}'. Expected one of {VALID_KINDS}."
         )
+
+
+# ── B.2: Context loading ──────────────────────────────────────────────
+
+
+def channel_context_path(channel: str) -> Path:
+    """Return the filesystem path to a channel's pinned context file.
+
+    Channels live at ``docs/agent-channels/{channel}/context.md``.
+    The file does NOT have to exist — ``context_sha256`` returns
+    empty string for missing files, and ``load_channel_context``
+    treats a missing file as "no pinned context" rather than erroring.
+    """
+    return CONTEXT_ROOT / channel / "context.md"
+
+
+def load_channel_context(
+    channel: str,
+    *,
+    _seen: set[str] | None = None,
+) -> dict[str, Any]:
+    """Load a channel's pinned context plus all recursive includes.
+
+    Walks the ``include`` chain depth-first, resolving each included
+    channel's ``context.md`` and concatenating them in include-order
+    (shared-first if ``shared`` is included). Cycles are broken by
+    tracking the ``_seen`` set — recursion never revisits a channel.
+
+    Returns a dict:
+        {
+            "body": str,                    # concatenated context text
+            "revs": {channel: sha256_hex},  # per-file revisions for audit
+            "missing": [channel, ...],      # channels whose context.md doesn't exist
+        }
+
+    The ``revs`` dict is intended for storing in the ``channel_messages``
+    row so that a message's context is replayable deterministically.
+
+    **Missing context files are soft errors.** They return empty body
+    and are recorded in ``missing``. A post will still succeed with
+    an empty context — the idea is that channels can be created
+    before their context.md is written, and the system should be
+    usable without any pinned context at all.
+    """
+    _seen = _seen if _seen is not None else set()
+    if channel in _seen:
+        return {"body": "", "revs": {}, "missing": []}
+    _seen.add(channel)
+
+    ch = get_channel(channel)
+    if ch is None:
+        # Channel doesn't exist in DB — treat as empty. Callers that
+        # care (e.g. post()) will fail upstream with a clearer error.
+        return {"body": "", "revs": {}, "missing": [channel]}
+
+    revs: dict[str, str] = {}
+    missing: list[str] = []
+    parts: list[str] = []
+
+    # 1. Recursively resolve all included channels first (shared, etc.)
+    #    so the final output reads: [shared] → [included_1] → [self].
+    for include in ch["include"]:
+        sub = load_channel_context(include, _seen=_seen)
+        if sub["body"]:
+            parts.append(sub["body"])
+        revs.update(sub["revs"])
+        missing.extend(sub["missing"])
+
+    # 2. Load this channel's own context.md.
+    ctx_path = channel_context_path(channel)
+    rev = context_sha256(ctx_path)
+    revs[channel] = rev
+    try:
+        own_body = ctx_path.read_text("utf-8")
+        if own_body.strip():
+            parts.append(
+                f"--- context: {channel} (sha256: {rev[:12]}) ---\n{own_body.rstrip()}\n"
+            )
+    except (OSError, FileNotFoundError):
+        missing.append(channel)
+
+    return {
+        "body": "\n".join(parts),
+        "revs": revs,
+        "missing": missing,
+    }
+
+
+# ── B.2: Monitor API fetch ────────────────────────────────────────────
+
+
+def fetch_monitor_state(
+    *,
+    timeout: float = MONITOR_FETCH_TIMEOUT_S,
+    url: str = MONITOR_API_URL,
+) -> dict[str, Any] | None:
+    """Fetch current project state from the Monitor API.
+
+    Returns the decoded JSON dict on success, or None on ANY failure
+    (connection refused, timeout, non-200 status, malformed JSON).
+    The Monitor API is on the same machine — if it's not responding
+    in 2 seconds, it's down, not slow. Callers treat None as "no
+    snapshot available" and proceed without blocking the post.
+
+    This is the dynamic-state half of Gemini's correction in the B.1
+    design review: the pinned context.md is STABLE state (conventions,
+    rules); the Monitor API snapshot is VOLATILE state (current sprint,
+    active tickets, recent commits, build state). Both get recorded
+    into the message row so replay is deterministic.
+    """
+    try:
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": "ai-agent-bridge-channels/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            if resp.status != 200:
+                return None
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        # Broad catch is deliberate (Gemini B.2 review non-blocker #2):
+        # urllib.error.URLError covers most network errors but not
+        # UnicodeDecodeError (subclass of ValueError) or some
+        # http.client.HTTPException subclasses like IncompleteRead.
+        # A freak network corruption should never crash an active post.
+        return None
+
+
+# ── B.2: History truncation (char budget, not message count) ─────────
+
+
+def truncate_history_by_budget(
+    messages: list[dict[str, Any]],
+    *,
+    max_chars: int = DEFAULT_MAX_HISTORY_CHARS,
+) -> tuple[list[dict[str, Any]], int]:
+    """Trim a message list to fit within a character budget.
+
+    Pattern ported from ``_messaging.get_conversation_context()`` —
+    iterate newest-first, accumulate until budget is exhausted, drop
+    oldest first. This is Gemini's B.1 #3 correction: count bytes,
+    not messages. A single 400-line script in the history would blow
+    past a naive ``K=5`` cap, so we truncate by char count instead.
+
+    Returns ``(kept_messages, dropped_count)`` ordered oldest→newest.
+    The caller is responsible for rendering the result into the final
+    prompt (so the "... [N older messages omitted] ..." marker is
+    placed consistently with whatever formatting they use).
+    """
+    if not messages:
+        return [], 0
+    # Rough character estimate = body + small envelope for metadata.
+    kept_rev: list[dict[str, Any]] = []
+    total = 0
+    for msg in reversed(messages):
+        entry_size = len(msg.get("body", "")) + 80  # +80 for round/agent/timestamp envelope
+        if total + entry_size > max_chars and kept_rev:
+            break
+        kept_rev.append(msg)
+        total += entry_size
+    dropped = len(messages) - len(kept_rev)
+    kept_rev.reverse()
+    return kept_rev, dropped
+
+
+# ── B.2: Agent prompt assembly ────────────────────────────────────────
+
+
+def build_agent_prompt(
+    channel: str,
+    body: str,
+    *,
+    history_tail: int = 10,
+    max_history_chars: int = DEFAULT_MAX_HISTORY_CHARS,
+    max_prompt_chars: int = DEFAULT_MAX_PROMPT_CHARS,
+    include_monitor_state: bool = True,
+) -> dict[str, Any]:
+    """Assemble the full text an agent sees for a post in this channel.
+
+    Returns a dict with the assembled text plus metadata useful for
+    storing on the message row:
+
+        {
+            "prompt": str,                   # the full text to send to the agent
+            "context_revs": {chan: sha256},  # which context files were seen
+            "monitor_state": dict | None,    # Monitor API snapshot at post-time
+            "history_dropped": int,          # # of older messages truncated
+            "total_chars": int,              # prompt length
+        }
+
+    Assembly order (oldest-first, highest-priority sections LAST so
+    they're near the end of the prompt where attention peaks):
+
+        1. Pinned context (shared + channel includes + channel self)
+        2. Monitor state snapshot (volatile project state)
+        3. Message history for the channel (truncated to budget)
+        4. The new post body
+
+    If the assembled prompt exceeds ``max_prompt_chars``, history is
+    dropped first (oldest-first). If even zero history won't fit,
+    the pinned context is truncated from the end. We never drop the
+    new post body — if the body alone exceeds the budget, we raise
+    ValueError so the caller knows to split or shorten it.
+    """
+    # 1. Pinned context from this channel and its includes
+    ctx = load_channel_context(channel)
+    context_text = ctx["body"]
+
+    # 2. Monitor state
+    monitor_state = fetch_monitor_state() if include_monitor_state else None
+    monitor_text = ""
+    if monitor_state:
+        monitor_text = (
+            "--- monitor: project state (volatile) ---\n"
+            + json.dumps(monitor_state, indent=2, ensure_ascii=False)
+            + "\n"
+        )
+
+    # 3. Channel history (newest N, truncated by char budget)
+    raw_history = read(channel, tail=history_tail)
+    kept, dropped = truncate_history_by_budget(
+        raw_history, max_chars=max_history_chars
+    )
+    history_text = ""
+    if kept:
+        lines = [f"--- history: last {len(kept)} messages in {channel} ---"]
+        if dropped:
+            lines.append(f"... [{dropped} older messages omitted] ...")
+        for msg in kept:
+            lines.append(
+                f"[{msg['created_at'][:19]}] {msg['from_agent']} "
+                f"(round {msg['round_index']}): {msg['body']}"
+            )
+        history_text = "\n".join(lines) + "\n"
+
+    # 4. The new post body
+    body_text = f"--- new post ({channel}) ---\n{body}\n"
+
+    # Assemble and enforce the hard ceiling
+    sections = [context_text, monitor_text, history_text, body_text]
+    prompt = "\n".join(s for s in sections if s.strip())
+
+    if len(prompt) > max_prompt_chars:
+        # Drop history first (oldest-first already truncated above,
+        # now drop all of it if needed).
+        prompt_no_history = "\n".join(
+            s for s in [context_text, monitor_text, body_text] if s.strip()
+        )
+        if len(prompt_no_history) <= max_prompt_chars:
+            prompt = prompt_no_history
+            dropped = len(raw_history)  # all dropped
+            history_text = ""
+        else:
+            # Even with zero history we're over budget. Drop monitor
+            # state AND truncate context. If the body alone is over
+            # budget, that's a caller error — raise.
+            body_len = len(body_text)
+            if body_len > max_prompt_chars:
+                raise ValueError(
+                    f"post body alone is {body_len} chars, "
+                    f"exceeds max_prompt_chars={max_prompt_chars}. "
+                    f"Split it into smaller posts or increase the budget."
+                )
+
+            # Budget math (post B.2 review — Gemini found a negative-
+            # slice bug in the original, and the fix introduced a
+            # second bug where the "[context truncated]" marker itself
+            # ate into the budget). Now we explicitly account for the
+            # marker length and guarantee the final prompt fits.
+            marker = "\n... [context truncated to fit budget] ...\n"
+            marker_len = len(marker)
+            non_body_budget = max_prompt_chars - body_len
+
+            # We need room for: marker + at least a few chars of context.
+            # If non_body_budget can't even fit the marker, drop context
+            # entirely and return just the body (can't lie about truncation
+            # if we have nothing to truncate TO).
+            min_context_chars = 1  # at least 1 char of context to be useful
+            if non_body_budget >= marker_len + min_context_chars:
+                remaining_for_ctx = non_body_budget - marker_len
+                if remaining_for_ctx < len(context_text):
+                    truncated_ctx = context_text[:remaining_for_ctx]
+                    prompt = f"{truncated_ctx}{marker}{body_text}"
+                else:
+                    # Context already fits without truncation
+                    prompt = (
+                        f"{context_text}\n{body_text}"
+                        if context_text.strip()
+                        else body_text
+                    )
+            else:
+                # No room for marker + context; body only
+                prompt = body_text
+
+            dropped = len(raw_history)
+            monitor_state = None  # dropped to save space
+
+    return {
+        "prompt": prompt,
+        "context_revs": ctx["revs"],
+        "monitor_state": monitor_state,
+        "history_dropped": dropped,
+        "total_chars": len(prompt),
+    }
 
 
 # ── Channel management ────────────────────────────────────────────────
@@ -207,13 +537,18 @@ def list_channels() -> list[dict[str, Any]]:
         conn.close()
 
 
-def _row_to_channel(row: tuple) -> dict[str, Any]:
+def _row_to_channel(row) -> dict[str, Any]:
+    """Convert a ``sqlite3.Row`` to a channel dict.
+
+    Uses dict-style key access so a SELECT column reorder can't silently
+    break this helper — Gemini's B.1 review non-blocker #2.
+    """
     return {
-        "name": row[0],
-        "description": row[1],
-        "include": [s for s in row[2].split(",") if s],
-        "subscribers": [s for s in row[3].split(",") if s],
-        "created_at": row[4],
+        "name": row["name"],
+        "description": row["description"],
+        "include": [s for s in row["include"].split(",") if s],
+        "subscribers": [s for s in row["subscribers"].split(",") if s],
+        "created_at": row["created_at"],
     }
 
 
@@ -231,9 +566,10 @@ def post(
     kind: str = "post",
     from_model: str | None = None,
     attachments: list[dict[str, Any]] | None = None,
-    context_rev_shared: str = "",
-    context_rev_channel: str = "",
+    context_rev_shared: str | None = None,
+    context_rev_channel: str | None = None,
     monitor_state_snapshot: dict[str, Any] | None = None,
+    auto_snapshot: bool = True,
 ) -> dict[str, Any]:
     """Create a new channel_messages row + N deliveries rows atomically.
 
@@ -247,11 +583,53 @@ def post(
     created and the message is a pure "log entry" (useful for
     system/audit posts). ``parent_id`` links a reply to its origin;
     the reply's ``thread_id`` is inherited from the parent.
+
+    **B.2 context auto-snapshot (#1190):** if ``auto_snapshot=True``
+    (default) and the ``context_rev_*`` / ``monitor_state_snapshot``
+    kwargs are left at their sentinel ``None``, the function reads
+    the current pinned context files and fetches the Monitor API,
+    storing both in the message row. This makes message history
+    deterministically replayable. Callers that want manual control
+    (tests, synthetic posts, system announcements) can pass explicit
+    values or set ``auto_snapshot=False``.
     """
     _validate_agent(from_agent)
     _validate_kind(kind)
     for agent in to_agents or []:
         _validate_agent(agent)
+
+    # B.2: Auto-populate context snapshots if not provided.
+    # The "" vs None distinction matters — empty string is an explicit
+    # "no context", None is "please auto-fetch". Tests and system posts
+    # can pass explicit empty strings to skip the filesystem/network I/O.
+    if auto_snapshot:
+        if context_rev_shared is None:
+            shared_path = channel_context_path(SHARED_CHANNEL)
+            context_rev_shared = context_sha256(shared_path)
+            # Loud warning on missing shared context — agents need
+            # project-wide rules/conventions, and posting blind is a
+            # worse failure mode than printing to stderr. Gemini's
+            # non-blocker #1 in the B.1 review (task bridge-b1-review).
+            if not context_rev_shared and channel != SHARED_CHANNEL:
+                import sys as _sys
+                print(
+                    f"⚠️  channel-bridge: shared context file is missing at "
+                    f"{shared_path} — agent will post without project-wide "
+                    f"rules. Create it with `ab context shared --edit`.",
+                    file=_sys.stderr,
+                )
+        if context_rev_channel is None:
+            context_rev_channel = context_sha256(
+                channel_context_path(channel)
+            )
+        if monitor_state_snapshot is None:
+            # Best-effort — returns None on any failure, which is fine.
+            monitor_state_snapshot = fetch_monitor_state()
+
+    # Normalize sentinel Nones so the DB stores empty string rather
+    # than nullable columns having inconsistent semantics.
+    context_rev_shared = context_rev_shared or ""
+    context_rev_channel = context_rev_channel or ""
 
     message_id = _new_id()
     created_at = _now_iso()
@@ -262,8 +640,18 @@ def post(
 
     conn = get_db()
     try:
-        # Verify the channel exists before inserting — the FK would catch
-        # it, but an explicit check gives a better error message.
+        # BEGIN IMMEDIATE acquires the write lock FIRST, then does all
+        # reads and writes under the same transaction. Gemini's #2
+        # blocker in the B.1 adversarial review: doing reads before
+        # BEGIN IMMEDIATE leaves a TOCTOU window where a concurrent
+        # writer could delete/rename the channel between the existence
+        # check and the insert, violating the FK. Solved by moving
+        # every read under the write lock. Under concurrency the
+        # second caller queues on busy_timeout rather than deadlocking.
+        conn.execute("BEGIN IMMEDIATE")
+
+        # Verify the channel exists before inserting — the FK would
+        # catch it, but an explicit check gives a better error message.
         ch = conn.execute(
             "SELECT name FROM channels WHERE name = ?", (channel,)
         ).fetchone()
@@ -279,15 +667,11 @@ def post(
             ).fetchone()
             if not parent:
                 raise ValueError(f"parent message '{parent_id}' not found")
-            thread_id = parent[0]
-            round_index = parent[1] + 1
+            thread_id = parent["thread_id"]
+            round_index = parent["round_index"] + 1
         else:
             thread_id = message_id
             round_index = 0
-
-        # BEGIN IMMEDIATE: acquire the write lock upfront so concurrent
-        # fanouts queue on busy_timeout instead of deadlocking mid-txn.
-        conn.execute("BEGIN IMMEDIATE")
 
         conn.execute(
             """
@@ -330,7 +714,11 @@ def post(
             "delivery_ids": delivery_ids,
             "created_at": created_at,
         }
-    except sqlite3.Error:
+    except Exception:
+        # Catches both sqlite3.Error (insert failure) AND ValueError
+        # from the now-inside-transaction channel/parent checks.
+        # Previously this was sqlite3.Error only, which left an orphan
+        # lock when a ValueError escaped inside the transaction.
         conn.rollback()
         raise
     finally:
@@ -389,25 +777,28 @@ def read(
         conn.close()
 
 
-def _row_to_message(row: tuple) -> dict[str, Any]:
+def _row_to_message(row) -> dict[str, Any]:
+    """Convert a ``sqlite3.Row`` to a message dict (dict-style access)."""
     return {
-        "message_id": row[0],
-        "channel": row[1],
-        "thread_id": row[2],
-        "parent_id": row[3],
-        "correlation_id": row[4],
-        "round_index": row[5],
-        "from_agent": row[6],
-        "from_model": row[7],
-        "kind": row[8],
-        "body": row[9],
-        "attachments": json.loads(row[10]) if row[10] else None,
-        "context_rev_shared": row[11],
-        "context_rev_channel": row[12],
+        "message_id": row["message_id"],
+        "channel": row["channel"],
+        "thread_id": row["thread_id"],
+        "parent_id": row["parent_id"],
+        "correlation_id": row["correlation_id"],
+        "round_index": row["round_index"],
+        "from_agent": row["from_agent"],
+        "from_model": row["from_model"],
+        "kind": row["kind"],
+        "body": row["body"],
+        "attachments": json.loads(row["attachments"]) if row["attachments"] else None,
+        "context_rev_shared": row["context_rev_shared"],
+        "context_rev_channel": row["context_rev_channel"],
         "monitor_state_snapshot": (
-            json.loads(row[13]) if row[13] else None
+            json.loads(row["monitor_state_snapshot"])
+            if row["monitor_state_snapshot"]
+            else None
         ),
-        "created_at": row[14],
+        "created_at": row["created_at"],
     }
 
 
@@ -472,14 +863,14 @@ def deliveries_for_message(message_id: str) -> list[dict[str, Any]]:
         ).fetchall()
         return [
             {
-                "delivery_id": r[0],
-                "message_id": r[1],
-                "to_agent": r[2],
-                "to_model": r[3],
-                "status": r[4],
-                "dispatched_at": r[5],
-                "delivered_at": r[6],
-                "error": r[7],
+                "delivery_id": r["delivery_id"],
+                "message_id": r["message_id"],
+                "to_agent": r["to_agent"],
+                "to_model": r["to_model"],
+                "status": r["status"],
+                "dispatched_at": r["dispatched_at"],
+                "delivered_at": r["delivered_at"],
+                "error": r["error"],
             }
             for r in rows
         ]
@@ -500,7 +891,8 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
             """
             SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
                    d.status, d.dispatched_at, d.delivered_at, d.error,
-                   cm.body, cm.from_agent, cm.channel, cm.created_at
+                   cm.body, cm.from_agent AS cm_from_agent,
+                   cm.channel AS cm_channel, cm.created_at AS cm_created_at
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ? AND d.status = 'pending'
@@ -510,18 +902,18 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
         ).fetchall()
         return [
             {
-                "delivery_id": r[0],
-                "message_id": r[1],
-                "to_agent": r[2],
-                "to_model": r[3],
-                "status": r[4],
-                "dispatched_at": r[5],
-                "delivered_at": r[6],
-                "error": r[7],
-                "body": r[8],
-                "from_agent": r[9],
-                "channel": r[10],
-                "created_at": r[11],
+                "delivery_id": r["delivery_id"],
+                "message_id": r["message_id"],
+                "to_agent": r["to_agent"],
+                "to_model": r["to_model"],
+                "status": r["status"],
+                "dispatched_at": r["dispatched_at"],
+                "delivered_at": r["delivered_at"],
+                "error": r["error"],
+                "body": r["body"],
+                "from_agent": r["cm_from_agent"],
+                "channel": r["cm_channel"],
+                "created_at": r["cm_created_at"],
             }
             for r in rows
         ]

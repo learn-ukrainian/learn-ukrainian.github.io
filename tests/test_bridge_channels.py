@@ -379,3 +379,258 @@ def test_context_sha256_missing_file_returns_empty_string(tmp_path):
     """Verify missing files return empty string rather than raising."""
     f = tmp_path / "nope.md"
     assert _channels.context_sha256(f) == ""
+
+
+# ════════════════════════════════════════════════════════════════════
+# B.2: Context injection + Monitor API fetch + prompt assembly (#1190)
+# ════════════════════════════════════════════════════════════════════
+
+@pytest.fixture
+def isolated_context_root(tmp_path, monkeypatch):
+    """Point CONTEXT_ROOT at a tmp dir so tests don't read real docs/."""
+    root = tmp_path / "agent-channels"
+    root.mkdir()
+    monkeypatch.setattr(_channels, "CONTEXT_ROOT", root)
+    return root
+
+
+def test_channel_context_path_returns_expected_location(isolated_context_root):
+    """Verify channel_context_path resolves to {CONTEXT_ROOT}/{channel}/context.md."""
+    p = _channels.channel_context_path("pipeline")
+    assert p == isolated_context_root / "pipeline" / "context.md"
+
+
+def test_load_channel_context_missing_returns_empty_body(isolated_context_root):
+    """Loading a channel with no context.md returns empty body + missing list."""
+    _channels.create_channel("pipeline")
+    result = _channels.load_channel_context("pipeline")
+    assert result["body"] == ""
+    assert "pipeline" in result["missing"]
+    assert "pipeline" in result["revs"]
+    assert result["revs"]["pipeline"] == ""
+
+
+def test_load_channel_context_with_file_loads_and_hashes(isolated_context_root):
+    """Loading a channel with a context.md reads it and computes sha256."""
+    _channels.create_channel("pipeline")
+    ctx_dir = isolated_context_root / "pipeline"
+    ctx_dir.mkdir()
+    (ctx_dir / "context.md").write_text("# pipeline rules\nUse BEGIN IMMEDIATE")
+    result = _channels.load_channel_context("pipeline")
+    assert "pipeline rules" in result["body"]
+    assert "BEGIN IMMEDIATE" in result["body"]
+    assert result["revs"]["pipeline"]  # nonempty sha256
+    assert result["missing"] == []
+
+
+def test_load_channel_context_recursive_includes(isolated_context_root):
+    """Includes are resolved depth-first, shared comes first in body."""
+    _channels.create_channel("shared")
+    _channels.create_channel("pipeline", include=["shared"])
+    (isolated_context_root / "shared").mkdir()
+    (isolated_context_root / "shared" / "context.md").write_text("PROJECT RULES")
+    (isolated_context_root / "pipeline").mkdir()
+    (isolated_context_root / "pipeline" / "context.md").write_text("PIPELINE RULES")
+    result = _channels.load_channel_context("pipeline")
+    # Shared must appear before pipeline in the combined body
+    assert result["body"].index("PROJECT RULES") < result["body"].index("PIPELINE RULES")
+    assert set(result["revs"].keys()) == {"shared", "pipeline"}
+    assert result["missing"] == []
+
+
+def test_load_channel_context_cycle_detection(isolated_context_root):
+    """Circular includes don't infinite-loop."""
+    _channels.create_channel("a", include=["b"])
+    _channels.create_channel("b", include=["a"])
+    (isolated_context_root / "a").mkdir()
+    (isolated_context_root / "a" / "context.md").write_text("A")
+    (isolated_context_root / "b").mkdir()
+    (isolated_context_root / "b" / "context.md").write_text("B")
+    # Should terminate without RecursionError
+    result = _channels.load_channel_context("a")
+    assert "A" in result["body"]
+    assert "B" in result["body"]
+
+
+def test_fetch_monitor_state_returns_none_on_connection_error(monkeypatch):
+    """Monitor API down → returns None, doesn't raise."""
+    import urllib.error
+    def boom(*a, **kw):
+        raise urllib.error.URLError("connection refused")
+    monkeypatch.setattr("urllib.request.urlopen", boom)
+    assert _channels.fetch_monitor_state(timeout=0.1) is None
+
+
+def test_fetch_monitor_state_returns_none_on_timeout(monkeypatch):
+    """Timeout also returns None, not raise."""
+    def boom(*a, **kw):
+        raise TimeoutError("slow")
+    monkeypatch.setattr("urllib.request.urlopen", boom)
+    assert _channels.fetch_monitor_state(timeout=0.1) is None
+
+
+def test_truncate_history_by_budget_empty():
+    """Empty list → empty result, zero dropped."""
+    kept, dropped = _channels.truncate_history_by_budget([])
+    assert kept == []
+    assert dropped == 0
+
+
+def test_truncate_history_by_budget_all_fit():
+    """If everything fits, nothing is dropped."""
+    messages = [{"body": "short", "round_index": 0}] * 3
+    kept, dropped = _channels.truncate_history_by_budget(messages, max_chars=10000)
+    assert len(kept) == 3
+    assert dropped == 0
+
+
+def test_truncate_history_by_budget_drops_oldest_first():
+    """Oldest messages are dropped first when over budget."""
+    messages = [
+        {"body": "a" * 100, "round_index": 0},
+        {"body": "b" * 100, "round_index": 1},
+        {"body": "c" * 100, "round_index": 2},
+    ]
+    # Budget fits roughly 1-2 messages (100 body + 80 envelope each)
+    kept, dropped = _channels.truncate_history_by_budget(messages, max_chars=200)
+    assert dropped >= 1
+    # Newest (c) should survive, oldest (a) dropped
+    kept_bodies = [m["body"] for m in kept]
+    assert "c" * 100 in kept_bodies
+    assert "a" * 100 not in kept_bodies
+
+
+def test_truncate_history_by_budget_keeps_at_least_one():
+    """Even with an absurdly small budget, the newest message is kept."""
+    messages = [
+        {"body": "a" * 10_000, "round_index": 0},
+        {"body": "b" * 10_000, "round_index": 1},
+    ]
+    kept, _dropped = _channels.truncate_history_by_budget(messages, max_chars=50)
+    # At least one (the newest) survives — the "and kept_rev" guard
+    assert len(kept) >= 1
+    assert kept[-1]["body"] == "b" * 10_000
+
+
+def test_post_auto_snapshot_captures_context_sha256(isolated_context_root):
+    """post() with auto_snapshot=True records file hashes into the message row."""
+    _channels.create_channel("shared")
+    _channels.create_channel("pipeline", include=["shared"])
+    (isolated_context_root / "shared").mkdir()
+    (isolated_context_root / "shared" / "context.md").write_text("shared-content")
+    (isolated_context_root / "pipeline").mkdir()
+    (isolated_context_root / "pipeline" / "context.md").write_text("pipeline-content")
+
+    # Prevent network call in test
+    with patch.object(_channels, "fetch_monitor_state", return_value=None):
+        result = _channels.post("pipeline", "user", "test body", auto_snapshot=True)
+
+    msgs = _channels.read("pipeline", tail=1)
+    assert len(msgs) == 1
+    import hashlib
+    shared_sha = hashlib.sha256(b"shared-content").hexdigest()
+    pipeline_sha = hashlib.sha256(b"pipeline-content").hexdigest()
+    assert msgs[0]["context_rev_shared"] == shared_sha
+    assert msgs[0]["context_rev_channel"] == pipeline_sha
+
+
+def test_post_auto_snapshot_with_missing_shared_warns(isolated_context_root, capsys):
+    """Missing shared context emits a loud stderr warning per review feedback."""
+    _channels.create_channel("shared")  # no context file
+    _channels.create_channel("pipeline")  # no context file either
+    with patch.object(_channels, "fetch_monitor_state", return_value=None):
+        _channels.post("pipeline", "user", "body", auto_snapshot=True)
+    captured = capsys.readouterr()
+    assert "shared context file is missing" in captured.err
+
+
+def test_post_auto_snapshot_false_skips_io(isolated_context_root):
+    """auto_snapshot=False leaves context_rev_* as empty strings."""
+    _channels.create_channel("pipeline")
+    _channels.post("pipeline", "user", "body", auto_snapshot=False)
+    msgs = _channels.read("pipeline", tail=1)
+    assert msgs[0]["context_rev_shared"] == ""
+    assert msgs[0]["context_rev_channel"] == ""
+    assert msgs[0]["monitor_state_snapshot"] is None
+
+
+def test_build_agent_prompt_assembles_sections(isolated_context_root):
+    """build_agent_prompt produces context + history + body in order."""
+    _channels.create_channel("pipeline")
+    (isolated_context_root / "pipeline").mkdir()
+    (isolated_context_root / "pipeline" / "context.md").write_text("RULES: always test")
+
+    # Post one historical message
+    _channels.post("pipeline", "user", "earlier message", auto_snapshot=False)
+
+    with patch.object(_channels, "fetch_monitor_state", return_value=None):
+        info = _channels.build_agent_prompt(
+            "pipeline", "new post body", include_monitor_state=False
+        )
+
+    assert "RULES: always test" in info["prompt"]
+    assert "earlier message" in info["prompt"]
+    assert "new post body" in info["prompt"]
+    # Context must come before history, history before body (order matters
+    # for attention — newest/most-important content at the END)
+    idx_rules = info["prompt"].index("RULES")
+    idx_earlier = info["prompt"].index("earlier message")
+    idx_body = info["prompt"].index("new post body")
+    assert idx_rules < idx_earlier < idx_body
+
+
+def test_build_agent_prompt_raises_if_body_alone_exceeds_budget(isolated_context_root):
+    """A too-large post body raises ValueError instead of silently truncating."""
+    _channels.create_channel("pipeline")
+    huge = "x" * 100_000
+    with pytest.raises(ValueError, match="post body alone"):
+        _channels.build_agent_prompt(
+            "pipeline", huge,
+            include_monitor_state=False,
+            max_prompt_chars=1000,
+        )
+
+
+def test_build_agent_prompt_respects_budget_when_body_close_to_limit(
+    isolated_context_root,
+):
+    """Regression for negative-slice bug in context truncation (#1190 B.2 review).
+
+    Gemini found that if ``body_len`` is close to but under
+    ``max_prompt_chars``, ``remaining = max_prompt_chars - body_len - 100``
+    evaluates NEGATIVE, and ``context_text[:-50]`` slices off only the last
+    50 chars instead of truncating to 50 chars. Before the fix the final
+    prompt blew past the ceiling.
+    """
+    _channels.create_channel("pipeline")
+    (isolated_context_root / "pipeline").mkdir()
+    # Large context — 10,000 chars of real content
+    (isolated_context_root / "pipeline" / "context.md").write_text("R" * 10_000)
+
+    # body is 950 chars; budget is 1000; remaining would be 1000-950-100 = -50
+    body = "B" * 950
+    info = _channels.build_agent_prompt(
+        "pipeline", body,
+        include_monitor_state=False,
+        max_prompt_chars=1000,
+    )
+
+    # The final prompt MUST fit the budget, no exceptions
+    assert len(info["prompt"]) <= 1000, (
+        f"prompt length {len(info['prompt'])} exceeds budget 1000 — "
+        f"negative-slice bug regressed"
+    )
+    # Body must survive intact
+    assert body in info["prompt"]
+
+
+def test_post_parent_fk_enforcement(isolated_context_root):
+    """Foreign key on parent_id: reply to non-existent parent raises."""
+    _channels.create_channel("pipeline")
+    # parent_id references a message that doesn't exist
+    with pytest.raises(ValueError, match="parent message"):
+        _channels.post(
+            "pipeline", "user", "reply body",
+            parent_id="deadbeef" * 4,
+            auto_snapshot=False,
+        )
