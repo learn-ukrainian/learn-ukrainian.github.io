@@ -4,387 +4,306 @@ level: a1
 inline:
 - id: fill-in-reflexive-endings
   type: fill-in
-  instruction: Оберіть правильну форму дієслова (Choose the correct verb form)
+  instruction: Вставте правильне закінчення дієслова
   items:
-  - sentence: Я ____.
-    answer: вмиваюся
+  - sentence: Я вмиваю____ вранці.
+    answer: ся
     options:
-    - вмиваюся
-    - вмиваєшся
-    - вмивається
-  - sentence: Ти ____ швидко.
-    answer: одягаєшся
+    - ся
+    - ться
+  - sentence: Ти одягаєш____ швидко.
+    answer: ся
     options:
-    - одягаюся
-    - одягаєшся
-    - одягається
-  - sentence: Він ____ пізно.
-    answer: прокидається
+    - ся
+    - ться
+  - sentence: Він прокидає____ пізно.
+    answer: ться
     options:
-    - прокидаюся
-    - прокидаєшся
-    - прокидається
-  - sentence: Вона ____ вранці.
-    answer: вмивається
+    - ся
+    - ться
+  - sentence: Вона збирає____ на роботу.
+    answer: ться
     options:
-    - вмиваюся
-    - вмиваєшся
-    - вмивається
-  - sentence: Я ____ на роботу.
-    answer: збираюся
+    - ся
+    - ться
+  - sentence: Я навчаю____.
+    answer: ся
     options:
-    - збираюся
-    - збираєшся
-    - збирається
-  - sentence: Ти ____ рано?
-    answer: прокидаєшся
+    - ся
+    - ться
+  - sentence: Ти повертаєш____ додому.
+    answer: ся
     options:
-    - прокидаюся
-    - прокидаєшся
-    - прокидається
-  - sentence: Брат ____ додому.
-    answer: повертається
+    - ся
+    - ться
+  - sentence: Він одягає____.
+    answer: ться
     options:
-    - повертаюся
-    - повертаєшся
-    - повертається
-  - sentence: Я ____ на вихідних.
-    answer: навчаюся
+    - ся
+    - ться
+  - sentence: Вона повертає____.
+    answer: ться
     options:
-    - навчаюся
-    - навчаєшся
-    - навчається
-  - sentence: Ти ____?
-    answer: збираєшся
+    - ся
+    - ться
+  - sentence: Я збираю____.
+    answer: ся
     options:
-    - збираюся
-    - збираєшся
-    - збирається
-  - sentence: Сестра ____.
-    answer: одягається
+    - ся
+    - ться
+  - sentence: Ти прокидаєш____.
+    answer: ся
     options:
-    - одягаюся
-    - одягаєшся
-    - одягається
+    - ся
+    - ться
+  title: Вставте правильне закінчення дієслова
 - id: quiz-reflexive-choice
   type: quiz
-  instruction: Рефлексивне чи ні? Оберіть правильний варіант (Reflexive or not? Choose
-    the correct option)
+  instruction: Оберіть правильну форму дієслова
   items:
-  - question: Я _____.
-    options:
-    - вмиваю
-    - вмиваюся
-    - вмиває
-    - вмивається
-    correct: 1
-  - question: Я _____ руки.
+  - question: Я ______ руки.
     options:
     - вмиваю
     - вмиваюся
     - вмиває
     - вмивається
     correct: 0
-  - question: Вона _____ дитину.
+  - question: Я ______ вранці.
+    options:
+    - вмиваю
+    - вмиваюся
+    - вмиває
+    - вмивається
+    correct: 1
+  - question: Вона ______ дитину.
     options:
     - одягає
     - одягається
-    - одягаю
-    - одягаюся
+    - одягаєш
+    - одягаєшся
     correct: 0
-  - question: Вона _____ швидко.
+  - question: Вона ______ швидко.
     options:
     - одягає
     - одягається
-    - одягаю
-    - одягаюся
+    - одягаєш
+    - одягаєшся
     correct: 1
-  - question: Ти _____ рано?
+  - question: Він ______ речі.
     options:
-    - прокидаєш
-    - прокидаєшся
-    - прокидаю
-    - прокидаюся
-    correct: 1
-  - question: Ти _____ сумку.
-    options:
-    - збираєш
-    - збираєшся
+    - збирає
+    - збирається
     - збираю
     - збираюся
     correct: 0
-  - question: Він _____.
+  - question: Він ______ на роботу.
     options:
-    - одягає
-    - одягається
-    - одягаєш
-    - одягаєшся
+    - збирає
+    - збирається
+    - збираю
+    - збираюся
     correct: 1
-  - question: Він _____ сина.
+  - question: Я ______ новини.
     options:
-    - одягає
-    - одягається
-    - одягаєш
-    - одягаєшся
+    - читаю
+    - читається
+    - читає
+    - читаюся
     correct: 0
+  - question: Я ______ пізно.
+    options:
+    - прокидаю
+    - прокидаюся
+    - прокидає
+    - прокидається
+    correct: 1
+  title: Оберіть правильну форму дієслова
+- id: order-morning-sequence
+  type: fill-in
+  instruction: Вставте правильне слово
+  items:
+  - sentence: ____ я прокидаюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: ____ я вмиваюся.
+    answer: Потім
+    options:
+    - Спочатку
+    - Потім
+    - Після цього
+  - sentence: ____ я снідаю.
+    answer: Після цього
+    options:
+    - Після цього
+    - Нарешті
+    - Спочатку
+  - sentence: ____ я йду на роботу.
+    answer: Нарешті
+    options:
+    - Нарешті
+    - Потім
+    - Спочатку
+  - sentence: ____ ми навчаємося.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Нарешті
+    - Після цього
+  - sentence: ____ ми гуляємо.
+    answer: Потім
+    options:
+    - Потім
+    - Нарешті
+    - Спочатку
+  title: Вставте правильне слово
 - id: write-morning-routine
   type: fill-in
-  instruction: Опишіть свій ранок (Describe your morning in 3 sentences)
+  instruction: Доповніть речення, щоб описати ранок
   items:
-  - sentence: Спочатку я ____ о сьомій.
+  - sentence: Спочатку я ____.
     answer: прокидаюся
     options:
     - прокидаюся
-    - вмиваюся
-    - йду
+    - прокидається
+    - прокидаєшся
   - sentence: Потім я ____ і снідаю.
-    answer: одягаюся
+    answer: вмиваюся
     options:
+    - вмивається
     - вмиваюся
-    - одягаюся
-    - збираюся
+    - вмиваєшся
   - sentence: Нарешті я ____ на роботу.
     answer: йду
     options:
+    - йде
+    - йдеш
     - йду
+  - sentence: Я ____ зуби щоранку.
+    answer: чищу
+    options:
+    - чищу
+    - чистиш
+    - чистить
+  - sentence: Потім я ____ каву.
+    answer: п'ю
+    options:
     - п'ю
-    - збираюся
+    - п'єш
+    - п'є
+  - sentence: Я ____ на автобус о восьмій.
+    answer: чекаю
+    options:
+    - чекаю
+    - чекає
+    - чекаєш
+  title: Доповніть речення, щоб описати ранок
 workbook:
-- id: match-up-vocab
-  type: match-up
-  instruction: З'єднайте українські слова з англійськими (Match the Ukrainian words
-    with English)
+- type: match-up
+  instruction: З'єднайте займенник із формою дієслова
   pairs:
-  - left: прокидатися
-    right: to wake up
-  - left: вмиватися
-    right: to wash face/hands
-  - left: одягатися
-    right: to get dressed
-  - left: збиратися
-    right: to get ready
-  - left: повертатися
-    right: to return
-  - left: навчатися
-    right: to study
-  - left: поспішати
-    right: to hurry
-- id: group-sort-verbs
-  type: group-sort
-  instruction: Розподіліть дієслова за типом (Sort the verbs by type)
+  - left: Я
+    right: вмиваюся
+  - left: Ти
+    right: прокидаєшся
+  - left: Він
+    right: одягається
+  - left: Вона
+    right: збирається
+  - left: Ми
+    right: снідаємо
+  - left: Вони
+    right: йдуть
+  title: З'єднайте займенник із формою дієслова
+- type: group-sort
+  instruction: 'Розподіліть дієслова: зворотні чи ні?'
   groups:
-  - label: Дія на себе (Reflexive)
+  - label: Зворотні (Reflexive)
     items:
-    - прокидатися
-    - вмиватися
-    - одягатися
-    - збиратися
-    - навчатися
-  - label: Звичайні (Regular)
+    - вмиваюся
+    - одягаєшся
+    - прокидається
+    - збираються
+    - навчаєшся
+    - повертаюся
+  - label: Незворотні (Non-reflexive)
     items:
-    - снідати
-    - йти
-    - поспішати
-    - пити
-    - читати
-- id: true-false-reading
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: Настя прокидається о сьомій.
-    correct: true
-    explanation: Так, Настя прокидається о сьомій.
-  - statement: Ліна п'є чай вранці.
-    correct: false
-    explanation: Ліна п'є каву (coffee) вранці.
-  - statement: Настя снідає о восьмій.
-    correct: false
-    explanation: О восьмій вона йде на роботу.
-  - statement: У суботу Ліна поспішає.
-    correct: false
-    explanation: У суботу вона не поспішає.
-  - statement: Настя навчається вранці у суботу.
-    correct: true
-    explanation: Так, вона навчається вранці.
-  - statement: Спочатку ми снідаємо, а потім прокидаємося.
-    correct: false
-    explanation: Спочатку ми прокидаємося, а потім снідаємо.
-- id: anagram-vocabulary
-  type: anagram
-  instruction: Складіть слова (Make the words)
-  items:
-  - letters:
-    - с
-    - н
-    - і
-    - д
-    - а
-    - т
-    - и
-    answer: снідати
-    hint: to have breakfast
-  - letters:
-    - н
-    - а
-    - р
-    - е
-    - ш
-    - т
-    - і
-    answer: нарешті
-    hint: finally
-  - letters:
-    - п
-    - о
-    - т
-    - і
-    - м
-    answer: потім
-    hint: then
-  - letters:
-    - п
-    - і
-    - з
-    - н
-    - о
-    answer: пізно
-    hint: late
-  - letters:
-    - в
-    - р
-    - а
-    - н
-    - ц
-    - і
-    answer: вранці
-    hint: in the morning
-  - letters:
-    - з
-    - б
-    - и
-    - р
-    - а
-    - т
-    - и
-    - с
-    - я
-    answer: збиратися
-    hint: to get ready
-- id: odd-one-out-vocab
-  type: odd-one-out
-  instruction: Знайдіть зайве слово (Find the odd one out)
+    - снідаю
+    - читаєш
+    - лежу
+    - гуляємо
+    - одягаю
+    - вмиває
+  title: 'Розподіліть дієслова: зворотні чи ні?'
+- type: odd-one-out
+  instruction: Оберіть зайве слово
   items:
   - words:
-    - прокидатися
-    - вмиватися
-    - одягатися
-    - снідати
+    - прокидаюся
+    - одягаюся
+    - вмиваюся
+    - снідаю
     correct: 3
-    explanation: «Снідати» — це звичайне дієслово (regular verb).
+    explanation: Снідати is not a reflexive verb.
   - words:
     - спочатку
     - потім
-    - нарешті
-    - кава
-    correct: 3
-    explanation: «Кава» — це іменник (noun).
-  - words:
+    - після цього
     - вранці
-    - пізно
-    - зуби
-    - швидко
-    correct: 2
-    explanation: «Зуби» — це іменник (noun).
-  - words:
-    - йти
-    - повертатися
-    - руки
-    - поспішати
-    correct: 2
-    explanation: «Руки» — це іменник (noun).
-  - words:
-    - снідати
-    - пити
-    - читати
-    - збиратися
     correct: 3
-    explanation: «Збиратися» — це рефлексивне дієслово (reflexive verb).
+    explanation: Вранці tells 'when', the others are sequence words.
   - words:
-    - я
-    - ти
+    - йду
+    - йдеш
+    - йде
+    - поспішаю
+    correct: 3
+    explanation: Поспішаю is a regular verb, the others are forms of the irregular
+      verb йти.
+  - words:
     - вмиваюся
-    - він
+    - одягає
+    - збирає
+    - прокидає
+    correct: 0
+    explanation: Вмиваюся is reflexive, the others are non-reflexive.
+  - words:
+    - вмиваєшся
+    - одягаєшся
+    - прокидаєшся
+    - збирається
+    correct: 3
+    explanation: Збирається is the 'він/вона' form, the others are 'ти'.
+  - words:
+    - читаю
+    - лежу
+    - навчаюся
+    - гуляю
     correct: 2
-    explanation: «Вмиваюся» — це дієслово (verb), інші — займенники (pronouns).
-- id: unjumble-routine
-  type: unjumble
-  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+    explanation: Навчаюся is reflexive, the others are not.
+  title: Оберіть зайве слово
+- type: true-false
+  instruction: Правда чи ні?
   items:
-  - words:
-    - одягаюся.
-    - вмиваюся
-    - і
-    - Потім
-    - я
-    correct_order:
-    - Потім
-    - я
-    - вмиваюся
-    - і
-    - одягаюся.
-  - words:
-    - нарешті
-    - на
-    - йду
-    - А
-    - роботу.
-    correct_order:
-    - А
-    - нарешті
-    - йду
-    - на
-    - роботу.
-  - words:
-    - сьомій.
-    - о
-    - прокидаюся
-    - Я
-    correct_order:
-    - Я
-    - прокидаюся
-    - о
-    - сьомій.
-  - words:
-    - не
-    - суботу
-    - У
-    - поспішаю.
-    - я
-    correct_order:
-    - У
-    - суботу
-    - я
-    - не
-    - поспішаю.
-  - words:
-    - новини.
-    - читаю
-    - лежу,
-    - Я
-    correct_order:
-    - Я
-    - лежу,
-    - читаю
-    - новини.
-  - words:
-    - ти
-    - на
-    - йдеш
-    - Коли
-    - навчання?
-    correct_order:
-    - Коли
-    - ти
-    - йдеш
-    - на
-    - навчання?
+  - statement: Дієслова із суфіксом -ся означають дію, спрямовану на себе.
+    correct: true
+    explanation: Yes, they are reflexive verbs.
+  - statement: Слово 'вмивається' означає 'to wash someone else'.
+    correct: false
+    explanation: '''Вмивається'' means ''to wash oneself''. ''Вмиває'' means ''to
+      wash someone else''.'
+  - statement: Слово 'одягаюся' означає 'I get dressed'.
+    correct: true
+    explanation: Yes, it is the reflexive form for 'Я'.
+  - statement: Слово 'снідаюся' є правильним.
+    correct: false
+    explanation: Снідати is not a reflexive verb. The correct form is 'снідаю'.
+  - statement: Закінчення -ться вимовляється як [ц':а].
+    correct: true
+    explanation: The ending -ється is pronounced as a long soft [ц':а].
+  - statement: Закінчення -шся вимовляється як [с':а].
+    correct: true
+    explanation: The ending -єшся is pronounced as a long soft [с':а].
+  title: Правда чи ні?
