@@ -242,7 +242,10 @@ WAVE_12_GAP_FILLS = [
      "period": "modern", "follow": False, "max_pages": 1},
 
     # ── Category B: primary chronicles (Kyivan Rus + Cossack era) ───
-    {"slug": "paterikon-pecherskyi",   "url": f"{BASE}/paterikon/paterikon.htm",
+    # Patericon: paterikon.htm is just a bibliographic stub linking only
+    # to the LAST page (pat38.htm). The real chain starts at pat01.htm
+    # and follows next-links through all 38 pages.
+    {"slug": "paterikon-pecherskyi",   "url": f"{BASE}/paterikon/pat01.htm",
      "work": "Патерик Києво-Печерський (II Касіянівська редакція, 1462)",
      "author": "Невідомий", "year": 1462, "genre": "hagiography",
      "period": "old_east_slavic", "follow": True, "max_pages": 80},
@@ -286,7 +289,7 @@ WAVE_12_GAP_FILLS = [
     # ── Category B: foundational literary + anthologies ────────────
     {"slug": "slovo-o-polku-ihorevim", "url": f"{BASE}/slovo/slovo.htm",
      "work": "Слово о полку Ігоревім", "author": "Невідомий",
-     "year": 1187, "genre": "epic", "period": "old_east_slavic",
+     "year": 1187, "genre": "poetry", "period": "old_east_slavic",
      "follow": True, "max_pages": 30},
     {"slug": "slovo-pereklady",        "url": f"{BASE}/slovo67/sl.htm",
      "work": "Слово о полку Ігоревім: переклади і переспіви",
@@ -310,10 +313,14 @@ WAVE_12_GAP_FILLS = [
      "work": "Грушевський — Історія України (однотомник)",
      "author": "Грушевський М.", "year": 1920, "genre": "scholarly",
      "period": "modern", "follow": True, "max_pages": 100},
-    {"slug": "yakovenko-narys",        "url": f"{BASE}/yakovenko/yak.htm",
-     "work": "Яковенко — Нарис історії середньовічної та ранньомодерної України",
-     "author": "Яковенко Н.", "year": 2006, "genre": "scholarly",
-     "period": "modern", "follow": True, "max_pages": 120},
+    # Yakovenko: only chapters 13-14 ("Україна між Сходом і Заходом")
+    # are actually digitized on litopys (yak13.htm + yak14.htm, ~115KB
+    # combined). yak01-yak12 are placeholder stubs and yak15-yak30 are
+    # bibliography pages, not real text. Start at yak13 and cap at 2.
+    {"slug": "yakovenko-skhid-zakhid",  "url": f"{BASE}/yakovenko/yak13.htm",
+     "work": "Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)",
+     "author": "Яковенко Н.", "year": 2002, "genre": "scholarly",
+     "period": "modern", "follow": True, "max_pages": 2},
 ]
 
 ALL_WAVES = {
