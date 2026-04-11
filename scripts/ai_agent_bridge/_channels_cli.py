@@ -453,13 +453,285 @@ def _handle_p(args) -> int:
 
 
 def _handle_discuss(args) -> int:
-    """Stub for B.4 — prints the plan but doesn't invoke agents yet."""
+    """Multi-agent fan-out discussion with bounded rounds.
+
+    Workflow:
+      1. Post the user's question to the channel as a normal message
+         with ``to_agents=with_list``. This creates the root message
+         that everything else threads off of.
+      2. For each round, build a per-agent prompt via
+         ``_channels.build_agent_prompt`` — the pinned context + the
+         channel history + a "please respond" instruction — and hand
+         it off to every agent in parallel through
+         ``agent_runtime.runner.invoke``. Each response lands back in
+         the channel as a reply with ``parent_id`` set to the root.
+      3. If all agents end their response with ``[AGREE]``, treat the
+         round as converged and stop early. Otherwise continue until
+         ``max_rounds`` is hit (capped at 4 regardless of caller).
+      4. Print a one-line transcript summary at the end so the user
+         can tail the thread for the full conversation.
+
+    The implementation is deliberately lightweight — no new schema,
+    no new tables, no new middleware. Everything routes through the
+    existing channel primitives so the transcript is visible in the
+    dashboard + CLI + API the moment a round resolves.
+    """
+    # Lazy import: agent_runtime pulls in the adapter stack and we
+    # don't want that on every ``ab --help``.
+    try:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        from agent_runtime.errors import (
+            AgentStalledError,
+            AgentTimeoutError,
+            AgentUnavailableError,
+            RateLimitedError,
+        )
+        from agent_runtime.runner import invoke as runtime_invoke
+    except ImportError as e:
+        print(f"❌ agent_runtime unavailable: {e}", file=sys.stderr)
+        print(
+            "   ab discuss needs the runtime adapters to be importable.",
+            file=sys.stderr,
+        )
+        return 1
+
+    # ── validate inputs ────────────────────────────────────────────
     with_agents = _parse_csv(args.with_agents)
-    rounds = min(max(1, args.max_rounds), 4)  # hard cap at 4
-    print(f"[B.4 stub] would open a discussion on #{args.channel}")
-    print(f"  participants: {', '.join(with_agents)}")
-    print(f"  max rounds:   {rounds}")
-    print(f"  topic:        {_resolve_body(args.body)[:100]}...")
+    if not with_agents:
+        print("❌ --with requires at least one agent", file=sys.stderr)
+        return 1
+    if len(with_agents) > 4:
+        print(
+            f"❌ --with accepts at most 4 agents, got {len(with_agents)}",
+            file=sys.stderr,
+        )
+        return 1
+    unknown = [a for a in with_agents if a not in _channels.VALID_AGENTS]
+    if unknown:
+        print(
+            f"❌ unknown agent(s): {', '.join(unknown)} "
+            f"(valid: {', '.join(sorted(_channels.VALID_AGENTS))})",
+            file=sys.stderr,
+        )
+        return 1
+
+    MAX_ROUNDS_CAP = 4
+    max_rounds = min(max(1, args.max_rounds), MAX_ROUNDS_CAP)
+    if args.max_rounds > MAX_ROUNDS_CAP:
+        print(
+            f"ℹ️  clamping --max-rounds {args.max_rounds} to {MAX_ROUNDS_CAP} "
+            f"(hard cap — escalate to a human if 4 rounds don't converge)"
+        )
+
+    if _channels.get_channel(args.channel) is None:
+        print(f"❌ channel '{args.channel}' does not exist", file=sys.stderr)
+        return 1
+
+    body = _resolve_body(args.body)
+    if not body.strip():
+        print("❌ empty discussion topic", file=sys.stderr)
+        return 1
+
+    # ── post the root question ────────────────────────────────────
+    try:
+        root = _channels.post(
+            args.channel,
+            "user",
+            body,
+            to_agents=with_agents,
+            auto_snapshot=True,
+        )
+    except ValueError as e:
+        print(f"❌ post failed: {e}", file=sys.stderr)
+        return 1
+
+    root_id = root["message_id"]
+    correlation_id = root["thread_id"]  # one correlation per discussion
+    print(
+        f"📢 discuss #{args.channel} (max {max_rounds} round{'s' if max_rounds > 1 else ''}, "
+        f"{len(with_agents)} participants)"
+    )
+    print(f"   root message: {root_id[:12]} / thread {correlation_id[:12]}")
     print()
-    print("ab discuss is implemented in B.4 — tracking issue: #1190")
+
+    def _invoke_one(
+        agent_name: str, prompt_text: str, round_idx: int
+    ) -> tuple[str, str, bool]:
+        """Run one agent for a specific round. Returns (agent, text, ok).
+
+        ``round_idx`` is woven into the task_id so the agent_runtime
+        usage log shows one row per (agent, round) — otherwise every
+        row in a 4-round discussion would collide on the same task_id
+        and the dashboard couldn't tell them apart.
+        """
+        try:
+            result = runtime_invoke(
+                agent_name,
+                prompt_text,
+                mode="read-only",
+                task_id=f"discuss-{correlation_id[:8]}-r{round_idx}-{agent_name}",
+                entrypoint="delegate",
+                hard_timeout=900,
+            )
+        except RateLimitedError as exc:
+            return (agent_name, f"[rate-limited: {exc}]", False)
+        except (AgentStalledError, AgentTimeoutError) as exc:
+            return (agent_name, f"[timeout: {exc}]", False)
+        except AgentUnavailableError as exc:
+            return (agent_name, f"[unavailable: {exc}]", False)
+        except Exception as exc:  # defensive — never let one agent's
+            # crash take down the whole discussion. KeyboardInterrupt
+            # is BaseException, not Exception, so Ctrl+C still bubbles
+            # up to the pool-shutdown branch in the main loop.
+            return (agent_name, f"[error: {type(exc).__name__}: {exc}]", False)
+
+        if not result.ok:
+            return (
+                agent_name,
+                f"[failed: {result.stderr_excerpt or 'no response'}]",
+                False,
+            )
+        return (agent_name, result.response.strip(), True)
+
+    completed_rounds = 0
+    for round_idx in range(1, max_rounds + 1):
+        completed_rounds = round_idx
+        print(f"── round {round_idx}/{max_rounds} ──────────────────────")
+
+        # Every agent sees the full channel history (pinned context +
+        # monitor state + recent posts including the root). The per-
+        # round directive tells them what to produce.
+        directive = (
+            f"You are participating in a bounded multi-agent discussion "
+            f"on #{args.channel}. This is round {round_idx} of at most "
+            f"{max_rounds}. Read the history above, then respond with "
+            f"your position on the root question.\n\n"
+            f"- Be concise but substantive. Cite file:line when relevant.\n"
+            f"- Push back on any other agent's claim you disagree with.\n"
+            f"- End your response with one of:\n"
+            f"    [AGREE]     — you are satisfied with the current direction\n"
+            f"    [DISAGREE]  — you still have open objections\n"
+            f"- If every agent ends with [AGREE], the discussion "
+            f"short-circuits and stops before round {max_rounds}."
+        )
+
+        # history_tail must be big enough to preserve the root
+        # question across every round. `tail` truncates from the
+        # OLDEST end, so older messages can never push the root out —
+        # we just need the window to span (1 root + all in-discussion
+        # replies). The +10 is headroom for some pre-root channel
+        # context so agents see recent project activity too.
+        needed_history = 1 + len(with_agents) * max_rounds + 10
+        try:
+            prompt_obj = _channels.build_agent_prompt(
+                args.channel, directive, history_tail=needed_history
+            )
+        except ValueError as e:
+            print(f"❌ prompt build failed: {e}", file=sys.stderr)
+            return 1
+        prompt_text = prompt_obj["prompt"]
+        print(
+            f"   prompt {len(prompt_text)} chars "
+            f"(history_tail={needed_history}, "
+            f"dropped {prompt_obj.get('history_dropped', 0)})"
+        )
+
+        # ── parallel fan-out ──────────────────────────────────────
+        # The `with` block calls pool.shutdown(wait=True) on exit. If
+        # the user hits Ctrl+C mid-round we catch KeyboardInterrupt,
+        # cancel all queued futures, and re-raise so the process
+        # exits promptly instead of blocking on in-flight invocations
+        # (which could be hold for up to hard_timeout=900 seconds).
+        responses: dict[str, tuple[str, bool]] = {}
+        pool = ThreadPoolExecutor(max_workers=len(with_agents))
+        try:
+            futures = {
+                pool.submit(_invoke_one, agent, prompt_text, round_idx): agent
+                for agent in with_agents
+            }
+            try:
+                for fut in as_completed(futures):
+                    agent, text, ok = fut.result()
+                    responses[agent] = (text, ok)
+                    status = "✅" if ok else "⚠️ "
+                    preview = text.replace("\n", " ")[:80]
+                    print(f"   {status} {agent}: {preview}")
+            except KeyboardInterrupt:
+                print(
+                    "\n⚠️  interrupted — cancelling pending agent invocations",
+                    file=sys.stderr,
+                )
+                for pending in futures:
+                    pending.cancel()
+                raise
+        finally:
+            # cancel_futures is Py3.9+. Tasks already running cannot
+            # be cancelled mid-flight, but queued ones will be.
+            pool.shutdown(wait=False, cancel_futures=True)
+
+        # ── post each response as a reply to root ─────────────────
+        # auto_snapshot=False here — the root message captured the
+        # state of the world for the discussion; re-snapshotting on
+        # every reply would mean N*max_rounds redundant Monitor API
+        # fetches + context file reads + extra storage. The reply's
+        # context is implicit from its parent_id anyway.
+        for agent in with_agents:
+            text, ok = responses[agent]
+            try:
+                _channels.post(
+                    args.channel,
+                    agent,
+                    text,
+                    to_agents=[],  # replies aren't re-delivered
+                    parent_id=root_id,
+                    correlation_id=correlation_id,
+                    kind="reply",
+                    auto_snapshot=False,
+                )
+            except ValueError as e:
+                print(
+                    f"⚠️  failed to store {agent} response: {e}",
+                    file=sys.stderr,
+                )
+
+        # ── convergence check ─────────────────────────────────────
+        # All agents must (1) have succeeded, and (2) end their
+        # response with the literal `[AGREE]` token at the tail.
+        # Strict endswith() — substring match would false-positive on
+        # "I don't [AGREE] with that. [DISAGREE]".
+        all_ok = all(ok for (_, ok) in responses.values())
+        all_agreed = all_ok and all(
+            text.strip().endswith("[AGREE]") for (text, _) in responses.values()
+        )
+        if all_agreed:
+            print()
+            print(f"✅ converged at round {round_idx} — all agents signed off [AGREE]")
+            break
+
+        if round_idx == max_rounds:
+            # Tell the caller WHY we stopped so escalation is obvious.
+            # Same strict endswith check as convergence — substring
+            # match would false-positive on "I don't [AGREE] with
+            # that. [DISAGREE]" and report no disagreements.
+            disagreeing = [
+                a
+                for a, (t, _) in responses.items()
+                if not t.strip().endswith("[AGREE]")
+            ]
+            print()
+            print(
+                f"⚠️  hit max_rounds={max_rounds} without convergence. "
+                f"Still disagreeing: {', '.join(disagreeing) or '(none? see errors)'}"
+            )
+            print(
+                "   Escalate to a human or re-open the discussion with a "
+                "tighter brief."
+            )
+
+    print()
+    print(
+        f"📊 discuss done after {completed_rounds} round(s). "
+        f"Full thread: ab channel tail {args.channel} --thread {root_id}"
+    )
     return 0
