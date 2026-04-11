@@ -552,8 +552,15 @@ def check_metalanguage_scaffolding(
     """
     Check if grammatical/linguistic terms used in instructions are taught first.
 
-    At A1-A2, grammar terms should appear in vocabulary before being used
-    in Ukrainian instructions. This ensures learners understand instructions.
+    At A1, grammar terms should appear in vocabulary before being used
+    in Ukrainian instructions. A2+ is exempt because A2 is where the
+    metalanguage IS taught — flagging the writer for using `вид` /
+    `відмінок` / `доконаний` in an A2 module is backwards.
+
+    Curriculum policy (2026-04-11): metalanguage is formally taught
+    at A2; B1+ assumes the learner already knows it. The check now
+    only fires at A1, where the learner should still see English
+    glosses for grammatical terms.
 
     Args:
         content: Full module content
@@ -568,8 +575,9 @@ def check_metalanguage_scaffolding(
     violations = []
 
     level_upper = level.upper()
-    if level_upper in ('B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH'):
-        return violations  # B1+ and LIT assumes all metalanguage known
+    if level_upper in ('A2', 'B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH'):
+        # A2 = teaches metalanguage, B1+ = assumes it known.
+        return violations
 
     # Get metalanguage for this level and all earlier levels
     level_order = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
