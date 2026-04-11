@@ -42,20 +42,41 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-# Rate-limit window in seconds. We reduced this from 5h to 15min in
-# 2026-04-10 (#1185 follow-up) after a single transient "No capacity
-# available" 429 at 12:08 falsely locked the entire quota for 5 hours,
-# blocking heal-pipeline runs that would otherwise have succeeded.
+# Rate-limit window in seconds. History:
+#   2026-04-09: 5 hours (way too long; one false 429 nuked 5 hours of build)
+#   2026-04-10: 15 minutes (still blocked actively-responding Gemini for
+#               14+ minutes after a stale transient-429 record)
+#   2026-04-11: 5 minutes — see _MIN_EVENTS_TO_BLOCK below for the
+#               complementary "isolated event = ignore" rule.
 #
 # Philosophy:
 #   - True quota exhaustion IS rare for us (Google AI Pro subscription,
-#     not API key rate limits). When it does happen, a 15-minute cool-off
-#     is plenty — the next call just confirms the state.
+#     not API key rate limits). When it does happen, the next call after
+#     5 minutes either confirms the lock or clears it.
 #   - Transient server-capacity issues are common and clear in seconds.
 #     The CLI retries them internally. We must not block on them.
-#   - A 15-minute window means a stale false-positive self-heals in
-#     under a quarter hour without any manual intervention.
-_RATE_LIMIT_WINDOW_S = 15 * 60
+#   - An ISOLATED rate-limit event in the window is treated as transient
+#     noise and DOES NOT block. Two or more events in the window means
+#     the quota is actually exhausted, and we block.
+_RATE_LIMIT_WINDOW_S = 5 * 60
+
+# Minimum number of rate-limit events in the window required to actually
+# block. A single isolated event is almost always a transient that the
+# CLI's internal retry already handled — blocking on it just penalizes
+# the next attempt for an issue that's already cleared.
+_MIN_EVENTS_TO_BLOCK = 2
+
+# Even if multiple events accumulated in the window, the issue has
+# probably cleared by the time the most recent event is older than this
+# many seconds. Real quota lockouts produce a continuous stream of 429s,
+# not a brief flurry followed by silence. If the latest event is
+# stale-by-this-much, we trust the model is responding again.
+_RECENCY_BLOCK_THRESHOLD_S = 90
+
+# Manual override: set LU_BYPASS_RATE_LIMIT=1 to disable the headroom
+# check entirely. Useful when you've verified the model is responding
+# but a stale record is still tripping the check.
+_BYPASS_ENV = "LU_BYPASS_RATE_LIMIT"
 
 # In-process cache of rate-limit state, keyed by (agent, model). When a
 # call returns outcome="rate_limited", we stamp the timestamp here so
@@ -151,28 +172,25 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
            the last 15 minutes.
 
     Window history: originally 5 hours, reduced to 15 minutes on
-    2026-04-10 after a transient 429 false-locked the entire quota for
-    a full five hours. See ``_RATE_LIMIT_WINDOW_S``.
+    2026-04-10, then to 5 minutes + min-events-to-block=2 on 2026-04-11
+    after a single 25-second-old transient false-locked an actively-
+    responding model. See ``_RATE_LIMIT_WINDOW_S``.
     """
     now = time.time()
 
-    # Fast path: in-process cache
-    cache_key = (agent, model)
-    cached_ts = _RATE_LIMIT_CACHE.get(cache_key)
-    if cached_ts is not None and (now - cached_ts) < _RATE_LIMIT_WINDOW_S:
-        age_s = now - cached_ts
-        return False, f"rate_limited {int(age_s)}s ago (in-process cache)"
-    elif cached_ts is not None:
-        # Cache entry expired; clear it
-        _RATE_LIMIT_CACHE.pop(cache_key, None)
+    # Manual override: emergency unblock when a stale record is wedging
+    # an actively-responding model. Set LU_BYPASS_RATE_LIMIT=1 to skip.
+    if os.environ.get(_BYPASS_ENV):
+        return True, ""
 
-    # Slow path: scan JSONL files for this (agent, *) and filter by model inside.
-    # To survive system clock jumps where old rate limit records might be in files
-    # with dates that don't match the currently shifted clock, we glob all files
-    # for the agent and rely on the file mtime + the absolute `ts` inside the record.
+    # Slow path: scan JSONL files for this (agent, *) and filter by model
+    # inside. To survive system clock jumps where old rate-limit records
+    # might be in files with dates that don't match the currently shifted
+    # clock, we glob all files for the agent and rely on the file mtime
+    # plus the absolute `ts` inside the record.
     cutoff = now - _RATE_LIMIT_WINDOW_S
     usage_dir = _usage_dir()
-    most_recent_rate_limit_ts: float | None = None
+    rate_limit_events: list[float] = []
 
     for file_path in usage_dir.glob(f"usage_{agent}-*.jsonl"):
         try:
@@ -200,17 +218,36 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
                         ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00")).timestamp()
                     except (ValueError, AttributeError):
                         continue
-                    if ts >= cutoff and (
-                        most_recent_rate_limit_ts is None
-                        or ts > most_recent_rate_limit_ts
-                    ):
-                        most_recent_rate_limit_ts = ts
+                    if ts >= cutoff:
+                        rate_limit_events.append(ts)
         except OSError:
             continue  # file disappeared mid-scan or permission denied; skip
 
-    if most_recent_rate_limit_ts is not None:
-        age_s = int(now - most_recent_rate_limit_ts)
-        return False, f"rate_limited {age_s}s ago (disk scan)"
+    # Cross-check the in-process cache as well — its event may not be on
+    # disk yet (writer race) and we'd otherwise undercount.
+    cache_key = (agent, model)
+    cached_ts = _RATE_LIMIT_CACHE.get(cache_key)
+    if cached_ts is not None:
+        if cached_ts >= cutoff and cached_ts not in rate_limit_events:
+            rate_limit_events.append(cached_ts)
+        elif cached_ts < cutoff:
+            _RATE_LIMIT_CACHE.pop(cache_key, None)  # expired
+
+    # Block ONLY when:
+    #   1. We have enough events to be confident the quota is actually
+    #      exhausted (≥ _MIN_EVENTS_TO_BLOCK), AND
+    #   2. The most recent event is recent enough that the issue is
+    #      likely still active (< _RECENCY_BLOCK_THRESHOLD_S seconds).
+    # A single isolated event, OR a stale flurry that ended N+ seconds
+    # ago, is treated as cleared and we proceed.
+    if len(rate_limit_events) >= _MIN_EVENTS_TO_BLOCK:
+        most_recent = max(rate_limit_events)
+        age_s = int(now - most_recent)
+        if age_s < _RECENCY_BLOCK_THRESHOLD_S:
+            return False, (
+                f"rate_limited {age_s}s ago "
+                f"({len(rate_limit_events)} events in last {_RATE_LIMIT_WINDOW_S // 60}min)"
+            )
 
     return True, ""
 
