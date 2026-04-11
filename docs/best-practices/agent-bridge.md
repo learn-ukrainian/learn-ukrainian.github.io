@@ -106,16 +106,48 @@ Revisions to `context.md` are tracked via sha256 — every message
 stores which revision it saw, so you can replay a conversation
 deterministically even if the context drifts later.
 
-## Token savings (measured)
+## Token savings (measured on the #1190 review trail)
 
-Before channels: every delegation manually re-typed ~5-35KB of
-project context. One day's worth of delegations (4 of them)
-consumed ~74KB of re-sent context.
+The channel bridge was built over four phases (B.1–B.4) with six
+adversarial review rounds handed to Gemini. The review briefs were
+written by hand against explicit AC lists — no bulk context paste —
+which means the numbers below under-sell the savings for typical
+"please review this diff" delegations that normally repeat 10–35KB
+of project rules each time.
 
-After channels: the pinned context + Monitor snapshot is fetched
-automatically and capped at ~6KB per post. Same 4 delegations now
-consume ~24KB total — a **67% reduction** in context overhead per
-post, compounded across all future delegations.
+**Measured brief sizes (chars sent from claude → gemini, excluding
+the ~10KB project-rules wrapper the legacy bridge prepends):**
+
+| Review round          | Task ID                        | Brief size |
+|-----------------------|--------------------------------|-----------:|
+| B.3 r1 (initial)      | `bridge-b3-review`             |  6,621     |
+| B.3 r2 (3 new blockers) | `bridge-b3-review-r2`        |  5,304     |
+| B.3 r3 (backslash bug)| `bridge-b3-review-r3`          |  2,683     |
+| B.3 r4 (CLEAN)        | `bridge-b3-review-r4`          |  2,121     |
+| B.4 r1 (4 blockers)   | `bridge-b4-review`             |  4,827     |
+| B.4 r2 (MINOR)        | `bridge-b4-review-r2`          |  3,915     |
+| **Total**             |                                | **25,471** |
+
+Every brief in that table would have been ~12KB larger had I
+followed the old convention (manually re-pasting the rules/history
+that channels would otherwise pin). Six rounds × ~12KB = **~72KB
+of repeated context avoided** on this one issue alone — and the
+savings grow roughly linearly with round count.
+
+**Compound wins on multi-round debates:** the same trick applies to
+`ab discuss` round 2+. When an agent is handed their own prior
+response via `_channels.build_agent_prompt` it doesn't need to be
+re-typed. The B.2 prompt assembler caps history at 5KB (configurable
+via `DEFAULT_MAX_HISTORY_CHARS`), so even a 4-round, 4-agent
+discussion stays inside a ~12KB budget per call instead of exploding
+to 40–60KB of copy-pasted transcript.
+
+**Tradeoff:** the first round of any new channel pays a small
+one-time cost — the pinned `context.md` + the Monitor API snapshot
+are concatenated into the prompt even if the agent doesn't strictly
+need them. For drive-by one-shots, the legacy `ask-*` commands are
+still cheaper. Use channels when the conversation will have at
+least two turns.
 
 ## Web dashboard
 

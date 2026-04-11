@@ -55,10 +55,23 @@ def _get_rw_db() -> sqlite3.Connection | None:
     return conn
 
 
-# ==================== MESSAGES ====================
+# ==================== MESSAGES (legacy broker) ====================
+#
+# Everything in this section reads/writes the legacy `messages` table
+# backing the ask-claude / ask-gemini / ask-codex CLI commands. It is
+# DEPRECATED for new conversations as of #1190 Phase B.5, but kept
+# alive because 3 scripts still depend on ask-* (scripts/wiki/compile.py,
+# scripts/audit/naturalness_check.py, scripts/batch/batch_fix_review.py).
+# For new multi-agent conversations, code reviews, and design debates,
+# use the channel bridge endpoints under /api/comms/channels/* and the
+# `ab channel` / `ab post` / `ab discuss` CLI commands.
+#
+# Removal target: once the remaining ask-* consumers are migrated, an
+# ADR in docs/decisions/ will set an expiry date and these routes can
+# be yanked. Until then, they stay.
 
 
-@router.get("/messages")
+@router.get("/messages", deprecated=True)
 async def list_messages(
     agent: str | None = Query(None, description="Filter by from_llm or to_llm"),
     task_id: str | None = Query(None),
@@ -67,7 +80,12 @@ async def list_messages(
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
 ):
-    """All messages with optional filters."""
+    """**Deprecated (#1190 B.5).** All broker messages with optional filters.
+
+    Use /api/comms/channels/{name}/messages for channel-based
+    conversations. Still backs the legacy comms.html Messages tab
+    and the ask-* CLI path.
+    """
     conn = _get_db()
     if not conn:
         return {"messages": [], "total": 0, "error": "Broker DB not found"}
@@ -105,9 +123,13 @@ async def list_messages(
     }
 
 
-@router.get("/conversations")
+@router.get("/conversations", deprecated=True)
 async def list_conversations(limit: int = Query(50, ge=1, le=200)):
-    """Messages grouped by task_id with summary stats."""
+    """**Deprecated (#1190 B.5).** Broker messages grouped by task_id.
+
+    Use /api/comms/channels/{name}/threads/{thread_id} for
+    channel-based threads.
+    """
     conn = _get_db()
     if not conn:
         return {"conversations": []}
@@ -131,9 +153,13 @@ async def list_conversations(limit: int = Query(50, ge=1, le=200)):
     return {"conversations": [dict(r) for r in rows]}
 
 
-@router.get("/conversation/{task_id}")
+@router.get("/conversation/{task_id}", deprecated=True)
 async def get_conversation(task_id: str):
-    """Full thread for one task."""
+    """**Deprecated (#1190 B.5).** Full broker thread for one task_id.
+
+    Use /api/comms/channels/{name}/threads/{thread_id} for
+    channel-based threads.
+    """
     conn = _get_db()
     if not conn:
         return {"messages": []}
@@ -839,9 +865,15 @@ class SendMessageRequest(BaseModel):
     message_type: str = "message"
 
 
-@router.post("/send")
+@router.post("/send", deprecated=True)
 async def send_message(msg: SendMessageRequest):
-    """Send a test message between agents. For debugging/testing from the UI."""
+    """**Deprecated (#1190 B.5).** Send a raw broker message.
+
+    Use POST /api/comms/channels/{name}/post for channel-based
+    conversations. This endpoint stays live because the legacy
+    comms.html compose form still hits it, but nothing new should
+    grow on top of it.
+    """
     conn = _get_rw_db()
     if not conn:
         return JSONResponse(status_code=500, content={"error": "DB not available"})
