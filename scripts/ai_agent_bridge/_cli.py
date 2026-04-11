@@ -505,6 +505,10 @@ def _build_parser() -> argparse.ArgumentParser:
     # interactive
     subparsers.add_parser("interactive", help="Interactive mode")
 
+    # Channel bridge commands (#1190) — registered in _channels_cli
+    from ._channels_cli import register_channel_commands
+    register_channel_commands(subparsers)
+
     return parser
 
 
@@ -559,6 +563,11 @@ def _dispatch_command(args):
         bridge_status()
     elif args.command == "interactive":
         interactive_mode()
+    elif args.command in ("channel", "post", "p", "discuss"):
+        # Channel bridge commands (#1190)
+        from ._channels_cli import dispatch_channel_command
+        rc = dispatch_channel_command(args)
+        sys.exit(rc)
     else:
         return False
     return True

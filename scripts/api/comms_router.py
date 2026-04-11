@@ -23,7 +23,7 @@ import sqlite3
 import time
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -856,6 +856,392 @@ async def send_message(msg: SendMessageRequest):
     msg_id = cursor.lastrowid
     conn.close()
     return {"id": msg_id, "sent": True}
+
+
+# ══════════════════════════════════════════════════════════════════
+# Channel bridge endpoints (#1190 Phase B.3)
+# ══════════════════════════════════════════════════════════════════
+#
+# These endpoints expose the channel bridge to the web dashboard
+# (playgrounds/channels.html). They reuse the same broker DB as the
+# legacy /api/comms/messages* endpoints but operate on the new
+# `channels`, `channel_messages`, `deliveries` tables.
+#
+# Security model: the FastAPI server is bound to 0.0.0.0 by default,
+# so we can't rely on binding alone. The POST endpoint enforces a
+# per-request client-host check (`_require_localhost`) that rejects
+# anything other than loopback. GET endpoints are read-only snapshots
+# of data that is already stored locally and are not gated.
+# Agents do NOT post via this API; only the human user (via the
+# browser or curl from the same machine). Agents use the CLI
+# (`ab p`, `ab post`, `ab discuss`) which has its own subprocess-
+# level invocation path.
+
+
+_LOCALHOST_HOSTS = {"127.0.0.1", "::1", "localhost"}
+
+
+def _require_localhost(request: Request) -> JSONResponse | None:
+    """Return a 403 JSONResponse if the request is not from loopback.
+
+    Returns None when the caller is local — the handler should proceed
+    normally. The check uses `request.client.host`, which FastAPI
+    populates from the accepted TCP socket, not from any client-
+    controllable header. X-Forwarded-For is deliberately ignored
+    because there is no trusted proxy in this deployment.
+    """
+    client = request.client
+    host = client.host if client else None
+    if host not in _LOCALHOST_HOSTS:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "error": "channel POST endpoint is localhost-only",
+                "client_host": host,
+            },
+        )
+    return None
+
+
+class ChannelPostRequest(BaseModel):
+    """Pydantic body for POST /channels/{name}/post."""
+    body: str
+    to_agents: list[str] = []
+    parent_id: str | None = None
+    correlation_id: str | None = None
+    from_agent: str = "user"
+    auto_snapshot: bool = True
+
+
+@router.get("/channels")
+async def list_channels_endpoint():
+    """List all channels with row counts and last activity.
+
+    Read-only. Safe to poll from the frontend every few seconds.
+    """
+    conn = _get_db()
+    if not conn:
+        return {"channels": [], "error": "Broker DB not found"}
+
+    try:
+        channel_rows = conn.execute(
+            "SELECT name, description, include, subscribers, created_at "
+            "FROM channels ORDER BY created_at ASC"
+        ).fetchall()
+        msg_counts = {}
+        latest = {}
+        for r in conn.execute(
+            "SELECT channel, COUNT(*) AS n, MAX(created_at) AS latest "
+            "FROM channel_messages GROUP BY channel"
+        ).fetchall():
+            msg_counts[r["channel"]] = r["n"]
+            latest[r["channel"]] = r["latest"]
+        pending_counts = {}
+        for r in conn.execute(
+            "SELECT cm.channel, COUNT(*) AS n "
+            "FROM deliveries d JOIN channel_messages cm "
+            "  ON cm.message_id = d.message_id "
+            "WHERE d.status = 'pending' "
+            "GROUP BY cm.channel"
+        ).fetchall():
+            pending_counts[r["channel"]] = r["n"]
+    finally:
+        conn.close()
+
+    channels = []
+    for r in channel_rows:
+        name = r["name"]
+        channels.append({
+            "name": name,
+            "description": r["description"] or "",
+            "include": [s for s in (r["include"] or "").split(",") if s],
+            "subscribers": [s for s in (r["subscribers"] or "").split(",") if s],
+            "created_at": r["created_at"],
+            "message_count": msg_counts.get(name, 0),
+            "last_activity": latest.get(name),
+            "pending_deliveries": pending_counts.get(name, 0),
+        })
+    return {"channels": channels, "count": len(channels)}
+
+
+@router.get("/channels/{name}")
+async def get_channel_endpoint(name: str):
+    """Channel metadata + context preview + pending delivery count."""
+    conn = _get_db()
+    if not conn:
+        return JSONResponse(
+            status_code=500, content={"error": "Broker DB not found"}
+        )
+
+    try:
+        row = conn.execute(
+            "SELECT name, description, include, subscribers, created_at "
+            "FROM channels WHERE name = ?",
+            (name,),
+        ).fetchone()
+        if not row:
+            return JSONResponse(
+                status_code=404, content={"error": f"channel '{name}' not found"}
+            )
+
+        msg_count = conn.execute(
+            "SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (name,)
+        ).fetchone()[0]
+        pending = conn.execute(
+            "SELECT COUNT(*) FROM deliveries d "
+            "JOIN channel_messages cm ON cm.message_id = d.message_id "
+            "WHERE cm.channel = ? AND d.status = 'pending'",
+            (name,),
+        ).fetchone()[0]
+    finally:
+        conn.close()
+
+    # Context preview (best-effort — reads from the filesystem)
+    context_preview = ""
+    context_sha = ""
+    try:
+        from ai_agent_bridge import _channels as _ch
+        ctx_path = _ch.channel_context_path(name)
+        if ctx_path.exists():
+            context_preview = ctx_path.read_text("utf-8")[:2000]
+            context_sha = _ch.context_sha256(ctx_path)
+    except Exception:
+        pass  # context fetch is non-critical
+
+    return {
+        "name": row["name"],
+        "description": row["description"] or "",
+        "include": [s for s in (row["include"] or "").split(",") if s],
+        "subscribers": [s for s in (row["subscribers"] or "").split(",") if s],
+        "created_at": row["created_at"],
+        "message_count": msg_count,
+        "pending_deliveries": pending,
+        "context_preview": context_preview,
+        "context_sha256": context_sha,
+    }
+
+
+@router.get("/channels/{name}/messages")
+async def list_channel_messages(
+    name: str,
+    tail: int = Query(20, ge=1, le=500),
+):
+    """Most recent messages in a channel, ordered oldest-first."""
+    conn = _get_db()
+    if not conn:
+        return JSONResponse(
+            status_code=500, content={"error": "Broker DB not found"}
+        )
+    try:
+        # Verify the channel exists first
+        ch = conn.execute(
+            "SELECT name FROM channels WHERE name = ?", (name,)
+        ).fetchone()
+        if not ch:
+            return JSONResponse(
+                status_code=404, content={"error": f"channel '{name}' not found"}
+            )
+
+        rows = conn.execute(
+            """
+            SELECT message_id, channel, thread_id, parent_id, correlation_id,
+                   round_index, from_agent, from_model, kind, body,
+                   attachments, context_rev_shared, context_rev_channel,
+                   created_at
+            FROM (
+                SELECT * FROM channel_messages
+                WHERE channel = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+            )
+            ORDER BY created_at ASC
+            """,
+            (name, tail),
+        ).fetchall()
+    finally:
+        conn.close()
+
+    messages = []
+    for r in rows:
+        messages.append({
+            "message_id": r["message_id"],
+            "channel": r["channel"],
+            "thread_id": r["thread_id"],
+            "parent_id": r["parent_id"],
+            "correlation_id": r["correlation_id"],
+            "round_index": r["round_index"],
+            "from_agent": r["from_agent"],
+            "from_model": r["from_model"],
+            "kind": r["kind"],
+            "body": r["body"],
+            "attachments": (
+                json.loads(r["attachments"]) if r["attachments"] else None
+            ),
+            "context_rev_shared": r["context_rev_shared"],
+            "context_rev_channel": r["context_rev_channel"],
+            "created_at": r["created_at"],
+        })
+    return {"channel": name, "count": len(messages), "messages": messages}
+
+
+@router.get("/channels/{name}/threads/{thread_id}")
+async def get_thread(name: str, thread_id: str):
+    """All messages in a thread, ordered by round_index then created_at."""
+    conn = _get_db()
+    if not conn:
+        return JSONResponse(
+            status_code=500, content={"error": "Broker DB not found"}
+        )
+    try:
+        rows = conn.execute(
+            """
+            SELECT message_id, channel, thread_id, parent_id, correlation_id,
+                   round_index, from_agent, from_model, kind, body,
+                   attachments, context_rev_shared, context_rev_channel,
+                   created_at
+            FROM channel_messages
+            WHERE channel = ? AND thread_id = ?
+            ORDER BY round_index ASC, created_at ASC
+            """,
+            (name, thread_id),
+        ).fetchall()
+    finally:
+        conn.close()
+
+    if not rows:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"thread '{thread_id}' not found in channel '{name}'"},
+        )
+
+    messages = []
+    for r in rows:
+        messages.append({
+            "message_id": r["message_id"],
+            "thread_id": r["thread_id"],
+            "parent_id": r["parent_id"],
+            "correlation_id": r["correlation_id"],
+            "round_index": r["round_index"],
+            "from_agent": r["from_agent"],
+            "from_model": r["from_model"],
+            "kind": r["kind"],
+            "body": r["body"],
+            "created_at": r["created_at"],
+        })
+    return {
+        "channel": name,
+        "thread_id": thread_id,
+        "count": len(messages),
+        "messages": messages,
+    }
+
+
+@router.get("/channels/{name}/deliveries")
+async def channel_deliveries(
+    name: str,
+    status: str | None = Query(None, description="Filter by status"),
+    limit: int = Query(50, ge=1, le=500),
+):
+    """Delivery status for messages in a channel."""
+    conn = _get_db()
+    if not conn:
+        return JSONResponse(
+            status_code=500, content={"error": "Broker DB not found"}
+        )
+
+    try:
+        where = ["cm.channel = ?"]
+        params: list = [name]
+        if status:
+            where.append("d.status = ?")
+            params.append(status)
+        params.append(limit)
+        rows = conn.execute(
+            f"""
+            SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
+                   d.status, d.dispatched_at, d.delivered_at, d.error,
+                   cm.body, cm.from_agent AS cm_from_agent, cm.created_at
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE {' AND '.join(where)}
+            ORDER BY cm.created_at DESC
+            LIMIT ?
+            """,
+            params,
+        ).fetchall()
+    finally:
+        conn.close()
+
+    deliveries = []
+    for r in rows:
+        body = r["body"] or ""
+        deliveries.append({
+            "delivery_id": r["delivery_id"],
+            "message_id": r["message_id"],
+            "to_agent": r["to_agent"],
+            "to_model": r["to_model"],
+            "status": r["status"],
+            "dispatched_at": r["dispatched_at"],
+            "delivered_at": r["delivered_at"],
+            "error": r["error"],
+            "preview": body[:200] + ("..." if len(body) > 200 else ""),
+            "from_agent": r["cm_from_agent"],
+            "created_at": r["created_at"],
+        })
+    return {"channel": name, "count": len(deliveries), "deliveries": deliveries}
+
+
+@router.post("/channels/{name}/post")
+async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
+    """Post a message to a channel (human-user only, localhost-gated).
+
+    Agents NEVER post via this endpoint — they use the CLI subprocess
+    path. This endpoint exists for (1) dashboard post forms, (2) future
+    click-to-ask affordances from other dashboards, (3) scripts that
+    want to drop messages without spawning a full CLI process.
+
+    The localhost gate rejects any client whose socket address isn't
+    127.0.0.1 / ::1. Since the API server binds to 0.0.0.0, this
+    per-request check is the only thing keeping LAN peers out.
+    """
+    gate = _require_localhost(request)
+    if gate is not None:
+        return gate
+    try:
+        # Import inside handler so the bridge package isn't a hard
+        # dependency for the rest of the API server startup.
+        from ai_agent_bridge import _channels as _ch
+    except ImportError as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"ai_agent_bridge not importable: {e}"},
+        )
+
+    try:
+        result = _ch.post(
+            name,
+            req.from_agent,
+            req.body,
+            to_agents=req.to_agents,
+            parent_id=req.parent_id,
+            correlation_id=req.correlation_id,
+            auto_snapshot=req.auto_snapshot,
+        )
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"error": str(e)})
+    except Exception as e:
+        return JSONResponse(
+            status_code=500, content={"error": f"post failed: {e}"}
+        )
+
+    return {
+        "message_id": result["message_id"],
+        "thread_id": result["thread_id"],
+        "round_index": result["round_index"],
+        "delivery_ids": result["delivery_ids"],
+        "created_at": result["created_at"],
+        "posted": True,
+    }
 
 
 @router.get("/by-module/{track}/{slug}")

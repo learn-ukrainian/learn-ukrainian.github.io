@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Channels - #1190</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* Top bar */
+.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; }
+.top-bar h1 { font-size: 18px; font-weight: 600; }
+.banner { display: none; background: var(--red); color: white; padding: 8px 24px; font-size: 13px; text-align: center; }
+
+/* Main layout */
+.layout { display: flex; flex: 1; min-height: 0; }
+.sidebar { width: 240px; border-right: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column; overflow-y: auto; }
+.main-panel { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--bg); }
+
+/* Sidebar items */
+.channel-item { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; display: block; border-left: 3px solid transparent; }
+.channel-item:hover { background: var(--bg3); }
+.channel-item.active { border-left-color: var(--blue); background: var(--bg2); }
+.channel-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.channel-meta { font-size: 11px; color: var(--text2); }
+.badge { background: var(--bg3); color: var(--text2); padding: 2px 6px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+.badge.pending { background: rgba(210,153,34,0.15); color: var(--yellow); }
+
+/* Main Panel Header */
+.channel-header { padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; position: relative; }
+.ch-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.ch-desc { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
+.ch-meta { font-size: 12px; display: flex; gap: 16px; color: var(--text3); }
+.ch-meta strong { color: var(--text); font-weight: 500; }
+
+/* Context Preview */
+.context-preview { margin-top: 12px; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 11px; color: var(--text2); max-height: 120px; overflow-y: auto; white-space: pre-wrap; }
+.context-header { font-size: 10px; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; display: flex; justify-content: space-between; }
+
+/* Messages area */
+.messages-area { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.message { display: flex; flex-direction: column; gap: 4px; }
+.msg-header { display: flex; gap: 8px; align-items: baseline; font-size: 12px; margin-bottom: 2px; }
+.msg-author { font-weight: 600; color: var(--blue); }
+.msg-author.gemini { color: var(--green); }
+.msg-author.claude { color: var(--purple); }
+.msg-author.user { color: var(--text); }
+.msg-time { color: var(--text3); font-size: 11px; }
+.msg-round { font-size: 10px; background: var(--bg3); padding: 1px 6px; border-radius: 4px; color: var(--text2); font-weight: 600; }
+.msg-body { background: var(--bg2); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; color: var(--text); line-height: 1.4; }
+.expand-link { color: var(--blue); cursor: pointer; font-size: 11px; margin-top: 4px; display: inline-block; }
+.expand-link:hover { text-decoration: underline; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
+.empty-state code { background: var(--bg2); padding: 2px 6px; border-radius: 4px; color: var(--text); }
+
+/* Post Form */
+.post-form { padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; }
+.post-error { color: var(--red); font-size: 12px; margin-bottom: 8px; display: none; }
+.post-success { color: var(--green); font-size: 12px; margin-bottom: 8px; display: none; }
+.post-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: flex-end; }
+.post-textarea { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical; min-height: 70px; }
+.post-textarea:focus { outline: none; border-color: var(--blue); }
+.post-controls { display: flex; justify-content: space-between; align-items: center; }
+.post-recipients { display: flex; gap: 12px; font-size: 12px; color: var(--text2); align-items: center; }
+.recipient-cb { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.post-btn { background: var(--blue); color: #fff; border: none; padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.post-btn:hover:not(:disabled) { opacity: 0.9; }
+.parent-id-container { font-size: 12px; color: var(--text3); display: flex; align-items: center; gap: 8px; }
+.parent-id-container input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; width: 80px; font-family: monospace; font-size: 11px; }
+.msg-reply { font-size: 10px; color: var(--text3); cursor: pointer; }
+.msg-reply:hover { color: var(--blue); text-decoration: underline; }
+
+/* Deliveries Dropdown */
+.deliveries-toggle { cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; color: var(--text2); }
+.deliveries-toggle:hover { color: var(--text); }
+.deliveries-panel { display: none; position: absolute; top: 50px; right: 24px; width: 320px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.8); z-index: 100; max-height: 400px; overflow-y: auto; }
+.deliveries-panel.open { display: block; }
+.delivery-item { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 11px; }
+.delivery-item:last-child { border-bottom: none; }
+.d-status { color: var(--yellow); font-weight: 600; text-transform: uppercase; font-size: 10px; }
+.d-agent { color: var(--blue); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div id="error-banner" class="banner"></div>
+
+<div class="top-bar">
+  <h1>Agent Channels <span style="font-weight:400;color:var(--text3);font-size:14px;margin-left:8px;">#1190</span></h1>
+  <div style="font-size:12px;color:var(--text3);" id="refresh-status">Auto-refresh active</div>
+</div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="empty-state">Loading channels...</div>
+  </div>
+
+  <div class="main-panel" id="main-panel" style="display:none;">
+    <div class="channel-header" id="channel-header">
+      <!-- header content injected -->
+    </div>
+    
+    <div class="messages-area" id="messages-area">
+      <!-- messages injected -->
+    </div>
+
+    <div class="post-form">
+      <div id="post-error" class="post-error"></div>
+      <div id="post-success" class="post-success">Message posted successfully!</div>
+      <div class="post-row">
+        <textarea id="post-body" class="post-textarea" placeholder="Type a message... (Markdown/code supported)"></textarea>
+      </div>
+      <div class="post-controls">
+        <div class="post-recipients" id="post-recipients">
+          <!-- checkboxes injected -->
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;">
+          <div class="parent-id-container" id="parent-id-container" style="display:none;">
+            Reply to: <input type="text" id="post-parent-id" placeholder="Msg ID" readonly>
+            <span style="cursor:pointer;color:var(--red);" onclick="clearReply()">✕</span>
+          </div>
+          <button id="post-btn" class="post-btn" disabled>Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-panel" id="main-empty" style="justify-content:center; align-items:center;">
+    <div class="empty-state" id="global-empty-state">
+      Select a channel to view messages
+    </div>
+  </div>
+</div>
+
+<script>
+let channels = [];
+let activeChannel = null;
+let autoRefreshTimer = null;
+let currentMessages = [];
+// Monotonic fetch counter — every call to loadChannelDetail bumps it.
+// Responses that resolve when their captured id is no longer the
+// current one are stale and must be discarded. This protects against
+// both channel-switch races AND same-channel overlap (auto-refresh
+// firing while a manual reload is in flight).
+let currentFetchId = 0;
+
+const DOM = {
+  sidebar: document.getElementById('sidebar'),
+  mainPanel: document.getElementById('main-panel'),
+  mainEmpty: document.getElementById('main-empty'),
+  channelHeader: document.getElementById('channel-header'),
+  messagesArea: document.getElementById('messages-area'),
+  postBody: document.getElementById('post-body'),
+  postBtn: document.getElementById('post-btn'),
+  postRecipients: document.getElementById('post-recipients'),
+  postError: document.getElementById('post-error'),
+  postSuccess: document.getElementById('post-success'),
+  refreshStatus: document.getElementById('refresh-status'),
+  errorBanner: document.getElementById('error-banner'),
+  parentIdContainer: document.getElementById('parent-id-container'),
+  postParentId: document.getElementById('post-parent-id'),
+};
+
+async function api(path, options = {}) {
+  try {
+    const res = await fetch(path, options);
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || `HTTP ${res.status}`);
+    }
+    DOM.errorBanner.style.display = 'none';
+    return await res.json();
+  } catch (err) {
+    DOM.errorBanner.textContent = `API Error: ${err.message}`;
+    DOM.errorBanner.style.display = 'block';
+    throw err;
+  }
+}
+
+function escapeHTML(str) {
+  return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Safe for interpolation inside a single-quoted JS string literal that
+// ALSO sits inside an HTML attribute value. Order matters: escape
+// backslashes FIRST, then single quotes, otherwise an input like
+// `\'; alert(1);//` will break out of the string literal because the
+// JS engine folds `\\` into `\` and sees `'` as a closing quote.
+// Callers must still HTML-escape the surrounding attribute if relevant.
+function escapeJSAttrString(str) {
+  return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+async function loadChannels() {
+  try {
+    const resp = await api('/api/comms/channels');
+    channels = resp.channels || [];
+    renderSidebar();
+    if (activeChannel) {
+      await loadChannelDetail(activeChannel, true);
+    }
+  } catch (e) {
+    if (channels.length === 0) {
+      DOM.sidebar.innerHTML = '<div class="empty-state">Failed to load channels</div>';
+    }
+  }
+}
+
+function renderSidebar() {
+  if (channels.length === 0) {
+    DOM.sidebar.innerHTML = '<div class="empty-state">No channels yet<br><br>Create one via CLI:<br><code>ab channel new &lt;name&gt;</code></div>';
+    return;
+  }
+  
+  DOM.sidebar.innerHTML = channels.map(c => {
+    const safeName = escapeHTML(c.name);
+    // HTML-escape FIRST (so `"` can't break out of the onclick="..."
+    // attribute), then JS-escape both backslashes AND single quotes
+    // so nothing can break out of the inner string literal. Skipping
+    // the backslash step lets `\'; alert(1);//` escape the literal
+    // because the JS engine folds `\\` into `\` before matching `'`.
+    const jsName = escapeJSAttrString(safeName);
+    const pendingHtml = c.pending_deliveries > 0
+      ? `<span class="badge pending">${c.pending_deliveries} pending</span>`
+      : '';
+    const activeCls = activeChannel === c.name ? 'active' : '';
+
+    return `
+      <div class="channel-item ${activeCls}" onclick="selectChannel('${jsName}')">
+        <div class="channel-name">
+          <span>#${safeName}</span>
+          <span class="badge">${c.message_count | 0}</span>
+        </div>
+        <div class="channel-meta">
+          ${pendingHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function selectChannel(name) {
+  if (activeChannel === name) return;
+  activeChannel = name;
+  renderSidebar();
+  
+  DOM.mainEmpty.style.display = 'none';
+  DOM.mainPanel.style.display = 'flex';
+  DOM.messagesArea.innerHTML = '<div class="empty-state">Loading messages...</div>';
+  clearReply();
+  
+  await loadChannelDetail(name);
+}
+
+async function loadChannelDetail(name, isBackground = false) {
+  const fetchId = ++currentFetchId;
+  try {
+    // encodeURIComponent guards against stray `/`, `#`, `?` in channel
+    // names even though the server validates the charset on create —
+    // defense-in-depth against future schema changes.
+    const encName = encodeURIComponent(name);
+    const [meta, msgsResp] = await Promise.all([
+      api(`/api/comms/channels/${encName}`),
+      api(`/api/comms/channels/${encName}/messages?tail=50`)
+    ]);
+    // Race guard: if another loadChannelDetail has started since we
+    // kicked off (e.g. user switched channels, or auto-refresh raced
+    // a manual reload), drop this response so it can't overwrite the
+    // newer view.
+    if (fetchId !== currentFetchId) return;
+    const msgs = msgsResp.messages || [];
+
+    renderChannelHeader(meta);
+    renderMessages(msgs, isBackground);
+    
+    if (!isBackground) {
+      const subs = meta.subscribers || [];
+      DOM.postRecipients.innerHTML = '<span style="font-weight:600;">To:</span> ' + subs.map(s => {
+        const safe = escapeHTML(s);
+        return `
+        <label class="recipient-cb">
+          <input type="checkbox" value="${safe}" checked> ${safe}
+        </label>
+      `;
+      }).join('');
+    }
+  } catch(e) {
+    if (!isBackground) {
+      DOM.messagesArea.innerHTML = `<div class="empty-state">Failed to load channel details: ${e.message}</div>`;
+    }
+  }
+}
+
+function renderChannelHeader(meta) {
+  const pending = meta.pending_deliveries || 0;
+  const pendingHtml = pending > 0 
+    ? `<div class="deliveries-toggle" onclick="toggleDeliveries()">● ${pending} pending deliveries ▾</div>` 
+    : '<div class="deliveries-toggle">0 pending deliveries</div>';
+    
+  let contextHtml = '';
+  if (meta.context_preview) {
+    contextHtml = `
+      <div class="context-preview">
+        <div class="context-header">
+          <span>Context Preview</span>
+          <span>sha256: ${escapeHTML(meta.context_sha256 ? meta.context_sha256.substring(0,8) : 'unknown')}</span>
+        </div>
+        ${escapeHTML(meta.context_preview)}
+      </div>
+    `;
+  }
+  
+  const includeList = meta.include || meta.includes || [];
+  const includes = includeList.length ? includeList.map(escapeHTML).join(', ') : 'none';
+  const subList = meta.subscribers || [];
+  const subs = subList.length ? subList.map(escapeHTML).join(', ') : 'none';
+  const safeName = escapeHTML(meta.name || activeChannel || '');
+  const safeDesc = escapeHTML(meta.description || 'No description provided.');
+  const msgCount = Number.isFinite(meta.message_count) ? meta.message_count : 0;
+
+  DOM.channelHeader.innerHTML = `
+    <div class="ch-title">
+      <span>#${safeName}</span>
+      ${pendingHtml}
+    </div>
+    <div class="ch-desc">${safeDesc}</div>
+    <div class="ch-meta">
+      <span><strong>Includes:</strong> ${includes}</span>
+      <span><strong>Subscribers:</strong> ${subs}</span>
+      <span><strong>Total Messages:</strong> ${msgCount}</span>
+    </div>
+    ${contextHtml}
+    <div class="deliveries-panel" id="deliveries-panel"></div>
+  `;
+}
+
+window.toggleDeliveries = async function() {
+  const panel = document.getElementById('deliveries-panel');
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    return;
+  }
+  
+  panel.innerHTML = '<div style="padding:12px;font-size:11px;color:var(--text2);">Loading deliveries...</div>';
+  panel.classList.add('open');
+  
+  try {
+    const delsResp = await api(`/api/comms/channels/${encodeURIComponent(activeChannel)}/deliveries?status=pending&limit=20`);
+    const dels = delsResp.deliveries || [];
+    if (dels.length === 0) {
+      panel.innerHTML = '<div style="padding:12px;font-size:11px;color:var(--text2);">No pending deliveries.</div>';
+    } else {
+      panel.innerHTML = dels.map(d => `
+        <div class="delivery-item">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span class="d-agent">To: ${escapeHTML(d.to_agent || '')}</span>
+            <span class="d-status">${escapeHTML(d.status || '')}</span>
+          </div>
+          <div style="color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            Msg #${escapeHTML(String(d.message_id || ''))}: ${escapeHTML(d.preview || '')}
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    panel.innerHTML = `<div style="padding:12px;font-size:11px;color:var(--red);">Error: ${e.message}</div>`;
+  }
+};
+
+window.expandMessage = function(id) {
+  const msg = currentMessages.find(m => String(m.id) === String(id));
+  if (!msg) return;
+  const el = document.getElementById('msg-body-' + id);
+  el.textContent = msg.body;
+  const link = document.getElementById('expand-' + id);
+  if (link) link.style.display = 'none';
+};
+
+window.replyTo = function(id) {
+  DOM.parentIdContainer.style.display = 'flex';
+  DOM.postParentId.value = id;
+  DOM.postBody.focus();
+};
+
+window.clearReply = function() {
+  DOM.parentIdContainer.style.display = 'none';
+  DOM.postParentId.value = '';
+};
+
+function renderMessages(msgs, isBackground) {
+  // API returns {message_id, created_at, ...}; normalize to {id, timestamp}
+  // so downstream render helpers stay agnostic to the server schema.
+  currentMessages = (msgs || []).map(m => ({
+    ...m,
+    id: m.message_id || m.id,
+    timestamp: m.created_at || m.timestamp,
+  }));
+  if (currentMessages.length === 0) {
+    DOM.messagesArea.innerHTML = '<div class="empty-state">No messages in this channel yet.</div>';
+    return;
+  }
+  
+  const isAtBottom = DOM.messagesArea.scrollHeight - DOM.messagesArea.scrollTop <= DOM.messagesArea.clientHeight + 50;
+  
+  DOM.messagesArea.innerHTML = currentMessages.map(m => {
+    // Every sink gets HTML-escaped; anything that lands inside a JS
+    // string literal in an onclick attribute gets an additional pass
+    // to neutralise single-quote breakout.
+    const safeAuthor = escapeHTML(m.from_agent || 'unknown');
+    const safeAuthorCls = escapeHTML((m.from_agent || '').toLowerCase());
+    const safeIdHtml = escapeHTML(String(m.id || ''));
+    // Backslash escape FIRST — see escapeJSAttrString rationale.
+    const safeIdJs = escapeJSAttrString(safeIdHtml);
+    const safeTime = escapeHTML(
+      m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour12: false }) : ''
+    );
+    const roundHtml = m.round_index > 0
+      ? `<span class="msg-round">r${m.round_index | 0}</span>`
+      : '';
+
+    let bodyPreview = m.body || '';
+    let isTruncated = false;
+    if (bodyPreview.length > 300) {
+      bodyPreview = bodyPreview.substring(0, 300);
+      isTruncated = true;
+    }
+
+    const expandHtml = isTruncated
+      ? `<span class="expand-link" id="expand-${safeIdHtml}" onclick="expandMessage('${safeIdJs}')">[${(m.body.length - 300) | 0} more chars]</span>`
+      : '';
+
+    return `
+      <div class="message">
+        <div class="msg-header">
+          <span class="msg-time">[${safeTime}]</span>
+          <span class="msg-author ${safeAuthorCls}">${safeAuthor}</span>
+          ${roundHtml}
+          <span class="msg-reply" onclick="replyTo('${safeIdJs}')">Reply</span>
+        </div>
+        <div>
+          <div class="msg-body" id="msg-body-${safeIdHtml}">${escapeHTML(bodyPreview)}</div>
+          ${expandHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  if (isAtBottom || !isBackground) {
+    DOM.messagesArea.scrollTop = DOM.messagesArea.scrollHeight;
+  }
+}
+
+// Post Form Handlers
+DOM.postBody.addEventListener('input', () => {
+  DOM.postBtn.disabled = DOM.postBody.value.trim().length === 0;
+});
+
+DOM.postBody.addEventListener('focus', () => {
+  stopAutoRefresh();
+});
+
+DOM.postBody.addEventListener('blur', () => {
+  if (DOM.postBody.value.trim() === '') {
+    startAutoRefresh();
+  }
+});
+
+DOM.postBtn.addEventListener('click', async () => {
+  const body = DOM.postBody.value.trim();
+  if (!body || !activeChannel) return;
+  
+  DOM.postBtn.disabled = true;
+  DOM.postError.style.display = 'none';
+  DOM.postSuccess.style.display = 'none';
+  
+  const to_agents = Array.from(DOM.postRecipients.querySelectorAll('input:checked')).map(cb => cb.value);
+  const parent_id = DOM.postParentId.value.trim();
+  
+  const payload = {
+    body,
+    to_agents,
+    from_agent: 'user',
+    auto_snapshot: false
+  };
+  if (parent_id) payload.parent_id = parent_id;
+  
+  try {
+    await api(`/api/comms/channels/${encodeURIComponent(activeChannel)}/post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    DOM.postBody.value = '';
+    DOM.postBtn.disabled = true;
+    startAutoRefresh();
+    clearReply();
+    
+    DOM.postSuccess.style.display = 'block';
+    setTimeout(() => { DOM.postSuccess.style.display = 'none'; }, 3000);
+    
+    await loadChannelDetail(activeChannel);
+    DOM.messagesArea.scrollTop = DOM.messagesArea.scrollHeight;
+  } catch(e) {
+    DOM.postError.textContent = `Post failed: ${e.message}`;
+    DOM.postError.style.display = 'block';
+    DOM.postBtn.disabled = false;
+  }
+});
+
+// Refresh Logic
+function startAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  autoRefreshTimer = setInterval(() => {
+    loadChannels();
+  }, 5000);
+  DOM.refreshStatus.textContent = 'Auto-refresh active';
+  DOM.refreshStatus.style.color = 'var(--text3)';
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  autoRefreshTimer = null;
+  DOM.refreshStatus.textContent = 'Auto-refresh paused (typing)';
+  DOM.refreshStatus.style.color = 'var(--yellow)';
+}
+
+// Global listeners
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.deliveries-toggle') || e.target.closest('.deliveries-panel')) return;
+  const panel = document.getElementById('deliveries-panel');
+  if (panel && panel.classList.contains('open')) {
+    panel.classList.remove('open');
+  }
+});
+
+// Init
+loadChannels().then(() => {
+  startAutoRefresh();
+});
+
+</script>
+</body>
+</html>
