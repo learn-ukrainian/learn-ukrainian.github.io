@@ -13,11 +13,29 @@ Replaces Qdrant vector DB entirely. All content searchable via SQLite FTS5
 for prose and B-TREE indexes for dictionary headword lookups.
 
 Usage:
+    # Preview what would happen (no destructive action)
+    .venv/bin/python scripts/wiki/build_sources_db.py --dry-run
+
+    # First-time build (no existing DB) — allowed unconditionally
     .venv/bin/python scripts/wiki/build_sources_db.py
+
+    # Rebuild an existing populated DB — requires --force
+    .venv/bin/python scripts/wiki/build_sources_db.py --force
+
+    # Rebuild + wipe the wikipedia table too (destructive, rare)
+    .venv/bin/python scripts/wiki/build_sources_db.py --force --no-preserve-wiki
+
+By default, `--force` rebuilds everything EXCEPT the wikipedia and
+wikipedia_negative_cache tables — those are populated separately by
+scripts/wiki/fetch_wikipedia.py and are expensive to refetch (Wikipedia
+API rate-limits). Pass --no-preserve-wiki to opt out of the preservation.
 """
 
+import argparse
+import contextlib
 import json
 import sqlite3
+import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -174,6 +192,35 @@ CREATE TABLE IF NOT EXISTS style_guide (
     source TEXT DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_style_word ON style_guide(word COLLATE NOCASE);
+
+-- === Wikipedia passthrough (populated by scripts/wiki/fetch_wikipedia.py) ===
+--
+-- These tables own the Wikipedia cache that the MCP sources server queries
+-- for wiki enrichment. build_sources_db.py creates the schema here so a
+-- rebuild produces a DB that fetch_wikipedia.py can populate — AND so
+-- that --force rebuilds (with preserve_wiki=True) can snapshot and
+-- restore the rows across the destroy/recreate cycle.
+
+CREATE TABLE IF NOT EXISTS wikipedia (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    url TEXT NOT NULL DEFAULT '',
+    text TEXT NOT NULL DEFAULT '',
+    char_count INTEGER DEFAULT 0,
+    fetched_at TEXT NOT NULL DEFAULT ''
+);
+CREATE VIRTUAL TABLE IF NOT EXISTS wikipedia_fts USING fts5(
+    title, text, content='wikipedia', content_rowid='id', tokenize='unicode61'
+);
+CREATE TRIGGER IF NOT EXISTS wikipedia_ai AFTER INSERT ON wikipedia BEGIN
+    INSERT INTO wikipedia_fts(rowid, title, text) VALUES (new.id, new.title, new.text);
+END;
+CREATE INDEX IF NOT EXISTS idx_wiki_title ON wikipedia(title);
+
+CREATE TABLE IF NOT EXISTS wikipedia_negative_cache (
+    topic TEXT PRIMARY KEY,
+    tried_at TEXT NOT NULL DEFAULT ''
+);
 """
 
 
@@ -208,25 +255,139 @@ def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
     return len(batch)
 
 
+def _db_is_populated(db: Path) -> tuple[bool, int]:
+    """True (plus row count) if the DB exists and has any rows in the
+    main content tables. Returns (False, 0) for missing/empty DBs.
+    """
+    if not db.exists():
+        return False, 0
+    try:
+        conn = sqlite3.connect(str(db))
+        total = 0
+        for tbl in ("textbooks", "literary_texts", "external_articles"):
+            with contextlib.suppress(sqlite3.OperationalError):
+                total += conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
+        conn.close()
+        return total > 0, total
+    except sqlite3.Error:
+        return False, 0
+
+
+def _extract_wikipedia_snapshot(db: Path) -> tuple[list[tuple], list[tuple]]:
+    """Read all rows from wikipedia + wikipedia_negative_cache tables,
+    returning them as list-of-tuples so we can re-insert after rebuild.
+    Returns ([], []) if the tables don't exist or the DB is missing.
+    """
+    if not db.exists():
+        return [], []
+    try:
+        conn = sqlite3.connect(str(db))
+        wiki_rows: list[tuple] = []
+        neg_rows: list[tuple] = []
+        with contextlib.suppress(sqlite3.OperationalError):
+            wiki_rows = list(conn.execute(
+                "SELECT title, url, text, char_count, fetched_at FROM wikipedia"
+            ))
+        with contextlib.suppress(sqlite3.OperationalError):
+            neg_rows = list(conn.execute(
+                "SELECT topic, tried_at FROM wikipedia_negative_cache"
+            ))
+        conn.close()
+        return wiki_rows, neg_rows
+    except sqlite3.Error:
+        return [], []
+
+
+def _restore_wikipedia_snapshot(conn: sqlite3.Connection,
+                                 wiki_rows: list[tuple],
+                                 neg_rows: list[tuple]) -> None:
+    """Re-insert wikipedia + negative cache rows into a freshly-built DB."""
+    if wiki_rows:
+        conn.executemany(
+            """INSERT INTO wikipedia (title, url, text, char_count, fetched_at)
+               VALUES (?, ?, ?, ?, ?)""",
+            wiki_rows,
+        )
+    if neg_rows:
+        conn.executemany(
+            "INSERT OR IGNORE INTO wikipedia_negative_cache (topic, tried_at) VALUES (?, ?)",
+            neg_rows,
+        )
+
+
 def build(db_path: Path | None = None,
           external_dir: Path | None = None,
           textbook_dir: Path | None = None,
-          gdrive_dir: Path | None = None) -> Path:
-    """Build the unified sources database."""
+          gdrive_dir: Path | None = None,
+          *,
+          force: bool = False,
+          dry_run: bool = False,
+          preserve_wiki: bool = True) -> Path:
+    """Build the unified sources database.
+
+    Safety:
+    - If the DB exists and is populated, requires `force=True` to proceed.
+      Without it, prints the row count and exits without touching anything.
+    - `dry_run=True` stops after the safety check and prints the plan.
+    - `preserve_wiki=True` (default) snapshots the wikipedia +
+      wikipedia_negative_cache tables before dropping the DB and re-inserts
+      them into the fresh schema — wikipedia API data is expensive to
+      refetch.
+    """
     db = db_path or DB_PATH
     ext_dir = external_dir or EXTERNAL_DIR
     tb_dir = textbook_dir or (gdrive_dir or GDRIVE_DATA) / "textbook_chunks"
     gd = gdrive_dir or GDRIVE_DATA
 
+    populated, total = _db_is_populated(db)
+    if populated and not force:
+        print(f"  ⚠️  {db.name} already populated ({total:,} rows across main tables).")
+        print("     Refusing to destroy it without --force. Use:")
+        print("       .venv/bin/python scripts/wiki/build_sources_db.py --force")
+        print("     or add --dry-run to preview what would happen.")
+        return db
+
+    if dry_run:
+        print(f"  🔍 DRY RUN: would rebuild {db.name}")
+        if populated:
+            print(f"     existing populated DB: {total:,} rows")
+        else:
+            print("     no existing populated DB (fresh build)")
+        print(f"     sources: {ext_dir}, {tb_dir}, {gd}")
+        print(f"     preserve wikipedia: {preserve_wiki}")
+        return db
+
+    # Snapshot wikipedia data BEFORE destroying the DB
+    wiki_rows: list[tuple] = []
+    neg_rows: list[tuple] = []
+    if preserve_wiki:
+        wiki_rows, neg_rows = _extract_wikipedia_snapshot(db)
+        if wiki_rows or neg_rows:
+            print(f"  💾 Preserving wikipedia snapshot: "
+                  f"{len(wiki_rows)} articles, {len(neg_rows)} negative-cache entries")
+
     if db.exists():
         db.unlink()
-        print(f"  🗑️  Removed existing {db.name}")
+        # Also drop stale WAL/SHM sidecars that can cause SQLite I/O errors
+        # on the freshly-created DB (seen in practice: rebuilding right
+        # after a restore would fail at executescript() with 'disk I/O
+        # error' because the old .db-wal was still present).
+        for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
+            if sidecar.exists():
+                sidecar.unlink()
+        print(f"  🗑️  Removed existing {db.name} (+ WAL/SHM sidecars)")
 
     db.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(db))
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=OFF")
     conn.executescript(SCHEMA)
+
+    if preserve_wiki and (wiki_rows or neg_rows):
+        _restore_wikipedia_snapshot(conn, wiki_rows, neg_rows)
+        conn.commit()
+        print(f"  ✅ Restored {len(wiki_rows)} wikipedia articles + "
+              f"{len(neg_rows)} negative-cache entries")
 
     total = 0
 
@@ -357,6 +518,53 @@ def build(db_path: Path | None = None,
     return db
 
 
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Build the unified sources.db (textbooks + literary + "
+                    "dictionaries + wikipedia passthrough).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "By default, refuses to destroy an existing populated DB. "
+            "Use --force to rebuild. --dry-run shows the plan without "
+            "touching anything. --no-preserve-wiki also wipes the "
+            "wikipedia table (use sparingly — refetching is slow)."
+        ),
+    )
+    parser.add_argument(
+        "--force", action="store_true",
+        help="Destroy and rebuild an existing populated DB. Required when "
+             "sources.db already has rows in textbooks/literary_texts/"
+             "external_articles.",
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true",
+        help="Print the plan without touching the filesystem or the DB.",
+    )
+    parser.add_argument(
+        "--no-preserve-wiki", action="store_true",
+        help="Also wipe the wikipedia and wikipedia_negative_cache tables. "
+             "Default is to snapshot and restore them across the rebuild.",
+    )
+    parser.add_argument(
+        "--db-path", type=Path, default=None,
+        help="Override the default data/sources.db path (testing only).",
+    )
+    return parser.parse_args(argv)
+
+
 if __name__ == "__main__":
+    args = _parse_args()
     print("🔨 Building unified sources database...")
-    build()
+    result = build(
+        db_path=args.db_path,
+        force=args.force,
+        dry_run=args.dry_run,
+        preserve_wiki=not args.no_preserve_wiki,
+    )
+    if args.dry_run:
+        sys.exit(0)
+    # If the build was refused for safety (not forced, DB populated),
+    # exit with code 2 so scripts calling this in CI notice.
+    populated, _ = _db_is_populated(result)
+    if populated and not args.force:
+        sys.exit(2)
