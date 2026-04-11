@@ -21,6 +21,58 @@ Every task follows this workflow. No exceptions for non-trivial changes.
   --task-id issue-NNN --model gemini-3.1-pro-preview
 ```
 
+## Channel bridge (#1190, shipped 2026-04-12)
+
+The agent bridge now supports **topic-scoped channels** — preferred
+for sustained multi-turn conversations because they eliminate the
+need to re-paste project context on every round.
+
+**Five seeded channels**: `shared`, `pipeline`, `content`,
+`architecture`, `reviews`. Every post auto-prepends:
+1. The channel's pinned `context.md` (via the include chain, so
+   `shared` is merged into everything)
+2. A Monitor API snapshot of volatile project state
+3. Recent channel history, character-budget truncated
+
+**Preferred for:** code reviews (multi-round), design debates,
+cross-agent discussions, anything that needs pinned context.
+**Not preferred for:** one-off drive-by questions — use `ask-*` for
+those.
+
+**Quick reference**:
+```bash
+# List / inspect
+ab channel list
+ab channel info pipeline
+ab channel tail reviews -n 20
+ab channel tail reviews --thread THREAD_ID
+
+# Post (short form — single recipient)
+ab p reviews gemini "quick question about module X"
+
+# Post (long form — multi-recipient, threading, parent/corr ids)
+ab post reviews "Review of #NNN" --to gemini,codex --parent MSG_ID
+
+# Multi-agent bounded discussion
+ab discuss architecture "Should we extract the V6 god object?" \
+    --with claude,gemini,codex --max-rounds 2
+```
+
+`ab discuss` runs rounds in parallel via ThreadPoolExecutor,
+short-circuits when all agents end their response with `[AGREE]`,
+and caps at 4 rounds. Default: 2 rounds, 1 agent. The transcript
+lands in `channel_messages` with proper `parent_id` threading so
+you can tail it later with `ab channel tail --thread`.
+
+**Web dashboard**: `http://localhost:8765/channels.html` (localhost
+only, read + post).
+
+**Full docs**: `docs/best-practices/agent-bridge.md`.
+
+The legacy `ask-gemini` / `ask-claude` / `ask-codex` commands are
+NOT deprecated — they stay alive for one-shot delegations. Use
+channels for anything that will have >1 turn.
+
 **Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken.
 
 **Issue discipline (coding issues)**:
