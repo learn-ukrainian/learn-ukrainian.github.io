@@ -189,6 +189,75 @@ Older messages still have their original `context_rev_*` values for
 deterministic replay — the update doesn't retroactively rewrite
 history.
 
+## Wake integration (C.3)
+
+The inbox worker now supports a simple filesystem wake hint at
+`.agent/wake/{agent}`. Whenever `_channels.post()` commits delivery
+rows for one or more recipients, it replaces each recipient's wake
+file atomically. That write is best-effort only: a wake-file failure
+does not roll back the message or delivery insert.
+
+Who writes:
+
+- `scripts/ai_agent_bridge/_channels.py` after a successful post commit
+
+Who reads:
+
+- Any external watcher you configure locally
+- `ab sync` if you prefer manual draining instead of OS integration
+
+Recommended mental model:
+
+- The SQLite `deliveries` table is the source of truth
+- Wake files are only a nudge to run `ab inbox run <agent>`
+- Missing a wake is safe because the work is still pending in SQLite
+
+Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
+
+> <?xml version="1.0" encoding="UTF-8"?>
+> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+> "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+> <plist version="1.0">
+> <dict>
+>   <key>Label</key>
+>   <string>learn-ukrainian.codex-inbox</string>
+>   <key>ProgramArguments</key>
+>   <array>
+>     <string>/Users/your-user/projects/learn-ukrainian/.venv/bin/python</string>
+>     <string>/Users/your-user/projects/learn-ukrainian/scripts/ai_agent_bridge/__main__.py</string>
+>     <string>inbox</string>
+>     <string>run</string>
+>     <string>codex</string>
+>     <string>--until-idle</string>
+>   </array>
+>   <key>WatchPaths</key>
+>   <array>
+>     <string>/Users/your-user/projects/learn-ukrainian/.agent/wake/codex</string>
+>   </array>
+> </dict>
+> </plist>
+
+Example systemd units (documented only, not tested here):
+
+> # ~/.config/systemd/user/learn-ukrainian-codex-inbox.path
+> [Path]
+> PathChanged=%h/projects/learn-ukrainian/.agent/wake/codex
+>
+> # ~/.config/systemd/user/learn-ukrainian-codex-inbox.service
+> [Service]
+> Type=oneshot
+> WorkingDirectory=%h/projects/learn-ukrainian
+> ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run codex --until-idle
+
+If you do not want OS-level watchers, use the manual fallback:
+
+```bash
+ab sync claude
+ab sync --all
+```
+
+That path reads the same `deliveries` queue and drains it on demand.
+
 ## See also
 
 - Issue #1190 — the channel bridge spec and implementation history

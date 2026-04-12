@@ -94,6 +94,7 @@ SHARED_CHANNEL = "shared"
 # Each channel gets its own subdirectory: docs/agent-channels/{channel}/
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CONTEXT_ROOT = _PROJECT_ROOT / "docs" / "agent-channels"
+WAKE_ROOT = _PROJECT_ROOT / ".agent" / "wake"
 
 # Monitor API endpoint for dynamic project state.
 # See docs/MONITOR-API.md. Short timeout because the API is on the same
@@ -167,6 +168,23 @@ def _validate_error_kind(error_kind: str) -> None:
             f"Unknown delivery error kind '{error_kind}'. "
             f"Expected one of {VALID_DELIVERY_ERROR_KINDS}."
         )
+
+
+def _touch_wake_file(agent: str) -> None:
+    """Best-effort wake hint for #1192 OS-level inbox watchers.
+
+    The file is replaced atomically per recipient after the post
+    transaction commits, so watchers never observe a partially-written
+    wake file and a wake failure never rolls back the message insert.
+    """
+    try:
+        WAKE_ROOT.mkdir(parents=True, exist_ok=True)
+        wake_path = WAKE_ROOT / agent
+        tmp_path = WAKE_ROOT / f".{agent}.{uuid.uuid4().hex}.tmp"
+        tmp_path.write_text(_now_iso(), encoding="utf-8")
+        tmp_path.replace(wake_path)
+    except OSError:
+        return
 
 
 def _row_to_pending_delivery(row) -> dict[str, Any]:
@@ -775,6 +793,9 @@ def post(
             )
 
         conn.commit()
+
+        for agent in set(to_agents or []):
+            _touch_wake_file(agent)
 
         return {
             "message_id": message_id,

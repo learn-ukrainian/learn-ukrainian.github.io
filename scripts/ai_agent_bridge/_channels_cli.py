@@ -18,6 +18,10 @@ ab channel tail <name> [--n N] [--thread TID]
 ab post <channel> <body> [--to A,...] [--parent ID] [--corr ID]
 ab p <channel> <agent> <body>                    # shorthand
 
+ab inbox run <agent> [--once] [--max-messages N] [--stop-after-seconds N]
+ab inbox show <agent>
+ab sync <agent> | ab sync --all
+
 ab discuss <channel> <body> --with A,B [--max-rounds N]   # B.4, stub for now
 ```
 
@@ -33,6 +37,8 @@ import os
 import shlex
 import subprocess
 import sys
+import time
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from . import _channels
@@ -161,6 +167,74 @@ def register_channel_commands(subparsers: Any) -> None:
     )
     p_parser.add_argument("body", help="Message body (use '-' for stdin)")
 
+    # ── top-level: inbox extensions on the legacy parser ──────────
+    inbox_parser = subparsers.choices.get("inbox")
+    if inbox_parser is not None:
+        inbox_sub = inbox_parser.add_subparsers(
+            dest="inbox_command",
+            required=False,
+        )
+
+        inbox_run = inbox_sub.add_parser(
+            "run",
+            help="Drain one channel inbox via the thread-coalesced worker",
+        )
+        inbox_run.add_argument(
+            "agent",
+            choices=list(_channels.VALID_AGENTS),
+            help="Agent inbox to drain",
+        )
+        inbox_mode = inbox_run.add_mutually_exclusive_group()
+        inbox_mode.add_argument(
+            "--until-idle",
+            action="store_true",
+            help="Drain until no more eligible deliveries remain (default)",
+        )
+        inbox_mode.add_argument(
+            "--once",
+            action="store_true",
+            help="Process one claimed thread and exit",
+        )
+        inbox_run.add_argument(
+            "--max-messages",
+            type=int,
+            default=None,
+            help="Soft cap on claimed deliveries for this run",
+        )
+        inbox_run.add_argument(
+            "--stop-after-seconds",
+            type=int,
+            default=None,
+            help="Stop after this many seconds between thread claims",
+        )
+
+        inbox_show = inbox_sub.add_parser(
+            "show",
+            help="Show pending/processing/failed channel deliveries for one agent",
+        )
+        inbox_show.add_argument(
+            "agent",
+            choices=list(_channels.VALID_AGENTS),
+            help="Agent inbox to inspect",
+        )
+
+    # ── top-level: sync ───────────────────────────────────────────
+    sync_parser = subparsers.add_parser(
+        "sync",
+        help="Manual inbox-drain fallback for one agent or all agents",
+    )
+    sync_parser.add_argument(
+        "agent",
+        nargs="?",
+        choices=list(_channels.VALID_AGENTS),
+        help="Single agent inbox to drain",
+    )
+    sync_parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Drain every agent inbox in sequence",
+    )
+
     # ── top-level: discuss (B.4 stub) ─────────────────────────────
     discuss_parser = subparsers.add_parser(
         "discuss",
@@ -191,10 +265,14 @@ def dispatch_channel_command(args) -> int:
     command = args.command
     if command == "channel":
         return _dispatch_channel_group(args)
+    if command == "inbox":
+        return _dispatch_inbox_command(args)
     if command == "post":
         return _handle_post(args)
     if command == "p":
         return _handle_p(args)
+    if command == "sync":
+        return _handle_sync(args)
     if command == "discuss":
         return _handle_discuss(args)
     print(f"unknown channel command: {command}", file=sys.stderr)
@@ -217,6 +295,17 @@ def _dispatch_channel_group(args) -> int:
     return 2
 
 
+def _dispatch_inbox_command(args) -> int:
+    """Route `ab inbox ...` channel-worker subcommands."""
+    sub = getattr(args, "inbox_command", None)
+    if sub == "run":
+        return _handle_inbox_run(args)
+    if sub == "show":
+        return _handle_inbox_show(args)
+    print("unknown subcommand: inbox", file=sys.stderr)
+    return 2
+
+
 # ── handlers ──────────────────────────────────────────────────────────
 
 
@@ -229,6 +318,182 @@ def _resolve_body(body_arg: str) -> str:
 
 def _parse_csv(s: str) -> list[str]:
     return [item.strip() for item in s.split(",") if item.strip()]
+
+
+def _now_utc() -> datetime:
+    return datetime.now(UTC)
+
+
+def _parse_iso(value: str) -> datetime:
+    return datetime.fromisoformat(value)
+
+
+def _format_age(from_iso: str, *, now: datetime | None = None) -> str:
+    """Render a compact human duration such as `12m` or `6h12m`."""
+    current = now or _now_utc()
+    delta = max(current - _parse_iso(from_iso), timedelta())
+    total_minutes = int(delta.total_seconds() // 60)
+    days, rem_minutes = divmod(total_minutes, 24 * 60)
+    hours, minutes = divmod(rem_minutes, 60)
+    if days > 0:
+        return f"{days}d{hours}h"
+    if hours > 0:
+        return f"{hours}h{minutes}m"
+    return f"{minutes}m"
+
+
+def _parse_backlog_warn_hours() -> float:
+    """Return the backlog warning threshold in hours."""
+    raw_value = os.environ.get("AB_BACKLOG_WARN_HOURS", "2").strip()
+    try:
+        hours = float(raw_value)
+    except ValueError:
+        return 2.0
+    return hours if hours > 0 else 2.0
+
+
+def _run_exit_code(deliveries_failed: int, aborted: bool) -> int:
+    """Map inbox-worker outcomes to the CLI exit codes from #1192."""
+    if aborted:
+        return 2
+    if deliveries_failed > 0:
+        return 1
+    return 0
+
+
+def _print_inbox_run_summary(summary: Any, *, duration_s: float) -> None:
+    """Render the one-line inbox worker summary expected by #1192."""
+    print(
+        "processed: "
+        f"{summary.deliveries_claimed} deliveries | "
+        f"{summary.threads_processed} threads | "
+        f"{summary.deliveries_failed} failed | "
+        f"duration: {duration_s:.1f}s"
+    )
+
+
+def _query_inbox_show(agent: str) -> dict[str, Any]:
+    """Return read-only inbox status details for one agent."""
+    from ._db import get_db
+
+    now = _now_utc()
+    failed_cutoff = (now - timedelta(hours=24)).isoformat()
+
+    conn = get_db()
+    try:
+        pending = conn.execute(
+            """
+            SELECT COUNT(*) AS count, MIN(cm.created_at) AS oldest_created_at
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.to_agent = ? AND d.status = 'pending'
+            """,
+            (agent,),
+        ).fetchone()
+        processing = conn.execute(
+            """
+            SELECT COUNT(*) AS count, MIN(d.lease_until) AS lease_until
+            FROM deliveries d
+            WHERE d.to_agent = ? AND d.status = 'processing'
+            """,
+            (agent,),
+        ).fetchone()
+        failed = conn.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.to_agent = ?
+              AND d.status = 'failed'
+              AND cm.created_at >= ?
+            """,
+            (agent, failed_cutoff),
+        ).fetchone()
+        oldest = conn.execute(
+            """
+            SELECT cm.channel, cm.thread_id, cm.from_agent, cm.body
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.to_agent = ? AND d.status = 'pending'
+            ORDER BY cm.created_at ASC, d.delivery_id ASC
+            LIMIT 1
+            """,
+            (agent,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+    preview = None
+    if oldest is not None:
+        body = str(oldest["body"]).replace("\n", " ").strip()
+        preview = {
+            "channel": str(oldest["channel"]),
+            "thread_id": str(oldest["thread_id"]),
+            "from_agent": str(oldest["from_agent"]),
+            "body": body[:60] + ("..." if len(body) > 60 else ""),
+        }
+
+    return {
+        "pending_count": int(pending["count"]) if pending else 0,
+        "oldest_created_at": (
+            str(pending["oldest_created_at"])
+            if pending and pending["oldest_created_at"]
+            else None
+        ),
+        "processing_count": int(processing["count"]) if processing else 0,
+        "processing_lease_until": (
+            str(processing["lease_until"])
+            if processing and processing["lease_until"]
+            else None
+        ),
+        "failed_count": int(failed["count"]) if failed else 0,
+        "preview": preview,
+    }
+
+
+def _pending_backlog_rows() -> list[dict[str, Any]]:
+    """Return pending-delivery backlog rows used for the warning banner."""
+    from ._db import get_db
+
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            """
+            SELECT d.to_agent, COUNT(*) AS count, MIN(cm.created_at) AS oldest_created_at
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.status = 'pending'
+            GROUP BY d.to_agent
+            ORDER BY d.to_agent ASC
+            """
+        ).fetchall()
+    finally:
+        conn.close()
+
+    return [
+        {
+            "agent": str(row["to_agent"]),
+            "count": int(row["count"]),
+            "oldest_created_at": str(row["oldest_created_at"]),
+        }
+        for row in rows
+        if row["oldest_created_at"]
+    ]
+
+
+def _maybe_print_backlog_warnings() -> None:
+    """Emit one stderr warning per agent with stale pending deliveries."""
+    threshold = timedelta(hours=_parse_backlog_warn_hours())
+    now = _now_utc()
+    for row in _pending_backlog_rows():
+        if now - _parse_iso(row["oldest_created_at"]) < threshold:
+            continue
+        age = _format_age(row["oldest_created_at"], now=now)
+        print(
+            f"⚠️  {row['agent']} has {row['count']} pending deliveries "
+            f"(oldest {age}). Run 'ab inbox run {row['agent']}' to drain.",
+            file=sys.stderr,
+        )
 
 
 def _handle_channel_new(args) -> int:
@@ -450,6 +715,83 @@ def _handle_p(args) -> int:
         no_snapshot = False
 
     return _handle_post(_Args())
+
+
+def _handle_inbox_run(args) -> int:
+    """Handle `ab inbox run <agent>`."""
+    from ._inbox import run_inbox
+
+    until_idle = not args.once
+    if args.until_idle:
+        until_idle = True
+
+    started_at = time.monotonic()
+    try:
+        summary = run_inbox(
+            args.agent,
+            max_messages=args.max_messages,
+            until_idle=until_idle,
+            stop_after_seconds=args.stop_after_seconds,
+        )
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
+
+    _print_inbox_run_summary(summary, duration_s=time.monotonic() - started_at)
+    return _run_exit_code(summary.deliveries_failed, summary.aborted)
+
+
+def _handle_inbox_show(args) -> int:
+    """Handle `ab inbox show <agent>` with pure read-only queries."""
+    status = _query_inbox_show(args.agent)
+
+    print(f"{args.agent} inbox:")
+    pending_line = f"  pending:    {status['pending_count']}"
+    if status["oldest_created_at"]:
+        pending_line += f" (oldest {_format_age(status['oldest_created_at'])} ago)"
+    print(pending_line)
+
+    processing_line = f"  processing: {status['processing_count']}"
+    if status["processing_lease_until"]:
+        processing_line += f" (lease until {status['processing_lease_until']})"
+    print(processing_line)
+    print(f"  failed (last 24h): {status['failed_count']}")
+    print("  oldest preview:")
+    preview = status["preview"]
+    if preview is None:
+        print("    (none)")
+        return 0
+    print(
+        f"    [{preview['channel']}/{preview['thread_id'][:5]}] "
+        f"{preview['from_agent']} → \"{preview['body']}\""
+    )
+    return 0
+
+
+def _handle_sync(args) -> int:
+    """Handle `ab sync` as a manual fallback inbox drain."""
+    if args.all and args.agent is not None:
+        print("❌ choose either an agent or --all, not both", file=sys.stderr)
+        return 2
+    if not args.all and args.agent is None:
+        print("❌ sync requires an agent or --all", file=sys.stderr)
+        return 2
+
+    agents = list(_channels.VALID_AGENTS) if args.all else [args.agent]
+    worst_exit_code = 0
+    for agent in agents:
+        class _Args:
+            once = False
+            until_idle = True
+            max_messages = None
+            stop_after_seconds = None
+
+            def __init__(self, agent_name: str) -> None:
+                self.agent = agent_name
+
+        exit_code = _handle_inbox_run(_Args(agent))
+        worst_exit_code = max(worst_exit_code, exit_code)
+    return worst_exit_code
 
 
 def _handle_discuss(args) -> int:

@@ -515,6 +515,10 @@ def _build_parser() -> argparse.ArgumentParser:
 def _dispatch_command(args):
     """Dispatch parsed CLI arguments to the appropriate handler."""
     if args.command == "inbox":
+        if getattr(args, "inbox_command", None):
+            from ._channels_cli import dispatch_channel_command
+            rc = dispatch_channel_command(args)
+            sys.exit(rc)
         check_inbox(args.for_llm)
     elif args.command == "read":
         read_message(args.message_id)
@@ -563,7 +567,7 @@ def _dispatch_command(args):
         bridge_status()
     elif args.command == "interactive":
         interactive_mode()
-    elif args.command in ("channel", "post", "p", "discuss"):
+    elif args.command in ("channel", "post", "p", "sync", "discuss"):
         # Channel bridge commands (#1190)
         from ._channels_cli import dispatch_channel_command
         rc = dispatch_channel_command(args)
@@ -614,5 +618,8 @@ def main():
     """CLI entry point."""
     parser = _build_parser()
     args = parser.parse_args()
+    if args.command is not None:
+        from ._channels_cli import _maybe_print_backlog_warnings
+        _maybe_print_backlog_warnings()
     if not _dispatch_command(args):
         parser.print_help()

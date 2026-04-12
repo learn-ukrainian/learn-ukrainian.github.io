@@ -153,6 +153,29 @@ def test_post_creates_delivery_row_per_recipient():
     assert {d["to_agent"] for d in dlvs} == {"claude", "codex", "user"}
     assert all(d["status"] == "pending" for d in dlvs)
 
+
+def test_post_touches_recipient_wake_file(tmp_path, monkeypatch):
+    """Posting to a recipient updates `.agent/wake/{agent}` after commit."""
+    wake_root = tmp_path / ".agent" / "wake"
+    wake_root.mkdir(parents=True)
+    wake_file = wake_root / "claude"
+    wake_file.write_text("old", encoding="utf-8")
+    wake_file.touch()
+    old_ns = 1_000_000_000
+    wake_file_stat = wake_file.stat()
+    assert wake_file_stat.st_mtime_ns > 0
+    import os
+    os.utime(wake_file, ns=(old_ns, old_ns))
+
+    monkeypatch.setattr(_channels, "WAKE_ROOT", wake_root)
+    _channels.create_channel("topic")
+
+    _channels.post("topic", "gemini", "hello", to_agents=["claude"], auto_snapshot=False)
+
+    assert wake_file.exists()
+    assert wake_file.stat().st_mtime_ns != old_ns
+    assert wake_file.read_text(encoding="utf-8").strip()
+
 def test_post_with_zero_recipients_no_deliveries():
     """Verify posting without recipients creates no delivery rows."""
     _channels.create_channel("topic")
