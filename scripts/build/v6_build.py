@@ -1258,7 +1258,10 @@ def step_pre_verify(level: str, module_num: int, slug: str,
     # Build vocabulary list for verification (guard against None YAML values)
     # v4 plans: list of {word, pos, definition} dicts
     # v3 plans: dict with {required: [...], recommended: [...]}
-    vocab_hints = plan.get("vocabulary_hints") or {}
+    # Accept both 'vocabulary_hints' (B1 convention) and 'vocabulary' (B2/C1
+    # convention). The pipeline historically only read vocabulary_hints, which
+    # meant B2 (68/93) and C1 (133/133) plans got zero vocabulary injected.
+    vocab_hints = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
     if isinstance(vocab_hints, list):
         # v4 format: flat list of dicts or strings
         all_vocab = [
@@ -1553,7 +1556,7 @@ def _chunk_required_vocab_block(plan: dict, section_index: int, total_sections: 
     where Gemini's attention is highest, and on the FINAL section we add a
     sweep-up reminder so any vocab that didn't fit earlier gets included.
     """
-    raw = plan.get("vocabulary_hints", {})
+    raw = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
     words: list[str] = []
     if isinstance(raw, list):
         words = [v.get("word", str(v)) if isinstance(v, dict) else str(v) for v in raw]
@@ -2022,7 +2025,7 @@ def step_write(level: str, module_num: int, slug: str,
         section_titles.append(f"- `## {summary_heading}` (~150 words)")
 
     # Build vocabulary hints (v4: list of {word,pos,definition}, v3: {required:[],recommended:[]})
-    raw_vocab = plan.get("vocabulary_hints", {})
+    raw_vocab = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
     vocab_lines = []
     # Required vocab list — used for the late-prompt MANDATORY checklist (#1189).
     # Format: list of plain Ukrainian words; the checklist renders them as
@@ -3113,7 +3116,7 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     # Load plan vocabulary
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan = yaml.safe_load(plan_path.read_text("utf-8")) if plan_path.exists() else {}
-    vocab_hints = plan.get("vocabulary_hints", {})
+    vocab_hints = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
     plan_vocab_text = yaml.dump(vocab_hints, allow_unicode=True, default_flow_style=False)
 
     # Load module content
@@ -3623,7 +3626,7 @@ def step_activities(
         hints_text = "(No activity_hints in plan. Generate appropriate exercises based on the content.)"
 
     # Build vocabulary text
-    vocab_hints = plan.get("vocabulary_hints", {})
+    vocab_hints = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
     vocab_text = yaml.dump(vocab_hints, allow_unicode=True, default_flow_style=False)
 
     # Build tool instructions
