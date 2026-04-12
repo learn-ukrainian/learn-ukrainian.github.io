@@ -247,19 +247,20 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ModelFamily:
-    """Model configuration for a writer/reviewer family (Claude or Gemini).
+    """Model configuration for a writer/reviewer family (Claude, Gemini, or Codex).
 
     Each family has two tiers:
     - thinking: full reasoning model (write, review, section rewrite)
     - fast: efficient model (skeleton, activities, vocab)
 
-    And a tool prefix for MCP tool instructions.
+    And a tool prefix for MCP tool instructions (empty for Codex, which
+    uses shell commands instead of MCP JSON-RPC).
     """
 
-    name: str           # "claude" or "gemini"
-    thinking: str       # opus / pro — for write, review, rewrite
-    fast: str           # sonnet / flash — for skeleton, activities, vocab
-    tool_prefix: str    # "mcp__rag__" (Claude) or "mcp_rag_" (Gemini)
+    name: str           # "claude", "gemini", or "codex"
+    thinking: str       # opus / pro / gpt-5.4 — for write, review, rewrite
+    fast: str           # sonnet / flash / gpt-5.4 — for skeleton, activities, vocab
+    tool_prefix: str    # "mcp__rag__" (Claude), "mcp_rag_" (Gemini), "" (Codex)
 
 
 @dataclass(frozen=True)
@@ -294,6 +295,16 @@ GEMINI_FAMILY = ModelFamily(
     tool_prefix="mcp_rag_",
 )
 
+CODEX_FAMILY = ModelFamily(
+    name="codex",
+    thinking="gpt-5.4",
+    fast="gpt-5.4",
+    # Codex uses shell commands for verification instead of MCP JSON-RPC.
+    # Tool instructions are loaded from scripts/tools/codex_tool_instructions.md
+    # and injected into the prompt. No tool_prefix needed.
+    tool_prefix="",
+)
+
 
 def get_family(writer: str) -> ModelFamily:
     """Resolve writer/reviewer string to a ModelFamily."""
@@ -301,6 +312,8 @@ def get_family(writer: str) -> ModelFamily:
         return CLAUDE_FAMILY
     if "gemini" in writer:
         return GEMINI_FAMILY
+    if "codex" in writer:
+        return CODEX_FAMILY
     raise ValueError(f"Unknown model family for writer: {writer}")
 
 
@@ -310,8 +323,22 @@ def _build_tool_instructions(writer: str) -> str:
     Uses explicit conditional triggers (Gemini's recommendation) to guide
     when to use tools vs just write. Batching enforced to prevent excessive
     tool calls.
+
+    For Codex writers, loads shell-command tool instructions from
+    scripts/tools/codex_tool_instructions.md instead of MCP tool references.
+    Codex runs via `codex exec --full-auto` and can execute arbitrary Python
+    via subprocess, so it gets direct shell commands instead of MCP JSON-RPC.
+    Issue: #1194
     """
-    # Tool name prefix differs by family
+    # Codex uses shell commands, not MCP — load from dedicated markdown file
+    if "codex" in writer:
+        instructions_path = PROJECT_ROOT / "scripts" / "tools" / "codex_tool_instructions.md"
+        if instructions_path.exists():
+            return "\n\n---\n\n" + instructions_path.read_text("utf-8")
+        # Fallback: return empty if file missing (shouldn't happen)
+        return ""
+
+    # Tool name prefix differs by family (Claude vs Gemini MCP)
     p = get_family(writer).tool_prefix
 
     return (
@@ -1286,11 +1313,13 @@ def step_pre_verify(level: str, module_num: int, slug: str,
 
     family = get_family(writer)
     agent = f"{family.name}-tools"
+    # Codex uses shell commands for verification — no MCP tools needed.
+    use_mcp = family.name != "codex"
 
     ok, raw = _dispatch(
         prompt, agent=agent, phase="pre-verify", orch_dir=orch_dir,
         timeout=TIMEOUT_PRE_VERIFY,
-        mcp_tools=True,
+        mcp_tools=use_mcp,
         allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
         model=family.fast,  # Fast model sufficient — structured output, not creative
     )
@@ -1301,7 +1330,7 @@ def step_pre_verify(level: str, module_num: int, slug: str,
         ok, raw = _dispatch(
             prompt, agent=agent, phase="pre-verify-retry", orch_dir=orch_dir,
             timeout=TIMEOUT_PRE_VERIFY,
-            mcp_tools=True,
+            mcp_tools=use_mcp,
             allowed_tools=CLAUDE_WRITER_TOOLS if family.name == "claude" else None,
             model=family.fast,
         )
@@ -1819,6 +1848,8 @@ def step_write_chunked(
     from build.dispatch import dispatch_agent as _dispatch
 
     use_tools = writer.endswith("-tools")
+    # Codex uses shell commands for verification, not MCP JSON-RPC
+    use_mcp = use_tools and not writer.startswith("codex")
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1872,8 +1903,8 @@ def step_write_chunked(
             ok, raw = _dispatch(
                 prompt, agent=writer, phase=f"write-chunk-{i + 1:02d}",
                 orch_dir=orch_dir, timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
-                mcp_tools=use_tools,
-                allowed_tools=CLAUDE_WRITER_TOOLS if (use_tools and writer.startswith("claude")) else None,
+                mcp_tools=use_mcp,
+                allowed_tools=CLAUDE_WRITER_TOOLS if (use_mcp and writer.startswith("claude")) else None,
             )
             if ok and raw:
                 break
@@ -2260,6 +2291,15 @@ def step_write(level: str, module_num: int, slug: str,
             timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
             mcp_tools=use_tools, allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
         )
+    elif writer in ("codex", "codex-tools"):
+        # Codex uses workspace-write sandbox (--full-auto) so it can run
+        # the shell-command verification tools injected into the prompt.
+        # No MCP tools — Codex verifies via subprocess Python calls.
+        # Issue: #1194
+        ok, raw = dispatch_agent(
+            prompt, agent="codex-tools" if use_tools else "codex", phase="write",
+            orch_dir=orch_dir, timeout=TIMEOUT_WRITE,
+        )
     else:
         _log(f"  ❌ Unknown writer: {writer}")
         return None
@@ -2337,13 +2377,24 @@ Start immediately with the first ## heading. Keep all other formatting exactly a
     from build.dispatch import CLAUDE_WRITER_TOOLS, dispatch_agent
 
     use_tools = writer.endswith("-tools")
-    base_writer = "gemini-tools" if "gemini" in writer else writer
+    if "gemini" in writer:
+        base_writer = "gemini-tools"
+    elif "codex" in writer:
+        base_writer = "codex-tools"
+    else:
+        base_writer = writer
 
     if "claude" in writer:
         ok, raw = dispatch_agent(
             prompt, agent=writer, phase="write-fix", orch_dir=orch_dir,
             timeout=TIMEOUT_WRITE, mcp_tools=use_tools,
             allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
+        )
+    elif "codex" in writer:
+        # Codex: shell-command tools via workspace-write, no MCP
+        ok, raw = dispatch_agent(
+            prompt, agent=base_writer, phase="write-fix", orch_dir=orch_dir,
+            timeout=TIMEOUT_WRITE,
         )
     else:
         ok, raw = dispatch_agent(
@@ -3670,7 +3721,12 @@ def step_activities(
     from build.dispatch import CLAUDE_WRITER_TOOLS
     from build.dispatch import dispatch_agent as _dispatch
 
-    base_writer = "gemini-tools" if "gemini" in writer else writer
+    if "gemini" in writer:
+        base_writer = "gemini-tools"
+    elif "codex" in writer:
+        base_writer = "codex-tools"
+    else:
+        base_writer = writer
     error_context = ""
 
     for attempt in range(1, max_retries + 2):
@@ -3691,6 +3747,13 @@ def step_activities(
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
                 orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES, mcp_tools=True,
+            )
+        elif "codex" in base_writer:
+            # Codex uses shell commands for verification, not MCP.
+            # workspace-write mode set by dispatch via agent name suffix.
+            ok, raw = _dispatch(
+                current_prompt, agent="codex-tools", phase="activities",
+                orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES,
             )
         else:
             # Activities are structured YAML — use fast model, not thinking
@@ -4269,7 +4332,12 @@ def step_review(content_path: Path, level: str, module_num: int,
     prose_words = len(re.sub(r":::.*?:::", "", generated_content, flags=re.DOTALL).split())
 
     # Build review prompt
-    writer_model = "Claude" if "claude" in writer else "Gemini"
+    if "claude" in writer:
+        writer_model = "Claude"
+    elif "codex" in writer:
+        writer_model = "Codex"
+    else:
+        writer_model = "Gemini"
     prompt = template
     replacements = {
         "{MODULE_NUM}": str(module_num),
@@ -4328,6 +4396,8 @@ def step_review(content_path: Path, level: str, module_num: int,
     if reviewer_override:
         reviewer = "claude" if "claude" in reviewer_override else "gemini"
     else:
+        # Cross-agent review: writer → opposite family reviews. Codex-written
+        # content is reviewed by Claude (same as Gemini-written content).
         reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
     p = get_family(reviewer).tool_prefix
     review_tools = (
@@ -4800,6 +4870,11 @@ claims, grammar rules, or cultural facts that aren't here.
             prompt, agent="claude-tools", phase="section-rewrite",
             orch_dir=orch_dir, timeout=TIMEOUT_WRITE,
             mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
+        )
+    elif "codex" in writer:
+        ok, raw = _dispatch(
+            prompt, agent="codex-tools", phase="section-rewrite",
+            orch_dir=orch_dir, timeout=TIMEOUT_WRITE,
         )
     else:
         ok, raw = _dispatch(
@@ -5642,8 +5717,8 @@ def main():
     parser.add_argument("module", type=int, help="Module number (or start of range with --range)")
     parser.add_argument("--range", type=int, default=None, metavar="END",
                         help="Build modules from MODULE to END (inclusive). E.g., a1 7 --range 14")
-    parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default="gemini-tools",
-                        help="Default: gemini-tools. *-tools = with MCP (VESUM/RAG) access during writing")
+    parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default="gemini-tools",
+                        help="Default: gemini-tools. *-tools = with verification access during writing (MCP for Claude/Gemini, shell commands for Codex)")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
     parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "audit", "all"],
