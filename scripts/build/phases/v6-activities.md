@@ -231,7 +231,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -334,6 +334,8 @@ Walk through this checklist explicitly before you start emitting. If ANY box is 
 - [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
 - [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
 - [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between {INLINE_MIN} and {INLINE_MAX}. I did NOT create more injection markers than {INLINE_MAX}.
 - [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
 - [ ] At B1+, all instructions are in Ukrainian (no English fallback).
 
