@@ -1020,16 +1020,18 @@ def _handle_discuss(args) -> int:
         # context is implicit from its parent_id anyway.
         for agent in with_agents:
             text, ok = responses[agent]
+            reply_recipients = [name for name in with_agents if name != agent]
             try:
                 _channels.post(
                     args.channel,
                     agent,
                     text,
-                    to_agents=[],  # replies aren't re-delivered
+                    to_agents=reply_recipients,
                     parent_id=root_id,
                     correlation_id=correlation_id,
                     kind="reply",
                     auto_snapshot=False,
+                    pre_delivered=True,
                 )
             except ValueError as e:
                 print(

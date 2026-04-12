@@ -84,6 +84,22 @@ def _delivery_statuses() -> list[sqlite3.Row]:
         conn.close()
 
 
+def _reply_deliveries() -> list[sqlite3.Row]:
+    conn = _db.get_db()
+    try:
+        return conn.execute(
+            """
+            SELECT cm.from_agent, cm.parent_id, d.to_agent, d.status, d.delivered_at
+            FROM channel_messages cm
+            JOIN deliveries d ON d.message_id = cm.message_id
+            WHERE cm.kind = 'reply'
+            ORDER BY cm.from_agent ASC, d.to_agent ASC
+            """
+        ).fetchall()
+    finally:
+        conn.close()
+
+
 def _ok_result(agent: str) -> Result:
     return Result(
         ok=True,
@@ -112,6 +128,50 @@ def test_inbox_show_empty(capsys):
     assert "processing: 0" in captured.out
     assert "failed (last 24h): 0" in captured.out
     assert "    (none)" in captured.out
+
+
+@patch("agent_runtime.runner.invoke")
+def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypatch, capsys):
+    _channels.create_channel("shared")
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+
+    def _discuss_result(agent: str, *_args, **_kwargs) -> Result:
+        return Result(
+            ok=True,
+            agent=agent,
+            model="test-model",
+            mode="read-only",
+            response=f"{agent} discuss reply [AGREE]",
+            stderr_excerpt=None,
+            duration_s=0.1,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={},
+        )
+
+    mock_invoke.side_effect = _discuss_result
+
+    exit_code = _run_cli(
+        ["discuss", "shared", "topic", "--with", "claude,codex", "--max-rounds", "1"]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "✅ converged at round 1" in captured.out
+
+    reply_deliveries = _reply_deliveries()
+    assert len(reply_deliveries) == 2
+    assert {
+        (row["from_agent"], row["to_agent"], row["status"])
+        for row in reply_deliveries
+    } == {
+        ("claude", "codex", "delivered"),
+        ("codex", "claude", "delivered"),
+    }
+    assert all(row["delivered_at"] is not None for row in reply_deliveries)
+    assert all(row["parent_id"] is not None for row in reply_deliveries)
 
 
 def test_inbox_show_with_pending_and_failed(capsys):

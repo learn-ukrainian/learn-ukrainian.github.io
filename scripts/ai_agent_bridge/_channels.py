@@ -659,6 +659,7 @@ def post(
     context_rev_channel: str | None = None,
     monitor_state_snapshot: dict[str, Any] | None = None,
     auto_snapshot: bool = True,
+    pre_delivered: bool = False,
 ) -> dict[str, Any]:
     """Create a new channel_messages row + N deliveries rows atomically.
 
@@ -671,7 +672,9 @@ def post(
     ``to_agents`` may be an empty list; in that case no deliveries are
     created and the message is a pure "log entry" (useful for
     system/audit posts). ``parent_id`` links a reply to its origin;
-    the reply's ``thread_id`` is inherited from the parent.
+    the reply's ``thread_id`` is inherited from the parent. If
+    ``pre_delivered=True``, any created delivery rows are inserted in
+    terminal ``delivered`` state immediately instead of ``pending``.
 
     **B.2 context auto-snapshot (#1190):** if ``auto_snapshot=True``
     (default) and the ``context_rev_*`` / ``monitor_state_snapshot``
@@ -783,19 +786,30 @@ def post(
         for agent in to_agents or []:
             dlv_id = _new_id()
             delivery_ids.append(dlv_id)
-            conn.execute(
-                """
-                INSERT INTO deliveries (
-                    delivery_id, message_id, to_agent, status
-                ) VALUES (?, ?, ?, 'pending')
-                """,
-                (dlv_id, message_id, agent),
-            )
+            if pre_delivered:
+                conn.execute(
+                    """
+                    INSERT INTO deliveries (
+                        delivery_id, message_id, to_agent, status, delivered_at
+                    ) VALUES (?, ?, ?, 'delivered', ?)
+                    """,
+                    (dlv_id, message_id, agent, created_at),
+                )
+            else:
+                conn.execute(
+                    """
+                    INSERT INTO deliveries (
+                        delivery_id, message_id, to_agent, status
+                    ) VALUES (?, ?, ?, 'pending')
+                    """,
+                    (dlv_id, message_id, agent),
+                )
 
         conn.commit()
 
-        for agent in set(to_agents or []):
-            _touch_wake_file(agent)
+        if not pre_delivered:
+            for agent in set(to_agents or []):
+                _touch_wake_file(agent)
 
         return {
             "message_id": message_id,
