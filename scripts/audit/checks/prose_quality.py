@@ -138,7 +138,7 @@ def check_glossary_lists(content: str) -> list[dict]:
                     run_start = i
                 run_length += 1
             else:
-                if run_length >= 3:
+                if run_start is not None and run_length >= 3:
                     sample = lines[run_start].strip()[:80]
                     orig_line = _find_line_in_original(content, lines[run_start].strip())
                     violations.append({
@@ -152,7 +152,7 @@ def check_glossary_lists(content: str) -> list[dict]:
                 run_length = 0
 
         # Check trailing run
-        if run_length >= 3:
+        if run_start is not None and run_length >= 3:
             sample = lines[run_start].strip()[:80]
             orig_line = _find_line_in_original(content, lines[run_start].strip())
             violations.append({

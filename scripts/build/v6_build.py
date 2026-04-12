@@ -5840,12 +5840,12 @@ def main():
 
     # --resume: restore dependency variables from disk if their phases are complete
     # These variables are normally set by earlier phases; when resuming we load from disk
-    packet_path = None
-    skeleton_text = ""
-    verification_text = ""
-    content_path = None
+    packet_path: Path | None = None
+    skeleton_text: str = ""
+    verification_text: str = ""
+    content_path: Path | None = None
     final_score: float | None = None
-    publish_completed = False
+    publish_completed: bool = False
 
     if completed_phases:
         # Restore packet_path (from research phase)
