@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import io
 import json
 import logging
 import os
@@ -193,6 +194,7 @@ class ModuleBuildLock:
             return True
         except OSError:
             # Another process holds the lock — check if it's still alive
+            locked_pid_str = "?"
             try:
                 os.lseek(self._fd, 0, os.SEEK_SET)
                 locked_pid_str = os.read(self._fd, 32).decode().strip()
@@ -1331,7 +1333,7 @@ def step_pre_verify(level: str, module_num: int, slug: str,
 
 
 def step_skeleton(level: str, module_num: int, slug: str,
-                  packet_path: Path, writer: str = "gemini") -> str | None:
+                  packet_path: Path | None, writer: str = "gemini") -> str | None:
     """Step 4: Generate paragraph-level skeleton for large modules.
 
     Produces a detailed structural plan (~500-800 words) that constrains
@@ -1774,7 +1776,7 @@ Write the section starting with the H2 heading **`## {section["title"]}`** (verb
 
 def step_write_chunked(
     level: str, module_num: int, slug: str,
-    packet_path: Path, writer: str = "gemini",
+    packet_path: Path | None, writer: str = "gemini",
     skeleton: str = "",
     correction_directive: str = "",
 ) -> Path | None:
@@ -1917,7 +1919,7 @@ def step_write_chunked(
 
 
 def step_write(level: str, module_num: int, slug: str,
-               packet_path: Path, writer: str = "gemini",
+               packet_path: Path | None, writer: str = "gemini",
                correction_directive: str = "",
                skeleton: str = "",
                no_chunk: bool = False,
@@ -2385,7 +2387,7 @@ Start immediately with the first ## heading. Keep all other formatting exactly a
 
 def step_write_with_retry(
     level: str, module_num: int, slug: str,
-    packet_path: Path,
+    packet_path: Path | None,
     writer: str = "gemini",
     max_retries: int = 4,
     skeleton: str = "",
@@ -4058,7 +4060,7 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
 
     # Load VESUM whitelist (global + per-module)
     try:
-        from vesum_whitelist import load_combined_whitelist
+        from tools.vesum_whitelist import load_combined_whitelist
         whitelist = load_combined_whitelist(level, slug)
     except Exception:
         whitelist = set()
@@ -4173,7 +4175,7 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
     whitelist: set[str] = set()
     if level and slug:
         try:
-            from vesum_whitelist import load_combined_whitelist
+            from tools.vesum_whitelist import load_combined_whitelist
             whitelist = load_combined_whitelist(level, slug)
         except Exception:
             pass
@@ -5632,7 +5634,7 @@ build_status: draft
 
 
 def main():
-    if hasattr(sys.stdout, "reconfigure"):
+    if isinstance(sys.stdout, io.TextIOWrapper):
         sys.stdout.reconfigure(line_buffering=True)
 
     parser = argparse.ArgumentParser(description="V6 Pipeline Build")
