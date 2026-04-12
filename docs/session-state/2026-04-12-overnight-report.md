@@ -93,8 +93,34 @@ Tonight's main deliverable was unblocking a clean B1/A1/A2 rebuild. That ladder 
 
 ## Final state
 
-**Commits landed (overnight + morning)**: 14
-**Issues closed**: #1091, #1093, #1191, #1193, #1194 (5 total)
+**Commits landed (full day)**: 18
+**Issues closed**: #1082(commented), #1086, #1087, #1088, #1084, #1090, #1093, #1102, #1114, #1122, #1191, #1193, #1194 (11 closed + 2 consolidated into #1197, #1198)
+**Issues filed**: #1193, #1194, #1195, #1196, #1197, #1198, #1199, #1200, #1201 (9 new)
+
+## Morning + afternoon additions (after overnight)
+
+| SHA | Title |
+|---|---|
+| `10c8d64fc` | A1+A2 plan quality fixes (9 plans, Gemini+Codex adversarial review) |
+| `34e21a996` | Cloze 1-based indexing (#1191) |
+| `0258bf464` | pyrightconfig.json for pyright LSP |
+| `1a0beaef0` | start-codex.sh worktree isolation (git lock fix) |
+| `86c695566` | codex-tools writer mode (#1194) |
+| `a45793437` | codex-tools as reviewer + cross-agent default |
+| `25a72473b` | bridge portable config via AB_* env vars |
+| `a50600b84` | C.4 ab discuss queue routing |
+| `68b196ef5` | B1 plan fixes |
+| `1b8db8677` | vocabulary/vocabulary_hints key fallback |
+| `efb44cf91` | session state + docs |
+
+## Key findings
+
+- **Writer A/B test**: Gemini-tools wins (3× cheaper, 4× faster, no Russicisms vs Codex's хорошо)
+- **Reviewer test**: Codex (gpt-5.4) is excellent — caught 4 CRITICAL Russicisms in Gemini's output (примірочна, кружка, відправки, давайте+infinitive)
+- **A1/A2 first build failed**: 54/59 A2 modules had low immersion because builds used OLD prompts. Fix: clear state, rebuild with new prompts.
+- **B2/C1 plans need regen**: 4×1000 robotic budgets (66/93 B2, 133/133 C1), missing dialogue_situations. Filed #1199.
+- **Wiki gaps**: B1 has 8 missing packets (auto-compile in research step), B2 needs 88, C1 needs 111+22 missing articles. Filed #1200.
+- **Pipeline vocabulary bug fixed**: v6_build.py only read vocabulary_hints, B2/C1 use vocabulary key. Fixed in 1b8db8677.
 **Issues updated with AC walks**: #1189 (ACs 1-5 ✅, AC6 blocked on rebuild), #1082 (status comment), #1192 (C.1-C.3 done, C.4-C.6 remaining)
 **Issues triaged**: #1086, #1087, #1084 (stale notes), #715/#675/#854 (relabeled from rag→sources)
 
