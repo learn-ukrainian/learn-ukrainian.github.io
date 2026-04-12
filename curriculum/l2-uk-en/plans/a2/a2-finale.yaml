@@ -2,7 +2,7 @@ module: a2-069
 level: A2
 sequence: 69
 slug: a2-finale
-version: '1.0'
+version: '1.1'
 title: Фінал A2
 subtitle: Підсумкове завдання — один день в українському місті
 focus: review
@@ -13,10 +13,10 @@ objectives:
 - Learner can sustain an extended conversation in Ukrainian across multiple everyday situations (transport,
   shopping, dining, asking directions).
 - Learner can narrate events in the past, describe the present, and discuss future plans using all A2
-  grammar structures fluently.
+  grammar structures in connected speech.
 - Learner can complete practical real-world tasks in Ukrainian (order food, buy tickets, ask for help,
   describe a problem).
-- Learner can demonstrate readiness for B1 through integrated use of cases, aspect, comparison, complex
+- Learner can demonstrate A2-level competence through integrated use of cases, aspect, comparison, complex
   sentences, and opinion expression.
 dialogue_situations:
 - setting: 'Full day in Lviv — morning: arriving at вокзал (m), checking into готель (m, hotel). Day:
@@ -40,7 +40,7 @@ content_outline:
   points:
   - 'At the market: buy food, discuss quantities and prices (numeral agreement: два кілограми яблук, п''ять
     помідорів), compare products (Ці яблука солодші за ті).'
-  - 'At a cafe: order food and drinks, discuss preferences (Я волію каву з молоком. А що ви порадите?),
+  - 'At a cafe: order food and drinks, discuss preferences (Я віддаю перевагу каві з молоком. А що ви порадите?),
     deal with a small problem (Вибачте, я замовляв борщ, а не суп).'
   - 'Walking around: describe what you see using all cases naturally, ask locals about sights (Що це за
     будівля? Коли її збудували?).'
