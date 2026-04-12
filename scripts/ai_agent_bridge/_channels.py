@@ -51,12 +51,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import urllib.request
 import uuid
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from ._config import REPO_ROOT
 from ._db import get_db
 
 # ── Constants ──────────────────────────────────────────────────────────
@@ -92,14 +94,23 @@ SHARED_CHANNEL = "shared"
 # Root directory for channel context files. In-repo, git-tracked,
 # reviewable — context drift becomes a first-class commit history.
 # Each channel gets its own subdirectory: docs/agent-channels/{channel}/
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CONTEXT_ROOT = _PROJECT_ROOT / "docs" / "agent-channels"
-WAKE_ROOT = _PROJECT_ROOT / ".agent" / "wake"
+CONTEXT_ROOT = Path(
+    os.environ.get("AB_CONTEXT_DIR", str(REPO_ROOT / "docs" / "agent-channels"))
+)
+WAKE_ROOT = Path(
+    os.environ.get("AB_WAKE_DIR", str(REPO_ROOT / ".agent" / "wake"))
+)
 
 # Monitor API endpoint for dynamic project state.
 # See docs/MONITOR-API.md. Short timeout because the API is on the same
 # machine — if it's not responding in 2 seconds, it's down, not slow.
-MONITOR_API_URL = "http://localhost:8765/api/state/summary"
+# Default keeps the original learn-ukrainian URL so interactive `ab post`
+# works without env setup. Projects without a Monitor API get a graceful
+# 2-second timeout + None return (fetch_monitor_state already handles this).
+# Override with AB_MONITOR_URL="" to disable explicitly.
+MONITOR_API_URL = os.environ.get(
+    "AB_MONITOR_URL", "http://localhost:8765/api/state/summary"
+)
 MONITOR_FETCH_TIMEOUT_S = 2.0
 
 # Character budget for message history when building an agent prompt.
@@ -333,6 +344,9 @@ def fetch_monitor_state(
     active tickets, recent commits, build state). Both get recorded
     into the message row so replay is deterministic.
     """
+    if not url:
+        return None
+
     try:
         req = urllib.request.Request(
             url,

@@ -3,6 +3,17 @@
 This package provides bidirectional communication between AI agents (Gemini, Claude)
 using a shared SQLite database.
 
+Configuration:
+- ``AB_REPO_ROOT``: defaults to the package's containing repo root.
+- ``AB_DB_PATH``: defaults to ``{REPO_ROOT}/.mcp/servers/message-broker/messages.db``.
+- ``AB_PID_DIR``: defaults to ``{REPO_ROOT}/.mcp/servers/message-broker/pids``.
+- ``AB_CONTEXT_DIR``: defaults to ``{REPO_ROOT}/docs/agent-channels``.
+- ``AB_WAKE_DIR``: defaults to ``{REPO_ROOT}/.agent/wake``.
+- ``AB_MONITOR_URL``: defaults to empty string (Monitor API disabled).
+- ``AB_GEMINI_MODEL``: defaults to ``batch_gemini_config.FLASH_MODEL`` when importable,
+  else ``gemini-2.0-flash``.
+- ``AB_PIPELINE_ENV_KEY``: defaults to ``LEARN_UKRAINIAN_PIPELINE``.
+
 All public functions are re-exported here for backward compatibility.
 """
 
@@ -27,8 +38,10 @@ from ._config import (
     CODEX_CLI,
     DB_PATH,
     GEMINI_CLI,
+    GEMINI_DEFAULT_MODEL,
     GH_CHAR_LIMIT,
     PID_DIR,
+    REPO_ROOT,
 )
 from ._db import get_db, get_session, init_db, set_session
 from ._gemini import ask_gemini, process_and_respond
@@ -59,8 +72,10 @@ __all__ = [
     # Config
     "DB_PATH",
     "GEMINI_CLI",
+    "GEMINI_DEFAULT_MODEL",
     "GH_CHAR_LIMIT",
     "PID_DIR",
+    "REPO_ROOT",
     "_MODEL_CACHE",
     "_MODEL_CACHE_TTL",
     "_PARENT_ENV",

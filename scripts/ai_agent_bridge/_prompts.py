@@ -1,9 +1,6 @@
 """Prompt building for Gemini and Claude interactions."""
 
-from pathlib import Path
-
-# Project root — resolved relative to this file
-_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from ._config import REPO_ROOT
 
 
 def _load_gemini_context() -> str:
@@ -14,7 +11,7 @@ def _load_gemini_context() -> str:
     to "read these files" — we inject them directly so there's no chance
     of Gemini skipping or hallucinating their contents.
     """
-    docs_dir = _PROJECT_ROOT / ".gemini" / "docs"
+    docs_dir = REPO_ROOT / ".gemini" / "docs"
     if not docs_dir.exists():
         return ""
 

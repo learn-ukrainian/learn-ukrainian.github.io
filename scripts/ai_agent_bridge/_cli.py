@@ -7,7 +7,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
-from batch_gemini_config import FLASH_MODEL
 
 from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
@@ -17,6 +16,7 @@ from ._codex import (
     process_all_codex,
     process_for_codex,
 )
+from ._config import GEMINI_DEFAULT_MODEL
 from ._db import get_db
 from ._gemini import ask_gemini, converse_gemini, process_and_respond
 from ._messaging import (
@@ -78,7 +78,7 @@ def _dispatch_interactive(action: str, parts: list[str]):
         print("Unknown command or missing arguments.")
 
 
-def process_all_gemini(model: str = FLASH_MODEL):
+def process_all_gemini(model: str = GEMINI_DEFAULT_MODEL):
     """Process ALL unread messages for Gemini in batch."""
     conn = get_db()
     cursor = conn.cursor()
@@ -366,7 +366,9 @@ def _build_parser() -> argparse.ArgumentParser:
     # process (for Gemini)
     proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
     proc_parser.add_argument("message_id", type=int, help="Message ID to process")
-    proc_parser.add_argument("--model", default=FLASH_MODEL, help="Gemini model")
+    proc_parser.add_argument(
+        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model"
+    )
     proc_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                              help="Run sync without timeout (used internally by fire-and-forget)")
 
@@ -424,7 +426,9 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
-    ask_gemini_parser.add_argument("--model", default=FLASH_MODEL, help="Gemini model to use")
+    ask_gemini_parser.add_argument(
+        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model to use"
+    )
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID")
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
@@ -454,7 +458,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # process-all
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
-    proc_all_parser.add_argument("--model", default=FLASH_MODEL, help="Gemini model")
+    proc_all_parser.add_argument(
+        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model"
+    )
 
     # process-claude-all
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")

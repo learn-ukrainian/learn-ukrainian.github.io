@@ -14,7 +14,6 @@ fire-and-forget path's logging. They will be deleted in Phase 6 cleanup.
 
 import atexit
 import contextlib
-import os
 import subprocess
 import sys
 import uuid
@@ -27,7 +26,6 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
-from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT

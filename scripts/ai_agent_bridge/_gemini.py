@@ -22,7 +22,6 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
-from batch_gemini_config import FLASH_MODEL
 
 from ._broker import (
     _git_status_snapshot,
@@ -31,7 +30,14 @@ from ._broker import (
     _validate_file_writes,
     _write_pid_file,
 )
-from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, GEMINI_CLI, REPO_ROOT
+from ._config import (
+    _MODEL_CACHE,
+    _MODEL_CACHE_TTL,
+    _PARENT_ENV,
+    GEMINI_CLI,
+    GEMINI_DEFAULT_MODEL,
+    REPO_ROOT,
+)
 from ._github import _post_review_to_github
 from ._messaging import (
     _extract_issue_number,
@@ -71,7 +77,7 @@ def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-pre
 
 
 def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query",
-               data: str | None = None, model: str = FLASH_MODEL,
+               data: str | None = None, model: str = GEMINI_DEFAULT_MODEL,
                from_model: str | None = None, async_mode: bool = False,
                stdout_only: bool = False, output_path: str | None = None,
                extract_tags: list | None = None, skip_model_check: bool = False,
@@ -170,7 +176,7 @@ def _extract_and_print(response: str, extract_tags: list):
         print("\n⚠️  No complete delimiter pairs found in output.")
 
 
-def process_and_respond(message_id: int, model: str = FLASH_MODEL,
+def process_and_respond(message_id: int, model: str = GEMINI_DEFAULT_MODEL,
                         fire_and_forget: bool = False, no_timeout: bool = False,
                         stdout_only: bool = False, output_path: str | None = None,
                         allow_write: bool = False, delimiters: str | None = None,

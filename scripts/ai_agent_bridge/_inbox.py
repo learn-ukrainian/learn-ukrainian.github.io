@@ -14,15 +14,37 @@ import time
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
-from agent_runtime.errors import (
-    AgentStalledError,
-    AgentTimeoutError,
-    AgentUnavailableError,
-    RateLimitedError,
-)
-from agent_runtime.result import Result
-from agent_runtime.runner import invoke as runtime_invoke
+try:
+    from agent_runtime.errors import (
+        AgentStalledError,
+        AgentTimeoutError,
+        AgentUnavailableError,
+        RateLimitedError,
+    )
+    from agent_runtime.runner import invoke as runtime_invoke
+
+    _HAS_RUNTIME = True
+except ImportError:
+    class RateLimitedError(Exception):
+        """Fallback used when agent_runtime is not importable."""
+
+
+    class AgentStalledError(Exception):
+        """Fallback used when agent_runtime is not importable."""
+
+
+    class AgentTimeoutError(Exception):
+        """Fallback used when agent_runtime is not importable."""
+
+
+    class AgentUnavailableError(Exception):
+        """Fallback used when agent_runtime is not importable."""
+
+
+    runtime_invoke = None
+    _HAS_RUNTIME = False
 
 from . import _channels
 from ._config import CLAUDE_CMD, REPO_ROOT
@@ -419,7 +441,7 @@ def _resolve_model(claimed: _ClaimedThread) -> str | None:
     return next(iter(models), None)
 
 
-def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Result:
+def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     task_id = _thread_session_key(claimed.channel, claimed.thread_id)
     existing_session = _get_session_id(task_id, agent) if agent == "claude" else None
     has_session = existing_session is not None
@@ -472,6 +494,11 @@ def run_inbox(
     falsely terminal-failing work that would likely succeed once the
     provider recovers. See #1192.
     """
+    if not _HAS_RUNTIME or runtime_invoke is None:
+        raise RuntimeError(
+            "agent_runtime is required for inbox draining. "
+            "Install it or add scripts/ to PYTHONPATH."
+        )
 
     _validate_agent(agent)
     if max_messages is not None and max_messages <= 0:

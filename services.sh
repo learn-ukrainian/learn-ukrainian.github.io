@@ -28,6 +28,9 @@ VENV="$PROJECT_ROOT/.venv/bin"
 
 mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 
+# Bridge defaults for learn-ukrainian. Other projects can set AB_* explicitly.
+export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary}"
+
 # Service definitions: name -> command, port, log file
 declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC
 
