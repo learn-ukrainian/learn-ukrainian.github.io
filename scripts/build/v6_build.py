@@ -4394,29 +4394,47 @@ def step_review(content_path: Path, level: str, module_num: int,
     # Determine reviewer BEFORE building tool instructions (bug fix: tool prefix
     # must match the actual reviewer, not the cross-agent default)
     if reviewer_override:
-        reviewer = "claude" if "claude" in reviewer_override else "gemini"
+        if "claude" in reviewer_override:
+            reviewer = "claude"
+        elif "codex" in reviewer_override:
+            reviewer = "codex"
+        else:
+            reviewer = "gemini"
     else:
-        # Cross-agent review: writer → opposite family reviews. Codex-written
-        # content is reviewed by Claude (same as Gemini-written content).
-        reviewer = "gemini" if writer in ("claude", "claude-tools") else "claude"
-    p = get_family(reviewer).tool_prefix
-    review_tools = (
-        "\n\n## Verification Tools (MCP)\n\n"
-        "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n\n"
-        "**Core Verification:**\n"
-        f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)\n"
-        f"- `{p}verify_lemma` — full declension/conjugation for a lemma\n"
-        f"- `{p}search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)\n"
-        f"- `{p}query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.\n"
-        f"- `{p}query_pravopys` — verify orthography rules (Правопис 2019)\n\n"
-        "**Content Quality:**\n"
-        f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)\n"
-        f"- `{p}search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)\n"
-        f"- `{p}search_etymology` — historical forms, etymology (Грінченко, 67K entries)\n"
-        f"- `{p}search_idioms` — verify idioms are authentic Ukrainian (25K entries)\n"
-        f"- `{p}search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)\n"
-        f"- `{p}query_grac` — check collocations and frequency in GRAC corpus (2B tokens)\n\n"
-        "**Reference:**\n"
+        # Cross-agent review: writer → opposite family reviews.
+        # Gemini writes → Codex reviews (per user directive: Claude is for coding, not batch reviewing).
+        # Claude writes → Gemini reviews.
+        # Codex writes → Gemini reviews.
+        if writer in ("claude", "claude-tools"):
+            reviewer = "gemini"
+        elif writer in ("gemini", "gemini-tools"):
+            reviewer = "codex"
+        else:
+            reviewer = "gemini"
+
+    # Build tool instructions for the reviewer.
+    # Codex uses shell-out commands; Claude/Gemini use MCP tool references.
+    if "codex" in reviewer:
+        review_tools = _build_tool_instructions("codex-tools")
+    else:
+        p = get_family(reviewer).tool_prefix
+        review_tools = (
+            "\n\n## Verification Tools (MCP)\n\n"
+            "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n\n"
+            "**Core Verification:**\n"
+            f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)\n"
+            f"- `{p}verify_lemma` — full declension/conjugation for a lemma\n"
+            f"- `{p}search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)\n"
+            f"- `{p}query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.\n"
+            f"- `{p}query_pravopys` — verify orthography rules (Правопис 2019)\n\n"
+            "**Content Quality:**\n"
+            f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)\n"
+            f"- `{p}search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)\n"
+            f"- `{p}search_etymology` — historical forms, etymology (Грінченко, 67K entries)\n"
+            f"- `{p}search_idioms` — verify idioms are authentic Ukrainian (25K entries)\n"
+            f"- `{p}search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)\n"
+            f"- `{p}query_grac` — check collocations and frequency in GRAC corpus (2B tokens)\n\n"
+            "**Reference:**\n"
         f"- `{p}search_text` — check how textbooks teach the topic (Grades 1-11)\n"
         f"- `{p}search_literary` — verify literary references against primary sources\n"
         f"- `{p}query_wikipedia` — fact-check historical/cultural claims\n\n"
@@ -4441,19 +4459,17 @@ def step_review(content_path: Path, level: str, module_num: int,
         reviewer_agent = reviewer_override
     elif reviewer == "gemini":
         reviewer_agent = "gemini-tools"
+    elif reviewer == "codex":
+        reviewer_agent = "codex-tools"
     else:
         reviewer_agent = "claude-tools"
     _log(f"  Reviewer: {reviewer_agent} (writer was {writer})")
 
     # Dispatch review — single call, no probe, no retry loop.
-    # Gemini on Google AI subscription is not rate-limited.
-    # The old probe + 5-retry + 60-300s backoff was pure waste.
     if reviewer == "gemini":
         from batch_gemini_config import GEMINI_REVIEW_MODEL
 
         review_timeout = 900  # 15 min — generous for a ~30K prompt
-        # MCP tools enabled — reviewer uses verify_words, search_style_guide.
-        # query_grac loops are blocked in the review prompt template.
         ok, raw = _dispatch(
             prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
             timeout=review_timeout, mcp_tools=True,
@@ -4461,6 +4477,18 @@ def step_review(content_path: Path, level: str, module_num: int,
         )
         if not ok or not raw:
             _log("  ❌ Gemini review failed — single attempt, no retry")
+    elif reviewer == "codex":
+        # Codex reviews via shell-out tools, not MCP. The tool instructions
+        # were already injected into the prompt above. Dispatch without
+        # mcp_tools so the codex adapter runs in workspace-write mode
+        # (needed for shell-out tool access).
+        review_timeout = 900
+        ok, raw = _dispatch(
+            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
+            timeout=review_timeout, mcp_tools=False,
+        )
+        if not ok or not raw:
+            _log("  ❌ Codex review failed — single attempt, no retry")
     else:
         from batch_gemini_config import CLAUDE_MODEL_FINAL_REVIEW
         ok, raw = _dispatch(
@@ -5719,7 +5747,7 @@ def main():
                         help="Build modules from MODULE to END (inclusive). E.g., a1 7 --range 14")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default="gemini-tools",
                         help="Default: gemini-tools. *-tools = with verification access during writing (MCP for Claude/Gemini, shell commands for Codex)")
-    parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
+    parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
     parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "audit", "all"],
                         default="all")
