@@ -93,8 +93,8 @@ Tonight's main deliverable was unblocking a clean B1/A1/A2 rebuild. That ladder 
 
 ## Final state
 
-**Commits landed tonight**: 7 (103b98992, 910874f65, 40c181040, 32a432bb8, 9b7d1dca8, 699298d90, 05211968e)
-**Issues closed**: #1093, #1193
+**Commits landed (overnight + morning)**: 14
+**Issues closed**: #1091, #1093, #1191, #1193, #1194 (5 total)
 **Issues updated with AC walks**: #1189 (ACs 1-5 ✅, AC6 blocked on rebuild), #1082 (status comment), #1192 (C.1-C.3 done, C.4-C.6 remaining)
 **Issues triaged**: #1086, #1087, #1084 (stale notes), #715/#675/#854 (relabeled from rag→sources)
 
