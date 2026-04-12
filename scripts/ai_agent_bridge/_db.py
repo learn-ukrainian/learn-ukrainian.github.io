@@ -107,10 +107,14 @@ CREATE TABLE IF NOT EXISTS deliveries (
     message_id TEXT NOT NULL,             -- FK → channel_messages.message_id
     to_agent TEXT NOT NULL,               -- claude/gemini/codex
     to_model TEXT,                        -- target model (nullable)
-    status TEXT DEFAULT 'pending',        -- pending/dispatched/delivered/failed
+    status TEXT DEFAULT 'pending',        -- pending/processing/dispatched/delivered/failed
     dispatched_at TEXT,
     delivered_at TEXT,
     error TEXT,
+    lease_until TEXT,
+    attempt_count INTEGER NOT NULL DEFAULT 0,
+    retry_after TEXT,
+    last_error_kind TEXT,
     FOREIGN KEY (message_id) REFERENCES channel_messages(message_id)
 );
 
@@ -118,6 +122,8 @@ CREATE INDEX IF NOT EXISTS idx_deliveries_message
     ON deliveries(message_id);
 CREATE INDEX IF NOT EXISTS idx_deliveries_agent_queue
     ON deliveries(to_agent, status, dispatched_at);
+CREATE INDEX IF NOT EXISTS idx_deliveries_claim
+    ON deliveries(to_agent, status, retry_after, lease_until);
 """
 
 
@@ -203,6 +209,37 @@ def get_db():
         )
         if not cursor.fetchone():
             conn.executescript(_CHANNELS_SCHEMA)
+        else:
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='deliveries'"
+            )
+            if cursor.fetchone():
+                cursor.execute("PRAGMA table_info(deliveries)")
+                delivery_columns = [row[1] for row in cursor.fetchall()]
+
+                if "lease_until" not in delivery_columns:
+                    conn.execute("ALTER TABLE deliveries ADD COLUMN lease_until TEXT")
+                if "attempt_count" not in delivery_columns:
+                    conn.execute(
+                        "ALTER TABLE deliveries ADD COLUMN attempt_count INTEGER NOT NULL DEFAULT 0"
+                    )
+                if "retry_after" not in delivery_columns:
+                    conn.execute("ALTER TABLE deliveries ADD COLUMN retry_after TEXT")
+                if "last_error_kind" not in delivery_columns:
+                    conn.execute(
+                        "ALTER TABLE deliveries ADD COLUMN last_error_kind TEXT"
+                    )
+
+                cursor.execute(
+                    "SELECT name FROM sqlite_master WHERE type='index' AND name='idx_deliveries_claim'"
+                )
+                if not cursor.fetchone():
+                    conn.execute(
+                        """
+                        CREATE INDEX IF NOT EXISTS idx_deliveries_claim
+                        ON deliveries(to_agent, status, retry_after, lease_until)
+                        """
+                    )
 
         conn.commit()
     except Exception:

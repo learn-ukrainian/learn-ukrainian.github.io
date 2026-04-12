@@ -5,6 +5,7 @@ from __future__ import annotations
 import sqlite3
 import sys
 import threading
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -23,6 +24,29 @@ def isolate_db(tmp_path):
          patch("ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
+
+
+def _iso_at(seconds: int) -> str:
+    base = datetime(2026, 1, 1, tzinfo=UTC)
+    return (base + timedelta(seconds=seconds)).isoformat()
+
+
+def _delivery_row(delivery_id: str) -> sqlite3.Row:
+    conn = _db.get_db()
+    try:
+        row = conn.execute(
+            """
+            SELECT delivery_id, status, lease_until, attempt_count,
+                   retry_after, delivered_at, error, last_error_kind
+            FROM deliveries
+            WHERE delivery_id = ?
+            """,
+            (delivery_id,),
+        ).fetchone()
+        assert row is not None
+        return row
+    finally:
+        conn.close()
 
 
 # 1. Channel CRUD
@@ -634,3 +658,255 @@ def test_post_parent_fk_enforcement(isolated_context_root):
             parent_id="deadbeef" * 4,
             auto_snapshot=False,
         )
+
+
+class TestDeliveryLeasing:
+    def test_claim_single_delivery(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+
+        assert claimed is not None
+        assert claimed["delivery_id"] == res["delivery_ids"][0]
+        assert claimed["status"] == "processing"
+
+        row = _delivery_row(res["delivery_ids"][0])
+        assert row["status"] == "processing"
+        assert row["lease_until"] is not None
+        assert row["attempt_count"] == 1
+
+    def test_claim_returns_none_when_empty(self):
+        assert _channels.claim_next_delivery("claude", now=_iso_at(0)) is None
+
+    def test_claim_atomic_under_concurrent_callers(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+
+        barrier = threading.Barrier(3)
+        results: list[dict[str, str] | None] = []
+        lock = threading.Lock()
+
+        def worker():
+            barrier.wait()
+            claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+            with lock:
+                results.append(claimed)
+
+        threads = [threading.Thread(target=worker) for _ in range(3)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        claimed = [item for item in results if item is not None]
+        assert len(claimed) == 1
+        assert claimed[0]["delivery_id"] == res["delivery_ids"][0]
+        assert sum(item is None for item in results) == 2
+
+    def test_claim_respects_retry_after(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        conn = _db.get_db()
+        conn.execute(
+            "UPDATE deliveries SET retry_after = ? WHERE delivery_id = ?",
+            (_iso_at(60), delivery_id),
+        )
+        conn.commit()
+        conn.close()
+
+        assert _channels.claim_next_delivery("claude", now=_iso_at(0)) is None
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(61))
+        assert claimed is not None
+        assert claimed["delivery_id"] == delivery_id
+
+    def test_claim_respects_max_attempts(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        first = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert first is not None
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "unavailable",
+            "try later",
+            reschedule_after=_iso_at(1),
+            now=_iso_at(0),
+        )
+
+        second = _channels.claim_next_delivery("claude", now=_iso_at(1))
+        assert second is not None
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "unavailable",
+            "try later",
+            reschedule_after=_iso_at(2),
+            now=_iso_at(1),
+        )
+
+        third = _channels.claim_next_delivery("claude", now=_iso_at(2))
+        assert third is not None
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "timeout",
+            "final timeout",
+            reschedule_after=_iso_at(3),
+            now=_iso_at(2),
+        )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "failed"
+        assert row["attempt_count"] == 3
+        assert _channels.claim_next_delivery("claude", now=_iso_at(3)) is None
+
+    def test_mark_delivered_terminal(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert claimed is not None
+        _channels.mark_delivery_delivered(
+            delivery_id,
+            "reply-1",
+            now=_iso_at(5),
+        )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "delivered"
+        assert row["delivered_at"] == _iso_at(5)
+        assert row["lease_until"] is None
+        assert _channels.claim_next_delivery("claude", now=_iso_at(6)) is None
+
+    def test_mark_failed_terminal(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert claimed is not None
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "tool_error",
+            "tool exploded",
+            now=_iso_at(5),
+        )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "failed"
+        assert row["error"] == "tool exploded"
+        assert row["lease_until"] is None
+        assert row["retry_after"] is None
+        assert _channels.claim_next_delivery("claude", now=_iso_at(6)) is None
+
+    def test_mark_failed_rescheduled(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert claimed is not None
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "unavailable",
+            "busy",
+            reschedule_after=_iso_at(60),
+            now=_iso_at(0),
+        )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "pending"
+        assert row["retry_after"] == _iso_at(60)
+        assert row["lease_until"] is None
+        assert _channels.claim_next_delivery("claude", now=_iso_at(59)) is None
+
+        claimed_again = _channels.claim_next_delivery("claude", now=_iso_at(60))
+        assert claimed_again is not None
+        assert claimed_again["delivery_id"] == delivery_id
+
+    def test_rate_limit_sets_default_retry_after(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert claimed is not None
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "rate_limited",
+            "rate limited",
+            now=_iso_at(0),
+        )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "pending"
+        assert row["retry_after"] == _iso_at(300)
+        assert row["last_error_kind"] == "rate_limited"
+
+    def test_release_expired_leases(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery(
+            "claude",
+            lease_seconds=30,
+            now=_iso_at(0),
+        )
+        assert claimed is not None
+
+        released = _channels.release_expired_leases(now=_iso_at(31))
+        assert released == 1
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "pending"
+        assert row["lease_until"] is None
+        assert row["attempt_count"] == 1
+
+        claimed_again = _channels.claim_next_delivery("claude", now=_iso_at(32))
+        assert claimed_again is not None
+        assert claimed_again["delivery_id"] == delivery_id
+
+    def test_release_expired_leases_ignores_fresh_leases(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery(
+            "claude",
+            lease_seconds=30,
+            now=_iso_at(0),
+        )
+        assert claimed is not None
+
+        released = _channels.release_expired_leases(now=_iso_at(29))
+        assert released == 0
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "processing"
+        assert row["lease_until"] == _iso_at(30)
+
+    def test_attempt_count_increments_on_each_claim(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        first = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert first is not None
+        assert _delivery_row(delivery_id)["attempt_count"] == 1
+
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "unavailable",
+            "retry",
+            reschedule_after=_iso_at(1),
+            now=_iso_at(0),
+        )
+
+        second = _channels.claim_next_delivery("claude", now=_iso_at(1))
+        assert second is not None
+        assert _delivery_row(delivery_id)["attempt_count"] == 2

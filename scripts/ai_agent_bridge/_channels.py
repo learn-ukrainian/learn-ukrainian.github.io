@@ -53,7 +53,7 @@ import hashlib
 import json
 import urllib.request
 import uuid
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -63,7 +63,24 @@ from ._db import get_db
 
 VALID_AGENTS = ("claude", "gemini", "codex", "user")
 VALID_KINDS = ("post", "reply", "system", "fanout_start", "fanout_end")
-VALID_DELIVERY_STATUSES = ("pending", "dispatched", "delivered", "failed")
+VALID_DELIVERY_STATUSES = (
+    "pending",
+    "processing",
+    "dispatched",
+    "delivered",
+    "failed",
+)
+VALID_DELIVERY_ERROR_KINDS = (
+    "rate_limited",
+    "timeout",
+    "unavailable",
+    "tool_error",
+    "parse_error",
+    "unknown",
+)
+DEFAULT_DELIVERY_LEASE_SECONDS = 600
+DEFAULT_MAX_DELIVERY_ATTEMPTS = 3
+DEFAULT_RATE_LIMIT_RETRY_SECONDS = 300
 
 # Default channel that every other channel includes unless overridden.
 # Holds project-wide pinned context that agents need on every message
@@ -109,6 +126,14 @@ def _new_id() -> str:
     return uuid.uuid4().hex
 
 
+def _parse_iso(value: str) -> datetime:
+    return datetime.fromisoformat(value)
+
+
+def _iso_after(value: str, *, seconds: int) -> str:
+    return (_parse_iso(value) + timedelta(seconds=seconds)).isoformat()
+
+
 def context_sha256(path: Path) -> str:
     """Compute sha256 hex of a context.md file.
 
@@ -134,6 +159,52 @@ def _validate_kind(kind: str) -> None:
         raise ValueError(
             f"Unknown kind '{kind}'. Expected one of {VALID_KINDS}."
         )
+
+
+def _validate_error_kind(error_kind: str) -> None:
+    if error_kind not in VALID_DELIVERY_ERROR_KINDS:
+        raise ValueError(
+            f"Unknown delivery error kind '{error_kind}'. "
+            f"Expected one of {VALID_DELIVERY_ERROR_KINDS}."
+        )
+
+
+def _row_to_pending_delivery(row) -> dict[str, Any]:
+    """Convert a joined delivery/message row to the queue payload shape."""
+    return {
+        "delivery_id": row["delivery_id"],
+        "message_id": row["message_id"],
+        "to_agent": row["to_agent"],
+        "to_model": row["to_model"],
+        "status": row["status"],
+        "dispatched_at": row["dispatched_at"],
+        "delivered_at": row["delivered_at"],
+        "error": row["error"],
+        "body": row["body"],
+        "from_agent": row["cm_from_agent"],
+        "channel": row["cm_channel"],
+        "created_at": row["cm_created_at"],
+    }
+
+
+def _delivery_queue_row(
+    conn,
+    delivery_id: str,
+) -> dict[str, Any] | None:
+    row = conn.execute(
+        """
+        SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
+               d.status, d.dispatched_at, d.delivered_at, d.error,
+               d.lease_until, d.attempt_count, d.retry_after, d.last_error_kind,
+               cm.body, cm.from_agent AS cm_from_agent,
+               cm.channel AS cm_channel, cm.created_at AS cm_created_at
+        FROM deliveries d
+        JOIN channel_messages cm ON cm.message_id = d.message_id
+        WHERE d.delivery_id = ?
+        """,
+        (delivery_id,),
+    ).fetchone()
+    return _row_to_pending_delivery(row) if row else None
 
 
 # ── B.2: Context loading ──────────────────────────────────────────────
@@ -824,25 +895,237 @@ def mark_delivery(
     try:
         if status == "dispatched":
             conn.execute(
-                "UPDATE deliveries SET status=?, dispatched_at=?, error=? WHERE delivery_id=?",
+                """
+                UPDATE deliveries
+                SET status=?, dispatched_at=?, error=?, lease_until=NULL
+                WHERE delivery_id=?
+                """,
                 (status, now, error, delivery_id),
             )
         elif status == "delivered":
             conn.execute(
-                "UPDATE deliveries SET status=?, delivered_at=?, error=? WHERE delivery_id=?",
+                """
+                UPDATE deliveries
+                SET status=?, delivered_at=?, error=?, lease_until=NULL, retry_after=NULL
+                WHERE delivery_id=?
+                """,
                 (status, delivered_at or now, error, delivery_id),
             )
         elif status == "failed":
             conn.execute(
-                "UPDATE deliveries SET status=?, error=? WHERE delivery_id=?",
+                """
+                UPDATE deliveries
+                SET status=?, error=?, lease_until=NULL, retry_after=NULL
+                WHERE delivery_id=?
+                """,
                 (status, error, delivery_id),
             )
         else:  # pending — should not usually be explicit, but allow
             conn.execute(
-                "UPDATE deliveries SET status=?, error=? WHERE delivery_id=?",
+                """
+                UPDATE deliveries
+                SET status=?, error=?, lease_until=NULL
+                WHERE delivery_id=?
+                """,
                 (status, error, delivery_id),
             )
         conn.commit()
+    finally:
+        conn.close()
+
+
+def claim_next_delivery(
+    agent: str,
+    *,
+    lease_seconds: int = DEFAULT_DELIVERY_LEASE_SECONDS,
+    max_attempts: int = DEFAULT_MAX_DELIVERY_ATTEMPTS,
+    now: str | None = None,
+) -> dict[str, Any] | None:
+    """Atomically claim the oldest eligible pending delivery for an agent."""
+    _validate_agent(agent)
+    if lease_seconds <= 0:
+        raise ValueError("lease_seconds must be > 0")
+    if max_attempts <= 0:
+        raise ValueError("max_attempts must be > 0")
+
+    now = now or _now_iso()
+    lease_until = _iso_after(now, seconds=lease_seconds)
+
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(
+            """
+            SELECT d.delivery_id
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.to_agent = ?
+              AND d.attempt_count < ?
+              AND (d.retry_after IS NULL OR d.retry_after <= ?)
+              AND (
+                    d.status = 'pending'
+                    OR (d.status = 'processing' AND d.lease_until <= ?)
+              )
+            ORDER BY cm.created_at ASC, d.delivery_id ASC
+            LIMIT 1
+            """,
+            (agent, max_attempts, now, now),
+        ).fetchone()
+        if not row:
+            conn.commit()
+            return None
+
+        conn.execute(
+            """
+            UPDATE deliveries
+            SET status='processing',
+                lease_until=?,
+                attempt_count=attempt_count + 1
+            WHERE delivery_id=?
+            """,
+            (lease_until, row["delivery_id"]),
+        )
+        claimed = _delivery_queue_row(conn, row["delivery_id"])
+        conn.commit()
+        return claimed
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def mark_delivery_delivered(
+    delivery_id: str,
+    reply_message_id: str,
+    *,
+    now: str | None = None,
+) -> None:
+    """Mark a claimed delivery as terminally delivered."""
+    now = now or _now_iso()
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(
+            "SELECT status FROM deliveries WHERE delivery_id = ?",
+            (delivery_id,),
+        ).fetchone()
+        if not row:
+            raise ValueError(f"delivery '{delivery_id}' not found")
+        if row["status"] in {"delivered", "failed"}:
+            conn.commit()
+            return
+
+        # reply_message_id is part of the worker API contract for the
+        # next phase, but the current deliveries schema does not yet
+        # persist reply linkage separately.
+        _ = reply_message_id
+        conn.execute(
+            """
+            UPDATE deliveries
+            SET status='delivered',
+                delivered_at=?,
+                error=NULL,
+                lease_until=NULL,
+                retry_after=NULL,
+                last_error_kind=NULL
+            WHERE delivery_id=?
+            """,
+            (now, delivery_id),
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def mark_delivery_failed(
+    delivery_id: str,
+    error_kind: str,
+    error_text: str,
+    *,
+    reschedule_after: str | None = None,
+    now: str | None = None,
+) -> None:
+    """Mark a claimed delivery as failed or rescheduled."""
+    _validate_error_kind(error_kind)
+    now = now or _now_iso()
+
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(
+            "SELECT status, attempt_count FROM deliveries WHERE delivery_id = ?",
+            (delivery_id,),
+        ).fetchone()
+        if not row:
+            raise ValueError(f"delivery '{delivery_id}' not found")
+        if row["status"] in {"delivered", "failed"}:
+            conn.commit()
+            return
+
+        retry_after = reschedule_after
+        if error_kind == "rate_limited" and retry_after is None:
+            retry_after = _iso_after(now, seconds=DEFAULT_RATE_LIMIT_RETRY_SECONDS)
+
+        exhausted = row["attempt_count"] >= DEFAULT_MAX_DELIVERY_ATTEMPTS
+        if retry_after is None or exhausted:
+            conn.execute(
+                """
+                UPDATE deliveries
+                SET status='failed',
+                    error=?,
+                    lease_until=NULL,
+                    retry_after=NULL,
+                    last_error_kind=?
+                WHERE delivery_id=?
+                """,
+                (error_text, error_kind, delivery_id),
+            )
+        else:
+            conn.execute(
+                """
+                UPDATE deliveries
+                SET status='pending',
+                    error=?,
+                    lease_until=NULL,
+                    retry_after=?,
+                    last_error_kind=?
+                WHERE delivery_id=?
+                """,
+                (error_text, retry_after, error_kind, delivery_id),
+            )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def release_expired_leases(now: str | None = None) -> int:
+    """Reclaim deliveries stuck in processing after their lease expires."""
+    now = now or _now_iso()
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        cursor = conn.execute(
+            """
+            UPDATE deliveries
+            SET status='pending',
+                lease_until=NULL
+            WHERE status='processing'
+              AND lease_until < ?
+            """,
+            (now,),
+        )
+        conn.commit()
+        return cursor.rowcount
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         conn.close()
 
@@ -854,7 +1137,8 @@ def deliveries_for_message(message_id: str) -> list[dict[str, Any]]:
         rows = conn.execute(
             """
             SELECT delivery_id, message_id, to_agent, to_model, status,
-                   dispatched_at, delivered_at, error
+                   dispatched_at, delivered_at, error,
+                   lease_until, attempt_count, retry_after, last_error_kind
             FROM deliveries
             WHERE message_id = ?
             ORDER BY delivery_id
@@ -871,6 +1155,10 @@ def deliveries_for_message(message_id: str) -> list[dict[str, Any]]:
                 "dispatched_at": r["dispatched_at"],
                 "delivered_at": r["delivered_at"],
                 "error": r["error"],
+                "lease_until": r["lease_until"],
+                "attempt_count": r["attempt_count"],
+                "retry_after": r["retry_after"],
+                "last_error_kind": r["last_error_kind"],
             }
             for r in rows
         ]
@@ -891,6 +1179,7 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
             """
             SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
                    d.status, d.dispatched_at, d.delivered_at, d.error,
+                   d.lease_until, d.attempt_count, d.retry_after, d.last_error_kind,
                    cm.body, cm.from_agent AS cm_from_agent,
                    cm.channel AS cm_channel, cm.created_at AS cm_created_at
             FROM deliveries d
@@ -900,22 +1189,6 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
             """,
             (agent,),
         ).fetchall()
-        return [
-            {
-                "delivery_id": r["delivery_id"],
-                "message_id": r["message_id"],
-                "to_agent": r["to_agent"],
-                "to_model": r["to_model"],
-                "status": r["status"],
-                "dispatched_at": r["dispatched_at"],
-                "delivered_at": r["delivered_at"],
-                "error": r["error"],
-                "body": r["body"],
-                "from_agent": r["cm_from_agent"],
-                "channel": r["cm_channel"],
-                "created_at": r["cm_created_at"],
-            }
-            for r in rows
-        ]
+        return [_row_to_pending_delivery(r) for r in rows]
     finally:
         conn.close()
