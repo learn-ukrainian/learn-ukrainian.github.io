@@ -3588,6 +3588,16 @@ def step_activities(
 
     # Activity count targets from config — inline/workbook split is source of truth
     activity_config = get_activity_config(level, module_num)
+    # Pull min_types_unique from the audit profile so the prompt can quote it
+    # without hardcoding level-specific numbers (Gemini b1-activity-fix-review caught
+    # hardcoded "5 distinct types" leaking from a B1-only fix into the shared template).
+    try:
+        from audit.config import get_level_config as _get_audit_cfg
+        _module_focus = plan.get("focus") or plan.get("module_focus")
+        _audit_profile = _get_audit_cfg(level.upper(), _module_focus)
+        min_types_unique = str(_audit_profile.get("min_types_unique", 0))
+    except Exception:
+        min_types_unique = "0"
     total_target = activity_config.get("TOTAL_TARGET", activity_config.get("ACTIVITY_COUNT_TARGET", "12"))
     inline_min = activity_config.get("INLINE_MIN", "4")
     inline_max = activity_config.get("INLINE_MAX", "6")
@@ -3629,6 +3639,7 @@ def step_activities(
         "{INLINE_PRIORITY_TYPES}": inline_priority,
         "{WORKBOOK_PRIORITY_TYPES}": workbook_priority,
         "{ITEMS_MIN}": items_min,
+        "{MIN_TYPES_UNIQUE}": min_types_unique,
         "{VOCAB_COUNT_TARGET}": vocab_count_target,
         "{FORBIDDEN_ACTIVITY_TYPES}": forbidden_types,
         "{ALLOWED_ACTIVITY_TYPES}": allowed_types,

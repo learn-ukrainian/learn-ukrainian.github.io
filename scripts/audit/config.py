@@ -692,8 +692,8 @@ LEVEL_CONFIG = {
     'B1-grammar': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 0,   # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
-        'min_items_per_activity': 6,
-        'min_types_unique': 3,
+        'min_items_per_activity': 8,   # Apr 2026: 6→8, aligned with b1-core ITEMS_MIN and rest of B1+ family
+        'min_types_unique': 5,         # Apr 2026: 3→5, prevent quiz-wall workbooks (B1 immersion crisis fix)
         'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
