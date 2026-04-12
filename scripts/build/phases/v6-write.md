@@ -280,14 +280,18 @@ Do not write any of these even once. Even in dialogues. Even in quoted examples.
 
 Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
 
-### B1+ Immersion (if level >= B1)
+### Level-specific immersion check
 
-Before finalising your output, verify:
-- [ ] ZERO `> *English translation*` blockquotes anywhere in the module
-- [ ] ZERO `*(English gloss)*` inline dialogue glosses
-- [ ] All narrative paragraphs are in Ukrainian
-- [ ] English-language callouts (`:::info` / `:::tip`) are used ONLY for genuinely abstract grammar concepts that cannot be explained natively
-- [ ] Metalanguage terms are translated inline ONLY on first use, bounded to ~2 per section
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
 
 ---
 

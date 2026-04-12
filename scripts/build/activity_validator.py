@@ -218,7 +218,11 @@ def _check_section_counts_and_types(
         return []
 
     try:
-        config = get_activity_config(level, module_num)
+        # Pass slug so checkpoint modules route to a1-checkpoint / a2-checkpoint
+        # configs (otherwise validator falls back to base a1/a2 ITEMS_MIN and
+        # validates checkpoints against the wrong threshold — Gemini caught this
+        # in a1-a2-prerebuild-fix-review).
+        config = get_activity_config(level, module_num, slug=slug)
     except Exception:
         return []
 

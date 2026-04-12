@@ -3586,8 +3586,10 @@ def step_activities(
     from pipeline.config_tables import get_activity_config, get_item_minimums_table
     item_minimums_table = get_item_minimums_table(level, module_num)
 
-    # Activity count targets from config — inline/workbook split is source of truth
-    activity_config = get_activity_config(level, module_num)
+    # Activity count targets from config — inline/workbook split is source of truth.
+    # Pass the slug so checkpoint modules route to a1-checkpoint / a2-checkpoint
+    # configs (audit demands ITEMS_MIN=10 for those, base a1/a2 only set 6/8).
+    activity_config = get_activity_config(level, module_num, slug=slug)
     # Pull min_types_unique from the audit profile so the prompt can quote it
     # without hardcoding level-specific numbers (Gemini b1-activity-fix-review caught
     # hardcoded "5 distinct types" leaking from a B1-only fix into the shared template).

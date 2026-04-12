@@ -2039,7 +2039,7 @@ def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     skill_name, skill_identity, persona_flavor = get_track_skill(track, num)
     immersion_rule = get_immersion_rule(track, num)
     level_constraints = get_level_constraints(track, plan)
-    activity_config = get_activity_config(track, num)
+    activity_config = get_activity_config(track, num, slug=slug)
     track_config = get_track_config(track)
 
     # config.py is the source of truth for word targets

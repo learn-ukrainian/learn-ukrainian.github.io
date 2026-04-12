@@ -134,7 +134,7 @@ def run_content_detectors(ctx: AuditContext, state: AuditState) -> None:
     #         print(f"     \u26a0\ufe0f  [{v['type']}] {v['issue']}")
     #     content_quality_violations.extend(euphony_violations)
 
-    prose_violations = check_prose_quality(ctx.content)
+    prose_violations = check_prose_quality(ctx.content, file_path=ctx.file_path)
     if prose_violations:
         print(f"  \u2728 Prose quality violations found: {len(prose_violations)}")
         for v in prose_violations:

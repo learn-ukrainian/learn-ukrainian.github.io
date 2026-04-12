@@ -219,14 +219,41 @@ IMMERSION_RULES: dict[str, str] = {
         "Simple subordinate clauses only. Aspect pairs introduced. No participles."
     ),
     "a2-m51-70": (
-        "TARGET: 70-90% Ukrainian.\n"
+        "TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.\n"
+        "\n"
         "LANGUAGE ROLES:\n"
-        "- PRIMARY: Ukrainian for everything.\n"
-        "- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.\n"
+        "- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, "
+        "Reading Practice blocks, learning callouts.\n"
+        "- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English "
+        "translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.\n"
+        "- VOCABULARY TABLE: English glosses live here, not in prose.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.\n"
+        "\n"
+        "⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:\n"
+        "- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more "
+        "than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in "
+        "the main prose.\n"
+        "- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write "
+        "ONE paragraph in Ukrainian, move on.\n"
+        "- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were "
+        "required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.\n"
+        "\n"
+        "ESCAPE HATCH (the 'Dual Ladder'):\n"
+        "For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout "
+        "written in English per section to clarify the concept. Because callouts are stripped from "
+        "the immersion metric, this serves as on-demand scaffolding for struggling learners without "
+        "penalising the immersion score. Do NOT abuse this — at most one English callout per major section.\n"
+        "\n"
         "A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
-        "Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. "
-        "All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
+        "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate "
+        "clauses only (який/що/коли). Full aspect pairs. No participles.\n"
+        "\n"
+        "CHECKLIST (re-read before writing each section):\n"
+        "- [ ] Every narrative paragraph in Ukrainian?\n"
+        "- [ ] Zero `> *English translation*` blockquotes after dialogues?\n"
+        "- [ ] At most ONE English `:::info` callout per major section?\n"
+        "- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?\n"
+        "- [ ] Reading Practice / Читаємо українською block in EVERY major section?\n"
     ),
     "b1-core": (
         "TARGET: 90-100% Ukrainian.\n"
@@ -1114,6 +1141,25 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "REQUIRED_TYPES": "",
         "PRIORITY_TYPES": "fill-in, match-up, quiz, image-to-letter, watch-and-repeat",
     },
+    # A1-checkpoint — review module, audit demands min_items_per_activity: 10
+    # (Apr 2026: added by Gemini's a1-a2-pre-rebuild-audit. Previously fell back
+    # to "a1" which set ITEMS_MIN=6 and immediately failed the audit gate.)
+    "a1-checkpoint": {
+        "TOTAL_TARGET": "8",
+        "INLINE_MIN": "3", "INLINE_MAX": "5",
+        "WORKBOOK_MIN": "5", "WORKBOOK_MAX": "8",
+        "ITEMS_MIN": "10",   # ← matches LEVEL_CONFIG['A1-checkpoint'] min_items_per_activity
+        "VOCAB_COUNT_TARGET": "15",  # checkpoints reuse prior vocab
+        "INLINE_ALLOWED_TYPES": "match-up, quiz, fill-in, true-false, classify, group-sort",
+        "WORKBOOK_ALLOWED_TYPES": "fill-in, match-up, group-sort, unjumble, quiz, true-false, classify, observe, phrase-table, odd-one-out, anagram",
+        "INLINE_PRIORITY_TYPES": "match-up, fill-in, quiz",
+        "WORKBOOK_PRIORITY_TYPES": "fill-in, match-up, group-sort, unjumble, anagram",
+        "ACTIVITY_COUNT_TARGET": "8", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "match-up, quiz, fill-in, true-false, classify, group-sort, unjumble, observe, phrase-table, odd-one-out, anagram",
+        "FORBIDDEN_ACTIVITY_TYPES": "image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "match-up, fill-in, quiz",
+    },
     # =====================================================================
     # A2 — Transformation + Basic Production (12 total: 4 inline + 8 workbook)
     # 2000-word modules, case drills, verb conjugation, basic dialogues
@@ -1129,6 +1175,25 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "INLINE_PRIORITY_TYPES": "fill-in, match-up, true-false, quiz",
         "WORKBOOK_PRIORITY_TYPES": "error-correction, cloze, unjumble, translate, fill-in",
         "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "16",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, classify, translate, odd-one-out, observe, phrase-table",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "error-correction, cloze, fill-in, unjumble, translate",
+    },
+    # A2-checkpoint — review module, audit demands min_items_per_activity: 10
+    # (Apr 2026: added by Gemini's a1-a2-pre-rebuild-audit. Previously fell back
+    # to "a2" which set ITEMS_MIN=8 and immediately failed the audit gate.)
+    "a2-checkpoint": {
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "5",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "10",
+        "ITEMS_MIN": "10",   # ← matches LEVEL_CONFIG['A2-checkpoint'] min_items_per_activity
+        "VOCAB_COUNT_TARGET": "20",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, quiz, true-false, mark-the-words, observe, phrase-table",
+        "INLINE_PRIORITY_TYPES": "fill-in, match-up, true-false",
+        "WORKBOOK_PRIORITY_TYPES": "error-correction, cloze, unjumble, translate, fill-in",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, classify, translate, odd-one-out, observe, phrase-table",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify",
         "REQUIRED_TYPES": "",
@@ -1470,8 +1535,25 @@ def get_level_constraints(track: str, plan: dict | None = None) -> str:
     return constraints
 
 
-def get_activity_config(track: str, module_num: int) -> dict[str, str]:
-    """Get activity configuration for a track + module number."""
+def get_activity_config(
+    track: str,
+    module_num: int,
+    slug: str | None = None,
+) -> dict[str, str]:
+    """Get activity configuration for a track + module number.
+
+    The optional ``slug`` argument routes checkpoint modules
+    (slug starts with ``checkpoint-``) to a checkpoint-specific
+    config when one exists. Without this routing, A1/A2 checkpoint
+    modules fall back to the base ``a1`` / ``a2`` configs and emit
+    ITEMS_MIN values that the audit gate immediately rejects
+    (Apr 2026: caught by Gemini's a1-a2-pre-rebuild-audit).
+    """
+    # Checkpoint slug routing — must run BEFORE the generic track lookup.
+    if slug and slug.startswith("checkpoint-"):
+        checkpoint_key = f"{track}-checkpoint"
+        if checkpoint_key in ACTIVITY_CONFIGS:
+            return ACTIVITY_CONFIGS[checkpoint_key]
     if track.startswith("lit-"):
         return ACTIVITY_CONFIGS["lit"]
     if track == "b1":

@@ -63,6 +63,25 @@ def _detect_level_from_content(content: str) -> str | None:
     return None
 
 
+def _detect_level_from_path(file_path: str) -> str | None:
+    """Detect level from file path (e.g. curriculum/l2-uk-en/a1/foo.md → A1).
+
+    A1/A2 modules in this project ship without frontmatter, so the content-based
+    detector returns None for them. Without a path-based fallback the
+    INLINE_ENGLISH_IN_PROSE check (which should ONLY fire at B1+) leaks into
+    A1/A2 and produces false-positive failures on every A1/A2 module that
+    follows the prompt's "(English translation)" rule.
+    (Caught by Gemini in a1-a2-pre-rebuild-audit, 2026-04-12.)
+    """
+    if not file_path:
+        return None
+    path_lower = file_path.lower()
+    for lvl in ('a1', 'a2', 'b1', 'b2', 'c1', 'c2'):
+        if f'/{lvl}/' in path_lower or f'/{lvl}-' in path_lower:
+            return lvl.upper()
+    return None
+
+
 def check_drill_blocks(content: str) -> list[dict]:
     """Detect _Приклади:_ / _Приклад:_ drill blocks in narrative prose.
 
@@ -386,20 +405,31 @@ def check_structural_monotony(content: str, max_similar: int = 3) -> list[dict]:
     return violations
 
 
-def check_prose_quality(content: str, yaml_content: dict | None = None) -> list[dict]:
+def check_prose_quality(
+    content: str,
+    yaml_content: dict | None = None,
+    file_path: str = '',
+) -> list[dict]:
     """Main entry point for prose quality checks.
 
     Args:
         content: The markdown content of the module
         yaml_content: Optional dict (unused, kept for API consistency with content_purity)
+        file_path: Optional path to the source file. Used as a fallback for level
+            detection when the markdown has no frontmatter (which is the case for
+            every A1/A2 module in this project — without it the
+            INLINE_ENGLISH_IN_PROSE check leaks into A1/A2 and false-positive-fails
+            modules that follow the prompt's "(English translation)" rule).
 
     Returns:
         List of violation dicts with type, severity, issue, fix, line keys
     """
     violations = []
 
-    # Detect level for English-in-prose check
-    level = _detect_level_from_content(content)
+    # Detect level for English-in-prose check.
+    # A1/A2 modules ship without frontmatter, so the content-based detector
+    # returns None and we fall back to the path-based detector.
+    level = _detect_level_from_content(content) or _detect_level_from_path(file_path)
 
     violations.extend(check_drill_blocks(content))
     violations.extend(check_glossary_lists(content))
