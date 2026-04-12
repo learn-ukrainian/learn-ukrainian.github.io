@@ -229,8 +229,44 @@ IMMERSION_RULES: dict[str, str] = {
         "All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
     ),
     "b1-core": (
-        "Full Ukrainian immersion. Grammar explained IN Ukrainian. "
-        "English only for disambiguation of false friends. Sentences max 30 words."
+        "TARGET: 90-100% Ukrainian.\n"
+        "\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: Ukrainian prose. Explain grammar IN Ukrainian "
+        "using Ukrainian linguistic terms (дієслово, відмінок, недоконаний вид).\n"
+        "- EXAMPLES & NARRATIVE: 100% Ukrainian.\n"
+        "- DIALOGUES: 100% Ukrainian. NO inline English glosses `*(English)*`.\n"
+        "- METALANGUAGE: For abstract grammar terms, you may provide ONE "
+        "parenthetical English translation on FIRST use only, e.g. "
+        "`**видова пара** (aspectual pair)`. Subsequent uses must be Ukrainian "
+        "only. Concrete vocabulary goes in the словник, not inline.\n"
+        "\n"
+        "⚠️ HARD STRUCTURAL RULE — READ THIS TWICE:\n"
+        "- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian "
+        "paragraphs. Every occurrence is an immediate audit failure. This "
+        "pattern destroyed B1 immersion on 35 modules and must never appear.\n"
+        "- FORBIDDEN: mirroring a Ukrainian paragraph with an English paragraph "
+        "translation. Write ONE paragraph in Ukrainian, move on.\n"
+        "- FORBIDDEN: English narrative paragraphs. If a concept needs English "
+        "scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the "
+        "main prose. (Callouts are stripped by the immersion calculator, so "
+        "this is the sanctioned escape hatch.)\n"
+        "\n"
+        "ESCAPE HATCH (the 'Dual Ladder'):\n"
+        "For highly abstract grammar concepts only, you may use ONE `:::info` "
+        "or `:::tip` callout written in English per section to clarify the "
+        "concept. Because callouts are stripped from the immersion metric, "
+        "this serves as on-demand scaffolding for struggling learners without "
+        "penalising the immersion score.\n"
+        "\n"
+        "Ukrainian sentences: max 30 words, natural textbook register.\n"
+        "\n"
+        "CHECKLIST (re-read before writing each section):\n"
+        "- [ ] Every narrative paragraph in Ukrainian?\n"
+        "- [ ] Zero `> *English translation*` blockquotes?\n"
+        "- [ ] Zero `*(English)*` inline dialogue glosses?\n"
+        "- [ ] At most 2 metalanguage terms parenthetically translated per section?\n"
+        "- [ ] If English scaffolding needed, is it in a `:::info` callout?\n"
     ),
     "b2+": (
         "Full Ukrainian immersion. No English except technical terminology. Sentences max 35 words."
@@ -1512,4 +1548,3 @@ def track_to_level_focus(track: str) -> tuple[str, str | None]:
     if track in _TRACK_FOCUS_MAP:
         return _TRACK_FOCUS_MAP[track]
     return (track.upper().split("-")[0], None)
-

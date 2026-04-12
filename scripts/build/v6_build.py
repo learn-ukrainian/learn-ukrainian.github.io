@@ -96,6 +96,32 @@ def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase:
         _log(f"  ❌ Rate limited during {phase} — giving up after {max_attempts} attempts")
     return True
 
+
+def _get_failing_audit_gates(level: str, slug: str) -> tuple[str, list[str]]:
+    """Read the latest status JSON and return the overall status plus failing gates."""
+    status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
+    if not status_path.exists():
+        return "missing", ["status-file-missing"]
+
+    try:
+        status = json.loads(status_path.read_text("utf-8"))
+    except Exception:
+        return "invalid", ["status-file-invalid"]
+
+    overall_status = status.get("overall", {}).get("status", "unknown")
+    gates = status.get("gates", {})
+    failing = [
+        gate_name
+        for gate_name, gate_data in gates.items()
+        if isinstance(gate_data, dict) and gate_data.get("status") == "fail"
+    ]
+
+    if failing:
+        return overall_status, failing
+    if overall_status in ("pass", "content-complete"):
+        return overall_status, []
+    return overall_status, ["overall-status"]
+
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 PIDRUCHNYK_URLS_PATH = PROJECT_ROOT / "data" / "pidruchnyk_urls.yaml"
@@ -5618,6 +5644,8 @@ def main():
                         help="Resume from last completed phase (reads state.json, skips completed phases)")
     parser.add_argument("--review-threshold", type=float, default=REVIEW_TARGET_SCORE,
                         help="Batch review skip threshold: rerun review when latest score is below this value")
+    parser.add_argument("--force-publish", action="store_true",
+                        help="Publish even if audit gates still fail after heal (not recommended)")
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
@@ -5659,6 +5687,7 @@ def main():
                      "--writer", args.writer,
                      "--step", args.step,
                      "--review-threshold", str(args.review_threshold),
+                     *(["--force-publish"] if args.force_publish else []),
                      *(["--resume"] if args.resume else []),
                      *(["--reviewer", args.reviewer] if args.reviewer else []),
                      *(["--skeleton"] if getattr(args, "skeleton", False) else []),
@@ -6499,6 +6528,16 @@ def main():
             )
             _log("   These need a writer/review pass: immersion %, robotic prose,")
             _log("   inline English in UK prose — run `--step review` or regen prose.")
+
+        _final_overall_status, _failing_audit_gates = _get_failing_audit_gates(args.level, slug)
+        if _failing_audit_gates and not args.force_publish:
+            _log("\n❌ PUBLISH BLOCKED: audit gates still failing after heal")
+            _log(f"   Overall status: {_final_overall_status}")
+            _log(f"   Failing gates: {', '.join(_failing_audit_gates)}")
+            _log("   Re-run with --force-publish to override (not recommended)")
+            _emit_phase_done("audit", _phase_start)
+            build_lock.release()
+            return False
         _emit_phase_done("audit", _phase_start)
 
     # Step 10: PUBLISH — now runs AFTER audit + heal so MDX reflects final state
@@ -6546,7 +6585,8 @@ def main():
 
     # Release build lock
     build_lock.release()
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(0 if main() is not False else 1)

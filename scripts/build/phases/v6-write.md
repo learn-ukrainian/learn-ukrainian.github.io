@@ -249,7 +249,7 @@ Available videos (for reference only — ENRICH handles placement):
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
@@ -279,6 +279,15 @@ Do not write any of these even once. Even in dialogues. Even in quoted examples.
 ❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
 
 Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### B1+ Immersion (if level >= B1)
+
+Before finalising your output, verify:
+- [ ] ZERO `> *English translation*` blockquotes anywhere in the module
+- [ ] ZERO `*(English gloss)*` inline dialogue glosses
+- [ ] All narrative paragraphs are in Ukrainian
+- [ ] English-language callouts (`:::info` / `:::tip`) are used ONLY for genuinely abstract grammar concepts that cannot be explained natively
+- [ ] Metalanguage terms are translated inline ONLY on first use, bounded to ~2 per section
 
 ---
 

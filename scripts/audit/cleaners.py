@@ -36,8 +36,16 @@ def clean_for_stats(text: str) -> str:
 
 def clean_for_immersion(text: str) -> str:
     """
-    Cleans text for immersion calculation. Keeps blockquotes (engagement boxes)
-    as they are part of the learning content and contribute to immersion.
+    Cleans text for immersion calculation.
+
+    Keeps blockquotes (engagement boxes, dialogue) as they are part of the
+    learning content and contribute to immersion. English translation
+    blockquotes are NOT stripped — if they appear in a B1+ module where
+    the prompt forbids them, the natural Cyrillic-ratio calculation will
+    correctly punish the module. Stripping them would both (a) artificially
+    inflate A1 immersion where translation blockquotes are REQUIRED, and
+    (b) mask LLM disobedience at B1+ where the prompt forbids them.
+    (Gemini review #b1-immersion-fix-review-r2 caught this.)
 
     Removes markdown syntax elements that would incorrectly count as non-Ukrainian:
     - URLs in markdown links
