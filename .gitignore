@@ -125,6 +125,7 @@ docs/damage-report-*.csv
 !tsconfig.json
 !.mcp.json
 !.markdownlint.json
+!pyrightconfig.json
 !.prettierrc
 !jest.config.js
 !eslint.config.mjs

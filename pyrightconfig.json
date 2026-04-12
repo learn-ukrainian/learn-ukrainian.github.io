@@ -1,0 +1,11 @@
+{
+  "include": ["scripts"],
+  "extraPaths": ["scripts"],
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Darwin",
+  "venvPath": ".",
+  "venv": ".venv",
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "warning",
+  "reportAttributeAccessIssue": "warning"
+}
