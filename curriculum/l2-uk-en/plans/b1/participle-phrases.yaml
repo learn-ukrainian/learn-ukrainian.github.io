@@ -1,8 +1,9 @@
+# NOTE: Codex review flagged this as potentially B2. Consider moving to B2 track. See #1192 plan review.
 module: b1-066
 level: B1
 sequence: 66
 slug: participle-phrases
-version: '3.1'
+version: '3.2'
 title: "Дієприкметниковий зворот"
 subtitle: "Дієприкметник із залежними словами та правила відокремлення"
 focus: grammar

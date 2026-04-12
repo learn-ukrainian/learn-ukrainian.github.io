@@ -2,7 +2,7 @@ module: b1-023
 level: B1
 sequence: 23
 slug: checkpoint-morphophonemics
-version: '3.0'
+version: '3.1'
 title: "Контрольна робота 1"
 subtitle: "Базовий рівень та морфонеміка — перевірка M01-M12"
 focus: review
@@ -35,7 +35,7 @@ dialogue_situations:
       tantum'
 content_outline:
   - section: Огляд базових часів та лексики (M01-M03)
-    words: 600
+    words: 550
     points:
       - 'Review of past, present, and future tenses from M01-M02: identifying tense
         and aspect in context. Practice: choosing between доконаний/недоконаний based
@@ -44,7 +44,7 @@ content_outline:
         and appearance traits. Practice: completing descriptions of people and their
         relationships.'
   - section: "Огляд чергувань"
-    words: 650
+    words: 550
     points:
       - "Review of vowel alternations from M04: [о/е] → [і] in закритий склад: рік
         — року, ніч — ночі, кінь — коня, піч — печі, осінь — осені. The rule: when
@@ -61,7 +61,7 @@ content_outline:
         (ст→с), серце — сердечний (рц→рд). Mnemonic: the 'extra' consonant drops when
         a suffix is added. Diagnostic: which consonant drops and why?"
   - section: "Огляд підкласів іменників"
-    words: 650
+    words: 550
     points:
       - "Мішана група (M09): Identification: stem ends in шиплячий (ж, ч, ш, щ). Key
         rule: орудний однини -ем (not -ом): ножем, сторожем, товаришем. Кличний: -е
@@ -77,7 +77,7 @@ content_outline:
         -ей (грошей), нульове (воріт). Special -ми in орудний: грішми, ворітьми (Ukrainian-specific).
         Agreement: always plural (великі двері, ліки закінчилися)."
   - section: "Медична лексика та морфонеміка"
-    words: 550
+    words: 500
     points:
       - "Integration exercise: medical vocabulary as a testbed for all Phases 1-2
         grammar. Word families with alternations: біль — болить — безболісний (і→о),
@@ -96,7 +96,7 @@ content_outline:
         10a): 'У якому відмінку вжито слово ліків?', 'Яке чергування відбувається
         у слові болить?'"
   - section: "Комплексні вправи: чергування"
-    words: 550
+    words: 500
     points:
       - "Exercise block 1 — Vowel alternation identification: Given pairs (рік-року,
         ніч-ночі, учень-учня, кінь-коня), learners identify the type: [о/е]→[і], [о/е]→zero,
@@ -112,7 +112,7 @@ content_outline:
         — this is a trap question). Learners must distinguish спрощення from other
         changes."
   - section: "Комплексні вправи: відмінювання"
-    words: 600
+    words: 500
     points:
       - "Exercise block 4 — Мішана група declension: Decline in context: 'Я бачив
         (сторож) біля (ворота).' → Я бачив сторожа біля воріт. 'Ми розмовляли з (товариш)
@@ -126,7 +126,7 @@ content_outline:
         inanimate). 'Ми поїхали на (канікули) до (Карпати).' → на канікули до Карпат.
         Tests родовий, знахідний, and preposition usage."
   - section: "Діалог-синтез"
-    words: 600
+    words: 500
     points:
       - "Extended dialogue in Ukrainian combining all Phases 1-2 grammar: A conversation
         between friends about health, travel to Карпати, and daily life. The dialogue
@@ -143,7 +143,7 @@ content_outline:
         відміни (подвоєння/без) ✓/✗, визначити pluralia tantum і вжити їх у правильній
         формі ✓/✗, вести діалог у лікаря з правильним керуванням ✓/✗."
   - section: "Підсумок та перехід до Фази 3"
-    words: 400
+    words: 350
     points:
       - "Phases 1-2 summary — what the learner has mastered: 1. Чергування голосних:
         [о/е]→[і], [о/е]→zero (M04). 2. Чергування приголосних: in nouns (M09) and

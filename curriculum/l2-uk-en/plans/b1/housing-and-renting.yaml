@@ -2,7 +2,7 @@ module: b1-031
 level: B1
 sequence: 31
 slug: housing-and-renting
-version: '3.1'
+version: '3.2'
 title: "Житло і оренда"
 subtitle: "Пошук квартири, оренда, комунальні послуги — відмінки в дії"
 focus: communication
@@ -167,5 +167,9 @@ grammar:
   - "Application of vocative in formal correspondence with landlords"
 register: розмовно-побутовий
 references:
-  - title: "Communicative context module"
-    notes: "Applies all Phase 6 grammar in housing, rental, and domestic contexts."
+  - title: "Заболотний Grade 9, p.186-192"
+    notes: "Побутове спілкування: practical communication in everyday contexts — housing,
+      services, complaints. Dialogue models for transactional situations."
+  - title: "Авраменко Grade 10, p.74-80"
+    notes: "Ділове спілкування: formal written communication — заява, договір, скарга.
+      Register and vocabulary for official correspondence with landlords/services."
