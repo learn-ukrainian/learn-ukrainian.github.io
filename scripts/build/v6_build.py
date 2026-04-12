@@ -2428,11 +2428,22 @@ Start immediately with the first ## heading. Keep all other formatting exactly a
     # Guard: reject fix output that lost significant content.
     # The fix step sometimes summarizes instead of correcting, producing
     # a fraction of the original word count. Keep the original if so.
+    # EXCEPTION: if the original has TOXIC violations (Russian characters,
+    # Russianisms), accept the shorter clean version — a short clean module
+    # is better than a long toxic one. The heal/review loop can expand it
+    # later. (2026-04-12: a2/all-cases-practice exhausted 5 retries because
+    # each fix was ~3000 words vs 6689 toxic original.)
     fix_words = len(final_content.split())
     orig_words = len(content.split())
-    if orig_words > 500 and fix_words < orig_words * 0.6:
+    original_is_toxic = bool(re.search(
+        r'[ъёыэ]|пожалуйста|спасибо|хорошо|конечно|ничего|сейчас|тоже|здесь',
+        content, re.IGNORECASE,
+    ))
+    if orig_words > 500 and fix_words < orig_words * 0.6 and not original_is_toxic:
         _log(f"  ❌ Fix output too short ({fix_words} words vs {orig_words} original) — keeping original")
         return None
+    if original_is_toxic and fix_words > 500:
+        _log(f"  ⚠️  Fix output shorter ({fix_words} vs {orig_words}) but original was TOXIC — accepting clean version")
 
     output_path.write_text(final_content, "utf-8")
 
