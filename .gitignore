@@ -126,6 +126,9 @@ docs/damage-report-*.csv
 !.mcp.json
 !.markdownlint.json
 !pyrightconfig.json
+
+# Codex interactive worktree (start-codex.sh)
+.worktrees/
 !.prettierrc
 !jest.config.js
 !eslint.config.mjs
