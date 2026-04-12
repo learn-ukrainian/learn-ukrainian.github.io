@@ -35,10 +35,10 @@ function retryBtn(container: HTMLElement) {
 
 describe('ClozePassage', () => {
   const baseProps = {
-    text: 'The sun [___:0] in the east. Water [___:1] wet.',
+    text: 'The sun [___:1] in the east. Water [___:2] wet.',
     blanks: [
-      { index: 0, options: ['rises', 'sets'], answer: 'rises' },
-      { index: 1, options: ['is', 'are'], answer: 'is' },
+      { index: 1, options: ['rises', 'sets'], answer: 'rises' },
+      { index: 2, options: ['is', 'are'], answer: 'is' },
     ],
   };
 
@@ -55,7 +55,7 @@ describe('ClozePassage', () => {
   test('each select carries its blank index via data-blank-index', () => {
     const { container } = render(<ClozePassage {...baseProps} />);
     const indices = blanks(container).map(s => s.getAttribute('data-blank-index'));
-    expect(new Set(indices)).toEqual(new Set(['0', '1']));
+    expect(new Set(indices)).toEqual(new Set(['1', '2']));
   });
 
   test('Check Answers is disabled while any blank is unfilled', () => {
@@ -67,9 +67,9 @@ describe('ClozePassage', () => {
     const user = userEvent.setup();
     const { container } = render(<ClozePassage {...baseProps} />);
 
-    await user.selectOptions(blankByIndex(container, 0), 'rises');
+    await user.selectOptions(blankByIndex(container, 1), 'rises');
     expect(checkBtn(container)).toBeDisabled(); // one blank still unfilled
-    await user.selectOptions(blankByIndex(container, 1), 'is');
+    await user.selectOptions(blankByIndex(container, 2), 'is');
 
     expect(checkBtn(container)).toBeEnabled();
   });
@@ -78,8 +78,8 @@ describe('ClozePassage', () => {
     const user = userEvent.setup();
     const { container } = render(<ClozePassage {...baseProps} />);
 
-    await user.selectOptions(blankByIndex(container, 0), 'rises');
-    await user.selectOptions(blankByIndex(container, 1), 'is');
+    await user.selectOptions(blankByIndex(container, 1), 'rises');
+    await user.selectOptions(blankByIndex(container, 2), 'is');
     await user.click(checkBtn(container)!);
 
     const fb = feedback(container);
@@ -92,8 +92,8 @@ describe('ClozePassage', () => {
     const user = userEvent.setup();
     const { container } = render(<ClozePassage {...baseProps} />);
 
-    await user.selectOptions(blankByIndex(container, 0), 'sets'); // wrong
-    await user.selectOptions(blankByIndex(container, 1), 'is'); // correct
+    await user.selectOptions(blankByIndex(container, 1), 'sets'); // wrong
+    await user.selectOptions(blankByIndex(container, 2), 'is'); // correct
     await user.click(checkBtn(container)!);
 
     const fb = feedback(container);
@@ -107,8 +107,8 @@ describe('ClozePassage', () => {
     const user = userEvent.setup();
     const { container } = render(<ClozePassage {...baseProps} />);
 
-    await user.selectOptions(blankByIndex(container, 0), 'rises');
-    await user.selectOptions(blankByIndex(container, 1), 'is');
+    await user.selectOptions(blankByIndex(container, 1), 'rises');
+    await user.selectOptions(blankByIndex(container, 2), 'is');
     await user.click(checkBtn(container)!);
 
     for (const sel of blanks(container)) {
@@ -120,8 +120,8 @@ describe('ClozePassage', () => {
     const user = userEvent.setup();
     const { container } = render(<ClozePassage {...baseProps} />);
 
-    await user.selectOptions(blankByIndex(container, 0), 'rises');
-    await user.selectOptions(blankByIndex(container, 1), 'is');
+    await user.selectOptions(blankByIndex(container, 1), 'rises');
+    await user.selectOptions(blankByIndex(container, 2), 'is');
     await user.click(checkBtn(container)!);
     await user.click(retryBtn(container)!);
 
@@ -148,8 +148,8 @@ describe('ClozePassage', () => {
 
     expect(checkBtn(container)?.textContent).toContain('Перевірити');
 
-    await user.selectOptions(blankByIndex(container, 0), 'rises');
-    await user.selectOptions(blankByIndex(container, 1), 'is');
+    await user.selectOptions(blankByIndex(container, 1), 'rises');
+    await user.selectOptions(blankByIndex(container, 2), 'is');
     await user.click(checkBtn(container)!);
 
     expect(feedback(container)?.textContent).toContain('Всі відповіді правильні');
@@ -159,13 +159,13 @@ describe('ClozePassage', () => {
     const user = userEvent.setup();
     const { container } = render(
       <ClozePassage
-        text="It [___:0] green."
-        blanks={[{ index: 0, options: ['  IS  ', 'are'], answer: 'is' }]}
+        text="It [___:1] green."
+        blanks={[{ index: 1, options: ['  IS  ', 'are'], answer: 'is' }]}
       />
     );
 
     // User picks the lowercase-equivalent option with whitespace padding
-    await user.selectOptions(blankByIndex(container, 0), '  IS  ');
+    await user.selectOptions(blankByIndex(container, 1), '  IS  ');
     await user.click(checkBtn(container)!);
 
     expect(feedback(container)?.getAttribute('data-correct')).toBe('true');
@@ -175,8 +175,8 @@ describe('ClozePassage', () => {
 // ── Cloze wrapper ─────────────────────────────────────────────────────────────
 
 describe('Cloze wrapper', () => {
-  const passage = 'Water [___:0] wet.';
-  const blanks = [{ index: 0, options: ['is', 'are'], answer: 'is' }];
+  const passage = 'Water [___:1] wet.';
+  const blanks = [{ index: 1, options: ['is', 'are'], answer: 'is' }];
 
   test('wraps everything in a cloze activity container', () => {
     const { container } = render(<Cloze passage={passage} blanks={blanks} />);
@@ -204,12 +204,9 @@ describe('Cloze wrapper', () => {
   });
 
   test('parses embedded-options passage format when no blanks are provided', () => {
-    // Inline format: passage text uses 0-based [___:N] markers; option
-    // blocks are numbered from 1 because the parser does `parseInt - 1`
-    // to convert them into the 0-based namespace the text markers use.
-    // Confirmed by reading parsePassageWithEmbeddedOptions() in the
-    // component source.
-    const embedded = `The sky is [___:0] today.
+    // 1-based convention (#1191): [___:1] matches option block "1."
+    // The parser reads the marker literally (no subtraction).
+    const embedded = `The sky is [___:1] today.
 
 1. blue | green | red
    > [!answer] blue`;

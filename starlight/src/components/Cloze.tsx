@@ -63,7 +63,7 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
       }
 
       const optionIndex = parseInt(match[1], 10);
-      const blank = shuffledBlanks.find(b => b.index === optionIndex); // MDX uses 0-based indices
+      const blank = shuffledBlanks.find(b => b.index === optionIndex); // 1-based: [___:1] matches option "1." (#1191)
 
       if (blank) {
         const selected = selections.get(blank.index);
@@ -179,7 +179,7 @@ function parsePassageWithEmbeddedOptions(passage: string): { text: string; blank
 
   const fullText = parts.join('\n\n');
   while ((match = optionPattern.exec(fullText)) !== null) {
-    const index = parseInt(match[1], 10) - 1; // Convert to 0-based
+    const index = parseInt(match[1], 10); // 1-based: [___:1] matches option block "1." (#1191)
     const optionsStr = match[2];
     const answer = match[3];
     const options = optionsStr.split('|').map(o => o.trim());
