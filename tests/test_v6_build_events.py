@@ -270,6 +270,34 @@ def test_main_returns_false_and_releases_lock_when_review_halts(
     assert events[-1]["phase"] == "review"
 
 
+def test_main_releases_lock_when_publish_raises(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    releases: list[str] = []
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: releases.append("released"))
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.6, "Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("boom")))
+    monkeypatch.setattr(quick_verify, "_check_toxic_tokens", lambda text: [])
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", "review", "--writer", "gemini"],
+    )
+
+    with pytest.raises(RuntimeError, match="boom"):
+        v6_build.main()
+
+    assert releases == ["released"]
+
+
 def test_subprocess_event_stream_is_line_buffered(tmp_path: Path) -> None:
     curriculum_root = _single_module_tree(tmp_path)
     helper_path = tmp_path / "run_v6_check.py"
