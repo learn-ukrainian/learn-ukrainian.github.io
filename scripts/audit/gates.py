@@ -68,6 +68,9 @@ def evaluate_priority_types(unique_types: set, priority_types: set) -> GateResul
     """Evaluate priority activity types gate."""
     if not priority_types:
         return GateResult('PASS', '✅', "N/A (LIT)")
+    if not unique_types:
+        # No activities exist — priority gate is N/A, not a failure
+        return GateResult('INFO', 'ℹ️', "N/A (no activities)")
     if unique_types.intersection(priority_types):
         return GateResult('PASS', '✅', "Priority types used")
     return GateResult('FAIL', '❌', "No priority types")

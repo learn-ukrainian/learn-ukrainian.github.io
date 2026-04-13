@@ -2676,17 +2676,21 @@ def step_fix_output(
     _log(f"  Step 5 (Fix): FIX OUTPUT — Holistic correction ({writer})")
     _log(f"{'='*60}")
 
+    # Sanitize content to prevent prompt injection via hallucinated closing tags
+    safe_content = content.replace("</draft>", "&lt;/draft&gt;").replace("</errors>", "&lt;/errors&gt;")
+    safe_directive = correction_directive.replace("</errors>", "&lt;/errors&gt;")
+
     prompt = f"""You are an expert Ukrainian linguist and curriculum designer.
 I have a completed draft of a curriculum module. However, it failed automated quality checks.
 
 Here are the errors you MUST fix:
 <errors>
-{correction_directive}
+{safe_directive}
 </errors>
 
 Here is the current draft:
 <draft>
-{content}
+{safe_content}
 </draft>
 
 Please output the FULL, CORRECTED draft.
@@ -2764,6 +2768,11 @@ Start immediately with the first ## heading. Keep all other formatting exactly a
         return None
     if original_is_toxic and fix_words > 500:
         _log(f"  ⚠️  Fix output shorter ({fix_words} vs {orig_words}) but original was TOXIC — accepting clean version")
+    elif original_is_toxic and fix_words <= 500:
+        # Toxic original but fix is structurally unviable (too short).
+        # Don't silently accept garbage output just because original was bad.
+        _log(f"  ❌ Fix output too short ({fix_words} words) even for toxic original — rejecting")
+        return None
 
     output_path.write_text(final_content, "utf-8")
 
