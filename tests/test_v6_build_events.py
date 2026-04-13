@@ -251,6 +251,41 @@ def test_main_emits_module_done_after_publish(
     assert module_done["ok"] is True
 
 
+@pytest.mark.parametrize(
+    ("word_target", "expected_error"),
+    [
+        (None, "word_target missing or non-numeric"),
+        ("not-a-number", "word_target missing or non-numeric"),
+        (0, "word_target must be greater than zero"),
+    ],
+)
+def test_run_pre_build_gate_rejects_invalid_word_target(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    word_target: object,
+    expected_error: str,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    plan_path = curriculum_root / "plans" / "a2" / "a2-bridge.yaml"
+    plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+
+    if word_target is None:
+        plan_data.pop("word_target", None)
+    else:
+        plan_data["word_target"] = word_target
+
+    plan_path.write_text(
+        yaml.safe_dump(plan_data, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+
+    assert v6_build._run_pre_build_gate("a2", "a2-bridge") is False
+    assert expected_error in capsys.readouterr().out
+
+
 @pytest.mark.parametrize("step_name", ["write", "review", "publish"])
 def test_main_blocks_plan_consuming_single_steps_on_pre_build_gate(
     tmp_path: Path,

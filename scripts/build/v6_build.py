@@ -779,9 +779,16 @@ def _run_pre_build_gate(level: str, slug: str) -> bool:
     if not has_vocab:
         _log("  ⚠️  PRE-BUILD GATE: No vocabulary_hints or vocabulary in plan (non-blocking)")
 
-    # 3. Word target sanity (vs config.py)
+    # 3. Word target sanity (required and positive before config comparison)
+    plan_wt = plan_data.get("word_target")
+    if isinstance(plan_wt, bool) or not isinstance(plan_wt, (int, float)):
+        _log("  ❌ PRE-BUILD GATE: word_target missing or non-numeric")
+        return False
+    if plan_wt <= 0:
+        _log("  ❌ PRE-BUILD GATE: word_target must be greater than zero")
+        return False
+
     from validate.validate_plan_config import get_config_target
-    plan_wt = plan_data.get("word_target", 0)
     config_wt = get_config_target(
         level,
         plan_data.get("sequence", 1),
