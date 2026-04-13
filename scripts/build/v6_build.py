@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import io
 import json
 import logging
@@ -1265,6 +1266,68 @@ def _is_seminar_track(level: str) -> bool:
     return level.lower() in _SEMINAR_TRACKS or level.lower().startswith("lit-")
 
 
+def _chunk_cache_meta_path(orch_dir: Path) -> Path:
+    """Metadata file tracking which skeleton produced cached chunks."""
+    return orch_dir / "chunk-cache-meta.json"
+
+
+def _hash_skeleton(skeleton: str) -> str:
+    """Hash the exact skeleton text used to generate chunk cache entries."""
+    return hashlib.sha256(skeleton.encode("utf-8")).hexdigest()
+
+
+def _load_chunk_cache_skeleton_hash(orch_dir: Path) -> str | None:
+    """Read cached skeleton hash for chunk cache validation."""
+    meta_path = _chunk_cache_meta_path(orch_dir)
+    if not meta_path.exists():
+        return None
+    try:
+        data = json.loads(meta_path.read_text("utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    value = data.get("skeleton_hash")
+    return value if isinstance(value, str) and value else None
+
+
+def _write_chunk_cache_meta(orch_dir: Path, skeleton_hash: str) -> None:
+    """Persist the skeleton fingerprint for future chunk cache reuse checks."""
+    meta_path = _chunk_cache_meta_path(orch_dir)
+    meta = {"skeleton_hash": skeleton_hash}
+    meta_path.write_text(json.dumps(meta, indent=2), "utf-8")
+
+
+def _invalidate_chunk_cache_if_needed(orch_dir: Path, skeleton: str) -> str:
+    """Clear cached chunk files when they were built from a different skeleton.
+
+    Legacy caches without metadata are treated as stale because their source
+    skeleton cannot be verified safely.
+    """
+    skeleton_hash = _hash_skeleton(skeleton)
+    chunk_files = sorted(orch_dir.glob("chunk-*.md"))
+    if not chunk_files:
+        return skeleton_hash
+
+    cached_hash = _load_chunk_cache_skeleton_hash(orch_dir)
+    if cached_hash == skeleton_hash:
+        return skeleton_hash
+
+    cleared = 0
+    for chunk_file in chunk_files:
+        try:
+            chunk_file.unlink()
+            cleared += 1
+        except OSError as exc:
+            _log(f"  ⚠️  Could not delete stale {chunk_file.name}: {exc}")
+
+    if cleared:
+        reason = "missing skeleton hash" if cached_hash is None else "skeleton changed"
+        _log(f"  🗑️  Cleared {cleared} stale chunk cache file(s) ({reason})")
+
+    return skeleton_hash
+
+
 def step_research(level: str, module_num: int, slug: str) -> Path | None:
     """Step 3: Build knowledge packet from wiki + discovery data.
 
@@ -2015,6 +2078,7 @@ def step_write_chunked(
     use_mcp = use_tools and not writer.startswith("codex")
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
+    skeleton_hash = _invalidate_chunk_cache_if_needed(orch_dir, skeleton)
 
     written_sections: list[str] = []
 
@@ -2104,6 +2168,7 @@ def step_write_chunked(
     output_dir = CURRICULUM_ROOT / level
     output_path = output_dir / f"{slug}.md"
     output_path.write_text(final_content, "utf-8")
+    _write_chunk_cache_meta(orch_dir, skeleton_hash)
 
     total_words = len(final_content.split())
     _log(f"\n  ✅ Chunked write complete: {total_words} words total ({len(sections)} sections)")
