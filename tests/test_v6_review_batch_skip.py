@@ -525,11 +525,11 @@ class TestBatchReviewSkip:
 
         def track_step_publish(*args, **kwargs):
             publish_calls.append((args, kwargs))
-            return None
+            return True
 
         def track_step_audit(*args, **kwargs):
             audit_calls.append((args, kwargs))
-            return None
+            return True
 
         monkeypatch.setattr(v6_build, "step_review", track_step_review)
         monkeypatch.setattr(v6_build, "step_audit", track_step_audit)
@@ -604,11 +604,11 @@ class TestBatchReviewSkip:
 
         def track_step_audit(*args, **kwargs):
             audit_calls.append((args, kwargs))
-            return None
+            return True
 
         def track_step_publish(*args, **kwargs):
             publish_calls.append((args, kwargs))
-            return None
+            return True
 
         monkeypatch.setattr(v6_build, "step_review", track_step_review)
         monkeypatch.setattr(v6_build, "step_audit", track_step_audit)

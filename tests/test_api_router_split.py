@@ -199,3 +199,17 @@ class TestStaticServing:
         r = client.get("/")
         # Might be 200 or 404 depending on whether index.html exists
         assert r.status_code in (200, 404)
+
+    def test_static_path_traversal_is_rejected(self, tmp_path, monkeypatch):
+        playgrounds_dir = tmp_path / "playgrounds"
+        playgrounds_dir.mkdir()
+        (playgrounds_dir / "index.html").write_text("ok", "utf-8")
+        outside_file = tmp_path / "secret.txt"
+        outside_file.write_text("secret", "utf-8")
+
+        monkeypatch.setattr("scripts.api.main.PLAYGROUNDS_DIR", playgrounds_dir)
+
+        r = client.get("/%2e%2e/secret.txt")
+
+        assert r.status_code == 403
+        assert r.json()["detail"] == "Path traversal not allowed"

@@ -4,6 +4,7 @@ Mounts at /api/rag/ — wraps scripts/rag/query.py functions
 and ports the browse logic from image_review_server.py.
 """
 
+import re
 import sys
 
 from fastapi import APIRouter, Query
@@ -104,6 +105,12 @@ async def browse_images(
 ):
     """Browse textbook images on disk with filtering and pagination."""
     if grade:
+        # Validate grade format to prevent path traversal
+        if not re.match(r"^grade-\d{2}$", grade):
+            return JSONResponse(
+                status_code=400,
+                content={"error": f"Invalid grade format: {grade}"},
+            )
         search_dirs = [IMAGE_DIR / grade]
         if not search_dirs[0].exists():
             return JSONResponse(

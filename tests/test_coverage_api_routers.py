@@ -139,6 +139,17 @@ def images_client(_patch_config, mock_project_root):
     return TestClient(app)
 
 
+@pytest.fixture()
+def rag_client(mock_project_root):
+    """TestClient for rag router."""
+    from scripts.api.rag_router import router
+
+    with patch("scripts.api.rag_router.IMAGE_DIR", mock_project_root / "data" / "textbook_images"):
+        app = FastAPI()
+        app.include_router(router, prefix="/api/rag")
+        yield TestClient(app)
+
+
 # ===========================================================================
 # COMMS ROUTER TESTS
 # ===========================================================================
@@ -1334,6 +1345,33 @@ class TestImagesCleanup:
         ):
             r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
         assert r.json()["deleted_count"] == 1
+
+    def test_cleanup_rejects_path_traversal(self, images_client, mock_project_root):
+        from scripts.api import images_router
+
+        outside_file = mock_project_root.parent / "outside.png"
+        outside_file.write_bytes(b"PNG")
+        images_router._index._records = {
+            "img1": {"image_id": "img1", "image_path": "../outside.png", "pdf_stem": "", "page": None},
+        }
+        images_router._index._loaded = True
+
+        r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
+
+        assert r.json()["deleted_count"] == 0
+        assert r.json()["not_found"] == ["img1"]
+        assert outside_file.exists()
+        assert "img1" in images_router._index.records
+
+
+class TestRagBrowseImages:
+    """Tests for /api/rag/browse_images."""
+
+    def test_browse_images_rejects_invalid_grade(self, rag_client):
+        r = rag_client.get("/api/rag/browse_images", params={"grade": "../etc"})
+
+        assert r.status_code == 400
+        assert r.json()["error"] == "Invalid grade format: ../etc"
 
 
 class TestImagesReload:

@@ -533,6 +533,102 @@ def test_main_blocks_publish_when_audit_crashes_with_stale_passing_status(
     assert v6_build.main() is False
     assert published == []
     assert not status_path.exists()
+    state_path = curriculum_root / "a2" / "orchestration" / "a2-bridge" / "state.json"
+    state = json.loads(state_path.read_text("utf-8"))
+    assert state["phases"]["audit"]["status"] == "failed"
+
+
+def test_step_publish_returns_false_on_mdx_validation_errors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    import build.activity_renderer as activity_renderer
+    import build.enrich as enrich
+    import build.mdx_validate as mdx_validate
+    import generate_landing_pages
+    import generate_mdx.dsl_to_mdx as dsl_to_mdx
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(v6_build, "_build_slovnyk_tab", lambda *args, **kwargs: "")
+    monkeypatch.setattr(v6_build, "_build_workbook_tab", lambda *args, **kwargs: "")
+    monkeypatch.setattr(v6_build, "_build_resources_tab_full", lambda *args, **kwargs: "")
+    monkeypatch.setattr(v6_build, "_sanitize_mdx", lambda content: content)
+    monkeypatch.setattr(activity_renderer, "get_required_imports", lambda *args, **kwargs: [])
+    monkeypatch.setattr(enrich, "_format_dialogues", lambda text: text)
+    monkeypatch.setattr(dsl_to_mdx, "convert_dsl_to_mdx", lambda text: (text, 0))
+    monkeypatch.setattr(mdx_validate, "validate_mdx", lambda path: ["broken-mdx"])
+    monkeypatch.setattr(generate_landing_pages, "generate_landing_page", lambda level: None)
+
+    assert v6_build.step_publish(content_path, "a2", "a2-bridge") is False
+
+
+def test_main_marks_verify_exercises_failed_when_step_returns_false(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "step_verify_exercises", lambda *args, **kwargs: False)
+    monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", "verify-exercises", "--writer", "gemini"],
+    )
+
+    assert v6_build.main() is True
+
+    state_path = curriculum_root / "a2" / "orchestration" / "a2-bridge" / "state.json"
+    state = json.loads(state_path.read_text("utf-8"))
+    assert state["phases"]["verify-exercises"]["status"] == "failed"
+
+    phase_events = [
+        event for event in _event_lines(capsys.readouterr().out)
+        if event["event"] == "phase_done" and event["phase"] == "verify-exercises"
+    ]
+    assert phase_events[-1]["status"] == "failed"
+    assert phase_events[-1]["ok"] is False
+
+
+def test_main_marks_publish_failed_when_publish_step_returns_false(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
+    monkeypatch.setattr(v6_build, "step_audit", lambda *args, **kwargs: True)
+    monkeypatch.setattr(v6_build, "_get_failing_audit_gates", lambda *args, **kwargs: ("pass", []))
+    monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: False)
+    monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", "publish", "--writer", "gemini"],
+    )
+
+    assert v6_build.main() is False
+
+    state_path = curriculum_root / "a2" / "orchestration" / "a2-bridge" / "state.json"
+    state = json.loads(state_path.read_text("utf-8"))
+    assert state["phases"]["audit"]["status"] == "complete"
+    assert state["phases"]["publish"]["status"] == "failed"
 
 
 @pytest.mark.parametrize(
@@ -676,6 +772,9 @@ def test_main_returns_false_and_releases_lock_when_review_halts(
 
     assert result is False
     assert releases == ["released"]
+    state_path = curriculum_root / "a2" / "orchestration" / "a2-bridge" / "state.json"
+    state = json.loads(state_path.read_text("utf-8"))
+    assert state["phases"]["review"]["status"] == "failed"
     events = _event_lines(capsys.readouterr().out)
     assert events[0]["event"] == "module_start"
     assert events[-1]["event"] == "module_failed"

@@ -14,7 +14,6 @@ import json
 import os
 import socket
 import subprocess
-import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -378,7 +377,7 @@ async def orient():
 async def get_config():
     # Import pipeline phase config — single source of truth
     try:
-        from pipeline_v5 import PHASE_LABELS, PHASES
+        from scripts.build.v6_build import PHASE_LABELS, PHASES
         pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
     except ImportError:
         pipeline_info = {}
@@ -464,8 +463,14 @@ async def dispatcher_running():
 
 @app.post("/api/batch/dispatcher/scan")
 async def run_dispatcher_scan():
-    cmd = [sys.executable, str(PROJECT_ROOT / "scripts" / "batch_dispatcher.py"), "scan"]
-    subprocess.run(cmd, cwd=PROJECT_ROOT)
+    cmd = [
+        str(PROJECT_ROOT / ".venv" / "bin" / "python"),
+        str(PROJECT_ROOT / "scripts" / "batch_dispatcher.py"),
+        "scan",
+    ]
+    result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    if result.returncode != 0:
+        raise HTTPException(status_code=500, detail="Dispatcher scan failed")
     return {"status": "ok"}
 
 
@@ -523,9 +528,13 @@ async def serve_image(path: str):
 async def serve_static(path: str):
     if not path or path == "/":
         return FileResponse(PLAYGROUNDS_DIR / "index.html")
-    file_path = PLAYGROUNDS_DIR / path
-    if file_path.exists():
+    file_path = (PLAYGROUNDS_DIR / path).resolve()
+    playgrounds_root = PLAYGROUNDS_DIR.resolve()
+    # Prevent path traversal — resolved path must stay within playgrounds dir
+    if not file_path.is_relative_to(playgrounds_root):
+        raise HTTPException(status_code=403, detail="Path traversal not allowed")
+    if file_path.is_file():
         return FileResponse(file_path)
-    if (file_path / "index.html").exists():
+    if file_path.is_dir() and (file_path / "index.html").is_file():
         return FileResponse(file_path / "index.html")
     raise HTTPException(status_code=404)

@@ -547,10 +547,15 @@ async def cleanup_images(body: CleanupRequest):
             not_found.append(image_id)
             continue
 
-        # Delete PNG file if it exists
+        # Delete PNG file if it exists (with path containment check)
         img_path = rec.get("image_path", "")
         if img_path:
-            full_path = PROJECT_ROOT / img_path
+            full_path = (PROJECT_ROOT / img_path).resolve()
+            data_root = (PROJECT_ROOT / "data").resolve()
+            # Prevent arbitrary file deletion — must stay within data/
+            if not full_path.is_relative_to(data_root):
+                not_found.append(image_id)
+                continue
             if full_path.exists():
                 full_path.unlink()
 

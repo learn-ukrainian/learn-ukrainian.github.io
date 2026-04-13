@@ -5828,8 +5828,8 @@ build_status: draft
         _log(f"  ⚠️  MDX validation: {len(mdx_errors)} issue(s):")
         for err in mdx_errors[:5]:
             _log(f"    {err}")
-    else:
-        _log("  ✅ MDX validation passed")
+        return False
+    _log("  ✅ MDX validation passed")
 
     # Regenerate landing page so module status stays current
     try:
@@ -6362,9 +6362,10 @@ def main():
         # Step 5d: VERIFY EXERCISES — grounding check (informational, non-blocking)
         if steps in ("all", "exercises", "verify-exercises") and "verify-exercises" not in completed_phases:
             _phase_start = time.monotonic()
-            step_verify_exercises(content_path, args.level, slug)
-            _save_v6_state(args.level, slug, "verify-exercises")
-            _emit_phase_done("verify-exercises", _phase_start)
+            vex_ok = step_verify_exercises(content_path, args.level, slug)
+            vex_status: V6_PHASE_STATUS = "complete" if vex_ok else "failed"
+            _save_v6_state(args.level, slug, "verify-exercises", status=vex_status)
+            _emit_phase_done("verify-exercises", _phase_start, status=vex_status)
 
         # Step 6: POST-PROCESS (strip LLM artifacts — but NOT stress annotation yet)
         # Stress annotation moves to AFTER review to avoid wrong stress marks
@@ -6429,7 +6430,8 @@ def main():
                 _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
                 _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
                 sys.exit(1)
-            _save_v6_state(args.level, slug, "review")
+            # NOTE: review state is saved AFTER acceptance decision, not here.
+            # See _save_v6_state call below the acceptance block.
             final_score = score
 
             # Fix strategy:
@@ -6459,7 +6461,7 @@ def main():
                     content_path, args.level, args.module, slug,
                     writer=args.writer, reviewer_override=args.reviewer,
                 )
-                _save_v6_state(args.level, slug, "review")
+                # NOTE: review state saved after acceptance decision, not here.
 
                 # Apply R2 fixes
                 r2_applied, r2_count = _apply_review_fixes(review_text, content_path)
@@ -6480,12 +6482,18 @@ def main():
                 else:
                     _log(f"\n❌ Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
                     _log("   Fix the plan or content manually, then re-run with --resume")
+                    _save_v6_state(args.level, slug, "review", status="failed")
                     _emit_module_failed("review", f"Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
                     return False  # Do not proceed to publish
             else:
                 _log(
                     f"\n✅ R1 score {r1_score}/10 ≥ {REVIEW_TARGET_SCORE:.1f} — accepting with {fix_count} fix(es)"
                 )
+
+            # Review accepted — NOW save state as complete.
+            # Deferred from initial review call to avoid marking failed reviews
+            # as complete (which would cause --resume to skip them).
+            _save_v6_state(args.level, slug, "review")
 
             # Run deterministic style cleanup if engagement is weak
             engagement_match = re.search(
@@ -6570,7 +6578,12 @@ def main():
             or "audit" in resume_invalidation_applied
         ):
             _phase_start = time.monotonic()
-            step_audit(content_path, args.level, slug)
+            audit_ok = step_audit(content_path, args.level, slug)
+            if not audit_ok:
+                _save_v6_state(args.level, slug, "audit", status="failed")
+                _log("\n❌ Build FAILED at Step 10 (audit)")
+                _emit_module_failed("audit", "Build FAILED at Step 10 (audit)")
+                return False
             _pre_audit_ran = True
 
             # Inspect the status file for activity-related failures. If any
@@ -6830,6 +6843,7 @@ def main():
                 _emit_phase_done("audit", _phase_start)
                 return False
             _emit_phase_done("audit", _phase_start)
+            _save_v6_state(args.level, slug, "audit")
 
         # Step 10: PUBLISH — now runs AFTER audit + heal so MDX reflects final state
         # Re-publishes if audit just ran, even if publish was marked complete —
@@ -6839,14 +6853,15 @@ def main():
             or "publish" in resume_invalidation_applied
         ) and (_pre_audit_ran or "publish" not in completed_phases):
             _phase_start = time.monotonic()
-            step_publish(content_path, args.level, slug)
+            publish_ok = step_publish(content_path, args.level, slug)
+            if not publish_ok:
+                _save_v6_state(args.level, slug, "publish", status="failed")
+                _log("\n❌ Build FAILED at Step 10 (publish)")
+                _emit_module_failed("publish", "Build FAILED at Step 10 (publish)")
+                return False
             _save_v6_state(args.level, slug, "publish")
             _emit_phase_done("publish", _phase_start)
             publish_completed = True
-
-        # Mark audit phase complete (it already ran pre-publish above)
-        if _pre_audit_ran:
-            _save_v6_state(args.level, slug, "audit")
 
         # Generate orchestration index (#1029)
         from build.orch_index import generate_index

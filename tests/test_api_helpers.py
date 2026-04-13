@@ -14,6 +14,7 @@ Covers:
 
 import json
 import time
+from pathlib import Path
 from unittest.mock import patch
 
 # ==================== review_parsing ====================
@@ -485,6 +486,25 @@ class TestIsReviewStale:
         review = tmp_path / "review.md"
         review.write_text(f"<!-- content-hash: {content_hash} -->\n# Review")
         assert is_review_stale(review, content) is False
+
+    def test_missing_review_not_stale(self, tmp_path):
+        from scripts.api.state_helpers import is_review_stale
+
+        content = tmp_path / "content.md"
+        content.write_text("some content")
+
+        assert is_review_stale(tmp_path / "missing-review.md", content) is False
+
+    def test_hash_read_oserror_returns_not_stale(self, tmp_path):
+        from scripts.api.state_helpers import is_review_stale
+
+        content = tmp_path / "content.md"
+        content.write_text("some content")
+        review = tmp_path / "review.md"
+        review.write_text("<!-- content-hash: abc123def456 -->\n# Review")
+
+        with patch.object(Path, "read_bytes", side_effect=OSError("boom")):
+            assert is_review_stale(review, content) is False
 
 
 class TestGetWordTargetFromPlan:

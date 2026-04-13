@@ -463,17 +463,26 @@ def extract_content_hash(review_path: Path) -> str | None:
 
 def is_review_stale(review_path: Path, content_path: Path | None) -> bool:
     """Check if a review file is stale relative to its content (#618)."""
+    if not review_path.exists():
+        return False
     if not content_path or not content_path.exists():
         return False
 
     import hashlib
     review_hash = extract_content_hash(review_path)
     if review_hash:
-        current_hash = hashlib.md5(content_path.read_bytes(), usedforsecurity=False).hexdigest()[:12]
+        try:
+            current_hash = hashlib.md5(content_path.read_bytes(), usedforsecurity=False).hexdigest()[:12]
+        except OSError:
+            return False
         return review_hash != current_hash
 
-    content_mtime = content_path.stat().st_mtime
-    return content_mtime > 0 and review_path.stat().st_mtime < content_mtime
+    try:
+        content_mtime = content_path.stat().st_mtime
+        review_mtime = review_path.stat().st_mtime
+    except OSError:
+        return False
+    return content_mtime > 0 and review_mtime < content_mtime
 
 
 def get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
@@ -528,5 +537,4 @@ def get_final_review_info(track_dir: Path, slug: str) -> dict | None:
         }
     except Exception:
         return None
-
 

@@ -14,6 +14,8 @@ Validates:
 """
 
 import json
+import subprocess
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
@@ -64,6 +66,39 @@ class TestConfigEndpoint:
     def test_has_pipeline_info(self):
         data = client.get("/api/config").json()
         assert "pipeline" in data
+
+    def test_uses_v6_pipeline_constants(self):
+        from scripts.build.v6_build import PHASE_LABELS, PHASES
+
+        data = client.get("/api/config").json()
+        assert data["pipeline"]["phases"] == PHASES
+        assert data["pipeline"]["phase_labels"] == PHASE_LABELS
+
+
+class TestDispatcherScanEndpoint:
+    """POST /api/batch/dispatcher/scan uses the project venv and checks failures."""
+
+    def test_returns_200_on_success(self):
+        with patch(
+            "scripts.api.main.subprocess.run",
+            return_value=subprocess.CompletedProcess(["scan"], 0),
+        ) as mock_run:
+            resp = client.post("/api/batch/dispatcher/scan")
+
+        assert resp.status_code == 200
+        assert resp.json() == {"status": "ok"}
+        cmd = mock_run.call_args.args[0]
+        assert cmd[0].endswith("/.venv/bin/python")
+
+    def test_returns_500_on_subprocess_failure(self):
+        with patch(
+            "scripts.api.main.subprocess.run",
+            return_value=subprocess.CompletedProcess(["scan"], 1),
+        ):
+            resp = client.post("/api/batch/dispatcher/scan")
+
+        assert resp.status_code == 500
+        assert resp.json()["detail"] == "Dispatcher scan failed"
 
 
 class TestStateSummaryEndpoint:
@@ -189,11 +224,12 @@ class TestExtractWordCountFromStatus:
         from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         class FakeResult:
-            data = {
-                "overall": {"status": "pass", "deferred_count": 0},
-                "gates": {"lesson": {"message": "1200 / 1500 words"}},
-                "timestamp": "2026-03-01T00:00:00Z",
-            }
+            def __init__(self):
+                self.data = {
+                    "overall": {"status": "pass", "deferred_count": 0},
+                    "gates": {"lesson": {"message": "1200 / 1500 words"}},
+                    "timestamp": "2026-03-01T00:00:00Z",
+                }
 
         wc, wt, dc, la = _extract_word_count_from_status(FakeResult())
         assert wc == 1200
@@ -214,20 +250,22 @@ class TestExtractWordCountFromStatus:
         from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         class FakeResult:
-            data = None
+            def __init__(self):
+                self.data = None
 
-        wc, wt, dc, la = _extract_word_count_from_status(FakeResult())
+        wc, _wt, _dc, _la = _extract_word_count_from_status(FakeResult())
         assert wc == 0
 
     def test_handles_deferred_count(self):
         from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         class FakeResult:
-            data = {
-                "overall": {"status": "pass", "deferred_count": 3},
-                "gates": {"lesson": {"message": "500 / 1000 words"}},
-                "timestamp": None,
-            }
+            def __init__(self):
+                self.data = {
+                    "overall": {"status": "pass", "deferred_count": 3},
+                    "gates": {"lesson": {"message": "500 / 1000 words"}},
+                    "timestamp": None,
+                }
 
         _, _, dc, _ = _extract_word_count_from_status(FakeResult())
         assert dc == 3
