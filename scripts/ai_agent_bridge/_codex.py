@@ -7,6 +7,7 @@ consistent with the runtime's resume_policy="never" for Codex.
 
 import json
 import os
+import re
 
 from agent_runtime import runner as agent_runner
 from agent_runtime.errors import (
@@ -22,6 +23,9 @@ from ._messaging import acknowledge, send_message
 from ._prompts import build_codex_prompt
 
 _CODEX_MODES = {"safe", "workspace-write", "full-auto", "danger"}
+_CHAIN_ISSUE_REF_RE = re.compile(r"^(?:#|issue-|gh-)?(?P<num>\d+)$")
+_DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS = 900
+_NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
 
 
 def _codex_bridge_mode() -> str:
@@ -51,16 +55,77 @@ def _codex_bridge_runtime_mode() -> str:
     return "read-only"  # "safe" → "read-only"
 
 
+def _resolve_codex_bridge_timeout(no_timeout: bool = False) -> int:
+    """Resolve Codex hard timeout from CLI flag/env with a safe fallback.
+
+    ``agent_runtime.runner.invoke()`` requires an integer hard timeout, so
+    bridge "no timeout" mode maps to a 24h ceiling rather than ``None``.
+    """
+    if no_timeout:
+        return _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS
+
+    raw = os.environ.get("CODEX_BRIDGE_TIMEOUT")
+    if raw is None:
+        return _DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS
+
+    value = raw.strip().lower()
+    if value in {"0", "none", "off", "false", "no"}:
+        return _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS
+
+    try:
+        timeout = int(value)
+    except ValueError:
+        print(
+            f"⚠️  Invalid CODEX_BRIDGE_TIMEOUT={raw!r} "
+            f"— falling back to {_DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS}s"
+        )
+        return _DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS
+
+    if timeout <= 0:
+        return _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS
+    return timeout
+
+
 def ask_codex(content: str, task_id: str | None = None, msg_type: str = "query",
               data: str | None = None, new_session: bool = False,
               from_llm: str = "gemini", from_model: str | None = None,
-              to_model: str | None = None):
+              to_model: str | None = None, no_timeout: bool = False):
     """Send message to Codex AND invoke Codex to process it."""
     msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm,
                           to_llm="codex", from_model=from_model, to_model=to_model)
     print(f"\n🚀 Invoking Codex to process message #{msg_id}...")
-    process_for_codex(msg_id, new_session)
+    process_for_codex(msg_id, new_session, no_timeout)
     return msg_id
+
+
+def ask_codex_chain(content_template: str, issue_refs: list[str], msg_type: str = "query",
+                    data: str | None = None, new_session: bool = False,
+                    from_llm: str = "gemini", from_model: str | None = None,
+                    to_model: str | None = None, no_timeout: bool = False) -> list[int]:
+    """Dispatch a sequence of issue-targeted Codex tasks one at a time."""
+    issues = _normalize_codex_chain_issues(issue_refs)
+    message_ids: list[int] = []
+    total = len(issues)
+
+    print(f"🔗 Dispatching Codex chain for {total} issue(s)...")
+    for index, issue_num in enumerate(issues, start=1):
+        task_id = f"issue-{issue_num}"
+        content = _render_codex_chain_content(content_template, issue_num, task_id)
+        print(f"\n━━━ Chain [{index}/{total}] {task_id}")
+        msg_id = ask_codex(
+            content,
+            task_id,
+            msg_type,
+            data,
+            new_session,
+            from_llm,
+            from_model,
+            to_model,
+            no_timeout,
+        )
+        message_ids.append(msg_id)
+
+    return message_ids
 
 
 def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
@@ -69,6 +134,51 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
 
     effective_model = model or "gpt-5.4"
     return has_headroom("codex", effective_model)
+
+
+def _normalize_codex_chain_issues(issue_refs: list[str]) -> list[int]:
+    """Normalize CLI issue refs while preserving order and dropping duplicates."""
+    issues: list[int] = []
+    seen: set[int] = set()
+
+    for raw_ref in issue_refs:
+        for part in raw_ref.split(","):
+            ref = part.strip()
+            if not ref:
+                continue
+
+            match = _CHAIN_ISSUE_REF_RE.fullmatch(ref)
+            if not match:
+                raise ValueError(
+                    f"Invalid --chain issue reference {ref!r}; "
+                    "use 1234, #1234, issue-1234, or gh-1234"
+                )
+
+            issue_num = int(match.group("num"))
+            if issue_num in seen:
+                continue
+
+            seen.add(issue_num)
+            issues.append(issue_num)
+
+    if not issues:
+        raise ValueError("--chain requires at least one GitHub issue reference")
+
+    return issues
+
+
+def _render_codex_chain_content(content_template: str, issue_num: int, task_id: str) -> str:
+    """Inject issue-specific context into a chain prompt template."""
+    rendered = (
+        content_template
+        .replace("{issue}", str(issue_num))
+        .replace("{issue_ref}", f"#{issue_num}")
+        .replace("{task_id}", task_id)
+    )
+    if rendered != content_template:
+        return rendered
+
+    return f"GitHub issue #{issue_num} ({task_id}).\n\n{content_template}"
 
 
 def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bool = False):
@@ -84,7 +194,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         return
 
     _ = new_session  # No-op: Codex always starts fresh (resume_policy="never")
-    timeout_val = 1800 if no_timeout else 900  # runner has its own hard_timeout
+    timeout_val = _resolve_codex_bridge_timeout(no_timeout)
     model = _extract_target_model(msg)
     has_room, reason = has_codex_headroom(model)
     if not has_room:
@@ -98,6 +208,10 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     print(f"   Type: {msg['type']}")
     print(f"   Task: {msg['task_id'] or 'N/A'}")
     print("   Session: NEW (Codex runtime always fresh)")
+    if timeout_val == _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS:
+        print("   Hard timeout: no-timeout requested (24h ceiling)")
+    else:
+        print(f"   Hard timeout: {timeout_val}s")
 
     try:
         result = agent_runner.invoke(

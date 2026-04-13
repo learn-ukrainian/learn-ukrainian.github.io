@@ -21,7 +21,12 @@ from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.result import Result
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 from ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
-from ai_agent_bridge._codex import _codex_bridge_runtime_mode, process_for_codex
+from ai_agent_bridge._codex import (
+    _codex_bridge_runtime_mode,
+    _resolve_codex_bridge_timeout,
+    ask_codex_chain,
+    process_for_codex,
+)
 from ai_agent_bridge._db import get_db, init_db
 from ai_agent_bridge._messaging import detect_sender, send_message
 
@@ -111,12 +116,134 @@ def test_handle_ask_codex_reads_stdin():
         from_llm="gemini",
         from_model=None,
         to_model=None,
+        no_timeout=False,
+        chain=None,
     )
     with patch("ai_agent_bridge._cli.ask_codex") as ask_codex_mock, \
          patch("sys.stdin", io.StringIO("stdin prompt")):
         _handle_ask_codex(args)
     ask_codex_mock.assert_called_once()
     assert ask_codex_mock.call_args[0][0] == "stdin prompt"
+    assert ask_codex_mock.call_args.args[-1] is False
+
+
+def test_handle_ask_codex_chain_rejects_explicit_task_id():
+    args = argparse.Namespace(
+        content="Fix {issue_ref}",
+        task_id="issue-1177",
+        type="query",
+        data=None,
+        new_session=False,
+        from_llm="gemini",
+        from_model=None,
+        to_model=None,
+        no_timeout=False,
+        chain=["1177"],
+    )
+
+    with pytest.raises(SystemExit, match="omit --task-id"):
+        _handle_ask_codex(args)
+
+
+def test_handle_ask_codex_requires_task_id_without_chain():
+    args = argparse.Namespace(
+        content="Fix #1177",
+        task_id=None,
+        type="query",
+        data=None,
+        new_session=False,
+        from_llm="gemini",
+        from_model=None,
+        to_model=None,
+        no_timeout=False,
+        chain=None,
+    )
+
+    with pytest.raises(SystemExit, match="requires --task-id"):
+        _handle_ask_codex(args)
+
+
+def test_handle_ask_codex_chain_dispatches_through_helper():
+    args = argparse.Namespace(
+        content="Fix {issue_ref}",
+        task_id=None,
+        type="query",
+        data=None,
+        new_session=False,
+        from_llm="gemini",
+        from_model=None,
+        to_model=None,
+        no_timeout=True,
+        chain=["1177", "#1178"],
+    )
+
+    with patch("ai_agent_bridge._cli.ask_codex_chain") as ask_codex_chain_mock:
+        _handle_ask_codex(args)
+
+    ask_codex_chain_mock.assert_called_once_with(
+        "Fix {issue_ref}",
+        ["1177", "#1178"],
+        "query",
+        None,
+        False,
+        "gemini",
+        None,
+        None,
+        True,
+    )
+
+
+def test_ask_codex_chain_dispatches_issues_sequentially():
+    with patch("ai_agent_bridge._codex.ask_codex", side_effect=[11, 12]) as ask_codex_mock:
+        message_ids = ask_codex_chain(
+            "Fix {issue_ref} via {task_id}",
+            ["1177", "#1178", "issue-1177"],
+            no_timeout=True,
+        )
+
+    assert message_ids == [11, 12]
+    assert ask_codex_mock.call_count == 2
+    assert ask_codex_mock.call_args_list[0].args == (
+        "Fix #1177 via issue-1177",
+        "issue-1177",
+        "query",
+        None,
+        False,
+        "gemini",
+        None,
+        None,
+        True,
+    )
+    assert ask_codex_mock.call_args_list[1].args == (
+        "Fix #1178 via issue-1178",
+        "issue-1178",
+        "query",
+        None,
+        False,
+        "gemini",
+        None,
+        None,
+        True,
+    )
+
+
+def test_ask_codex_chain_prefixes_issue_context_without_placeholders():
+    with patch("ai_agent_bridge._codex.ask_codex", return_value=11) as ask_codex_mock:
+        ask_codex_chain("Review and fix the issue.", ["1177"])
+
+    assert ask_codex_mock.call_args.args[0] == (
+        "GitHub issue #1177 (issue-1177).\n\nReview and fix the issue."
+    )
+
+
+def test_resolve_codex_bridge_timeout_defaults_to_normal_timeout():
+    with patch.dict(os.environ, {}, clear=True):
+        assert _resolve_codex_bridge_timeout() == 900
+
+
+def test_resolve_codex_bridge_timeout_honors_env_override():
+    with patch.dict(os.environ, {"CODEX_BRIDGE_TIMEOUT": "120"}, clear=True):
+        assert _resolve_codex_bridge_timeout() == 120
 
 
 def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
@@ -176,6 +303,8 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     assert kwargs["entrypoint"] == "bridge"
     assert kwargs["tool_config"] is None
     assert kwargs["session_id"] is None
+    assert kwargs["hard_timeout"] == 900
+    assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_called_once_with("issue-1177", "codex", "session-123")
     mock_send_message.assert_called_once_with(
         content="Codex response",
@@ -240,6 +369,8 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     assert kwargs["entrypoint"] == "bridge"
     assert kwargs["session_id"] is None
     assert kwargs["tool_config"] is None
+    assert kwargs["hard_timeout"] == 900
+    assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_not_called()
     mock_send_message.assert_called_once_with(
         content="Codex response",

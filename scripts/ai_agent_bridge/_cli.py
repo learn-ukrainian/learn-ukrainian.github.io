@@ -12,6 +12,7 @@ from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
 from ._codex import (
     ask_codex,
+    ask_codex_chain,
     has_codex_headroom,
     process_all_codex,
     process_for_codex,
@@ -408,7 +409,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # ask-codex
     ask_codex_parser = subparsers.add_parser("ask-codex", help="Send message AND invoke Codex (one-step; use '-' to read from stdin)")
     ask_codex_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
-    ask_codex_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
+    ask_codex_parser.add_argument("--task-id", help="Task ID (required unless --chain is used)")
     ask_codex_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_codex_parser.add_argument("--data", help="Path to data file to attach")
     ask_codex_parser.add_argument("--new-session", dest="new_session", action="store_true",
@@ -419,6 +420,10 @@ def _build_parser() -> argparse.ArgumentParser:
                                   help="Exact sender model ID")
     ask_codex_parser.add_argument("--to-model", dest="to_model",
                                   help="Target model ID")
+    ask_codex_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
+                                  help="Run sync without timeout")
+    ask_codex_parser.add_argument("--chain", nargs="+", metavar="ISSUE",
+                                  help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)")
 
     # ask-gemini
     ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step)")
@@ -598,8 +603,21 @@ def _handle_ask_codex(args):
     if args.data:
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
+    if args.chain:
+        if args.task_id:
+            raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
+        try:
+            ask_codex_chain(content, args.chain, args.type, data,
+                            args.new_session, args.from_llm, args.from_model,
+                            args.to_model, args.no_timeout)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+        return
+    if not args.task_id:
+        raise SystemExit("ask-codex requires --task-id unless --chain is used")
     ask_codex(content, args.task_id, args.type, data,
-              args.new_session, args.from_llm, args.from_model, args.to_model)
+              args.new_session, args.from_llm, args.from_model,
+              args.to_model, args.no_timeout)
 
 
 def _handle_ask_gemini(args):
