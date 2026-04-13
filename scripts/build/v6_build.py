@@ -5960,6 +5960,20 @@ def main():
                         )
                         for _p in ("audit", "repair", "publish", "review"):
                             completed_phases.discard(_p)
+
+                    # Also invalidate review when score is below threshold
+                    # (even if audit is passing — audit pass != review pass)
+                    if "review" in completed_phases and steps in ("review", "all"):
+                        _latest = _load_latest_review_result(args.level, slug)
+                        _threshold = getattr(args, "review_threshold", REVIEW_TARGET_SCORE)
+                        if _latest and _latest.score < _threshold:
+                            _log(
+                                f"   🩹 Review score {_latest.score:.1f} < {_threshold:.1f} threshold"
+                            )
+                            _log("      Invalidating review phase for re-review")
+                            _invalidate_phases(args.level, slug, ["review"])
+                            completed_phases.discard("review")
+
                 except Exception as _e:
                     _log(f"   ⚠️  Could not inspect status for auto-invalidation: {_e}")
 
