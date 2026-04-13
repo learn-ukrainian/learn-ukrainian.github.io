@@ -1037,6 +1037,22 @@ def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | Non
         return None
 
 
+def _resume_review_failure_reason(
+    latest_review: ReviewParseResult,
+    review_threshold: float,
+) -> str | None:
+    """Explain why a saved review is not strong enough to skip resume work."""
+    if latest_review.score < review_threshold:
+        return f"latest review {latest_review.score}/10 < {review_threshold:.1f}"
+    if latest_review.verdict != "PASS":
+        return f"latest review verdict {latest_review.verdict}"
+    if latest_review.dim_floor_fail:
+        return "latest review dimension floor fail"
+    if not latest_review.passed:
+        return "latest review did not pass deterministic gates"
+    return None
+
+
 def _audit_code_latest_mtime() -> float:
     """Return the latest mtime across scripts/audit/**/*.py.
 
@@ -1189,11 +1205,12 @@ def _build_resume_invalidation_plan(
             reason="no saved review found",
             invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
         )
-    if latest_review.score < review_threshold:
+    review_failure_reason = _resume_review_failure_reason(latest_review, review_threshold)
+    if review_failure_reason is not None:
         invalidation.update(review_tail)
         return ResumeInvalidationPlan(
             should_skip=False,
-            reason=f"latest review {latest_review.score}/10 < {review_threshold:.1f}",
+            reason=review_failure_reason,
             invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
         )
 
@@ -1201,7 +1218,7 @@ def _build_resume_invalidation_plan(
         should_skip=True,
         reason=(
             f"phases complete + audit pass + all gates pass + "
-            f"review {latest_review.score}/10 >= {review_threshold:.1f}"
+            f"review PASS {latest_review.score}/10 >= {review_threshold:.1f}"
         ),
         invalidate_phases=(),
     )

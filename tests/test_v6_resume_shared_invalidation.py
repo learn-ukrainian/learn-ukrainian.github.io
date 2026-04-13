@@ -53,6 +53,12 @@ def _write_review(curriculum_root: Path, slug: str, score: float) -> None:
     )
 
 
+def _write_review_text(curriculum_root: Path, slug: str, review_text: str) -> None:
+    review_dir = curriculum_root / "b1" / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
+
+
 def _write_passing_status(curriculum_root: Path, slug: str) -> None:
     status_dir = curriculum_root / "b1" / "status"
     status_dir.mkdir(parents=True, exist_ok=True)
@@ -130,3 +136,64 @@ def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(tmp_p
     assert len(review_calls) == 1
     assert len(audit_calls) == 1
     assert len(publish_calls) == 1
+
+
+def test_resume_plan_reruns_when_latest_review_verdict_is_revise(tmp_path, monkeypatch):
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    slug = "single-module"
+    _write_manifest(curriculum_root, [slug])
+    _write_state(curriculum_root, slug)
+    _write_review_text(
+        curriculum_root,
+        slug,
+        (
+            "## Scores\n"
+            "| Dimension | Score | Evidence |\n"
+            "|-----------|-------|----------|\n"
+            + "\n".join(
+                f"| {i}. Dimension {i} | 10/10 | Strong evidence |"
+                for i in range(1, 10)
+            )
+            + "\n\n## Verdict: REVISE\n"
+        ),
+    )
+    _write_passing_status(curriculum_root, slug)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+
+    plan = v6_build._build_resume_invalidation_plan("b1", slug, "publish", 9.0)
+
+    assert plan.should_skip is False
+    assert plan.reason == "latest review verdict REVISE"
+    assert plan.invalidate_phases == ("review", "stress", "publish", "audit")
+
+
+def test_resume_plan_reruns_when_latest_review_hits_dimension_floor(tmp_path, monkeypatch):
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    slug = "single-module"
+    _write_manifest(curriculum_root, [slug])
+    _write_state(curriculum_root, slug)
+    _write_review_text(
+        curriculum_root,
+        slug,
+        (
+            "## Scores\n"
+            "| Dimension | Score | Evidence |\n"
+            "|-----------|-------|----------|\n"
+            "| 1. Dimension 1 | 7/10 | Factual error in the core explanation |\n"
+            + "\n".join(
+                f"| {i}. Dimension {i} | 10/10 | Strong evidence |"
+                for i in range(2, 10)
+            )
+            + "\n\n## Verdict: PASS\n"
+        ),
+    )
+    _write_passing_status(curriculum_root, slug)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+
+    plan = v6_build._build_resume_invalidation_plan("b1", slug, "publish", 8.0)
+
+    assert plan.should_skip is False
+    assert plan.reason == "latest review dimension floor fail"
+    assert plan.invalidate_phases == ("review", "stress", "publish", "audit")

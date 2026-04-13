@@ -32,9 +32,9 @@ def test_status_returns_track_summary(tmp_path, monkeypatch):
             }
         },
     )
-    monkeypatch.setattr("wiki.sources.list_discovery_slugs", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
     monkeypatch.setattr(
-        "wiki.sources.gather_discovery_sources",
+        "wiki.sources.gather_discovery_sources_readonly",
         lambda track, slug: {
             "literary_chunks": [{"chunk_id": "lit-1"}],
             "textbook_chunks": [{"chunk_id": "text-1"}],
@@ -73,7 +73,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
     article_path.write_text("# Kyivan Rus\n\nKyiv was a major political center.\n", encoding="utf-8")
 
     monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
-    monkeypatch.setattr("wiki.sources.list_discovery_slugs", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
     monkeypatch.setattr(
         "wiki.state.list_wiki_articles",
         lambda: [{"path": "periods/kyivan-rus.md"}],
@@ -91,7 +91,7 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
         },
     )
     monkeypatch.setattr(
-        "wiki.sources.gather_discovery_sources",
+        "wiki.sources.gather_discovery_sources_readonly",
         lambda track, slug: {
             "literary_chunks": [],
             "textbook_chunks": [{"chunk_id": "text-1"}],
@@ -182,14 +182,33 @@ def test_sources_endpoint_handles_missing_table(tmp_path, monkeypatch):
 
 
 def test_sources_per_module_returns_404_when_discovery_missing(monkeypatch):
-    monkeypatch.setattr("wiki.sources.list_discovery_slugs", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
 
     def fake_gather_discovery_sources(track, slug):
         raise FileNotFoundError("missing discovery")
 
-    monkeypatch.setattr("wiki.sources.gather_discovery_sources", fake_gather_discovery_sources)
+    monkeypatch.setattr("wiki.sources.gather_discovery_sources_readonly", fake_gather_discovery_sources)
 
     response = client.get("/api/wiki/sources/hist/kyivan-rus")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Discovery not found: hist/kyivan-rus"
+
+
+def test_status_read_only_does_not_generate_discovery_files(tmp_path, monkeypatch):
+    curriculum_dir = tmp_path / "curriculum"
+    plans_dir = curriculum_dir / "plans" / "hist"
+    plans_dir.mkdir(parents=True)
+    (plans_dir / "plan-only.yaml").write_text("title: Plan Only\n", encoding="utf-8")
+
+    monkeypatch.setattr(wiki_router, "_known_tracks", lambda: ["hist"])
+    monkeypatch.setattr("wiki.sources.CURRICULUM_DIR", curriculum_dir)
+    monkeypatch.setattr("wiki.state.get_status_summary", lambda: {})
+    monkeypatch.setattr("wiki.state.list_wiki_articles", lambda: [])
+    monkeypatch.setattr("wiki.state.load_progress", lambda: {"articles": {}})
+
+    response = client.get("/api/wiki/status/hist")
+
+    assert response.status_code == 200
+    assert response.json()[0]["slug"] == "plan-only"
+    assert not (curriculum_dir / "hist" / "discovery").exists()

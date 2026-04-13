@@ -571,6 +571,21 @@ class TestEvaluateImmersion:
         eval_imm(ctx, state)
         assert state.has_critical_failure
 
+    def test_low_immersion_respects_configured_no_gate_ranges(self):
+        from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
+
+        state = AuditState()
+        ctx = _make_ctx(
+            level_code='C1',
+            module_num=20,
+            module_focus='reading',
+            body="only english words here nothing else at all",
+            config={'min_immersion': 0, 'max_immersion': 100, 'min_engagement': 3, 'min_vocab': 25},
+        )
+        eval_imm(ctx, state)
+        assert not state.has_critical_failure
+
 
 class TestCheckTransliterationPolicy:
     """Tests for check_transliteration_policy."""

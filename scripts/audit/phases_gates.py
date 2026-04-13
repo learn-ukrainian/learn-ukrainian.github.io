@@ -294,9 +294,6 @@ def evaluate_immersion(ctx: AuditContext, state: AuditState) -> tuple[float, int
                 'fix': violation.fix
             })
 
-    if immersion_score < 10.0 and ctx.module_num > 5:
-        state.has_critical_failure = True
-
     return immersion_score, min_imm, max_imm
 
 

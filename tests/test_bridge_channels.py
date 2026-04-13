@@ -87,6 +87,18 @@ def test_create_channel_with_include_and_subscribers():
     assert fetched["include"] == ["shared", "other"]
     assert fetched["subscribers"] == ["claude", "gemini"]
 
+
+def test_create_channel_rejects_user_subscriber():
+    """Channel subscribers are delivery targets, so `user` is invalid."""
+    with pytest.raises(ValueError, match="Unknown delivery target 'user'"):
+        _channels.create_channel("topic", subscribers=["user"])
+
+
+def test_validate_recipient_agent_accepts_non_user_agents():
+    """Delivery targets still accept the real agent inboxes."""
+    for agent in ("claude", "gemini", "codex"):
+        _channels._validate_recipient_agent(agent)
+
 def test_create_channel_invalid_name_raises():
     """Verify invalid channel names are rejected."""
     for bad_name in ["", "   ", "My Topic", "my topic"]:
@@ -145,13 +157,20 @@ def test_post_with_monitor_snapshot_roundtrip():
 def test_post_creates_delivery_row_per_recipient():
     """Verify posting creates one delivery row per specified recipient."""
     _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello", to_agents=["claude", "codex", "user"])
-    assert len(res["delivery_ids"]) == 3
+    res = _channels.post("topic", "gemini", "hello", to_agents=["claude", "codex"])
+    assert len(res["delivery_ids"]) == 2
 
     dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert len(dlvs) == 3
-    assert {d["to_agent"] for d in dlvs} == {"claude", "codex", "user"}
+    assert len(dlvs) == 2
+    assert {d["to_agent"] for d in dlvs} == {"claude", "codex"}
     assert all(d["status"] == "pending" for d in dlvs)
+
+
+def test_post_rejects_user_as_delivery_target():
+    """`user` may author posts, but may not receive delivery rows."""
+    _channels.create_channel("topic")
+    with pytest.raises(ValueError, match="Unknown delivery target 'user'"):
+        _channels.post("topic", "gemini", "hello", to_agents=["user"])
 
 
 def test_post_touches_recipient_wake_file(tmp_path, monkeypatch):
@@ -365,7 +384,7 @@ def test_concurrent_post_no_data_loss(isolate_db):
 
     def worker(i):
         barrier.wait()
-        _channels.post("topic", "gemini", f"body{i}", to_agents=["claude", "codex", "user"])
+        _channels.post("topic", "gemini", f"body{i}", to_agents=["claude", "codex"])
 
     for i in range(5):
         t = threading.Thread(target=worker, args=(i,))
@@ -384,7 +403,7 @@ def test_concurrent_post_no_data_loss(isolate_db):
 
     assert len(msgs) == 5
     assert len(set(msgs)) == 5  # No duplicates
-    assert len(dlvs) == 15      # 5 messages * 3 recipients
+    assert len(dlvs) == 10      # 5 messages * 2 recipients (claude + codex)
 
 def test_concurrent_reply_to_same_parent():
     """Verify multiple threads can reply to the same parent safely."""

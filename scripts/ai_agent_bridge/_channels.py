@@ -64,6 +64,7 @@ from ._db import get_db
 # ── Constants ──────────────────────────────────────────────────────────
 
 VALID_AGENTS = ("claude", "gemini", "codex", "user")
+VALID_RECIPIENT_AGENTS = tuple(agent for agent in VALID_AGENTS if agent != "user")
 VALID_KINDS = ("post", "reply", "system", "fanout_start", "fanout_end")
 VALID_DELIVERY_STATUSES = (
     "pending",
@@ -163,6 +164,14 @@ def _validate_agent(agent: str) -> None:
     if agent not in VALID_AGENTS:
         raise ValueError(
             f"Unknown agent '{agent}'. Expected one of {VALID_AGENTS}."
+        )
+
+
+def _validate_recipient_agent(agent: str) -> None:
+    if agent not in VALID_RECIPIENT_AGENTS:
+        raise ValueError(
+            f"Unknown delivery target '{agent}'. "
+            f"Expected one of {VALID_RECIPIENT_AGENTS}."
         )
 
 
@@ -575,7 +584,7 @@ def create_channel(
     include = include or []
     subscribers = subscribers or []
     for agent in subscribers:
-        _validate_agent(agent)
+        _validate_recipient_agent(agent)
 
     conn = get_db()
     try:
@@ -703,7 +712,7 @@ def post(
     _validate_agent(from_agent)
     _validate_kind(kind)
     for agent in to_agents or []:
-        _validate_agent(agent)
+        _validate_recipient_agent(agent)
 
     # B.2: Auto-populate context snapshots if not provided.
     # The "" vs None distinction matters — empty string is an explicit

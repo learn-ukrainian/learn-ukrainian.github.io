@@ -115,6 +115,7 @@ CREATE TABLE IF NOT EXISTS deliveries (
     attempt_count INTEGER NOT NULL DEFAULT 0,
     retry_after TEXT,
     last_error_kind TEXT,
+    mode TEXT DEFAULT 'read-only',        -- read-only/workspace-write/danger
     FOREIGN KEY (message_id) REFERENCES channel_messages(message_id)
 );
 

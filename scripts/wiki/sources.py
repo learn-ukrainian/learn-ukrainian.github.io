@@ -94,30 +94,40 @@ def load_discovery(track: str, slug: str) -> dict | None:
         return yaml.safe_load(f)
 
 
-def list_discovery_slugs(track: str) -> list[str]:
-    """List all module slugs that have discovery files for a track.
-
-    If no discovery files exist but plans do, auto-generates discovery
-    files from plan data (extracting keywords from title, sections, vocab).
-    """
-    discovery_dir = CURRICULUM_DIR / track / "discovery"
+def _plan_files(track: str) -> list[Path]:
+    """Return non-hidden, non-backup plan files for a track."""
     plans_dir = CURRICULUM_DIR / "plans" / track
+    if not plans_dir.exists():
+        return []
+    return sorted(
+        p for p in plans_dir.glob("*.yaml")
+        if not p.name.startswith(".") and not p.name.endswith(".bak")
+    )
 
-    # If discovery files exist, use them
+
+def list_discovery_slugs_readonly(track: str) -> list[str]:
+    """List track slugs without creating discovery files on disk."""
+    discovery_dir = CURRICULUM_DIR / track / "discovery"
+    slugs = set()
+    if discovery_dir.exists():
+        slugs.update(p.stem for p in discovery_dir.glob("*.yaml"))
+    slugs.update(plan_path.stem for plan_path in _plan_files(track))
+    return sorted(slugs)
+
+
+def list_discovery_slugs(track: str) -> list[str]:
+    """List all module slugs, auto-generating discovery files when needed."""
+    discovery_dir = CURRICULUM_DIR / track / "discovery"
+
     if discovery_dir.exists():
         slugs = sorted(p.stem for p in discovery_dir.glob("*.yaml"))
         if slugs:
             return slugs
 
-    # Auto-generate from plans if no discovery files
-    if plans_dir.exists():
-        plan_files = sorted(
-            p for p in plans_dir.glob("*.yaml")
-            if not p.name.startswith(".") and not p.name.endswith(".bak")
-        )
-        if plan_files:
-            _auto_generate_discovery(track, plan_files, discovery_dir)
-            return sorted(p.stem for p in discovery_dir.glob("*.yaml"))
+    plan_files = _plan_files(track)
+    if plan_files:
+        _auto_generate_discovery(track, plan_files, discovery_dir)
+        return sorted(p.stem for p in discovery_dir.glob("*.yaml"))
 
     return []
 
@@ -257,8 +267,8 @@ def find_literary_by_chunk_ids(chunk_ids: list[str]) -> dict[Path, list[str]]:
     return result
 
 
-def gather_discovery_sources(track: str, slug: str) -> dict:
-    """Gather all source material referenced by a discovery file.
+def _gather_discovery_sources_from_loaded(discovery: dict) -> dict:
+    """Gather source material from an already-loaded discovery document.
 
     Returns:
         {
@@ -269,10 +279,6 @@ def gather_discovery_sources(track: str, slug: str) -> dict:
             "literary_files": [Paths to matching literary JSONLs],
         }
     """
-    discovery = load_discovery(track, slug)
-    if not discovery:
-        return {"error": f"No discovery file for {track}/{slug}"}
-
     keywords = discovery.get("query_keywords", [])
 
     # Gather inline chunks from discovery (already have text snippets)
@@ -299,6 +305,19 @@ def gather_discovery_sources(track: str, slug: str) -> dict:
     }
 
 
+def gather_discovery_sources_readonly(track: str, slug: str) -> dict:
+    """Gather discovery-backed source material without writing repo files."""
+    discovery = load_discovery(track, slug)
+    if not discovery:
+        return {"error": f"No discovery file for {track}/{slug}"}
+    return _gather_discovery_sources_from_loaded(discovery)
+
+
+def gather_discovery_sources(track: str, slug: str) -> dict:
+    """Gather all source material referenced by a discovery file."""
+    return gather_discovery_sources_readonly(track, slug)
+
+
 def get_track_source_summary(track: str) -> dict:
     """Summarize all source material available for a track.
 
@@ -312,7 +331,7 @@ def get_track_source_summary(track: str) -> dict:
             "unique_literary_files": [str],
         }
     """
-    slugs = list_discovery_slugs(track)
+    slugs = list_discovery_slugs_readonly(track)
     total_lit = 0
     total_text = 0
     lit_file_stems: set[str] = set()

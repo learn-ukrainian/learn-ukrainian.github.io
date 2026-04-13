@@ -70,7 +70,7 @@ def _ensure_track_exists(track: str) -> None:
 
 def _track_slugs(track: str) -> list[str]:
     try:
-        return wiki_sources.list_discovery_slugs(track)
+        return wiki_sources.list_discovery_slugs_readonly(track)
     except Exception:
         return []
 
@@ -128,7 +128,7 @@ def _read_article_metrics(path: Path, cache: dict[Path, dict[str, Any]]) -> dict
 
 def _source_count(track: str, slug: str) -> int:
     try:
-        data = wiki_sources.gather_discovery_sources(track, slug)
+        data = wiki_sources.gather_discovery_sources_readonly(track, slug)
     except Exception:
         return 0
 
@@ -301,7 +301,7 @@ async def wiki_sources_module(track: str, slug: str):
         raise HTTPException(status_code=404, detail=f"Article not found: {track}/{slug}")
 
     try:
-        data = wiki_sources.gather_discovery_sources(track, slug)
+        data = wiki_sources.gather_discovery_sources_readonly(track, slug)
     except Exception as exc:
         raise HTTPException(status_code=404, detail=f"Discovery not found: {track}/{slug}") from exc
 
